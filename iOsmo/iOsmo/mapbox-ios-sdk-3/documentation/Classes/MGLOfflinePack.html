@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MGLOfflinePack Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+  </head>
+  <body>
+
+    <a name="//apple_ref/objc/Class/MGLOfflinePack" class="dashAnchor"></a>
+
+    <a title="MGLOfflinePack Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          <img class="header-icon" src="../img/mapbox.svg" alt="Mapbox iOS SDK Docs"/>
+        </a>
+        
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/mapbox/mapbox-gl-native">
+            <svg class="header-icon" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    		      <path stroke="none" stroke-width="1" fill="white" fill-rule="evenodd" d="M16.6,0.4 C7.6,0.4 0.3,7.7 0.3,16.7 C0.3,23.9 5,30 11.4,32.2 C12.2,32.3 12.5,31.8 12.5,31.4 L12.5,28.6 C8,29.6 7,26.4 7,26.4 C6.3,24.5 5.2,24 5.2,24 C3.7,23 5.3,23 5.3,23 C6.9,23.1 7.8,24.7 7.8,24.7 C9.3,27.2 11.6,26.5 12.5,26.1 C12.6,25 13.1,24.3 13.5,23.9 C9.9,23.5 6.1,22.1 6.1,15.8 C6.1,14 6.7,12.6 7.8,11.4 C7.6,11 7.1,9.3 8,7.1 C8,7.1 9.4,6.7 12.5,8.8 C13.8,8.4 15.2,8.3 16.6,8.3 C18,8.3 19.4,8.5 20.7,8.8 C23.8,6.7 25.2,7.1 25.2,7.1 C26.1,9.3 25.5,11 25.4,11.4 C26.4,12.5 27.1,14 27.1,15.8 C27.1,22.1 23.3,23.4 19.7,23.8 C20.3,24.3 20.8,25.3 20.8,26.8 L20.8,31.3 C20.8,31.7 21.1,32.2 21.9,32.1 C28.4,29.9 33,23.8 33,16.6 C32.9,7.7 25.6,0.4 16.6,0.4 L16.6,0.4 Z"></path>
+            </svg>
+            View on GitHub
+          </a>
+        </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fios%2Dsdk%2Fdocsets%2FMapbox%2Exml">
+            <img class="header-icon" src="../img/dash.png"/>
+            Install in Dash
+          </a>
+        </p>
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Mapbox iOS SDK Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      MGLOfflinePack Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Maps.html">Maps</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLAccountManager.html">MGLAccountManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLMapCamera.html">MGLMapCamera</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLMapView.html">MGLMapView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MGLMapViewDelegate.html">MGLMapViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLStyle.html">MGLStyle</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MGLUserTrackingMode.html">MGLUserTrackingMode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Annotations.html">Annotations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MGLAnnotation.html">MGLAnnotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLAnnotationImage.html">MGLAnnotationImage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLAnnotationView.html">MGLAnnotationView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MGLCalloutView.html">MGLCalloutView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MGLCalloutViewDelegate.html">MGLCalloutViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLMultiPoint.html">MGLMultiPoint</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLMultiPolygon.html">MGLMultiPolygon</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLMultiPolyline.html">MGLMultiPolyline</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLPointAnnotation.html">MGLPointAnnotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLPolygon.html">MGLPolygon</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLPolyline.html">MGLPolyline</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MGLOverlay.html">MGLOverlay</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLShape.html">MGLShape</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLShapeCollection.html">MGLShapeCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLUserLocation.html">MGLUserLocation</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Map Data.html">Map Data</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/MGLFeature.html">MGLFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLMultiPointFeature">MGLMultiPointFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLMultiPolygonFeature">MGLMultiPolygonFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLMultiPolylineFeature">MGLMultiPolylineFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLPointFeature">MGLPointFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLPolygonFeature">MGLPolygonFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLPolylineFeature">MGLPolylineFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Map Data.html#/c:objc(cs)MGLShapeCollectionFeature">MGLShapeCollectionFeature</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Offline Maps.html">Offline Maps</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Offline Maps.html#/c:objc(pl)MGLOfflineRegion">MGLOfflineRegion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLOfflineStorage.html">MGLOfflineStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLOfflinePack.html">MGLOfflinePack</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MGLOfflinePackProgress.html">MGLOfflinePackProgress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MGLOfflinePackState.html">MGLOfflinePackState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLTilePyramidOfflineRegion.html">MGLTilePyramidOfflineRegion</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Geometry.html">Geometry</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLClockDirectionFormatter.html">MGLClockDirectionFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLCompassDirectionFormatter.html">MGLCompassDirectionFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MGLCoordinateBounds.html">MGLCoordinateBounds</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateBoundsEqualToCoordinateBounds">MGLCoordinateBoundsEqualToCoordinateBounds</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateBoundsGetCoordinateSpan">MGLCoordinateBoundsGetCoordinateSpan</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateBoundsIsEmpty">MGLCoordinateBoundsIsEmpty</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateBoundsMake">MGLCoordinateBoundsMake</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateBoundsOffset">MGLCoordinateBoundsOffset</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/MGLCoordinateFormatter.html">MGLCoordinateFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateInCoordinateBounds">MGLCoordinateInCoordinateBounds</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MGLCoordinateSpan.html">MGLCoordinateSpan</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateSpanEqualToCoordinateSpan">MGLCoordinateSpanEqualToCoordinateSpan</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLCoordinateSpanMake">MGLCoordinateSpanMake</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:@MGLCoordinateSpanZero">MGLCoordinateSpanZero</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLDegreesFromRadians">MGLDegreesFromRadians</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLRadiansFromDegrees">MGLRadiansFromDegrees</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Geometry.html#/c:MGLGeometry.h@F@MGLStringFromCoordinateBounds">MGLStringFromCoordinateBounds</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Categories.html">Other Categories</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Categories/NSValue(MGLGeometryAdditions).html">NSValue(MGLGeometryAdditions)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Constants.html">Other Constants</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLErrorDomain">MGLErrorDomain</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLMapViewDecelerationRateFast">MGLMapViewDecelerationRateFast</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLMapViewDecelerationRateImmediate">MGLMapViewDecelerationRateImmediate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLMapViewDecelerationRateNormal">MGLMapViewDecelerationRateNormal</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackErrorNotification">MGLOfflinePackErrorNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackErrorUserInfoKey">MGLOfflinePackErrorUserInfoKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackMaximumCountUserInfoKey">MGLOfflinePackMaximumCountUserInfoKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackMaximumMapboxTilesReachedNotification">MGLOfflinePackMaximumMapboxTilesReachedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackProgressChangedNotification">MGLOfflinePackProgressChangedNotification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackProgressUserInfoKey">MGLOfflinePackProgressUserInfoKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MGLOfflinePackStateUserInfoKey">MGLOfflinePackStateUserInfoKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:MGLStyle.h@MGLStyleDefaultVersion">MGLStyleDefaultVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MapboxVersionNumber">MapboxVersionNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Constants.html#/c:@MapboxVersionString">MapboxVersionString</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Enums.html">Other Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MGLAnnotationVerticalAlignment.html">MGLAnnotationVerticalAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MGLAnnotationViewDragState.html">MGLAnnotationViewDragState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MGLErrorCode.html">MGLErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MGLMapDebugMaskOptions.html">MGLMapDebugMaskOptions</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Other Type Definitions.html">Other Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Type Definitions.html#/c:MGLOfflineStorage.h@T@MGLOfflinePackAdditionCompletionHandler">MGLOfflinePackAdditionCompletionHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Other Type Definitions.html#/c:MGLOfflineStorage.h@T@MGLOfflinePackRemovalCompletionHandler">MGLOfflinePackRemovalCompletionHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>MGLOfflinePack</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">MGLOfflinePack</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>An <code>MGLOfflinePack</code> represents a collection of resources necessary for viewing
+a region offline to a local database.</p>
+
+<p>To create an instance of <code>MGLOfflinePack</code>, use the
+<code>+[MGLOfflineStorage addPackForRegion:withContext:completionHandler:]</code> method.
+A pack created using <code>-[MGLOfflinePack init]</code> is immediately invalid.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(py)region"></a>
+                    <a name="//apple_ref/objc/Property/region" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(py)region">region</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The region for which the pack manages resources.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Offline Maps.html#/c:objc(pl)MGLOfflineRegion">MGLOfflineRegion</a></span><span class="o">&gt;</span> <span class="n">_Nonnull</span> <span class="n">region</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">region</span><span class="p">:</span> <span class="kt"><a href="../Offline Maps.html#/c:objc(pl)MGLOfflineRegion">MGLOfflineRegion</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L108">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(py)context"></a>
+                    <a name="//apple_ref/objc/Property/context" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(py)context">context</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Arbitrary data stored alongside the downloaded resources.</p>
+
+<p>The context typically holds application-specific information for identifying
+the pack, such as a user-selected name.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSData</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">context</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">NSData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L116">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(py)state"></a>
+                    <a name="//apple_ref/objc/Property/state" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(py)state">state</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The pack’s current state.</p>
+
+<p>The state of an inactive or completed pack is computed lazily and is set to
+<code>MGLOfflinePackStateUnknown</code> by default. To request the pack’s status, use the
+<code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(im)requestProgress">-requestProgress</a></code> method. To get notified when the state becomes known and
+when it changes, observe KVO change notifications on this pack’s <code>state</code> key
+path. Alternatively, you can add an observer for
+<code><a href="../Other Constants.html#/c:@MGLOfflinePackProgressChangedNotification">MGLOfflinePackProgressChangedNotification</a></code>s about this pack that come from the
+default notification center.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums/MGLOfflinePackState.html">MGLOfflinePackState</a></span> <span class="n">state</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">state</span><span class="p">:</span> <span class="kt"><a href="../Enums/MGLOfflinePackState.html">MGLOfflinePackState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L129">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(py)progress"></a>
+                    <a name="//apple_ref/objc/Property/progress" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(py)progress">progress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The pack’s current progress.</p>
+
+<p>The progress of an inactive or completed pack is computed lazily, and all its
+fields are set to 0 by default. To request the pack’s progress, use the
+<code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(im)requestProgress">-requestProgress</a></code> method. To get notified when the progress becomes
+known and when it changes, observe KVO change notifications on this pack’s
+<code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)state">state</a></code> key path. Alternatively, you can add an observer for
+<code><a href="../Other Constants.html#/c:@MGLOfflinePackProgressChangedNotification">MGLOfflinePackProgressChangedNotification</a></code>s about this pack that come from the
+default notification center.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Structs/MGLOfflinePackProgress.html">MGLOfflinePackProgress</a></span> <span class="n">progress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">progress</span><span class="p">:</span> <span class="kt"><a href="../Structs/MGLOfflinePackProgress.html">MGLOfflinePackProgress</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L142">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(im)resume"></a>
+                    <a name="//apple_ref/objc/Method/-resume" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(im)resume">-resume</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resumes downloading if the pack is inactive.</p>
+
+<p>A pack resumes asynchronously. To get notified when this pack resumes, observe
+KVO change notifications on this pack’s <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)state">state</a></code> key path. Alternatively, you
+can add an observer for <code><a href="../Other Constants.html#/c:@MGLOfflinePackProgressChangedNotification">MGLOfflinePackProgressChangedNotification</a></code>s about this
+pack that come from the default notification center.</p>
+
+<p>When a pack resumes after being suspended, it may begin by iterating over the
+already downloaded resources. As a result, the <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)progress">progress</a></code> structure’s
+<code>countOfResourcesCompleted</code> field may revert to 0 before rapidly returning to
+the level of progress at the time the pack was suspended.</p>
+
+<p>To temporarily suspend downloading, call the <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(im)suspend">-suspend</a></code> method.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">resume</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">resume</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L159">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(im)suspend"></a>
+                    <a name="//apple_ref/objc/Method/-suspend" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(im)suspend">-suspend</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Temporarily stops downloading if the pack is active.</p>
+
+<p>A pack suspends asynchronously. To get notified when this pack resumes, observe
+KVO change notifications on this pack’s <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)state">state</a></code> key path. Alternatively, you
+can add an observer for <code><a href="../Other Constants.html#/c:@MGLOfflinePackProgressChangedNotification">MGLOfflinePackProgressChangedNotification</a></code> about this
+pack that come from the default notification center.</p>
+
+<p>If the pack previously reached a higher level of progress before being
+suspended, it may wait to suspend until it returns to that level.</p>
+
+<p>To resume downloading, call the <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(im)resume">-resume</a></code> method.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">suspend</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">suspend</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L174">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MGLOfflinePack(im)requestProgress"></a>
+                    <a name="//apple_ref/objc/Method/-requestProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MGLOfflinePack(im)requestProgress">-requestProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Request an asynchronous update to the pack’s <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)state">state</a></code> and <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)progress">progress</a></code> properties.</p>
+
+<p>The state and progress of an inactive or completed pack are computed lazily. If
+you need the state or progress of a pack whose <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)state">state</a></code> property is currently
+set to <code>MGLOfflinePackStateUnknown</code>, observe KVO change notifications on this
+pack’s <code><a href="../Classes/MGLOfflinePack.html#/c:objc(cs)MGLOfflinePack(py)state">state</a></code> key path, then call this method. Alternatively, you can add an
+observer for <code><a href="../Other Constants.html#/c:@MGLOfflinePackProgressChangedNotification">MGLOfflinePackProgressChangedNotification</a></code> about this pack that
+come from the default notification center.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">requestProgress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">requestProgress</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-gl-native/tree/ios-v3.3.4/platform/darwin/src/MGLOfflinePack.h#L186">
+                          show on github
+                          <img class="show-on-github-icon" src="../img/github.svg"/>
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2014–2016 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/mapbox-gl-native/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>
