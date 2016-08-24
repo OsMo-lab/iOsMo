@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString

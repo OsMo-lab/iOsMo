@@ -104,6 +104,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
     @IBAction func changeTrackingModeClick(sender: AnyObject) {
         
         isTracked = !isTracked
+        if isTracked {
+            trackingModeBtn.setImage(UIImage(named: "unlock-25"), forState: UIControlState.Normal)
+        } else {
+            trackingModeBtn.setImage(UIImage(named: "lock-25"), forState: UIControlState.Normal)
+        }
         setupLocationTrackingSettings()
     }
     
@@ -170,17 +175,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
     
     
     func setupMapView(){
-        
-        //let tileSource = RMOpenStreetMapSource()
-        //self.mapView.tileSource = tileSource
-        //var hello = tileSource.shortAttribution
-        //self.mapView.styleURL = MGLStyle.outdoorsStyleURLWithVersion(9)
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
-        //self.mapView.zoom = 20
-        //self.mapView.hideAttribution = true
-        //self.mapView.adjustTilesForRetinaDisplay = true
-      
     }
     
     func setupLocationTrackingSettings()
@@ -194,12 +190,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
     func uiSettings(){
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
-        slider.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height)
+        slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
 
         UITabBar.appearance().tintColor = UIColor(red: 35/255, green: 159/255, blue: 151/255, alpha: 1.0)
 
-        sliderImg.roundCorners([.TopRight , .BottomRight], radius: 2)
-        fronSliderImg.roundCorners([.TopLeft , .BottomLeft], radius: 2)
+        //sliderImg.roundCorners([.TopRight , .BottomRight], radius: 2)
+        //fronSliderImg.roundCorners([.TopLeft , .BottomLeft], radius: 2)
     }
     
     private func updateSessionValues(elapsedTime: Int){
@@ -276,7 +272,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
                     
                     self.log.enqueue("Monitoring View Controller: The session was opened")
                     
-                    self.playStopBtn.setImage(UIImage(named: "stop-64"), forState: UIControlState.Normal)
+                    self.playStopBtn.setImage(UIImage(named: "stop-100"), forState: UIControlState.Normal)
                     self.pauseBtn.hidden = false
                     
                     if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
@@ -308,7 +304,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
             
             connectionManager.connect()
             isLoaded = true
-            // Do any additional setup after loading the view, typically from a nib.
             
         }
     }
@@ -323,9 +318,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
         sessionTimer = SessionTimer(handler: updateSessionValues)
         
         uiSettings()
-        setupMapView()
+        //setupMapView()
         
-        setupLocationTrackingSettings()
+        //setupLocationTrackingSettings()
         
         
     }
@@ -339,13 +334,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
     //handler for sent coordinate
     func onSentCoordinate(location: LocationModel){
         
-        moveToPosition(location)
-        drawLocationOnMap([location])
+        //moveToPosition(location)
+        //drawLocationOnMap([location])
     }
     
     
 //MARK:  MapViewInteraction
-    
+   /*
     func moveToPosition(location: LocationModel){
         //self.mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon), animated: true)
 //        
@@ -364,7 +359,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
 //            self.mapView.zoom = 20
 //        }
     }
-    
+  */
 //
 //    func mapView(mapView: RMMapView!, layerForAnnotation annotation: RMAnnotation!) -> RMMapLayer!{
 //        
