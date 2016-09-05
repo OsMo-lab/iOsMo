@@ -54,9 +54,6 @@ public class TcpClient : NSObject, NSStreamDelegate {
         }
         
         log.enqueue("create connection, input and output streams")
-        
-        
-        
     }
     
     public func send(request: String){
@@ -77,7 +74,7 @@ public class TcpClient : NSObject, NSStreamDelegate {
     private var message: String = ""
     
     public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
-        print(aStream.description, eventCode)
+        //print(aStream.description, eventCode)
         switch (eventCode) {
             
         case NSStreamEvent.None:

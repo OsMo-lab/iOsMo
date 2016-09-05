@@ -8,10 +8,9 @@
 
 
 import UIKit
-import Mapbox
 
 
-class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDelegate/*, RMMapViewDelegate*/{
+class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMapViewDelegate*/{
     
     required init(coder aDecoder: NSCoder) {
         
@@ -34,7 +33,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
    
     var log: LogQueue
     var isMonitoringOn = false
-    var mainAnnotation: MGLPointAnnotation?
+
     var isSessionPaused = false
     var isTracked = true
     
@@ -56,7 +55,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
 
     @IBOutlet weak var pauseBtn: UIButton!
     @IBOutlet weak var slider: UIScrollView!
-    @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var copyButton: UIButton!
     @IBOutlet weak var connectionResult: UILabel!
     @IBOutlet weak var monitoringResult: UILabel!
@@ -88,29 +86,15 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
             if selectedGroupIndex != nil { actionSheet.addButtonWithTitle("clear all") }
         }
         
-        actionSheet.showInView(self.mapView)
+        //actionSheet.showInView(self.mapView)
     }
-    @IBAction func locateClick(sender: AnyObject) {
-        if let location = mapView.userLocation?.location {
-            mapView.setCenterCoordinate(location.coordinate, animated: true)
-        }
-    }
+
     
     @IBAction func CopyLink(sender: AnyObject) {
         
         UIPasteboard.generalPasteboard().string = connectionManager.sessionUrl
     }
-    
-    @IBAction func changeTrackingModeClick(sender: AnyObject) {
-        
-        isTracked = !isTracked
-        if isTracked {
-            trackingModeBtn.setImage(UIImage(named: "unlock-25"), forState: UIControlState.Normal)
-        } else {
-            trackingModeBtn.setImage(UIImage(named: "lock-25"), forState: UIControlState.Normal)
-        }
-        setupLocationTrackingSettings()
-    }
+
     
     @IBAction func pauseClick(sender: AnyObject) {
         
@@ -173,19 +157,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
         }
     }
     
-    
-    func setupMapView(){
-        self.mapView.delegate = self
-        self.mapView.showsUserLocation = true
-    }
-    
-    func setupLocationTrackingSettings()
-    {
-        
-        let trackingMode: MGLUserTrackingMode = (isTracked) ? MGLUserTrackingMode.Follow : MGLUserTrackingMode.None
-        mapView.setUserTrackingMode(trackingMode, animated: true)
-        
-    }
     
     func uiSettings(){
         //TODO: make for different iPhoneSizes
@@ -294,8 +265,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
                     self.playStopBtn.setImage(UIImage(named: "play-100"), forState: UIControlState.Normal)
                     self.isSessionPaused = false
                     self.pauseBtn.setImage(UIImage(named: "pause-32"), forState: UIControlState.Normal)
-                    if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
-                    self.mainAnnotation = nil
+                    //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
+                    //self.mainAnnotation = nil
                     
                     if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
                 }
@@ -416,98 +387,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
     */
     
     // This delegate method is where you tell the map to load a view for a specific annotation. To load a static MGLAnnotationImage, you would use `-mapView:imageForAnnotation:`.
-    func mapView(mapView: MGLMapView, viewForAnnotation annotation: MGLAnnotation) -> MGLAnnotationView? {
-        
-        return nil
     
-    }
-    
-    func drawLocationOnMap(locationModels: [LocationModel]){
-        
-        
-        var locations = [CLLocation]()
-        var coordinates: [CLLocationCoordinate2D] = []
-        
-        for loc in locationModels{
-            let clLocation = CLLocation(latitude: loc.lat, longitude: loc.lon)
-            locations.append(clLocation)
-            
-            let coordinate = CLLocationCoordinate2DMake(loc.lat, loc.lon)
-            
-            // Add coordinate to coordinates array
-            coordinates.append(coordinate)
-        }
-        
-        if (mainAnnotation == nil){
-            
-            if let f = locations.first {
-                let ann = MGLPointAnnotation();
-                ann.coordinate = f.coordinate;
-                ann.title = ""
-                //ann.userInfo = locations
-                
-                //mapView.addAnnotation(ann)
-                mainAnnotation = ann
-            }
-        }
-        else {
-            
-            let line = MGLPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-            mapView.addAnnotation(line)
-            
-            /*
-            var shape: MGLPolyline()
-            
-            
-            if let lay = layer {
-                shape = lay
-            }
-            else {
-                shape = RMShape(view: mapView)
-                
-                mainAnnotation?.layer = shape
-                shape.lineColor = UIColor.orangeColor()
-                shape.lineWidth = 5.0
-                
-            }
-            
-            for location in locations {
-                
-                shape.addLineToCoordinate(location.coordinate)
-                shape.moveToCoordinate(location.coordinate)
-                
-            }*/
-        }
- 
-    
-    }
-    
-    func drawPeoples(location: UserGroupCoordinate){
-        
-        let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
-        if self.mapView != nil {
-            
-            let user = groupManager.getUser(location.groupId, user: location.userId)
-            let userName = user?.name ?? "\(location.userId)"
-            /*
-                let ann = self.mapView.annotations.filter{$0.title == userName}
-                if let existedAnn = ann.first as? RMAnnotation{
-                    existedAnn.coordinate = clLocation
-                }
-                else {
-                    
-                    let annotation = RMAnnotation(mapView: self.mapView, coordinate: clLocation, andTitle: userName)
-                    annotation.userInfo = user
-                    self.mapView.addAnnotation(annotation)
- 
-                    onMapNow.append(userName)
-                    
-                }
-            */
-                //clearPeople("\(user.name)")
-            
-        }
-    }
     
     func clearPeople(people: String){
         /*
@@ -574,7 +454,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate, MGLMapV
                     
                     for coord in $0 {
                         
-                        self.drawPeoples(coord)
+                        //self.drawPeoples(coord)
                         
                     }
                 }

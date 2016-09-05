@@ -58,8 +58,9 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
 
 
     func reload(){
-        
-        let url = NSString(string: "https://osmo.mobi/signin?type=m")
+        ///let device = SettingsManager.getKey(SettingKeys.device)
+        //let url = NSString(string: "https://osmo.mobi/signin?type=m&")
+        let url = "https://osmo.mobi/signin?type=m"
         if let checkURL = NSURL(string: url as String) {
             
             if let auth = authView  {
@@ -69,8 +70,7 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
             }
             
         }
-        else
-        {
+        else {
             print("wrong request")
         }
         
