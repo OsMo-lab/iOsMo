@@ -17,7 +17,7 @@ public class TcpConnection: BaseTcpConnection {
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
     public var sessionUrlParsed: String = ""
-    public func getSessionUrl() -> String? {return "https://osmo.mobi/u/\(sessionUrlParsed)"}
+    public func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
    
     public override func connect(token: Token){
         
