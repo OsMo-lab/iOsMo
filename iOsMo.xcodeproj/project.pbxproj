@@ -34,7 +34,6 @@
 		29CDE0851A61911900CC5628 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CDE0841A61911900CC5628 /* SettingsViewController.swift */; };
 		29CED6BB1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png in Resources */ = {isa = PBXBuildFile; fileRef = 29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */; };
 		29CED6BD1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png in Resources */ = {isa = PBXBuildFile; fileRef = 29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */; };
-		29DAF9491A703BF200188D8A /* SessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DAF9481A703BF200188D8A /* SessionModel.swift */; };
 		29F293E11AED989600B6AF8A /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F293E01AED989600B6AF8A /* Coordinate.swift */; };
 		29F293E31AEEFA4500B6AF8A /* UserGroupCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F293E21AEEFA4500B6AF8A /* UserGroupCoordinate.swift */; };
 		29F9A6D61AC0C31F001A610D /* ConnectionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F9A6D51AC0C31F001A610D /* ConnectionHelper.swift */; };
@@ -91,7 +90,6 @@
 		29CDE0841A61911900CC5628 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screen Shot 2015-01-07 at 00.10.05.png"; sourceTree = "<group>"; };
 		29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screen Shot 2015-01-07 at 00.09.29.png"; sourceTree = "<group>"; };
-		29DAF9481A703BF200188D8A /* SessionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
 		29F293E01AED989600B6AF8A /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		29F293E21AEEFA4500B6AF8A /* UserGroupCoordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserGroupCoordinate.swift; sourceTree = "<group>"; };
 		29F9A6D51AC0C31F001A610D /* ConnectionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionHelper.swift; sourceTree = "<group>"; };
@@ -244,7 +242,6 @@
 		2982CFB71AC89DDB0070A090 /* Session */ = {
 			isa = PBXGroup;
 			children = (
-				29DAF9481A703BF200188D8A /* SessionModel.swift */,
 				2982CFB81AC89E740070A090 /* SessionStatus.swift */,
 				2982CFBA1AC89E8E0070A090 /* SessionManager.swift */,
 				29CD67091ACB6EA000656860 /* SessionTimer.swift */,
@@ -410,7 +407,6 @@
 				29520AB61AD4838500CC4136 /* GroupManager.swift in Sources */,
 				29520AB11AD17E2400CC4136 /* ObserverSet.swift in Sources */,
 				29F293E31AEEFA4500B6AF8A /* UserGroupCoordinate.swift in Sources */,
-				29DAF9491A703BF200188D8A /* SessionModel.swift in Sources */,
 				29F9A6D81AC0C50C001A610D /* BaseTcpConnection.swift in Sources */,
 				293C95C61A3C7FAE005DD4CE /* Enums.swift in Sources */,
 				2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */,
@@ -561,18 +557,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/iOsmo/mapbox-ios-sdk-3/dynamic",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/iOsmo/Mapbox-iOS-SDK-1.4.1",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -591,18 +581,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/iOsmo/mapbox-ios-sdk-3/dynamic",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/iOsmo/Mapbox-iOS-SDK-1.4.1",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

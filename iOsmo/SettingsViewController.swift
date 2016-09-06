@@ -45,7 +45,7 @@ class SettingsViewController: UIViewController {
         
         if let device = SettingsManager.getKey(SettingKeys.device) {
             if device.length > 0 {
-                awakeModeSwitcher.setOn(false, animated: false)
+                resetAuthSwitcher.setOn(false, animated: false)
             }
         }
         // Do any additional setup after loading the view.
