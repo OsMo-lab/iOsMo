@@ -14,13 +14,11 @@
 		293C957F1A34B217005DD4CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 293C957E1A34B217005DD4CE /* Images.xcassets */; };
 		293C95821A34B217005DD4CE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 293C95801A34B217005DD4CE /* LaunchScreen.xib */; };
 		293C958E1A34B217005DD4CE /* iOsmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C958D1A34B217005DD4CE /* iOsmoTests.swift */; };
-		293C95A31A34C3CF005DD4CE /* LogQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 293C95A01A34C3CF005DD4CE /* LogQueue.m */; };
 		293C95B61A34F63B005DD4CE /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 293C95B51A34F63B005DD4CE /* settings.plist */; };
 		293C95BC1A3C660F005DD4CE /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95BB1A3C660F005DD4CE /* ConnectionManager.swift */; };
 		293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C11A3C665E005DD4CE /* ConnectionProtocol.swift */; };
 		293C95C41A3C6FB1005DD4CE /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C31A3C6FB1005DD4CE /* LocationModel.swift */; };
 		293C95C61A3C7FAE005DD4CE /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C51A3C7FAE005DD4CE /* Enums.swift */; };
-		293C95C81A3D0717005DD4CE /* ConnectionHelperOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C71A3D0717005DD4CE /* ConnectionHelperOld.swift */; };
 		293C95CA1A3D2AA0005DD4CE /* SettingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C91A3D2AA0005DD4CE /* SettingManager.swift */; };
 		293C95CD1A3E3660005DD4CE /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95CC1A3E3660005DD4CE /* Token.swift */; };
 		29520AB11AD17E2400CC4136 /* ObserverSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520AB01AD17E2400CC4136 /* ObserverSet.swift */; };
@@ -72,15 +70,12 @@
 		293C95871A34B217005DD4CE /* iOsmoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOsmoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C958C1A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C958D1A34B217005DD4CE /* iOsmoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOsmoTests.swift; sourceTree = "<group>"; };
-		293C959F1A34C3CF005DD4CE /* LogQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogQueue.h; sourceTree = "<group>"; };
-		293C95A01A34C3CF005DD4CE /* LogQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogQueue.m; sourceTree = "<group>"; };
 		293C95AB1A34C4D9005DD4CE /* iOsmo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOsmo-Bridging-Header.h"; sourceTree = "<group>"; };
 		293C95B51A34F63B005DD4CE /* settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settings.plist; sourceTree = "<group>"; };
 		293C95BB1A3C660F005DD4CE /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		293C95C11A3C665E005DD4CE /* ConnectionProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionProtocol.swift; sourceTree = "<group>"; };
 		293C95C31A3C6FB1005DD4CE /* LocationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		293C95C51A3C7FAE005DD4CE /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		293C95C71A3D0717005DD4CE /* ConnectionHelperOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionHelperOld.swift; sourceTree = "<group>"; };
 		293C95C91A3D2AA0005DD4CE /* SettingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingManager.swift; sourceTree = "<group>"; };
 		293C95CC1A3E3660005DD4CE /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		29520AB01AD17E2400CC4136 /* ObserverSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserverSet.swift; sourceTree = "<group>"; };
@@ -158,7 +153,6 @@
 				2982CFB71AC89DDB0070A090 /* Session */,
 				29DAF9461A7038E500188D8A /* Location */,
 				29DAF9471A7039D200188D8A /* Utility */,
-				293C95CB1A3DBD2A005DD4CE /* NotUsed */,
 				293C95BA1A3C65E4005DD4CE /* Connection */,
 				293C959B1A34BF8E005DD4CE /* ObjC */,
 				293C959A1A34BD4A005DD4CE /* Controllers */,
@@ -233,16 +227,6 @@
 				2982CFB51AC230320070A090 /* TcpConnection.swift */,
 			);
 			name = Connection;
-			sourceTree = "<group>";
-		};
-		293C95CB1A3DBD2A005DD4CE /* NotUsed */ = {
-			isa = PBXGroup;
-			children = (
-				293C95C71A3D0717005DD4CE /* ConnectionHelperOld.swift */,
-				293C959F1A34C3CF005DD4CE /* LogQueue.h */,
-				293C95A01A34C3CF005DD4CE /* LogQueue.m */,
-			);
-			name = NotUsed;
 			sourceTree = "<group>";
 		};
 		29520AB41AD4835500CC4136 /* Groups */ = {
@@ -430,7 +414,6 @@
 				29F9A6D81AC0C50C001A610D /* BaseTcpConnection.swift in Sources */,
 				293C95C61A3C7FAE005DD4CE /* Enums.swift in Sources */,
 				2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */,
-				293C95A31A34C3CF005DD4CE /* LogQueue.m in Sources */,
 				293C95C41A3C6FB1005DD4CE /* LocationModel.swift in Sources */,
 				293C95CD1A3E3660005DD4CE /* Token.swift in Sources */,
 				293C95761A34B217005DD4CE /* AppDelegate.swift in Sources */,
@@ -449,7 +432,6 @@
 				29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */,
 				F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */,
 				29CCA6241B1676AB00DA0C83 /* Extensions.swift in Sources */,
-				293C95C81A3D0717005DD4CE /* ConnectionHelperOld.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

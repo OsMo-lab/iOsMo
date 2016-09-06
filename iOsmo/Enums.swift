@@ -28,6 +28,7 @@ enum Tags: String {
     case getGroups = "GROUP"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
+    case remoteCommandResponse = "RCR:"
     case activateAllGroup = "GAA"
     case deactivateAllGroup = "GDA"
     //case activatePoolGroup = "PG"
@@ -65,6 +66,7 @@ enum AnswTags: String{
     case getGroups = "GROUP"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
+    case remoteCommand = "RC:"
     //case activatePG = "PG"
     case kick = "BYE|"
     case pong = "PP"
@@ -97,4 +99,22 @@ enum GroupActions: String {
     case enter = "enter"
     case new = "new"
     case leave = "leave"
+}
+
+enum RemoteCommand: String {
+    case TRACKER_GCM_ID = "80"
+    case TRACKER_BATTERY_INFO = "11"
+    case TRACKER_SATELLITES_INFO = "13"
+    case TRACKER_SYSTEM_INFO = "14"
+    case TRACKER_WIFI_INFO = "20"
+    case TRACKER_WIFI_ON = "21"
+    case TRACKER_WIFI_OFF = "22"
+    case TRACKER_VIBRATE = "41"
+    case TRACKER_EXIT = "42"
+    case TRACKER_GET_PREFS = "43"
+    case TRACKER_SET_PREFS = "44"
+    case TRACKER_SESSION_CONTINUE = "5"
+    case TRACKER_SESSION_PAUSE = "6"
+    case TRACKER_SESSION_START = "1"
+    case TRACKER_SESSION_STOP = "2"
 }

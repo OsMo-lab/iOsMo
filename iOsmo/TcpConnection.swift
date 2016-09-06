@@ -99,9 +99,21 @@ public class TcpConnection: BaseTcpConnection {
             }
             return false
         }
+        
         let parseBoolAnswer = {()-> Bool in return output.componentsSeparatedByString("|")[1] == "1" }
         
-        let parseParamName = {() -> String in return output.componentsSeparatedByString("|").first!.componentsSeparatedByString(":").first!}
+        var command = output.componentsSeparatedByString("|").first!
+        var addict = output.componentsSeparatedByString("|").last!
+        var param = ""
+        if command.containsString(":"){
+            param = command.componentsSeparatedByString(":").last!
+            command = command.componentsSeparatedByString(":").first!
+        }
+        
+        
+        let parseCommandName = {() -> String in return output.componentsSeparatedByString("|").first!.componentsSeparatedByString(":").first!}
+        
+        let parseParamName = {() -> String in return output.componentsSeparatedByString("|").first!.componentsSeparatedByString(":").last!}
         
         //if outputContains(AnswTags.token){
         if outputContains(AnswTags.auth){
@@ -198,11 +210,11 @@ public class TcpConnection: BaseTcpConnection {
         
         if outputContains(AnswTags.enterGroup) {
             
-            answerObservers.notify(AnswTags.enterGroup, parseParamName(),parseBoolAnswer())
+            answerObservers.notify(AnswTags.enterGroup, parseCommandName(),parseBoolAnswer())
             return
         }
         if outputContains(AnswTags.leaveGroup) {
-            answerObservers.notify(AnswTags.leaveGroup, parseParamName(), parseBoolAnswer())
+            answerObservers.notify(AnswTags.leaveGroup, parseCommandName(), parseBoolAnswer())
             return
         }
         
@@ -224,6 +236,13 @@ public class TcpConnection: BaseTcpConnection {
         if outputContains(AnswTags.gaa){
             
             self.answerObservers.notify((AnswTags.allGroupsEnabled, "", parseBoolAnswer()))
+            return
+        }
+        if outputContains(AnswTags.remoteCommand){
+            if param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue {
+                super.sendSystemInfo()
+            }
+            
             return
         }
         if outputContains(AnswTags.grCoord) {
@@ -271,6 +290,16 @@ public class TcpConnection: BaseTcpConnection {
         }
         return nil
     }
+    
+    func parseRemoteCommand(responce: String) -> (Int?, AnyObject?){
+        
+        let index = responce.componentsSeparatedByString("|")[0].characters.count
+        let range = Range<String.Index>(responce.startIndex..<responce.startIndex.advancedBy(index))
+        let commandId = Int(responce.substringWithRange(range).componentsSeparatedByString(":")[1])
+        
+        return (commandId, responce)
+    }
+
     
     func parseGroupCoordinates(responce: String) -> (Int?, AnyObject?){
         

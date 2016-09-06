@@ -24,10 +24,10 @@ struct ConnectionHelper {
         if key == nil || key!.length == 0{
             
             let vendorKey = UIDevice.currentDevice().identifierForVendor!.UUIDString
+            let model = UIDevice.currentDevice().model
             let version = UIDevice.currentDevice().systemVersion
             
-            //TODO: platform - real platform needed
-            let responseData = sendPostRequest(authUrl!, requestBody: "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=iOS\(version)")
+            let responseData = sendPostRequest(authUrl!, requestBody: "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)")
             
             if let response = responseData, newKey = response.objectForKey(Keys.key.rawValue) as? NSString {
                 print ("got auth response")

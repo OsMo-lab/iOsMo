@@ -11,6 +11,8 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
+    var connectionManager = ConnectionManager.sharedConnectionManager
+    
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
@@ -29,6 +31,7 @@ class SettingsViewController: UIViewController {
             SettingsManager.setKey("", forKey: SettingKeys.device)
             SettingsManager.setKey("", forKey: SettingKeys.user)
             SettingsManager.setKey("", forKey: SettingKeys.auth)
+            connectionManager.connect()
         }
     }
     
@@ -42,7 +45,7 @@ class SettingsViewController: UIViewController {
         
         if let device = SettingsManager.getKey(SettingKeys.device) {
             if device.length > 0 {
-                awakeModeSwitcher.setOn(true, animated: false)
+                awakeModeSwitcher.setOn(false, animated: false)
             }
         }
         // Do any additional setup after loading the view.

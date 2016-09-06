@@ -30,8 +30,7 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
         delegate?.loginCancelled(self)
     }
     
-    var delegate: AuthResultProtocol?
-    
+    var delegate: AuthResultProtocol?    
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -58,11 +57,9 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
 
 
     func reload(){
-        ///let device = SettingsManager.getKey(SettingKeys.device)
-        //let url = NSString(string: "https://osmo.mobi/signin?type=m&")
-        let url = "https://osmo.mobi/signin?type=m"
+        let device = SettingsManager.getKey(SettingKeys.device) as! String
+        let url = "https://osmo.mobi/signin?type=m&key=\(device)"
         if let checkURL = NSURL(string: url as String) {
-            
             if let auth = authView  {
                 
                 let urlRequest = NSURLRequest(URL: checkURL)

@@ -13,6 +13,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var groupsEnabled = true
     
     let groupCell = "groupCell"
+    let newGroupCell = "newGroupCell"
     let enterGroupCell = "enterGroupCell"
     
     var groups: [Group] = [Group]()
@@ -55,8 +56,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         
         if let switcher = self.activateSwitcher {
 
-            if switcher.on { groupManager.activateAllGroups()}
-            else {groupManager.deactivateAllGroups() }
+            if switcher.on {
+                groupManager.activateAllGroups()
+            } else {
+                groupManager.deactivateAllGroups()
+            }
         }
     }
     
@@ -70,6 +74,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var connectionManager = ConnectionManager.sharedConnectionManager
     var groupManager = GroupManager.sharedGroupManager
     
+    
+    override func viewDidAppear(animated: Bool) {
+        setLoginControls()
+    
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -88,7 +97,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
     
-        setLoginControls()
+        //setLoginControls()
         
         groupManager.groupListUpdated.add{
 
@@ -136,7 +145,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         
         groupManager.groupLeft.add{
-            
             if ($0.0) {self.groupManager.groupList()}
         }
         
@@ -255,14 +263,14 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let row = indexPath.row
-        var cell: UITableViewCell
+        var cell: UITableViewCell?
         
         if groupAction == GroupActions.enter && row == 0 {
-            
-            cell = tableView.dequeueReusableCellWithIdentifier(enterGroupCell, forIndexPath: indexPath) 
-            if let gName = cell.contentView.viewWithTag(1) as? UITextField,
-                   nick = cell.contentView.viewWithTag(2) as? UITextField,
-                   btn = cell.contentView.viewWithTag(4) as? UIButton {
+
+           cell = tableView.dequeueReusableCellWithIdentifier(enterGroupCell, forIndexPath: indexPath)
+            if let gName = cell!.contentView.viewWithTag(1) as? UITextField,
+                   nick = cell!.contentView.viewWithTag(2) as? UITextField,
+                   btn = cell!.contentView.viewWithTag(4) as? UIButton {
                 
                     gName.text = ""
                     gName.enabled = true
@@ -274,16 +282,18 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         else {
             cell = tableView.dequeueReusableCellWithIdentifier(groupCell, forIndexPath: indexPath)
-            
-            if let groupName = cell.contentView.viewWithTag(1) as? UILabel {
+            if (cell == nil) {
+                cell = UITableViewCell(style:UITableViewCellStyle.Subtitle, reuseIdentifier:groupCell)
+            }
+            if let groupName = cell!.contentView.viewWithTag(1) as? UILabel {
                 
                 groupName.text = (groupAction == GroupActions.enter) ? self.groups[row - 1].name : self.groups[row].name
             }
             //cell.textLabel?.text = ""
             
         }
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        return cell
+        cell!.selectionStyle = UITableViewCellSelectionStyle.None
+        return cell!
     }
 
     // MARK UITableViewDelegate
@@ -325,7 +335,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         return true
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }
     

@@ -52,6 +52,27 @@ public class BaseTcpConnection: NSObject {
         sendNextCoordinates()
     }
     
+    public func sendSystemInfo(){
+        let model = UIDevice.currentDevice().model
+        let version = UIDevice.currentDevice().systemVersion
+        
+        let jsonInfo: AnyObject =
+            ["devicename": model, "version": "iOS \(version)"]
+        
+        do{
+            let data = try NSJSONSerialization.dataWithJSONObject(jsonInfo, options: NSJSONWritingOptions(rawValue: 0))
+            
+            if let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding) {
+                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
+                send(request)            }
+        }catch {
+            
+            print("error generating system info")
+        }
+        
+        
+    }
+    
     public func closeSession(){
         
         log.enqueue("send close session request")

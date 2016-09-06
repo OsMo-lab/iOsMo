@@ -3,6 +3,9 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -23,6 +26,17 @@
                value = "count.text">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.group">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>
