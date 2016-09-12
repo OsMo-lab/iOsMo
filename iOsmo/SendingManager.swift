@@ -14,7 +14,7 @@ public class SendingManager: NSObject{
     let sentObservers = ObserverSet<LocationModel>()
     
     private let connectionManager = ConnectionManager.sharedConnectionManager
-    private let locationTracker = LocationTracker()
+    public let locationTracker = LocationTracker()
     private let log = LogQueue.sharedLogQueue
     
     private let sendTime = 5.0 // should be imported from settings

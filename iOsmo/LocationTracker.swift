@@ -16,6 +16,7 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     private var allSessionLocations = [LocationModel]()
     private var lastLocations = [LocationModel]()
+    public var distance = 0.0;
     
     
     class var sharedLocationManager : CLLocationManager {
@@ -51,13 +52,13 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
                 print("authorization status authorized")
                 log.enqueue("authorization status authorized")
                 
-                var locationManager = LocationTracker.sharedLocationManager
+                let locationManager = LocationTracker.sharedLocationManager
                 locationManager.delegate = self
                 locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 locationManager.distanceFilter = kCLDistanceFilterNone
                 locationManager.pausesLocationUpdatesAutomatically = false
                 
-                let aSelector : Selector = "isOperatingSystemAtLeastVersion:"
+                let aSelector : Selector = #selector(NSProcessInfo.isOperatingSystemAtLeastVersion(_:))
                 let higher8 = NSProcessInfo.instancesRespondToSelector(aSelector)
                 
                 if higher8 {
@@ -95,28 +96,28 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
         return getLastLocations
     }
     
-    public func locationManager(manager: CLLocationManager!,
+    public func locationManager(manager: CLLocationManager,
         didChangeAuthorizationStatus status: CLAuthorizationStatus){
         
         print("didChangeAuthorizationStatus")
         log.enqueue("didChangeAuthorizationStatus")
     }
     
-    public func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]){
-        
+    public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         print("didUpdateLocation")
         log.enqueue("didUpdateLocation")
-        
+        var prev_loc = locations.first
+        if ((lastLocations.last) != nil) {
+            prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
+        }
         for loc in locations {
-            
-
-                
                 let theCoordinate = loc.coordinate
                 let theAccuracy = loc.horizontalAccuracy
                 let theAltitude = loc.altitude
-                
+            
+            
                 let locationAge = -loc.timestamp.timeIntervalSinceNow
-                
+            
                 if locationAge > 30 {continue}
                 
                 //select only valid location and also location with good accuracy
@@ -127,31 +128,30 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
                     locationModel.speed = loc.speed as Double
                     locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
                     
+                    let distanceInMeters = loc.distanceFromLocation(prev_loc!)
+                    distance = distance + distanceInMeters
+                    prev_loc = loc
+                    
                     self.lastLocations.append(locationModel)
                     self.allSessionLocations.append(locationModel)
                     
                 }
-
-            
         }
 
     }
     
-    public func locationManager(manager: CLLocationManager!, didFailWithError error: CLError!){
-        
+    public func locationManager(manager: CLLocationManager, didFailWithError error: NSError){
         print("locationManager error \(error)")
         log.enqueue("locationManager error \(error)")
         
-        switch (error!){
-        	case CLError.Network:
+        switch (error.code){
+        	case CLError.Network.rawValue:
                 print("network")
-            case CLError.Denied:
+            case CLError.Denied.rawValue:
                 print("denied")
             default:
                 print("some error")
         }
-        
-        
     }
     
     

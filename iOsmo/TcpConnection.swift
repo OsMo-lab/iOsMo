@@ -241,6 +241,8 @@ public class TcpConnection: BaseTcpConnection {
         if outputContains(AnswTags.remoteCommand){
             if param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue {
                 super.sendSystemInfo()
+            }else if param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue {
+                super.sendBatteryStatus()
             }
             
             return

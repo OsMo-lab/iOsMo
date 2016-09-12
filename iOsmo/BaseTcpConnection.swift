@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+
 public class BaseTcpConnection: NSObject {
     
     let tcpClient = TcpClient()
@@ -69,8 +71,29 @@ public class BaseTcpConnection: NSObject {
             
             print("error generating system info")
         }
+    }
+    
+    public func sendBatteryStatus(){
+        UIDevice.currentDevice().batteryMonitoringEnabled = true
+        let level = UIDevice.currentDevice().batteryLevel * 100
+        var state = -1;
+        if (UIDevice.currentDevice().batteryState == .Charging) {
+            state = 1;
+        }
         
+        let jsonInfo: AnyObject =
+            ["percent": level, "plugged": state]
         
+        do{
+            let data = try NSJSONSerialization.dataWithJSONObject(jsonInfo, options: NSJSONWritingOptions(rawValue: 0))
+            
+            if let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding) {
+                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
+                send(request)            }
+        }catch {
+            
+            print("error generating battery info")
+        }
     }
     
     public func closeSession(){

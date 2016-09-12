@@ -8,7 +8,7 @@
 
 
 import UIKit
-
+import CoreLocation
 
 class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMapViewDelegate*/{
     
@@ -17,14 +17,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         log = LogQueue.sharedLogQueue
         connectionManager = ConnectionManager.sharedConnectionManager
         sendingManger = SendingManager.sharedSendingManager
-        
         groupManager = GroupManager.sharedGroupManager
-        
+
         super.init(coder: aDecoder)!
-
-                //fatalError("init(coder:) has not been implemented")
     }
-
 
     var connectionManager: ConnectionManager
     var sendingManger: SendingManager
@@ -178,7 +174,29 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         if let timeLabel = self.timeLabel {
             timeLabel.text = "\(strH)\(strM)\(strS)"
+            
         }
+        let distance = sendingManger.locationTracker.distance;
+        if let distanceLabel = self.distanceLabel {
+            distanceLabel.text = String(format:"%.2f", distance)
+        }
+        
+        let locs: [LocationModel] = sendingManger.locationTracker.getLastLocations()
+        
+        
+        if let loc = locs.last {
+            var speed = loc.speed
+            if speed < 0 {
+                speed = 0
+            }
+            if let speedLabel = self.avgSpeedLabel {
+                speedLabel.text = String(format:"%.2f", speed)
+            }
+           
+        }
+        
+        
+        
     }
     
     private func durationBySecond(seconds s:Int) -> (hours: Int, minutes: Int, seconds: Int){
