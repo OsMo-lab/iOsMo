@@ -15,7 +15,7 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
     private let log = LogQueue.sharedLogQueue
     
     private var allSessionLocations = [LocationModel]()
-    private var lastLocations = [LocationModel]()
+    public var lastLocations = [LocationModel]()
     public var distance = 0.0;
     
     

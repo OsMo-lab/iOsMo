@@ -41,8 +41,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2014 Apple Inc. All Rights Reserved.
- 
+ Copyright (C) 2014 Apple Inc, (c) 2016 Alexey Sirotkin All Rights Reserved.
  */
 
 #import <Foundation/Foundation.h>
@@ -69,9 +68,9 @@ extern NSString *kReachabilityChangedNotification;
 
 /*!
  * Use to check the reachability of a given IP address.
- */
-+ (instancetype)reachabilityWithAddress:(const struct sockaddr_in *)hostAddress;
 
++ (instancetype)reachabilityWithAddress:(const struct sockaddr_in *)hostAddress;
+ */
 /*!
  * Checks whether the default route is available. Should be used by applications that do not connect to a particular host.
  */
@@ -79,9 +78,9 @@ extern NSString *kReachabilityChangedNotification;
 
 /*!
  * Checks whether a local WiFi connection is available.
- */
-+ (instancetype)reachabilityForLocalWiFi;
 
++ (instancetype)reachabilityForLocalWiFi;
+ */
 /*!
  * Start listening for reachability notifications on the current run loop.
  */

@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 13/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2016 Alexey Sirotkin All rights reserved.
 //
 // implementations of Singleton: https://github.com/hpique/SwiftSingleton
 // implement http://stackoverflow.com/questions/9810585/how-to-get-reachability-notifications-in-ios-in-background-when-dropping-wi-fi-n
@@ -75,9 +75,7 @@ public class ConnectionManager: NSObject{
         
         //!! subscribtion for almost all types events
         connection.answerObservers.add(notifyAnswer)
-        
-        
-       
+
     }
     
     public func reachabilityChanged(note: NSNotification) {

@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 15/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2016 Alexey Sirotkin. All rights reserved.
 //
 
 //used lib from https://mikeash.com/pyblog/friday-qa-2015-01-23-lets-build-swift-notifications.html
@@ -17,7 +17,7 @@ public class SendingManager: NSObject{
     public let locationTracker = LocationTracker()
     private let log = LogQueue.sharedLogQueue
     
-    private let sendTime = 5.0 // should be imported from settings
+    private let sendTime = 5.0 // seconds, should be imported from settings
     private var lcSendTimer: NSTimer?
     let aSelector : Selector = #selector(SendingManager.sending)
     private var onConnectionRun: ObserverSetEntry<(Bool, String)>?
@@ -99,7 +99,7 @@ public class SendingManager: NSObject{
         if connectionManager.sessionOpened && connectionManager.connected {
             
             let coors: [LocationModel] = locationTracker.getLastLocations()
-            
+            print("CoordinateManager: got \(coors.count) coordinates")
             log.enqueue("CoordinateManager: drawing \(coors.count) coordinates")
             
             if coors.count > 0 {

@@ -62,7 +62,7 @@ class LogViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let countValue = Int (count.text!);
+        //let countValue = Int (count.text!);
         // Do any additional setup after loading the view, typically from a nib.
     }
 

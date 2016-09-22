@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 07/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2016 Alexey Sirotkin. All rights reserved.
 //
 
 
@@ -181,7 +181,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             distanceLabel.text = String(format:"%.2f", distance)
         }
         
-        let locs: [LocationModel] = sendingManger.locationTracker.getLastLocations()
+        let locs: [LocationModel] = sendingManger.locationTracker.lastLocations
         
         
         if let loc = locs.last {

@@ -120,7 +120,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	return returnValue;
 }
 
-
+/*
 + (instancetype)reachabilityWithAddress:(const struct sockaddr_in *)hostAddress
 {
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)hostAddress);
@@ -138,20 +138,16 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	}
 	return returnValue;
 }
-
+*/
 
 
 + (instancetype)reachabilityForInternetConnection
 {
-	struct sockaddr_in zeroAddress;
-	bzero(&zeroAddress, sizeof(zeroAddress));
-	zeroAddress.sin_len = sizeof(zeroAddress);
-	zeroAddress.sin_family = AF_INET;
-    
-	return [self reachabilityWithAddress:&zeroAddress];
+  
+	return [self reachabilityWithHostName:@"osmo.mobi"];
 }
 
-
+/*
 + (instancetype)reachabilityForLocalWiFi
 {
 	struct sockaddr_in localWifiAddress;
@@ -170,7 +166,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     
 	return returnValue;
 }
-
+*/
 
 #pragma mark - Start and stop notifier
 
