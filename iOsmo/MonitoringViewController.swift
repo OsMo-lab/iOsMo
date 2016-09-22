@@ -61,7 +61,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBOutlet weak var trackingModeBtn: UIButton!
 
-    @IBAction func selectGroupsClick(sender: AnyObject) {
+    @IBAction func selectGroupsClick(_ sender: AnyObject) {
         
         //let selectedGroupName = (selectedGroupIndex != nil) ? inGroup?[selectedGroupIndex!].name : nil
         
@@ -76,23 +76,23 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
             for group in groups{
                 
-                actionSheet.addButtonWithTitle(group.name)
+                actionSheet.addButton(withTitle: group.name)
             }
             
-            if selectedGroupIndex != nil { actionSheet.addButtonWithTitle("clear all") }
+            if selectedGroupIndex != nil { actionSheet.addButton(withTitle: "clear all") }
         }
         
         //actionSheet.showInView(self.mapView)
     }
 
     
-    @IBAction func CopyLink(sender: AnyObject) {
+    @IBAction func CopyLink(_ sender: AnyObject) {
         
-        UIPasteboard.generalPasteboard().string = connectionManager.sessionUrl
+        UIPasteboard.general.string = connectionManager.sessionUrl
     }
 
     
-    @IBAction func pauseClick(sender: AnyObject) {
+    @IBAction func pauseClick(_ sender: AnyObject) {
         
         isSessionPaused = !isSessionPaused
         
@@ -100,7 +100,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
             sendingManger.pauseSendingCoordinates()
             isMonitoringOn = false
-            pauseBtn.setImage(UIImage(named: "play-32"), forState: UIControlState.Normal)
+            pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
             self.monitoringResult.text = "is PAUSED"
             if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
         }
@@ -108,7 +108,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
             sendingManger.startSendingCoordinates()
             isMonitoringOn = true
-            pauseBtn.setImage(UIImage(named: "pause-32"), forState: UIControlState.Normal)
+            pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
             self.monitoringResult.text = "is ON"
             if let sessionTimer = self.sessionTimer { sessionTimer.start()}
         }
@@ -116,14 +116,14 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     }
     
-    @IBAction func GoByLink(sender: AnyObject) {
+    @IBAction func GoByLink(_ sender: AnyObject) {
       
         
-        if let sessionUrl = connectionManager.sessionUrl, url = sessionUrl.stringByAddingPercentEncodingWithAllowedCharacters (NSCharacterSet.URLQueryAllowedCharacterSet()) {
+        if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
-            if let checkURL = NSURL(string: url) {
+            if let checkURL = URL(string: url) {
                 
-                if UIApplication.sharedApplication().openURL(checkURL) {
+                if UIApplication.shared.openURL(checkURL) {
                     print("url succefully opened")
                     log.enqueue("url successfully opened")
                 }
@@ -138,18 +138,18 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
 
     }
     
-    @IBAction func MonitoringAction(sender: AnyObject) {
+    @IBAction func MonitoringAction(_ sender: AnyObject) {
                
         if isSessionPaused || isMonitoringOn {
             
             sendingManger.stopSendingCoordinates()
-            UIApplication.sharedApplication().idleTimerDisabled = false
+            UIApplication.shared.isIdleTimerDisabled = false
             
         }
         else {
             
             sendingManger.startSendingCoordinates()
-            UIApplication.sharedApplication().idleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
     
@@ -165,7 +165,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //fronSliderImg.roundCorners([.TopLeft , .BottomLeft], radius: 2)
     }
     
-    private func updateSessionValues(elapsedTime: Int){
+    fileprivate func updateSessionValues(_ elapsedTime: Int){
     
         let (h, m, s) = durationBySecond(seconds: elapsedTime)
         let strH: String = h > 9 ? "\(h):" : h == 0 ? "" : "0\(h):"
@@ -199,13 +199,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
     }
     
-    private func durationBySecond(seconds s:Int) -> (hours: Int, minutes: Int, seconds: Int){
+    fileprivate func durationBySecond(seconds s:Int) -> (hours: Int, minutes: Int, seconds: Int){
         
         return ((s % (24*3600))/3600, s%3600/60, s%60)
     }
     
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(false)
         if !isLoaded {
@@ -254,15 +254,15 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 if theChange {
                     
                     if let sUrl = self.connectionManager.sessionUrl {
-                        self.link.setTitle(sUrl, forState: UIControlState.Normal)
-                        self.link.enabled = true
-                        self.copyButton.enabled = true
+                        self.link.setTitle(sUrl, for: UIControlState())
+                        self.link.isEnabled = true
+                        self.copyButton.isEnabled = true
                     }
                     
                     self.log.enqueue("Monitoring View Controller: The session was opened")
                     
-                    self.playStopBtn.setImage(UIImage(named: "stop-100"), forState: UIControlState.Normal)
-                    self.pauseBtn.hidden = false
+                    self.playStopBtn.setImage(UIImage(named: "stop-100"), for: UIControlState())
+                    self.pauseBtn.isHidden = false
                     
                     if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
                         self.sessionTimer!.reset()
@@ -272,17 +272,17 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                 else {
                     
-                    self.link.setTitle($0.1.isEmpty ? "session was closed" : $0.1, forState: UIControlState.Normal)
-                    self.link.enabled = false
-                    self.copyButton.enabled = false
+                    self.link.setTitle($0.1.isEmpty ? "session was closed" : $0.1, for: UIControlState())
+                    self.link.isEnabled = false
+                    self.copyButton.isEnabled = false
                     
                     self.log.enqueue("Monitoring View Controller: The session was closed")
                     
                     
-                    self.pauseBtn.hidden = true
-                    self.playStopBtn.setImage(UIImage(named: "play-100"), forState: UIControlState.Normal)
+                    self.pauseBtn.isHidden = true
+                    self.playStopBtn.setImage(UIImage(named: "play-100"), for: UIControlState())
                     self.isSessionPaused = false
-                    self.pauseBtn.setImage(UIImage(named: "pause-32"), forState: UIControlState.Normal)
+                    self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
                     //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
                     //self.mainAnnotation = nil
                     
@@ -302,7 +302,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         super.viewDidLoad()
                 
-        sendingManger.sentObservers.add(self, self.dynamicType.onSentCoordinate)
+        sendingManger.sentObservers.add(self, type(of: self).onSentCoordinate)
        
         sessionTimer = SessionTimer(handler: updateSessionValues)
         
@@ -321,7 +321,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
 
     //handler for sent coordinate
-    func onSentCoordinate(location: LocationModel){
+    func onSentCoordinate(_ location: LocationModel){
         
         //moveToPosition(location)
         //drawLocationOnMap([location])
@@ -407,7 +407,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     // This delegate method is where you tell the map to load a view for a specific annotation. To load a static MGLAnnotationImage, you would use `-mapView:imageForAnnotation:`.
     
     
-    func clearPeople(people: String){
+    func clearPeople(_ people: String){
         /*
         let ann = mapView.annotations.filter{$0.title == "\(people)"}
         
@@ -439,9 +439,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
     }
     */
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
+    func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
         
-        if actionSheet.buttonTitleAtIndex(buttonIndex) == "clear all" {
+        if actionSheet.buttonTitle(at: buttonIndex) == "clear all" {
             self.selectedGroupIndex = nil
             
             groupManager.updateGroupsOnMap([])
@@ -489,18 +489,18 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
     }
     
-    func alert(title: String, message: String) {
+    func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(myAlert, animated: true, completion: nil)
+            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(myAlert, animated: true, completion: nil)
         } else { // iOS 7
             let alert: UIAlertView = UIAlertView()
             alert.delegate = self
             
             alert.title = title
             alert.message = message
-            alert.addButtonWithTitle("OK")
+            alert.addButton(withTitle: "OK")
             
             alert.show()
         }

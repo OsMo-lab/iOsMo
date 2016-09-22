@@ -8,13 +8,13 @@
 
 import Foundation
 
-public class Token{
+open class Token{
     
     var token: NSString
     var device_key: NSString
     var address: NSString
     var port: Int
-    public var error: String = ""
+    open var error: String = ""
     
     init(tokenString: NSString, address: NSString, port: Int, key: NSString){
         self.token = tokenString

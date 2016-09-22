@@ -8,61 +8,45 @@
 
 import Foundation
 
-public class TcpClient : NSObject, NSStreamDelegate {
+open class TcpClient : NSObject, StreamDelegate {
 
     let log = LogQueue.sharedLogQueue
-    var inputStream: NSInputStream?
-    var outputStream: NSOutputStream?
+    var inputStream: InputStream?
+    var outputStream: OutputStream?
     // MARK: - NSStreamDelegate
-    public var callbackOnParse: ((String) -> Void)?
-    public var callbackOnError: ((Bool) -> Void)?
+    open var callbackOnParse: ((String) -> Void)?
+    open var callbackOnError: ((Bool) -> Void)?
     
-    public func createConnection(token: Token){
-        
-        //different creation for different ios
-        
-        
-        let aSelector : Selector = #selector(NSProcessInfo.isOperatingSystemAtLeastVersion(_:))
-        let higher8 = NSProcessInfo.instancesRespondToSelector(aSelector)
-        
-        if higher8 {
-        
-            NSStream.getStreamsToHostWithName("osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
+    open func createConnection(_ token: Token){
+        if (token.port>0) {
+            Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
+            if let inputStream = self.inputStream {
+
+                inputStream.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+                
+                inputStream.delegate = self
+                inputStream.schedule(in: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+                inputStream.open()
+            }
             
-        }
-        else {
-            var inStreamUnmanaged:Unmanaged<CFReadStream>?
-            var outStreamUnmanaged:Unmanaged<CFWriteStream>?
-            CFStreamCreatePairWithSocketToHost(nil, "osmo.mobi", UInt32(token.port), &inStreamUnmanaged, &outStreamUnmanaged)
-            inputStream = inStreamUnmanaged?.takeRetainedValue()
-            outputStream = outStreamUnmanaged?.takeRetainedValue()
+            if let outputStream = self.outputStream {
+                outputStream.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+                outputStream.delegate = self
+                outputStream.schedule(in: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+                outputStream.open()
+            }
             
+            log.enqueue("create connection, input and output streams")
         }
-        inputStream!.setProperty(NSStreamSocketSecurityLevelTLSv1, forKey: NSStreamSocketSecurityLevelKey)
-        outputStream!.setProperty(NSStreamSocketSecurityLevelTLSv1, forKey: NSStreamSocketSecurityLevelKey)
-        if let inputStream = self.inputStream {
-            
-            inputStream.delegate = self
-            inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-            inputStream.open()
-        }
-        
-        if let outputStream = self.outputStream {
-            outputStream.delegate = self
-            outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-            outputStream.open()
-        }
-        
-        log.enqueue("create connection, input and output streams")
     }
     
-    public func send(request: String){
+    open func send(_ request: String){
         
         log.enqueue("r: \(request)")
         print("r: \(request)")
         let requestToSend = "\(request)\n"
-        if let outputStream = outputStream, data = requestToSend.dataUsingEncoding(NSUTF8StringEncoding) {
-             outputStream.write(UnsafePointer<UInt8>(data.bytes), maxLength: data.length)
+        if let outputStream = outputStream, let data = requestToSend.data(using: String.Encoding.utf8) {
+             outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
         }
         else {
             log.enqueue("error: send request")
@@ -71,26 +55,26 @@ public class TcpClient : NSObject, NSStreamDelegate {
     }
 
     
-    private var message: String = ""
+    fileprivate var message: String = ""
     
-    public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
+    open func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         //print(aStream.description, eventCode)
         switch (eventCode) {
             
-        case NSStreamEvent.None:
+        case Stream.Event():
             print ("None")
 
    
-        case NSStreamEvent.EndEncountered:
+        case Stream.Event.endEncountered:
             print ("EndEncountered")
             return
         
         
-        case NSStreamEvent.OpenCompleted:
+        case Stream.Event.openCompleted:
             
             print("stream opened")
             log.enqueue("stream opened")
-        case NSStreamEvent.ErrorOccurred:
+        case Stream.Event.errorOccurred:
             
             print("stream was handle error, connection is out")
             log.enqueue("stream was handle error, connection is out")
@@ -98,14 +82,14 @@ public class TcpClient : NSObject, NSStreamDelegate {
                 
                 callbackOnError!(true)
             }
-        case NSStreamEvent.HasSpaceAvailable:
+        case Stream.Event.hasSpaceAvailable:
             print("HasSpaceAvailable")
             break
-        case NSStreamEvent.HasBytesAvailable:
+        case Stream.Event.hasBytesAvailable:
             print("HasBytesAvailable")
             
             let bufferSize = 1024
-            var buffer = [UInt8](count: bufferSize, repeatedValue: 0)
+            var buffer = [UInt8](repeating: 0, count: bufferSize)
             var len: Int = 0
             
             if let iStream = inputStream {
@@ -115,7 +99,7 @@ public class TcpClient : NSObject, NSStreamDelegate {
                     len = iStream.read(&buffer, maxLength: bufferSize)
                     if len > 0 {
                         
-                        if let output = NSString(bytes: &buffer, length: len, encoding: NSUTF8StringEncoding) {
+                        if let output = NSString(bytes: &buffer, length: len, encoding: String.Encoding.utf8.rawValue) {
                             message = "\(message)\(output)"
                         }
                     }
@@ -133,12 +117,12 @@ public class TcpClient : NSObject, NSStreamDelegate {
             if !message.isEmpty {
                 
                 //check for spliting:
-                let responceSplit = message.componentsSeparatedByString("\n")
+                let responceSplit = message.components(separatedBy: "\n")
                 var count = 0
                 for res in responceSplit {
                     if !res.isEmpty{
                         
-                        let subst = message[Range(message.endIndex.advancedBy(-1)..<message.endIndex)]
+                        let subst = message[Range(message.characters.index(message.endIndex, offsetBy: -1)..<message.endIndex)]
                         if responceSplit.count < 2 && subst != "\n"{
                             return
                         }
@@ -154,7 +138,7 @@ public class TcpClient : NSObject, NSStreamDelegate {
                             
                         }
                         let resAdvance = res + "\n"
-                        message = (responceSplit.count != count) ? message.substringWithRange(Range<String.Index>(resAdvance.endIndex..<message.endIndex)) : res
+                        message = (responceSplit.count != count) ? message.substring(with: Range<String.Index>(resAdvance.endIndex..<message.endIndex)) : res
                         
                         count += 1
                     }

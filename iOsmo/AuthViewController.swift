@@ -10,36 +10,36 @@ import UIKit
 
 protocol AuthResultProtocol {
     
-    func succesfullLoginWithToken (controller: AuthViewController, info : AuthInfo) -> Void
-    func loginCancelled (controller: AuthViewController) -> Void
+    func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void
+    func loginCancelled (_ controller: AuthViewController) -> Void
     
     
 }
 
-public class AuthViewController: UIViewController, UIWebViewDelegate {
+open class AuthViewController: UIViewController, UIWebViewDelegate {
 
     let authAnswerScheme = "api.osmo.mobi"
     @IBOutlet weak var authView: UIWebView!
     
-    @IBAction func OnReload(sender: AnyObject) {
+    @IBAction func OnReload(_ sender: AnyObject) {
         reload()
     
     }
-    @IBAction func OnCancel(sender: AnyObject) {
+    @IBAction func OnCancel(_ sender: AnyObject) {
         
         delegate?.loginCancelled(self)
     }
     
     var delegate: AuthResultProtocol?    
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         reload()
     }
 
-    override public func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -59,10 +59,10 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
     func reload(){
         let device = SettingsManager.getKey(SettingKeys.device) as! String
         let url = "https://osmo.mobi/signin?type=m&key=\(device)"
-        if let checkURL = NSURL(string: url as String) {
+        if let checkURL = URL(string: url as String) {
             if let auth = authView  {
                 
-                let urlRequest = NSURLRequest(URL: checkURL)
+                let urlRequest = URLRequest(url: checkURL)
                 auth.loadRequest(urlRequest)
             }
             
@@ -74,36 +74,30 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
     }
     
     
-    public func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
         
-        if let url = request.URL, host = url.host {
+        if let url = request.url, let host = url.host {
             
             if host == authAnswerScheme {
                 
-                let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)
+                let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
                 if let comp = components {
                     
-                    let aSelector : Selector = #selector(NSProcessInfo.isOperatingSystemAtLeastVersion(_:))
-                    let higher8 = NSProcessInfo.instancesRespondToSelector(aSelector)
-                    
-                    if higher8 {
-                        
+                    if #available(iOS 8, *){
                         let queryItems = comp.queryItems
-
                         
-                        if let u = queryItems!.filter({m in m.name == "nick"}).first , user = u.value,
-                            p = queryItems!.filter({m in m.name == "user"}).first , passKey = p.value {
+                        if let u = queryItems!.filter({m in m.name == "nick"}).first , let user = u.value,
+                            let p = queryItems!.filter({m in m.name == "user"}).first , let passKey = p.value {
                                 print("auth user: \(user) with passkey: \(passKey)")
                                 LogQueue.sharedLogQueue.enqueue("auth user: \(user) with passkey: \(passKey)")
                                 
                                 delegate?.succesfullLoginWithToken(self, info: AuthInfo(accountName: user, key: passKey))
                         }
-                        
                     }
                     else {
                         
-                        if let user = url.queryParams()["nick"] as? String, passKey = url.queryParams()["user"] as? String {
+                        if let user = url.queryParams()["nick"] as? String, let passKey = url.queryParams()["user"] as? String {
                             
                             print("auth user: \(user) with passkey: \(passKey)")
                             LogQueue.sharedLogQueue.enqueue("auth user: \(user) with passkey: \(passKey)")
@@ -122,19 +116,19 @@ public class AuthViewController: UIViewController, UIWebViewDelegate {
         return true
     }
     
-    public func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+    open func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         //
     }
     
-    public func webViewDidStartLoad(webView: UIWebView) {
+    open func webViewDidStartLoad(_ webView: UIWebView) {
         //show loading indicator
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
     
     
-    public func webViewDidFinishLoad(webView: UIWebView) {
+    open func webViewDidFinishLoad(_ webView: UIWebView) {
         //hide loading indicator
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 

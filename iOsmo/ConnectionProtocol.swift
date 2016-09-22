@@ -10,13 +10,13 @@ import Foundation
 
 public protocol ConnectionProtocol{
     
-    func connect(token: Token)
+    func connect(_ token: Token)
     
     func openSession()
     
     func closeSession()
     
-    func send(request: String)
+    func send(_ request: String)
     
     var sessionUrlParsed: String {get}
     

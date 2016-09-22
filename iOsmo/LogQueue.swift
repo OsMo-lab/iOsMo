@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class LogQueue {
+open class LogQueue {
     var innerQueue: [String]
     let maxSize = 500
     class var sharedLogQueue : LogQueue {
@@ -29,19 +29,19 @@ public class LogQueue {
     
     var count: Int{ get{ return innerQueue.count }}
     
-    func enqueue(record: String){
-        let dateFormat = NSDateFormatter()
+    func enqueue(_ record: String){
+        let dateFormat = DateFormatter()
         dateFormat.dateFormat = "HH:mm:ss"
-        let eventDate = dateFormat.stringFromDate(NSDate())
+        let eventDate = dateFormat.string(from: Date())
         let event = "\(eventDate): \(record)"
         if innerQueue.count >= maxSize {
             
-            innerQueue.removeAtIndex(0)
+            innerQueue.remove(at: 0)
         }
         innerQueue.append(event)
     }
     
-    func getArray(startIndex: Int, count: Int) -> [String] {
+    func getArray(_ startIndex: Int, count: Int) -> [String] {
         
         var result = [String]()
         for index in startIndex...startIndex + count - 1 {

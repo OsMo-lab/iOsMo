@@ -17,17 +17,17 @@ class SettingsViewController: UIViewController {
     
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
     
-    @IBAction func AwakeModeChanged(sender: AnyObject) {
+    @IBAction func AwakeModeChanged(_ sender: AnyObject) {
     
-        SettingsManager.setKey(self.awakeModeSwitcher.on ? "1" : "0", forKey: SettingKeys.isStayAwake)
+        SettingsManager.setKey(self.awakeModeSwitcher.isOn ? "1" : "0", forKey: SettingKeys.isStayAwake)
         
-        UIApplication.sharedApplication().idleTimerDisabled = awakeModeSwitcher.on
+        UIApplication.shared.isIdleTimerDisabled = awakeModeSwitcher.isOn
     
     }
     
     /*Сброс авторизации устройства*/
-    @IBAction func ResetModeChanged(sender: AnyObject) {
-        if self.resetAuthSwitcher.on {
+    @IBAction func ResetModeChanged(_ sender: AnyObject) {
+        if self.resetAuthSwitcher.isOn {
             SettingsManager.setKey("", forKey: SettingKeys.device)
             SettingsManager.setKey("", forKey: SettingKeys.user)
             SettingsManager.setKey("", forKey: SettingKeys.auth)

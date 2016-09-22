@@ -8,15 +8,15 @@
 
 import Foundation
 
-extension NSURL{
-    func queryParams() -> [String:AnyObject] {
-        var info : [String:AnyObject] = [String:AnyObject]()
+extension URL{
+    func queryParams() -> [String:Any] {
+        var info : [String:Any] = [String:Any]()
         if let queryString = self.query{
-            for parameter in queryString.componentsSeparatedByString("&"){
-                let parts = parameter.componentsSeparatedByString("=")
+            for parameter in queryString.components(separatedBy: "&"){
+                let parts = parameter.components(separatedBy: "=")
                 if parts.count > 1{
-                    let key = (parts[0] as String).stringByRemovingPercentEncoding
-                    let value = (parts[1] as String).stringByRemovingPercentEncoding
+                    let key = (parts[0] as NSString).removingPercentEncoding
+                    let value = (parts[1] as NSString).removingPercentEncoding
                     if key != nil && value != nil{
                         info[key!] = value
                     }
@@ -31,10 +31,10 @@ extension NSURL{
 
 extension UIView {
     
-    func roundCorners(corners:UIRectCorner, radius: CGFloat) {
+    func roundCorners(_ corners:UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
-        mask.path = path.CGPath
+        mask.path = path.cgPath
         self.layer.mask = mask
     }
 }

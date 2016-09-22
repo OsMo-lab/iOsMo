@@ -7,7 +7,7 @@
 //
 
 import Foundation
-public class User{
+open class User{
 
     var id: String
     var device: String

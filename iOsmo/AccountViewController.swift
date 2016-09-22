@@ -26,37 +26,37 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     @IBOutlet weak var tableView: UITableView!
     
-    @IBAction func btnCancelCellAdd(sender: AnyObject) {
+    @IBAction func btnCancelCellAdd(_ sender: AnyObject) {
         
         tableView.beginUpdates()
         
-        tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow:0, inSection:0)], withRowAnimation: UITableViewRowAnimation.Automatic)
+        tableView.deleteRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
         
         groupAction = GroupActions.view
         tableView.endUpdates()
-        btnEnterGroup.enabled = true
+        btnEnterGroup.isEnabled = true
         
     }
-    @IBAction func btnEnterCellAdd(sender: AnyObject) {
+    @IBAction func btnEnterCellAdd(_ sender: AnyObject) {
         
         groupAction = GroupActions.enter
         tableView.beginUpdates()
         
-        tableView.insertRowsAtIndexPaths([NSIndexPath(forRow:0, inSection:0)], withRowAnimation: UITableViewRowAnimation.Automatic)
+        tableView.insertRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
         
         tableView.endUpdates()
-        btnEnterGroup.enabled = false
+        btnEnterGroup.isEnabled = false
     }
     
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var activateSwitcher: UISwitch!
 
-    @IBAction func activateAllSwitched(sender: AnyObject) {
+    @IBAction func activateAllSwitched(_ sender: AnyObject) {
         
         if let switcher = self.activateSwitcher {
 
-            if switcher.on {
+            if switcher.isOn {
                 groupManager.activateAllGroups()
             } else {
                 groupManager.deactivateAllGroups()
@@ -65,7 +65,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     
-    @IBAction func btnGroupsClicked(sender: AnyObject) {
+    @IBAction func btnGroupsClicked(_ sender: AnyObject) {
         groupManager.groupList()
     }
     
@@ -75,7 +75,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var groupManager = GroupManager.sharedGroupManager
     
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         setLoginControls()
     
     }
@@ -84,10 +84,10 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
 
         connectionManager.groupsEnabled.add{
             
-            self.activateSwitcher.on = $0
+            self.activateSwitcher.isOn = $0
         }
         
-        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
         // subscribe once
         if self.onConnectionRun == nil {
             
@@ -117,27 +117,27 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList()
-                self.btnEnterGroup.enabled = true
+                self.btnEnterGroup.isEnabled = true
             }
             else {
                 self.alert("error on enter group", message: $0.1)
                 
-                if let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)),
-                    indicator = cell.contentView.viewWithTag(3) as? UIActivityIndicatorView {
+                if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)),
+                    let indicator = cell.contentView.viewWithTag(3) as? UIActivityIndicatorView {
                         
                         indicator.stopAnimating()
                         
                         if let gName = cell.contentView.viewWithTag(1) as? UITextField,
-                            nick = cell.contentView.viewWithTag(2) as? UITextField {
+                            let nick = cell.contentView.viewWithTag(2) as? UITextField {
                                 
                                 gName.text = ""
-                                gName.enabled = true
+                                gName.isEnabled = true
                                 nick.text = ""
-                                nick.enabled = true
+                                nick.isEnabled = true
                         }
                         
                         if let btn = cell.contentView.viewWithTag(4) as? UIButton {
-                            btn.hidden = false
+                            btn.isHidden = false
                         }
 
                 }
@@ -161,15 +161,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "toAuth" {
             
-            if let vC = segue.destinationViewController as? AuthViewController { vC.delegate = self}
+            if let vC = segue.destination as? AuthViewController { vC.delegate = self}
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "toAuth" {
             
             if successLogin {
@@ -185,14 +185,14 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         return true
     }
     
-    func succesfullLoginWithToken (controller: AuthViewController, info : AuthInfo) -> Void {
+    func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void {
        
-        SettingsManager.setKey(info.accountName, forKey: SettingKeys.user)
+        SettingsManager.setKey(info.accountName as NSString, forKey: SettingKeys.user)
         
         
         connectionManager.connect()
         userName.text = "connecting.."
-        controller.dismissViewControllerAnimated(true, completion: nil)
+        controller.dismiss(animated: true, completion: nil)
         
     }
     
@@ -202,46 +202,46 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             
             if user.length > 0 {
                 userName.text = String(user)
-                loginBtn.setImage(UIImage(named: "exit-32"), forState: UIControlState.Normal)
+                loginBtn.setImage(UIImage(named: "exit-32"), for: UIControlState())
                 self.successLogin = true
             }
             else {
                 
                 userName.text = "Unknown"
-                loginBtn.setImage(UIImage(named: "enter-32"), forState: UIControlState.Normal)
+                loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
                 self.successLogin = false
             }
         }
         else {
             
             userName.text = "Unknown"
-            loginBtn.setImage(UIImage(named: "enter-32"), forState: UIControlState.Normal)
+            loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
             self.successLogin = false
         }
     }
     
-    func loginCancelled (controller: AuthViewController) -> Void {
+    func loginCancelled (_ controller: AuthViewController) -> Void {
         
-        controller.dismissViewControllerAnimated(true, completion: nil)
+        controller.dismiss(animated: true, completion: nil)
        
     }
     
     // MARK UITableViewDataSource
-    @IBAction func btnEnterGroupClicked(sender: AnyObject) {
+    @IBAction func btnEnterGroupClicked(_ sender: AnyObject) {
 
-        if let firstRow = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)),
-               gName = firstRow.contentView.viewWithTag(1) as? UITextField,
-               nick = firstRow.contentView.viewWithTag(2) as? UITextField,
-               indicator = firstRow.contentView.viewWithTag(3) as? UIActivityIndicatorView,
-               btn = firstRow.contentView.viewWithTag(4) as? UIButton
+        if let firstRow = tableView.cellForRow(at: IndexPath(row: 0, section: 0)),
+               let gName = firstRow.contentView.viewWithTag(1) as? UITextField,
+               let nick = firstRow.contentView.viewWithTag(2) as? UITextField,
+               let indicator = firstRow.contentView.viewWithTag(3) as? UIActivityIndicatorView,
+               let btn = firstRow.contentView.viewWithTag(4) as? UIButton
         {
             
             if !gName.text!.isEmpty && !nick.text!.isEmpty {
                 
                 // change ui control state
-                gName.enabled = false
-                nick.enabled = false
-                btn.hidden = true
+                gName.isEnabled = false
+                nick.isEnabled = false
+                btn.isHidden = true
                 indicator.startAnimating()
                 
                 groupManager.enterGroup(gName.text!, nick: nick.text!)
@@ -251,39 +251,39 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
  
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let additionalRows = (self.groupAction == GroupActions.enter) ? 1 : 0
         return groups.count + additionalRows
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let row = indexPath.row
+        let row = (indexPath as NSIndexPath).row
         var cell: UITableViewCell?
         
         if groupAction == GroupActions.enter && row == 0 {
 
-           cell = tableView.dequeueReusableCellWithIdentifier(enterGroupCell, forIndexPath: indexPath)
+           cell = tableView.dequeueReusableCell(withIdentifier: enterGroupCell, for: indexPath)
             if let gName = cell!.contentView.viewWithTag(1) as? UITextField,
-                   nick = cell!.contentView.viewWithTag(2) as? UITextField,
-                   btn = cell!.contentView.viewWithTag(4) as? UIButton {
+                   let nick = cell!.contentView.viewWithTag(2) as? UITextField,
+                   let btn = cell!.contentView.viewWithTag(4) as? UIButton {
                 
                     gName.text = ""
-                    gName.enabled = true
+                    gName.isEnabled = true
                     nick.text = ""
-                    nick.enabled = true
-                    btn.hidden = false
+                    nick.isEnabled = true
+                    btn.isHidden = false
                     
             }
         }
         else {
-            cell = tableView.dequeueReusableCellWithIdentifier(groupCell, forIndexPath: indexPath)
+            cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)
             if (cell == nil) {
-                cell = UITableViewCell(style:UITableViewCellStyle.Subtitle, reuseIdentifier:groupCell)
+                cell = UITableViewCell(style:UITableViewCellStyle.subtitle, reuseIdentifier:groupCell)
             }
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel {
                 
@@ -292,36 +292,36 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             //cell.textLabel?.text = ""
             
         }
-        cell!.selectionStyle = UITableViewCellSelectionStyle.None
+        cell!.selectionStyle = UITableViewCellSelectionStyle.none
         return cell!
     }
 
     // MARK UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        _ = indexPath.row
+        _ = (indexPath as NSIndexPath).row
         
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return !(groupAction == GroupActions.enter && indexPath.row == 0)
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return !(groupAction == GroupActions.enter && (indexPath as NSIndexPath).row == 0)
     }
 
-    func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String? {
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return "leave"
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.Delete {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
         
-            if let curRow = tableView.cellForRowAtIndexPath(indexPath), indicator = curRow.contentView.viewWithTag(3) as? UIActivityIndicatorView {
+            if let curRow = tableView.cellForRow(at: indexPath), let indicator = curRow.contentView.viewWithTag(3) as? UIActivityIndicatorView {
                 
                 indicator.startAnimating()
             }
             
-            let group = groups[indexPath.row]
+            let group = groups[(indexPath as NSIndexPath).row]
             groupManager.leaveGroup(group.id)
             
             tableView.setEditing(false, animated: true)
@@ -330,27 +330,27 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
 
     //MARK UITextFieldDelegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
     
-    func alert(title: String, message: String) {
+    func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(myAlert, animated: true, completion: nil)
+            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(myAlert, animated: true, completion: nil)
         } else { // iOS 7
             let alert: UIAlertView = UIAlertView()
             alert.delegate = self
             
             alert.title = title
             alert.message = message
-            alert.addButtonWithTitle("OK")
+            alert.addButton(withTitle: "OK")
             
             alert.show()
         }

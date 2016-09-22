@@ -7,7 +7,7 @@
 //
 
 import Foundation
-public class GroupManager{
+open class GroupManager{
 
     
     var groupsOnMap: [Int] = [Int]()
@@ -22,7 +22,7 @@ public class GroupManager{
     
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     
-    private let log = LogQueue.sharedLogQueue
+    fileprivate let log = LogQueue.sharedLogQueue
     
     class var sharedGroupManager : GroupManager {
     
@@ -35,26 +35,26 @@ public class GroupManager{
     
     let connection = ConnectionManager.sharedConnectionManager
     
-    public func activateAllGroups(){
+    open func activateAllGroups(){
         
         connection.activateAllGroups()
     }
     
-    public func deactivateAllGroups(){
+    open func deactivateAllGroups(){
     
         connection.deactivateAllGroups()
     }
     
-    public func activateGroup(name: String){}
+    open func activateGroup(_ name: String){}
     
-    public func deactivateGroup(name: String) {}
+    open func deactivateGroup(_ name: String) {}
     
 
     
     var onEnterGroup : ObserverSetEntry<(Bool, String)>?
     var onLeaveGroup : ObserverSetEntry<(Bool, String)>?
     
-    public func enterGroup(name: String, nick: String){
+    open func enterGroup(_ name: String, nick: String){
     
         self.onEnterGroup = connection.groupEntered.add{
         
@@ -67,7 +67,7 @@ public class GroupManager{
         connection.enterGroup(name, nick: nick)
     }
     
-    public func leaveGroup(u: String) {
+    open func leaveGroup(_ u: String) {
         
         self.onLeaveGroup = connection.groupLeft.add{
             
@@ -80,7 +80,7 @@ public class GroupManager{
         connection.leaveGroup(u)
     }
     
-    public func groupList(){
+    open func groupList(){
         
         if self.onGroupListUpdated == nil {
             self.onGroupListUpdated = connection.groupList.add{
@@ -94,7 +94,7 @@ public class GroupManager{
         connection.getGroups()
     }
     
-    public func createGroup(){
+    open func createGroup(){
         
         
         
@@ -102,7 +102,7 @@ public class GroupManager{
     
    
     
-    public func updateGroupsOnMap(groups: [Int]){
+    open func updateGroupsOnMap(_ groups: [Int]){
         
         groupsOnMap = groups
         connection.monitoringGroups = groups
@@ -119,7 +119,7 @@ public class GroupManager{
     }
     
 
-    public func getUser(group:  Int, user: Int) -> User? {
+    open func getUser(_ group:  Int, user: Int) -> User? {
         
         let foundGroup = allGroups?.filter{$0.id == "\(group)"}.first
         return foundGroup?.users.filter{$0.device == "\(user)"}.first

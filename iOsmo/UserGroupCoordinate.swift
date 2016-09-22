@@ -7,7 +7,7 @@
 //
 
 import Foundation
-public class UserGroupCoordinate{
+open class UserGroupCoordinate{
     
     let groupId: Int
     let userId: Int

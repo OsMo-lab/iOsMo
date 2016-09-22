@@ -9,19 +9,19 @@
 //used lib from https://mikeash.com/pyblog/friday-qa-2015-01-23-lets-build-swift-notifications.html
 
 import Foundation
-public class SendingManager: NSObject{
+open class SendingManager: NSObject{
     //used lib
     let sentObservers = ObserverSet<LocationModel>()
     
-    private let connectionManager = ConnectionManager.sharedConnectionManager
-    public let locationTracker = LocationTracker()
-    private let log = LogQueue.sharedLogQueue
+    fileprivate let connectionManager = ConnectionManager.sharedConnectionManager
+    open let locationTracker = LocationTracker()
+    fileprivate let log = LogQueue.sharedLogQueue
     
-    private let sendTime = 5.0 // seconds, should be imported from settings
-    private var lcSendTimer: NSTimer?
+    fileprivate let sendTime = 5.0 // seconds, should be imported from settings
+    fileprivate var lcSendTimer: Timer?
     let aSelector : Selector = #selector(SendingManager.sending)
-    private var onConnectionRun: ObserverSetEntry<(Bool, String)>?
-    private var onSessionRun: ObserverSetEntry<(Bool, String)>?
+    fileprivate var onConnectionRun: ObserverSetEntry<(Bool, String)>?
+    fileprivate var onSessionRun: ObserverSetEntry<(Bool, String)>?
     
     class var sharedSendingManager: SendingManager {
         struct Static {
@@ -36,7 +36,7 @@ public class SendingManager: NSObject{
         super.init()
     }
 
-    public func startSendingCoordinates(){
+    open func startSendingCoordinates(){
         
         locationTracker.turnMonitorinOn() //start getting coordinates
 
@@ -77,7 +77,7 @@ public class SendingManager: NSObject{
         
     }
     
-    public func pauseSendingCoordinates(){
+    open func pauseSendingCoordinates(){
         
         locationTracker.turnMonitoringOff()
         
@@ -86,14 +86,14 @@ public class SendingManager: NSObject{
         
     }
     
-    public func stopSendingCoordinates(){
+    open func stopSendingCoordinates(){
         
         pauseSendingCoordinates()
         connectionManager.closeSession()
     
     }
     
-    public func sending(){
+    open func sending(){
         
         //MUST REFACTOR
         if connectionManager.sessionOpened && connectionManager.connected {
@@ -116,13 +116,13 @@ public class SendingManager: NSObject{
         
     }
     
-    private func startSending(){
+    fileprivate func startSending(){
         if connectionManager.sessionOpened {
             
             log.enqueue("CoordinateManager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
-            self.lcSendTimer = NSTimer.scheduledTimerWithTimeInterval(sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
+            self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
            
        
         }

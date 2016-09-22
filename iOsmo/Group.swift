@@ -7,7 +7,7 @@
 //
 
 import Foundation
-public class Group{
+open class Group{
     var id: String
     var name: String
     var descr: String = ""

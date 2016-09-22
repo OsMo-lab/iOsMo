@@ -14,34 +14,34 @@ struct SettingsManager {
     static var settingPath: NSString?
     
     
-    static func getKey(forKey: SettingKeys) -> NSString?{
+    static func getKey(_ forKey: SettingKeys) -> NSString?{
         
         getKeyFromSettings(forKey)
         
         return key
     }
         
-    static func setKey(key: NSString, forKey: SettingKeys){
+    static func setKey(_ key: NSString, forKey: SettingKeys){
        
         
-        if let getPath = getSettingPath as? String, fileData = NSMutableDictionary(contentsOfFile: getPath){
+        if let getPath = getSettingPath as? String, let fileData = NSMutableDictionary(contentsOfFile: getPath){
             
             fileData.setValue(key, forKey: forKey.rawValue)
-            fileData.writeToFile(getPath, atomically: true)
+            fileData.write(toFile: getPath, atomically: true)
         }
     }
     
-    private static func getKeyFromSettings(forKey: SettingKeys){
+    fileprivate static func getKeyFromSettings(_ forKey: SettingKeys){
 
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default
        
         if let getPath = getSettingPath as? String {
             
-            if !fileManager.fileExistsAtPath(getPath){
+            if !fileManager.fileExists(atPath: getPath){
                 
-                if let bundle = NSBundle.mainBundle().pathForResource("settings", ofType: "plist"){
+                if let bundle = Bundle.main.path(forResource: "settings", ofType: "plist"){
                     do {
-                        try fileManager.copyItemAtPath(bundle, toPath: getPath)
+                        try fileManager.copyItem(atPath: bundle, toPath: getPath)
                     }catch {
                     }
                 }
@@ -50,7 +50,7 @@ struct SettingsManager {
             
             if let savedKey = NSMutableDictionary(contentsOfFile: getPath){
                 
-                key = savedKey.objectForKey(forKey.rawValue) as? NSString
+                key = savedKey.object(forKey: forKey.rawValue) as? NSString
             }
             
         }
@@ -58,7 +58,7 @@ struct SettingsManager {
         
     }
     
-    private static var getSettingPath: NSString? {
+    fileprivate static var getSettingPath: NSString? {
         
         get {
             
@@ -67,10 +67,10 @@ struct SettingsManager {
             }
         else {
                 
-                let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+                let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
                 if let documentDirectory = paths[0] as? NSString {
                     
-                    settingPath = documentDirectory.stringByAppendingPathComponent("settings.plist")
+                    settingPath = documentDirectory.appendingPathComponent("settings.plist") as NSString?
                     return settingPath
                 }
                 

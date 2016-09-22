@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0730"
+   LastUpgradeVersion = "0800"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -17,7 +17,7 @@
                BlueprintIdentifier = "293C956F1A34B217005DD4CE"
                BuildableName = "iOsmo.app"
                BlueprintName = "iOsmo"
-               ReferencedContainer = "container:iOsmo.xcodeproj">
+               ReferencedContainer = "container:iOsMo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "293C95861A34B217005DD4CE"
                BuildableName = "iOsmoTests.xctest"
                BlueprintName = "iOsmoTests"
-               ReferencedContainer = "container:iOsmo.xcodeproj">
+               ReferencedContainer = "container:iOsMo.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -45,7 +45,7 @@
             BlueprintIdentifier = "293C956F1A34B217005DD4CE"
             BuildableName = "iOsmo.app"
             BlueprintName = "iOsmo"
-            ReferencedContainer = "container:iOsmo.xcodeproj">
+            ReferencedContainer = "container:iOsMo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -68,7 +68,7 @@
             BlueprintIdentifier = "293C956F1A34B217005DD4CE"
             BuildableName = "iOsmo.app"
             BlueprintName = "iOsmo"
-            ReferencedContainer = "container:iOsmo.xcodeproj">
+            ReferencedContainer = "container:iOsMo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -87,7 +87,7 @@
             BlueprintIdentifier = "293C956F1A34B217005DD4CE"
             BuildableName = "iOsmo.app"
             BlueprintName = "iOsmo"
-            ReferencedContainer = "container:iOsmo.xcodeproj">
+            ReferencedContainer = "container:iOsMo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

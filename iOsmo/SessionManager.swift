@@ -7,23 +7,23 @@
 //
 
 import Foundation
-public class SessionManager{
+open class SessionManager{
     
-    private let locationTracker = LocationTracker()
+    fileprivate let locationTracker = LocationTracker()
     
-    public func prepare(){
+    open func prepare(){
         
     }
     
-    public func start(){
+    open func start(){
         
     }
     
-    public func stop(){
+    open func stop(){
     
     }
     
-    public func pause(){
+    open func pause(){
     
     }
     

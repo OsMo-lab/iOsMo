@@ -11,7 +11,7 @@
 
 import Foundation
 
-public class ConnectionManager: NSObject{
+open class ConnectionManager: NSObject{
 
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroups: [Int] {
@@ -48,12 +48,12 @@ public class ConnectionManager: NSObject{
     
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
-    private let log = LogQueue.sharedLogQueue
+    fileprivate let log = LogQueue.sharedLogQueue
     
-    private var connection = TcpConnection()
-    private var reachability: Reachability
-    private let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
-    public var shouldReConnect = false
+    fileprivate var connection = TcpConnection()
+    fileprivate var reachability: Reachability
+    fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
+    open var shouldReConnect = false
     
     class var sharedConnectionManager : ConnectionManager{
         
@@ -66,10 +66,10 @@ public class ConnectionManager: NSObject{
 
     override init(){
         
-        self.reachability = Reachability.reachabilityForInternetConnection()
+        self.reachability = Reachability.forInternetConnection()
         
         super.init()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: aSelector, name: kReachabilityChangedNotification, object: self.reachability)
+        NotificationCenter.default.addObserver(self, selector: aSelector, name: NSNotification.Name.reachabilityChanged, object: self.reachability)
         
         self.reachability.startNotifier()
         
@@ -78,7 +78,7 @@ public class ConnectionManager: NSObject{
 
     }
     
-    public func reachabilityChanged(note: NSNotification) {
+    open func reachabilityChanged(_ note: Notification) {
         
         log.enqueue("reachability changed")
         if let reachability = note.object as? Reachability {
@@ -88,12 +88,12 @@ public class ConnectionManager: NSObject{
     }
     
     
-    public var sessionUrl: String? { get { return self.connection.getSessionUrl() } }
+    open var sessionUrl: String? { get { return self.connection.getSessionUrl() } }
     
-    public var connected: Bool = false
-    public var sessionOpened: Bool = false
+    open var connected: Bool = false
+    open var sessionOpened: Bool = false
  
-    public func connect(reconnect: Bool = false){
+    open func connect(_ reconnect: Bool = false){
         log.enqueue("connect")
         
         if !ConnectionManager.hasConnectivity() {
@@ -132,7 +132,7 @@ public class ConnectionManager: NSObject{
         }
     }
     
-    public func openSession(){
+    open func openSession(){
         log.enqueue("ConnectionManager: open session")
         
         if connected {
@@ -141,7 +141,7 @@ public class ConnectionManager: NSObject{
        }
     }
 
-    public func closeSession(){
+    open func closeSession(){
         log.enqueue("ConnectionManager: close session")
         
         if self.connected {
@@ -150,7 +150,7 @@ public class ConnectionManager: NSObject{
         }
     }
     
-    public func sendCoordinates(coordinates: [LocationModel])
+    open func sendCoordinates(_ coordinates: [LocationModel])
     {
         if self.sessionOpened {
             
@@ -159,7 +159,7 @@ public class ConnectionManager: NSObject{
     }
     
     // Groups funcs
-    public func getGroups(){
+    open func getGroups(){
         if self.connected {
         
             if self.onGroupListUpdated == nil {
@@ -170,21 +170,21 @@ public class ConnectionManager: NSObject{
         }
     }
     
-    public func enterGroup(name: String, nick: String){
+    open func enterGroup(_ name: String, nick: String){
         
         if self.connected{
             connection.sendEnterGroup(name, nick: nick)
         }
     }
     
-    public func leaveGroup(u: String){
+    open func leaveGroup(_ u: String){
         if self.connected {
             connection.sendLeaveGroup(u)
         }
         
     }
 
-    public func activateAllGroups(){
+    open func activateAllGroups(){
         if self.connected {
             connection.sendActivateAllGroups()
         }
@@ -192,7 +192,7 @@ public class ConnectionManager: NSObject{
     
     
     
-    public func deactivateAllGroups(){
+    open func deactivateAllGroups(){
         if self.connected {
             connection.sendDeactivateAllGroups()
         }
@@ -200,7 +200,7 @@ public class ConnectionManager: NSObject{
     
     //MARK private methods
     
-    private func notifyAnswer(tag: AnswTags, name: String, answer: Bool){
+    fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Bool){
         if tag == AnswTags.token {
             //means response to try connecting
             print("connected")
@@ -241,7 +241,7 @@ public class ConnectionManager: NSObject{
     }
 
 
-    private func checkStatus(reachability: Reachability){
+    fileprivate func checkStatus(_ reachability: Reachability){
         
         let status: NetworkStatus = reachability.currentReachabilityStatus()
         
@@ -263,9 +263,9 @@ public class ConnectionManager: NSObject{
         
     }
     
-    class private func hasConnectivity() -> Bool {
+    class fileprivate func hasConnectivity() -> Bool {
         
-        let reachability: Reachability = Reachability.reachabilityForInternetConnection()
+        let reachability: Reachability = Reachability.forInternetConnection()
         let networkStatus: Int = reachability.currentReachabilityStatus().rawValue
         
         return networkStatus != 0

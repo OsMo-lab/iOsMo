@@ -10,13 +10,13 @@
 import Foundation
 import CoreLocation
 
-public class LocationTracker: NSObject, CLLocationManagerDelegate {
+open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
-    private let log = LogQueue.sharedLogQueue
+    fileprivate let log = LogQueue.sharedLogQueue
     
-    private var allSessionLocations = [LocationModel]()
-    public var lastLocations = [LocationModel]()
-    public var distance = 0.0;
+    fileprivate var allSessionLocations = [LocationModel]()
+    open var lastLocations = [LocationModel]()
+    open var distance = 0.0;
     
     
     class var sharedLocationManager : CLLocationManager {
@@ -31,7 +31,7 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
         super.init()
     }
     
-    public func turnMonitorinOn(){
+    open func turnMonitorinOn(){
        
         if CLLocationManager.locationServicesEnabled() == false {
         
@@ -42,8 +42,8 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
         else
         {
             let authorizationStatus = CLLocationManager.authorizationStatus()
-            if (authorizationStatus ==  CLAuthorizationStatus.Restricted ||
-                authorizationStatus == CLAuthorizationStatus.Denied){
+            if (authorizationStatus ==  CLAuthorizationStatus.restricted ||
+                authorizationStatus == CLAuthorizationStatus.denied){
                     print("authorization failed")
                     log.enqueue("authorization failed")
             }
@@ -57,12 +57,8 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
                 locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 locationManager.distanceFilter = kCLDistanceFilterNone
                 locationManager.pausesLocationUpdatesAutomatically = false
-                
-                let aSelector : Selector = #selector(NSProcessInfo.isOperatingSystemAtLeastVersion(_:))
-                let higher8 = NSProcessInfo.instancesRespondToSelector(aSelector)
-                
-                if higher8 {
-                    
+               
+                if #available(iOS 8, *){
                     locationManager.requestAlwaysAuthorization()
                     if #available(iOS 9, *){
                         locationManager.allowsBackgroundLocationUpdates = true
@@ -80,7 +76,7 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
     
     
-    public func turnMonitoringOff(){
+    open func turnMonitoringOff(){
         print("monitoring was stopped")
         log.enqueue("montoring was stopped")
         
@@ -88,7 +84,7 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
     
     
-    public func getLastLocations() -> [LocationModel]{
+    open func getLastLocations() -> [LocationModel]{
         
         let getLastLocations = self.lastLocations
         self.lastLocations = [LocationModel]()
@@ -96,14 +92,14 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
         return getLastLocations
     }
     
-    public func locationManager(manager: CLLocationManager,
-        didChangeAuthorizationStatus status: CLAuthorizationStatus){
+    open func locationManager(_ manager: CLLocationManager,
+        didChangeAuthorization status: CLAuthorizationStatus){
         
         print("didChangeAuthorizationStatus")
         log.enqueue("didChangeAuthorizationStatus")
     }
     
-    public func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+    open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         print("didUpdateLocation")
         log.enqueue("didUpdateLocation")
         var prev_loc = locations.first
@@ -128,7 +124,7 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
                     locationModel.speed = loc.speed as Double
                     locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
                     
-                    let distanceInMeters = loc.distanceFromLocation(prev_loc!)
+                    let distanceInMeters = loc.distance(from: prev_loc!)
                     distance = distance + distanceInMeters
                     prev_loc = loc
                     
@@ -140,14 +136,15 @@ public class LocationTracker: NSObject, CLLocationManagerDelegate {
 
     }
     
-    public func locationManager(manager: CLLocationManager, didFailWithError error: NSError){
+
+    open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
         print("locationManager error \(error)")
         log.enqueue("locationManager error \(error)")
         
-        switch (error.code){
-        	case CLError.Network.rawValue:
+        switch (error){
+        	case CLError.Code.network:
                 print("network")
-            case CLError.Denied.rawValue:
+            case CLError.Code.denied:
                 print("denied")
             default:
                 print("some error")

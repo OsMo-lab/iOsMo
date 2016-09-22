@@ -29,11 +29,11 @@ public struct LocationModel{
     init(coordString: String){
         
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
-        let parts = coordString.componentsSeparatedByString("S")
+        let parts = coordString.components(separatedBy: "S")
         self.speed = atof(parts[1])
         
-        let coordinatesMerged = parts[0].substringFromIndex(parts[0].startIndex.advancedBy(1))
-        let coordinates = coordinatesMerged.componentsSeparatedByString(":")
+        let coordinatesMerged = parts[0].substring(from: parts[0].characters.index(parts[0].startIndex, offsetBy: 1))
+        let coordinates = coordinatesMerged.components(separatedBy: ":")
         self.lat = atof(coordinates[0])
         self.lon = atof(coordinates[1])
         
@@ -43,13 +43,13 @@ public struct LocationModel{
         
         var isSimulated = false
 
-        if UIDevice.currentDevice().model == "iPhone Simulator" {
+        if UIDevice.current.model == "iPhone Simulator" {
             isSimulated = true
         }
         
         
-        let formatedSpeed = speed > 0 ? (NSString(format:speedFormat, speed)): 0
-        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat, lat)):\(NSString(format:coordFormat, lon))S\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
+        let formatedSpeed = speed > 0 ? (NSString(format:speedFormat as NSString, speed)): "0"
+        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))S\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
         
         LogQueue.sharedLogQueue.enqueue(toSend)
         print(toSend)
@@ -58,7 +58,7 @@ public struct LocationModel{
     }
     
     
-    private func randRange (lower: UInt32 , upper: UInt32) -> Int {
+    fileprivate func randRange (_ lower: UInt32 , upper: UInt32) -> Int {
         return (Int)(lower + arc4random_uniform(upper - lower + 1))
     }
 

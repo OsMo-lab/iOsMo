@@ -27,9 +27,9 @@ class LogViewController: UIViewController {
     @IBOutlet weak var count: UITextField!
     
     
-    @IBAction func onEditingEnd(sender: AnyObject) {
+    @IBAction func onEditingEnd(_ sender: AnyObject) {
     }
-    @IBAction func Load(sender: AnyObject) {
+    @IBAction func Load(_ sender: AnyObject) {
     
         self.page = 1
         self.logBox.text = ""
@@ -37,20 +37,20 @@ class LogViewController: UIViewController {
         
         let countToGet = (lastCount < countValue) ? lastCount : countValue
         
-        let toDisplay: [AnyObject] = logQueue.getArray(lastCount - countToGet, count: countToGet)
-        for i in toDisplay.count.stride(to: 1, by: -1) {
+        let toDisplay: [AnyObject] = logQueue.getArray(lastCount - countToGet, count: countToGet) as [AnyObject]
+        for i in stride(from: toDisplay.count, to: 1, by: -1) {
             if let str = toDisplay[i-1] as? String { self.logMessage(str) }
         }       
         
     }
-    @IBAction func Next(sender: AnyObject) {
+    @IBAction func Next(_ sender: AnyObject) {
         
         let others = lastCount - page*countValue
         let countToGet = (others > countValue) ? countValue : (others > 0) ? others : 0
         
         let toDisplay = logQueue.getArray(lastCount - page*countValue - countToGet, count: countToGet)
         
-        for i in toDisplay.count.stride(to: 1, by: -1){
+        for i in stride(from: toDisplay.count, to: 1, by: -1){
             self.logMessage(toDisplay[i-1] as String)
         }
     
@@ -71,7 +71,7 @@ class LogViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func logMessage (message: String){
+    func logMessage (_ message: String){
         
         let newLineStr = "\n"
         let text = "\(self.logBox.text) \(message)\(newLineStr)"

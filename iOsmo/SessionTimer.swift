@@ -7,24 +7,24 @@
 //
 
 import Foundation
-public class SessionTimer: NSObject{
+open class SessionTimer: NSObject{
     
-    public var IsStarted: Bool { get { return self.isStarted} }
-    public var handler: (Int) -> Void
+    open var IsStarted: Bool { get { return self.isStarted} }
+    open var handler: (Int) -> Void
     
-    private var isStarted : Bool = false
-    private var timer = NSTimer()
-    private var elapsedTime: Int = 0
+    fileprivate var isStarted : Bool = false
+    fileprivate var timer = Timer()
+    fileprivate var elapsedTime: Int = 0
     
     
-    init(handler: (Int) -> Void){
+    init(handler: @escaping (Int) -> Void){
     
         self.handler = handler
     }
     
     func start(){
     
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(SessionTimer.tick), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(SessionTimer.tick), userInfo: nil, repeats: true)
 
         self.isStarted = true
     }

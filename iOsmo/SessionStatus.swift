@@ -9,10 +9,10 @@
 import Foundation
 enum SessionStatus: Int16 {
     
-    case Started = 0
-    case Finished = 1
-    case Paused = 2
-    case Saved = 3
-    case Restored = 4
+    case started = 0
+    case finished = 1
+    case paused = 2
+    case saved = 3
+    case restored = 4
     
 }

@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-public class BaseTcpConnection: NSObject {
+open class BaseTcpConnection: NSObject {
     
     let tcpClient = TcpClient()
 
-    public var addCallBackOnError: ((Bool) -> Void)? { get {return tcpClient.callbackOnError} set { tcpClient.callbackOnError = newValue } }
+    open var addCallBackOnError: ((Bool) -> Void)? { get {return tcpClient.callbackOnError} set { tcpClient.callbackOnError = newValue } }
     
-    public var shouldCloseSession = false
+    open var shouldCloseSession = false
     
     let log = LogQueue.sharedLogQueue
    
@@ -28,13 +28,13 @@ public class BaseTcpConnection: NSObject {
         
     }
     
-    func connect(token: Token){
+    func connect(_ token: Token){
         
         tcpClient.createConnection(token)
     }
     
    
-    public func sendCoordinates(coordinates: [LocationModel]){
+    open func sendCoordinates(_ coordinates: [LocationModel]){
         
         self.coordinates += coordinates
         sendNextCoordinates()
@@ -49,22 +49,22 @@ public class BaseTcpConnection: NSObject {
     func onSentCoordinate(){
     
         if self.coordinates.count > 0 {
-            self.coordinates.removeAtIndex(0)
+            self.coordinates.remove(at: 0)
         }
         sendNextCoordinates()
     }
     
-    public func sendSystemInfo(){
-        let model = UIDevice.currentDevice().model
-        let version = UIDevice.currentDevice().systemVersion
+    open func sendSystemInfo(){
+        let model = UIDevice.current.model
+        let version = UIDevice.current.systemVersion
         
-        let jsonInfo: AnyObject =
+        let jsonInfo: NSDictionary =
             ["devicename": model, "version": "iOS \(version)"]
         
         do{
-            let data = try NSJSONSerialization.dataWithJSONObject(jsonInfo, options: NSJSONWritingOptions(rawValue: 0))
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
             
-            if let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding) {
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
                 send(request)            }
         }catch {
@@ -73,21 +73,21 @@ public class BaseTcpConnection: NSObject {
         }
     }
     
-    public func sendBatteryStatus(){
-        UIDevice.currentDevice().batteryMonitoringEnabled = true
-        let level = UIDevice.currentDevice().batteryLevel * 100
+    open func sendBatteryStatus(){
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        let level = UIDevice.current.batteryLevel * 100
         var state = -1;
-        if (UIDevice.currentDevice().batteryState == .Charging) {
+        if (UIDevice.current.batteryState == .charging) {
             state = 1;
         }
         
-        let jsonInfo: AnyObject =
+        let jsonInfo: NSDictionary =
             ["percent": level, "plugged": state]
         
         do{
-            let data = try NSJSONSerialization.dataWithJSONObject(jsonInfo, options: NSJSONWritingOptions(rawValue: 0))
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
             
-            if let jsonString = NSString(data: data, encoding: NSUTF8StringEncoding) {
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
                 send(request)            }
         }catch {
@@ -96,7 +96,7 @@ public class BaseTcpConnection: NSObject {
         }
     }
     
-    public func closeSession(){
+    open func closeSession(){
         
         log.enqueue("send close session request")
         let request = "\(Tags.closeSession.rawValue)"
@@ -105,10 +105,10 @@ public class BaseTcpConnection: NSObject {
 
     
     //TODO: should be in sending manager!!!
-    private func sendNextCoordinates(){
+    fileprivate func sendNextCoordinates(){
         if self.shouldCloseSession {
             
-            self.coordinates.removeAll(keepCapacity: false)
+            self.coordinates.removeAll(keepingCapacity: false)
             closeSession()
             
         }
@@ -125,7 +125,7 @@ public class BaseTcpConnection: NSObject {
     
     
     
-    func closeSession(request: String){
+    func closeSession(_ request: String){
         
         log.enqueue("should close session: \(shouldCloseSession)")
         self.shouldCloseSession = self.coordinates.count == 0
@@ -138,7 +138,7 @@ public class BaseTcpConnection: NSObject {
         
     }
     
-    public func send(request: String){
+    open func send(_ request: String){
         
         tcpClient.send(request)
     }

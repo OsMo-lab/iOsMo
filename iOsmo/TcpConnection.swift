@@ -7,19 +7,39 @@
 //
 
 import Foundation
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
 
-public class TcpConnection: BaseTcpConnection {
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
 
-    public var monitoringGroups: [Int]?
+
+open class TcpConnection: BaseTcpConnection {
+
+    open var monitoringGroups: [Int]?
     
     let answerObservers = ObserverSet<(AnswTags, String, Bool)>()
     let groupListDownloaded = ObserverSet<[Group]>()
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
-    public var sessionUrlParsed: String = ""
-    public func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
+    open var sessionUrlParsed: String = ""
+    open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
    
-    public override func connect(token: Token){
+    open override func connect(_ token: Token){
         
         super.connect(token)
         super.tcpClient.callbackOnParse = parseOutput
@@ -27,34 +47,34 @@ public class TcpConnection: BaseTcpConnection {
         sendAuth(token)
     }
     
-    public func openSession(){
+    open func openSession(){
         
         let request = "\(Tags.openSession.rawValue)"
         super.send(request)
     }
        
-    public func sendGetGroups(){
+    open func sendGetGroups(){
         
         let request = "\(Tags.getGroups.rawValue)"
         super.send(request)
     }
     
-    public func sendEnterGroup(name: String, nick: String){
+    open func sendEnterGroup(_ name: String, nick: String){
         let request = "\(Tags.enterGroup.rawValue)\(name)|\(nick)"
         super.send(request)
     }
     
-    public func sendLeaveGroup(u: String){
+    open func sendLeaveGroup(_ u: String){
         let request = "\(Tags.leaveGroup.rawValue)\(u)"
         super.send(request)
     }
     
-    public func sendActivateAllGroups(){
+    open func sendActivateAllGroups(){
         let request = "\(Tags.activateAllGroup.rawValue)"
         super.send(request)
     }
     
-    public func sendDeactivateAllGroups(){
+    open func sendDeactivateAllGroups(){
         let request = "\(Tags.deactivateAllGroup.rawValue)"
         super.send(request)
     }
@@ -62,7 +82,7 @@ public class TcpConnection: BaseTcpConnection {
        
     //MARK private methods
 
-    private func sendToken(token: Token){
+    fileprivate func sendToken(_ token: Token){
         
         let request = "\(Tags.token.rawValue)\(token.token)"
         
@@ -72,7 +92,7 @@ public class TcpConnection: BaseTcpConnection {
         log.enqueue("send token")
     }
     
-    private func sendAuth(token: Token){
+    fileprivate func sendAuth(_ token: Token){
 
         let request = "\(Tags.auth.rawValue)\(token.device_key)"
         
@@ -83,37 +103,37 @@ public class TcpConnection: BaseTcpConnection {
     }
 
     //probably should be refactored and moved to ReconnectManager
-    private func sendPing(){
+    fileprivate func sendPing(){
         
         super.send("\(Tags.ping.rawValue)")
         log.enqueue("SendPing: \(Tags.ping.rawValue)")
     }
     
     
-    private func parseOutput(output: String){
+    fileprivate func parseOutput(_ output: String){
         
         let outputContains = {(tag: AnswTags) -> Bool in
-            if let container = output.rangeOfString(tag.rawValue) {
+            if let container = output.range(of: tag.rawValue) {
                  //return  distance(output.startIndex, container.startIndex) == 0 //should be found at begin of string
-                return output.startIndex.distanceTo(container.startIndex) == 0
+                return output.characters.distance(from: output.startIndex, to: container.lowerBound) == 0
             }
             return false
         }
         
-        let parseBoolAnswer = {()-> Bool in return output.componentsSeparatedByString("|")[1] == "1" }
+        let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|")[1] == "1" }
         
-        var command = output.componentsSeparatedByString("|").first!
-        var addict = output.componentsSeparatedByString("|").last!
+        var command = output.components(separatedBy: "|").first!
+        var addict = output.components(separatedBy: "|").last!
         var param = ""
-        if command.containsString(":"){
-            param = command.componentsSeparatedByString(":").last!
-            command = command.componentsSeparatedByString(":").first!
+        if command.contains(":"){
+            param = command.components(separatedBy: ":").last!
+            command = command.components(separatedBy: ":").first!
         }
         
         
-        let parseCommandName = {() -> String in return output.componentsSeparatedByString("|").first!.componentsSeparatedByString(":").first!}
+        let parseCommandName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").first!}
         
-        let parseParamName = {() -> String in return output.componentsSeparatedByString("|").first!.componentsSeparatedByString(":").last!}
+        let parseParamName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").last!}
         
         //if outputContains(AnswTags.token){
         if outputContains(AnswTags.auth){
@@ -125,7 +145,7 @@ public class TcpConnection: BaseTcpConnection {
                 
                 if !result.0
                 {
-                    if let parsed = parseJson(output) {
+                    if let parsed = parseJson(output)  as? [String: Any] {
                         
                         if let groupsEnabled = parsed["group"] as? Bool {
 
@@ -193,9 +213,9 @@ public class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.pong){
-            let dateFormat = NSDateFormatter()
+            let dateFormat = DateFormatter()
             dateFormat.dateFormat = "HH:mm:ss"
-            let eventDate = dateFormat.stringFromDate(NSDate())
+            let eventDate = dateFormat.string(from: Date())
             
             print("\(output) \(eventDate) server wants answer :)")
             log.enqueue("server wants answer ;)")
@@ -252,7 +272,7 @@ public class TcpConnection: BaseTcpConnection {
             if let monitor = monitoringGroups {
                 
                 let parseRes = parseGroupCoordinates(output)
-                    if let grId = parseRes.0, res = parseRes.1 {
+                    if let grId = parseRes.0, let res = parseRes.1 {
                         
                         if monitor.contains(grId){
                             if let groups = parseCoordinate(grId, coordinates: res) {
@@ -273,13 +293,13 @@ public class TcpConnection: BaseTcpConnection {
         }
     }
     
-    func parseCoordinate(group: Int, coordinates: AnyObject) -> [UserGroupCoordinate]? {
+    func parseCoordinate(_ group: Int, coordinates: Any) -> [UserGroupCoordinate]? {
         
         if let users = coordinates as? Array<String> {
             var res = [UserGroupCoordinate]()
         
             for u in users {
-                let uc = u.componentsSeparatedByString("|")
+                let uc = u.components(separatedBy: "|")
                 let user = Int(uc[0])
                 if user>0 { //id
                     
@@ -293,30 +313,30 @@ public class TcpConnection: BaseTcpConnection {
         return nil
     }
     
-    func parseRemoteCommand(responce: String) -> (Int?, AnyObject?){
+    func parseRemoteCommand(_ responce: String) -> (Int?, AnyObject?){
         
-        let index = responce.componentsSeparatedByString("|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.startIndex.advancedBy(index))
-        let commandId = Int(responce.substringWithRange(range).componentsSeparatedByString(":")[1])
+        let index = responce.components(separatedBy: "|")[0].characters.count
+        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
+        let commandId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
         
-        return (commandId, responce)
+        return (commandId, responce as AnyObject?)
     }
 
     
-    func parseGroupCoordinates(responce: String) -> (Int?, AnyObject?){
+    func parseGroupCoordinates(_ responce: String) -> (Int?, Any?){
         
-        let index = responce.componentsSeparatedByString("|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.startIndex.advancedBy(index))
-        let groupId = Int(responce.substringWithRange(range).componentsSeparatedByString(":")[1])
+        let index = responce.components(separatedBy: "|")[0].characters.count
+        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
+        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
         
         return (groupId, parseJson(responce))
     }
     
-    func parseForErrorJson(responce: String) -> (Bool, String)? {
+    func parseForErrorJson(_ responce: String) -> (Bool, String)? {
         
         if let dic = parseJson(responce) as? Dictionary<String, AnyObject> {
             
-            if dic.indexForKey("error") == nil {
+            if dic.index(forKey: "error") == nil {
                 return (false, "")
             }
             else {
@@ -329,7 +349,7 @@ public class TcpConnection: BaseTcpConnection {
         return nil
     }
     
-    func parseJson(responce: String) -> AnyObject? {
+    func parseJson(_ responce: String) -> Any? {
         
         
         // server can accumulate some messages, so should define it
@@ -337,18 +357,18 @@ public class TcpConnection: BaseTcpConnection {
         
         // should parse only first | sign, because of responce structure
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
-        let index = responce.componentsSeparatedByString("|")[0].characters.count + 1
-        let range = Range<String.Index>(responce.startIndex.advancedBy( index)..<responce.endIndex)
+        let index = responce.components(separatedBy: "|")[0].characters.count + 1
+        let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
         
         
-        let json = responce.substringWithRange(range)
+        let json = responce.substring(with: range)
         
         //tag.componentsSeparatedByString("|")[0]
         
-        if let data: NSData = json.dataUsingEncoding(NSUTF8StringEncoding) {
+        if let data: Data = json.data(using: String.Encoding.utf8) {
         
             do  {
-            let jsonObject: AnyObject! = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)
+            let jsonObject: Any! = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers)
         
                 return jsonObject;
             } catch {
@@ -360,7 +380,7 @@ public class TcpConnection: BaseTcpConnection {
         return nil
     }
     
-    func parseGroupsJson(responce: String) -> [Group]? {
+    func parseGroupsJson(_ responce: String) -> [Group]? {
         
         //let responceFirst = responce.componentsSeparatedByString("\n")[0] <-- has no sense because splitting in other place
         
@@ -368,16 +388,16 @@ public class TcpConnection: BaseTcpConnection {
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
         
         
-        let index = responce.componentsSeparatedByString("|")[0].characters.count + 1
-        let range = Range<String.Index>(responce.startIndex.advancedBy( index)..<responce.endIndex)
+        let index = responce.components(separatedBy: "|")[0].characters.count + 1
+        let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
         
         
-        let json = responce.substringWithRange(range)
+        let json = responce.substring(with: range)
         
         //tag.componentsSeparatedByString("|")[0]
 
         do {
-        if let data: NSData = json.dataUsingEncoding(NSUTF8StringEncoding), jsonObject: AnyObject! =  try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers), jsonGroups = jsonObject as? Array<AnyObject> {
+        if let data: Data = json.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers), let jsonGroups = jsonObject as? Array<Any> {
             
             
                 var groups = [Group]()
@@ -420,9 +440,9 @@ public class TcpConnection: BaseTcpConnection {
         return nil
     }
     
-    func parseTag(responce: String, key: ParseKeys) -> String? {
+    func parseTag(_ responce: String, key: ParseKeys) -> String? {
         
-        if let responceValues: NSDictionary = parseJson(responce) as? Dictionary<String, AnyObject>, tag = responceValues.objectForKey(key.rawValue) as? String {
+        if let responceValues: NSDictionary = parseJson(responce) as? Dictionary<String, AnyObject> as NSDictionary?, let tag = responceValues.object(forKey: key.rawValue) as? String {
             return tag
         }
         return nil
