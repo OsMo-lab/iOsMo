@@ -50,10 +50,7 @@ public struct LocationModel{
         
         let formatedSpeed = speed > 0 ? (NSString(format:speedFormat as NSString, speed)): "0"
         let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))S\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
-        
-        LogQueue.sharedLogQueue.enqueue(toSend)
-        print(toSend)
-        
+
         return toSend
     }
     

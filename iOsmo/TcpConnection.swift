@@ -263,6 +263,12 @@ open class TcpConnection: BaseTcpConnection {
                 super.sendSystemInfo()
             }else if param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue {
                 super.sendBatteryStatus()
+            }else if param == RemoteCommand.TRACKER_SESSION_STOP.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand, param, true))
+            }else if param == RemoteCommand.TRACKER_SESSION_START.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
+            }else if param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
             
             return
@@ -333,14 +339,14 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     func parseForErrorJson(_ responce: String) -> (Bool, String)? {
-        
-        if let dic = parseJson(responce) as? Dictionary<String, AnyObject> {
-            
+        if let dic = parseJson(responce) as? Dictionary<String, Any>{
+
             if dic.index(forKey: "error") == nil {
                 return (false, "")
-            }
-            else {
-                if let err =  dic["error"] as? String{
+            }  else {
+                if let err =  dic["error_description"] as? String{
+                    return (true, err)
+                }else if let err =  dic["error"] as? String{
                     return (true, err)
                 }
                 return (true, "error message is not parsed")

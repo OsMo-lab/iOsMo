@@ -40,7 +40,6 @@ struct ConnectionHelper {
         
         LogQueue.sharedLogQueue.enqueue("get key")
         var key = SettingsManager.getKey(SettingKeys.device)
-        
         if key == nil || key!.length == 0{
             
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
@@ -54,9 +53,14 @@ struct ConnectionHelper {
                 LogQueue.sharedLogQueue.enqueue("got key by post request")
                 SettingsManager.setKey(newKey, forKey: SettingKeys.device)
                 key = newKey
+            } else {
+                return nil
             }
-            else {return nil}
         }
+        print("device key\(key)")
+        
+        //5 = 9C7tNWXcxRziR6rkG7PiQXzP7Vriy3FgF5WLhYeXOz3lDJOidx3kiCJNccPQsORj
+        //iPad = j1aZppa8cdti5MqkfHjRj86LJIKv2OFmjnsjrDRzLmws4E4ipYwLnrjBJ70WOnAJ
         return key
         
     }
@@ -179,7 +183,7 @@ struct ConnectionHelper {
                     let jsonDict = try JSONSerialization.jsonObject(with: responseData, options: JSONSerialization.ReadingOptions.mutableContainers);
                     
                         
-                    return jsonDict as! NSDictionary;
+                    return jsonDict as? NSDictionary;
                     
                     
                 }catch {

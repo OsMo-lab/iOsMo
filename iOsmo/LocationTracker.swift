@@ -100,7 +100,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
     
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        print("didUpdateLocation")
+        //print("didUpdateLocation")
         log.enqueue("didUpdateLocation")
         var prev_loc = locations.first
         if ((lastLocations.last) != nil) {
@@ -122,6 +122,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     //add others values
                     locationModel.accuracy = Int(theAccuracy)
                     locationModel.speed = loc.speed as Double
+                    locationModel.course = Float(loc.course)
                     locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
                     
                     let distanceInMeters = loc.distance(from: prev_loc!)

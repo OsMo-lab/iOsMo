@@ -236,6 +236,21 @@ open class ConnectionManager: NSObject{
             
             groupsEnabled.notify(answer)
         }
+        if tag == AnswTags.remoteCommand {
+            if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
+                closeSession()
+                
+            }
+            if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
+                openSession()
+                
+            }
+            if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
+                
+                
+            }
+            
+        }
         
         /// etc
     }

@@ -25,6 +25,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var onConnectionRun: ObserverSetEntry<(Bool, String)>?
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var userName: UILabel!
+    @IBOutlet weak var loginBtn: UIButton!
+    @IBOutlet weak var activateSwitcher: UISwitch!
     
     @IBAction func btnCancelCellAdd(_ sender: AnyObject) {
         
@@ -48,9 +51,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         btnEnterGroup.isEnabled = false
     }
     
-    @IBOutlet weak var userName: UILabel!
-    @IBOutlet weak var loginBtn: UIButton!
-    @IBOutlet weak var activateSwitcher: UISwitch!
+    
 
     @IBAction func activateAllSwitched(_ sender: AnyObject) {
         

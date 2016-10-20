@@ -41,7 +41,6 @@ open class TcpClient : NSObject, StreamDelegate {
     }
     
     open func send(_ request: String){
-        
         log.enqueue("r: \(request)")
         print("r: \(request)")
         let requestToSend = "\(request)\n"
@@ -112,8 +111,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 return
             }
            
-            //insert check
-            print(message)
+
             if !message.isEmpty {
                 
                 //check for spliting:
@@ -121,13 +119,10 @@ open class TcpClient : NSObject, StreamDelegate {
                 var count = 0
                 for res in responceSplit {
                     if !res.isEmpty{
-                        
                         let subst = message[Range(message.characters.index(message.endIndex, offsetBy: -1)..<message.endIndex)]
                         if responceSplit.count < 2 && subst != "\n"{
                             return
-                        }
-                        else
-                        {
+                        } else {
                             //print what we parse
                             print("a: \(res)")
                             log.enqueue("a: \(res)")

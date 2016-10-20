@@ -92,6 +92,7 @@ enum SettingKeys: String {
     case auth = "authKey"
     case isStayAwake = "isStayAwake"
     case user = "user"
+    case sendTime = "sendTime"
 }
 
 enum GroupActions: String {

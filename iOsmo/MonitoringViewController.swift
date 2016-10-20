@@ -103,8 +103,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
             self.monitoringResult.text = "is PAUSED"
             if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
-        }
-        else {
+        } else {
             
             sendingManger.startSendingCoordinates()
             isMonitoringOn = true
@@ -117,8 +116,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func GoByLink(_ sender: AnyObject) {
-      
-        
+ 
         if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
@@ -212,8 +210,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
             //setup handler for open connection
             connectionManager.connectionRun.add{
-                
-                
                 let theChange = $0.0
                 
                 if theChange {
@@ -229,8 +225,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 }
                 
                 
-                print("MonitoringViewController: The connection status was changed: \(theChange)")
-                self.log.enqueue("MonitoringViewController: The connection status was changed: \(theChange)")
+                print("MVC: The connection status was changed: \(theChange)")
+                self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
                 
                 self.connectionResult.text = theChange ? "connection is ON" :  "connection is OFF"
@@ -249,7 +245,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
                 self.monitoringResult.text = theChange ? "is ON" : "is OFF"
                 self.isMonitoringOn = theChange
-                print("MonitoringViewController: The session was opened/closed.\(theChange)")
+                print("MVC: The session was opened/closed.\(theChange)")
                 
                 if theChange {
                     
@@ -259,7 +255,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                         self.copyButton.isEnabled = true
                     }
                     
-                    self.log.enqueue("Monitoring View Controller: The session was opened")
+                    self.log.enqueue("MVC: The session was opened")
                     
                     self.playStopBtn.setImage(UIImage(named: "stop-100"), for: UIControlState())
                     self.pauseBtn.isHidden = false
@@ -268,15 +264,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                         self.sessionTimer!.reset()
                         self.sessionTimer!.start()
                     }
-                }
-                    
-                else {
+                } else {
                     
                     self.link.setTitle($0.1.isEmpty ? "session was closed" : $0.1, for: UIControlState())
                     self.link.isEnabled = false
                     self.copyButton.isEnabled = false
                     
-                    self.log.enqueue("Monitoring View Controller: The session was closed")
+                    self.log.enqueue("MVC: The session was closed")
                     
                     
                     self.pauseBtn.isHidden = true

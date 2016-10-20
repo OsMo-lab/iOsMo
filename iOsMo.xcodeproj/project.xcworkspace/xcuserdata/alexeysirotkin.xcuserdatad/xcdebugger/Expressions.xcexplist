@@ -38,5 +38,16 @@
       <ContextState
          contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
       </ContextState>
+      <ContextState
+         contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "logQueue">
+            </PersistentString>
+            <PersistentString
+               value = "toDisplay">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

@@ -9,13 +9,13 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController ,UITextFieldDelegate {
 
     var connectionManager = ConnectionManager.sharedConnectionManager
     
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
-    
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
+    @IBOutlet weak var intervalTextField: UITextField!
     
     @IBAction func AwakeModeChanged(_ sender: AnyObject) {
     
@@ -35,6 +35,27 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    @IBAction func textFieldEnter(_sender: UITextField){
+        _sender.becomeFirstResponder()
+    }
+    
+    @IBAction func textFieldShouldEndEditing(_ textField: UITextField){
+        
+        //Требуется остановить - заново запустить трекинг, для активизации введенного значения
+        var sendTime: Double = Double(textField.text!)!;
+        if (sendTime < 5) {
+            sendTime = 5
+        }else if (sendTime > 60) {
+            sendTime = 60
+        }
+        SettingsManager.setKey(String(sendTime) as NSString, forKey: SettingKeys.sendTime)
+        intervalTextField.resignFirstResponder()
+    
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        intervalTextField.resignFirstResponder();
+        return true;
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,6 +69,14 @@ class SettingsViewController: UIViewController {
                 resetAuthSwitcher.setOn(false, animated: false)
             }
         }
+        
+        if var sendTime = SettingsManager.getKey(SettingKeys.sendTime) {
+            if sendTime.length == 0 {
+                sendTime = "5"
+            }
+            intervalTextField.text = sendTime as String
+        }
+        //intervalTextField.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
 

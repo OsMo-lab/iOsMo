@@ -13,7 +13,13 @@ open class BaseTcpConnection: NSObject {
     
     let tcpClient = TcpClient()
 
-    open var addCallBackOnError: ((Bool) -> Void)? { get {return tcpClient.callbackOnError} set { tcpClient.callbackOnError = newValue } }
+    open var addCallBackOnError: ((Bool) -> Void)? {
+        get {
+            return tcpClient.callbackOnError
+        } set {
+            tcpClient.callbackOnError = newValue
+        }
+    }
     
     open var shouldCloseSession = false
     
@@ -66,9 +72,9 @@ open class BaseTcpConnection: NSObject {
             
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
-                send(request)            }
+                send(request)
+            }
         }catch {
-            
             print("error generating system info")
         }
     }
@@ -139,7 +145,6 @@ open class BaseTcpConnection: NSObject {
     }
     
     open func send(_ request: String){
-        
         tcpClient.send(request)
     }
     

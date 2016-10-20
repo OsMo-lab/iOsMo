@@ -44,8 +44,10 @@ open class LogQueue {
     func getArray(_ startIndex: Int, count: Int) -> [String] {
         
         var result = [String]()
-        for index in startIndex...startIndex + count - 1 {
-            result.append(innerQueue[index])
+        if (count>0) {
+            for index in startIndex...startIndex + count - 1 {
+                result.append(innerQueue[index])
+            }
         }
     
         return result

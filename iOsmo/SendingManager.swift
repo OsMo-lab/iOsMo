@@ -17,7 +17,6 @@ open class SendingManager: NSObject{
     open let locationTracker = LocationTracker()
     fileprivate let log = LogQueue.sharedLogQueue
     
-    fileprivate let sendTime = 5.0 // seconds, should be imported from settings
     fileprivate var lcSendTimer: Timer?
     let aSelector : Selector = #selector(SendingManager.sending)
     fileprivate var onConnectionRun: ObserverSetEntry<(Bool, String)>?
@@ -100,11 +99,11 @@ open class SendingManager: NSObject{
             
             let coors: [LocationModel] = locationTracker.getLastLocations()
             print("CoordinateManager: got \(coors.count) coordinates")
-            log.enqueue("CoordinateManager: drawing \(coors.count) coordinates")
+            log.enqueue("CoordinateManager: got \(coors.count) coordinates")
             
             if coors.count > 0 {
            
-                log.enqueue("CoordinateManager: drawing \(coors.count) coordinates")
+                log.enqueue("CoordinateManager: sending \(coors.count) coordinates")
                 self.connectionManager.sendCoordinates(Array<LocationModel>(arrayLiteral: coors.last!))
                 
                 for c in coors {
@@ -122,6 +121,16 @@ open class SendingManager: NSObject{
             log.enqueue("CoordinateManager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
+            var sendTime:TimeInterval = 5.0;
+            if let sT = SettingsManager.getKey(SettingKeys.sendTime) {
+                sendTime  = sT.doubleValue
+                if sendTime < 1 {
+                    sendTime = 5;
+                }
+            
+            }
+
+            
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
            
        

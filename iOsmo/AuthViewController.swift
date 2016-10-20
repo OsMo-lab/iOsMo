@@ -61,13 +61,11 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
         let url = "https://osmo.mobi/signin?type=m&key=\(device)"
         if let checkURL = URL(string: url as String) {
             if let auth = authView  {
-                
                 let urlRequest = URLRequest(url: checkURL)
                 auth.loadRequest(urlRequest)
             }
             
-        }
-        else {
+        } else {
             print("wrong request")
         }
         

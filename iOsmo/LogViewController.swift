@@ -37,10 +37,15 @@ class LogViewController: UIViewController {
         
         let countToGet = (lastCount < countValue) ? lastCount : countValue
         
-        let toDisplay: [AnyObject] = logQueue.getArray(lastCount - countToGet, count: countToGet) as [AnyObject]
+        let toDisplay = logQueue.getArray(lastCount - countToGet, count: countToGet)
+        /*
         for i in stride(from: toDisplay.count, to: 1, by: -1) {
-            if let str = toDisplay[i-1] as? String { self.logMessage(str) }
-        }       
+            //if let str = toDisplay[i-1] as? String { self.logMessage(str) }
+            self.logMessage(toDisplay[i-1] as String)
+        } 
+         */
+        let l = toDisplay.joined(separator: "\n")
+        self.logBox.text = l
         
     }
     @IBAction func Next(_ sender: AnyObject) {
@@ -50,9 +55,11 @@ class LogViewController: UIViewController {
         
         let toDisplay = logQueue.getArray(lastCount - page*countValue - countToGet, count: countToGet)
         
-        for i in stride(from: toDisplay.count, to: 1, by: -1){
+        /*for i in stride(from: toDisplay.count, to: 1, by: -1){
             self.logMessage(toDisplay[i-1] as String)
-        }
+        }*/
+        let l = toDisplay.joined(separator: "\n")
+        self.logBox.text = l
     
         if toDisplay.count == countValue {page += 1}
     
@@ -74,8 +81,8 @@ class LogViewController: UIViewController {
     func logMessage (_ message: String){
         
         let newLineStr = "\n"
-        let text = "\(self.logBox.text) \(message)\(newLineStr)"
-    
+        //let text = "\(self.logBox.text) \(message)\(newLineStr)"
+        let text = "\(self.logBox.text)test\(newLineStr)"
         self.logBox.text = text
        
     }
