@@ -427,12 +427,12 @@ open class TcpConnection: BaseTcpConnection {
                         
                         let u = jsonU as! Dictionary<String, AnyObject>
                         let uId = u["u"] as! String
-                        let uDevice = u["device"] as! String
+                        //let uDevice = u["device"] as? String
                         let uName = u["name"] as! String
-                        let uConnected = u["connected"] as! String
+                        let uConnected = u["connected"] as! Double
                         let uColor = u["color"] as! String
                         
-                        let user = User(id: uId, device: uDevice, name: uName, color: uColor, connected: uConnected)
+                        let user = User(id: uId, name: uName, color: uColor, connected: uConnected)
                         group.users.append(user)
                     }
                     
