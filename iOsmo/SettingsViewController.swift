@@ -12,6 +12,7 @@ import UIKit
 class SettingsViewController: UIViewController ,UITextFieldDelegate {
 
     var connectionManager = ConnectionManager.sharedConnectionManager
+    var clickCount = 0;
     
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
@@ -22,7 +23,13 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
         SettingsManager.setKey(self.awakeModeSwitcher.isOn ? "1" : "0", forKey: SettingKeys.isStayAwake)
         
         UIApplication.shared.isIdleTimerDisabled = awakeModeSwitcher.isOn
-    
+        if (awakeModeSwitcher.isOn) {
+            clickCount += 1;
+            if (clickCount == 7) {
+                SettingsManager.setKey("enable", forKey: SettingKeys.logView)
+                self.alert("LogView unlocked",message:"Restart iOsMo")
+            }
+        }
     }
     
     /*Сброс авторизации устройства*/
@@ -85,6 +92,22 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func alert(_ title: String, message: String) {
+        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
+            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(myAlert, animated: true, completion: nil)
+        } else { // iOS 7
+            let alert: UIAlertView = UIAlertView()
+            alert.delegate = self
+            
+            alert.title = title
+            alert.message = message
+            alert.addButton(withTitle: "OK")
+            
+            alert.show()
+        }
+    }
 
     /*
     // MARK: - Navigation

@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>21</string>
+	<string>25</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -29,7 +29,7 @@
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoiYWxlc2lyIiwiYSI6ImNpcndlZnRqMjAwaXJodW5oaDl1emo0ZDgifQ.Kpw_j2rtO_XpVHeXIuRu6w</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location is required to find out where you are</string>
+	<string>Background location is required to track and share your location</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

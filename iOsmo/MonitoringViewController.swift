@@ -45,6 +45,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
     
+    @IBOutlet weak var osmoImage: UIImageView!
     @IBOutlet weak var gpsConnectionImage: UIImageView!
     @IBOutlet weak var serverConnectionImg: UIImageView!
     @IBOutlet weak var playStopBtn: UIButton!
@@ -232,6 +233,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.connectionResult.text = theChange ? "connection is ON" :  "connection is OFF"
                 self.serverConnectionImg.image = theChange ? UIImage(named:"online-32")! : UIImage(named:"offline-32")!
                 
+                
                 if !theChange && !$0.1.isEmpty {
                     
                     self.alert("Error", message: $0.1)
@@ -245,6 +247,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
                 self.monitoringResult.text = theChange ? "is ON" : "is OFF"
                 self.isMonitoringOn = theChange
+                self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 print("MVC: The session was opened/closed.\(theChange)")
                 
                 if theChange {

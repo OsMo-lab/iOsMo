@@ -65,9 +65,13 @@ class LogViewController: UIViewController {
     
     }
     
-    
+    override func viewDidAppear(_ animated: Bool) {
+        self.Load(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         //let countValue = Int (count.text!);
         // Do any additional setup after loading the view, typically from a nib.
