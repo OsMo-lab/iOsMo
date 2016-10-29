@@ -19,6 +19,8 @@ protocol AuthResultProtocol {
 open class AuthViewController: UIViewController, UIWebViewDelegate {
 
     let authAnswerScheme = "api.osmo.mobi"
+    let log = LogQueue.sharedLogQueue
+    
     @IBOutlet weak var authView: UIWebView!
     
     @IBAction func OnReload(_ sender: AnyObject) {
@@ -59,6 +61,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
     func reload(){
         let device = SettingsManager.getKey(SettingKeys.device) as! String
         let url = "https://osmo.mobi/signin?type=m&key=\(device)"
+        log.enqueue("Authenticationg at \(url)")
         if let checkURL = URL(string: url as String) {
             if let auth = authView  {
                 let urlRequest = URLRequest(url: checkURL)
@@ -88,7 +91,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
                         if let u = queryItems!.filter({m in m.name == "nick"}).first , let user = u.value,
                             let p = queryItems!.filter({m in m.name == "user"}).first , let passKey = p.value {
                                 print("auth user: \(user) with passkey: \(passKey)")
-                                LogQueue.sharedLogQueue.enqueue("auth user: \(user) with passkey: \(passKey)")
+                                log.enqueue("auth user: \(user) with passkey: \(passKey)")
                                 
                                 delegate?.succesfullLoginWithToken(self, info: AuthInfo(accountName: user, key: passKey))
                         }
@@ -98,7 +101,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
                         if let user = url.queryParams()["nick"] as? String, let passKey = url.queryParams()["user"] as? String {
                             
                             print("auth user: \(user) with passkey: \(passKey)")
-                            LogQueue.sharedLogQueue.enqueue("auth user: \(user) with passkey: \(passKey)")
+                            log.enqueue("auth user: \(user) with passkey: \(passKey)")
                             
                             delegate?.succesfullLoginWithToken(self, info: AuthInfo(accountName: user, key: passKey))
                         }

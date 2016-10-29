@@ -116,16 +116,14 @@ open class ConnectionManager: NSObject{
                 }
                 connection.connect(tkn)
                 shouldReConnect = false //interesting why here? may after connction is successful??
-            }
-            else {
+            } else {
                 
                 connectionRun.notify((false, "\(tkn.error)"))
                 shouldReConnect = false
             }
         
         
-        }
-        else {
+        } else {
         
             connectionRun.notify((false, "")) //token is missing
             shouldReConnect = true

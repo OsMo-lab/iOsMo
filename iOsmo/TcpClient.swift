@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 25/03/15.
-//  Copyright (c) 2015 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2016 Alexey Sirotkin. All rights reserved.
 //
 
 import Foundation
@@ -45,9 +45,12 @@ open class TcpClient : NSObject, StreamDelegate {
         print("r: \(request)")
         let requestToSend = "\(request)\n"
         if let outputStream = outputStream, let data = requestToSend.data(using: String.Encoding.utf8) {
-             outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
-        }
-        else {
+             let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+            if (wb == -1 ) {
+                log.enqueue("error: write to output stream")
+                print("error: write to output stream")
+            }
+        } else {
             log.enqueue("error: send request")
             print("error: send request")
         }
@@ -66,6 +69,13 @@ open class TcpClient : NSObject, StreamDelegate {
    
         case Stream.Event.endEncountered:
             print ("EndEncountered")
+            log.enqueue("stream endEcountered")
+            inputStream?.close()
+            outputStream?.close()
+            if callbackOnError != nil {
+                
+                callbackOnError!(true)
+            }
             return
         
         
@@ -103,8 +113,7 @@ open class TcpClient : NSObject, StreamDelegate {
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 print("Stream is empty")
                 log.enqueue("Stream is empty")
                 

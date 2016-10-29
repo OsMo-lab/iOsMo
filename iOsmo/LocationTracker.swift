@@ -35,22 +35,17 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
        
         if CLLocationManager.locationServicesEnabled() == false {
         
-            print("location services enabled false!")
-            log.enqueue("location services enabled FALSE!")
-        
-        }
-        else
-        {
+            print("Location services enabled false!")
+            log.enqueue("Location services enabled FALSE!")
+        } else {
             let authorizationStatus = CLLocationManager.authorizationStatus()
             if (authorizationStatus ==  CLAuthorizationStatus.restricted ||
                 authorizationStatus == CLAuthorizationStatus.denied){
-                    print("authorization failed")
-                    log.enqueue("authorization failed")
-            }
-            else {
-                
-                print("authorization status authorized")
-                log.enqueue("authorization status authorized")
+                    print("Location authorization failed")
+                    log.enqueue("Location authorization failed")
+            } else {
+                print("Location authorization status authorized")
+                log.enqueue("Location authorization status authorized")
                 
                 let locationManager = LocationTracker.sharedLocationManager
                 locationManager.delegate = self
@@ -63,13 +58,13 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     if #available(iOS 9, *){
                         locationManager.allowsBackgroundLocationUpdates = true
                     }
-                    log.enqueue("request always authorization was sent to user")
+                    log.enqueue("Location request always authorization was sent to user")
                 }
                 
                 locationManager.startUpdatingLocation()
                 
-                print("start coordinate monitoring")
-                log.enqueue("start coordinate monitoring")
+                print("startUpdatingLocation")
+                log.enqueue("startUpdatingLocation")
             }
         }
         
@@ -77,10 +72,9 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     
     open func turnMonitoringOff(){
-        print("monitoring was stopped")
-        log.enqueue("montoring was stopped")
-        
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
+        print("stopUpdatingLocation")
+        log.enqueue("stopUpdatingLocation")
     }
     
     
@@ -95,8 +89,8 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open func locationManager(_ manager: CLLocationManager,
         didChangeAuthorization status: CLAuthorizationStatus){
         
-        print("didChangeAuthorizationStatus")
-        log.enqueue("didChangeAuthorizationStatus")
+        print("Location didChangeAuthorizationStatus to \(status.rawValue)")
+        log.enqueue("Location didChangeAuthorizationStatus to \(status.rawValue)")
     }
     
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){

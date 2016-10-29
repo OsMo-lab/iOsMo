@@ -104,9 +104,7 @@ open class TcpConnection: BaseTcpConnection {
 
     //probably should be refactored and moved to ReconnectManager
     fileprivate func sendPing(){
-        
         super.send("\(Tags.ping.rawValue)")
-        log.enqueue("SendPing: \(Tags.ping.rawValue)")
     }
     
     
@@ -176,8 +174,7 @@ open class TcpConnection: BaseTcpConnection {
                 
                 answerObservers.notify(AnswTags.openedSession, result.1 , !result.0)
                 return
-            }
-            else {
+            } else {
                 print("error: open session asnwer cannot be parsed")
                 log.enqueue("error: open session asnwer cannot be parsed")
             }

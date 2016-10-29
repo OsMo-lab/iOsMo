@@ -144,8 +144,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             sendingManger.stopSendingCoordinates()
             UIApplication.shared.isIdleTimerDisabled = false
             
-        }
-        else {
+        } else {
             
             sendingManger.startSendingCoordinates()
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
@@ -219,8 +218,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                         self.inGroup = $0
                     }
                     self.groupManager.groupList()
-                }
-                else if let glUpdated = self.onGroupListUpdated {
+                } else if let glUpdated = self.onGroupListUpdated {
                     
                     self.groupManager.groupListUpdated.remove(glUpdated)
                 }
