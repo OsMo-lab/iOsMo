@@ -82,7 +82,7 @@ open class BaseTcpConnection: NSObject {
     open func sendBatteryStatus(){
         UIDevice.current.isBatteryMonitoringEnabled = true
         let level = UIDevice.current.batteryLevel * 100
-        var state = -1;
+        var state = 0;
         if (UIDevice.current.batteryState == .charging) {
             state = 1;
         }
