@@ -158,7 +158,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
 
-        UITabBar.appearance().tintColor = UIColor(red: 35/255, green: 159/255, blue: 151/255, alpha: 1.0)
+        //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
         //sliderImg.roundCorners([.TopRight , .BottomRight], radius: 2)
         //fronSliderImg.roundCorners([.TopLeft , .BottomLeft], radius: 2)
