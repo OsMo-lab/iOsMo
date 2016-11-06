@@ -36,7 +36,6 @@ open class SendingManager: NSObject{
     }
 
     open func startSendingCoordinates(){
-        
         locationTracker.turnMonitorinOn() //start getting coordinates
 
         if !connectionManager.connected {

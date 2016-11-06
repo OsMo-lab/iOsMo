@@ -18,7 +18,7 @@ public struct LocationModel{
     
     
     let coordFormat = "%.6f"
-    let speedFormat = "%.2f"
+    let speedFormat = "S%.2f"
     
     
     init(lat: Double, lon: Double){
@@ -48,8 +48,8 @@ public struct LocationModel{
         }
         
         
-        let formatedSpeed = speed > 0 ? (NSString(format:speedFormat as NSString, speed)): "0"
-        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))S\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
+        let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
+        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
 
         return toSend
     }

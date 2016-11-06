@@ -146,6 +146,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
         } else {
             
+            
             sendingManger.startSendingCoordinates()
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
@@ -180,8 +181,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         }
         
         let locs: [LocationModel] = sendingManger.locationTracker.lastLocations
-        
-        
+
         if let loc = locs.last {
             var speed = loc.speed
             if speed < 0 {
@@ -192,9 +192,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
            
         }
-        
-        
-        
+
     }
     
     fileprivate func durationBySecond(seconds s:Int) -> (hours: Int, minutes: Int, seconds: Int){

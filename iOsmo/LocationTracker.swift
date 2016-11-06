@@ -32,6 +32,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
     
     open func turnMonitorinOn(){
+        self.distance = 0
        
         if CLLocationManager.locationServicesEnabled() == false {
         
