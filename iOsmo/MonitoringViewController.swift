@@ -52,9 +52,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
 
     @IBOutlet weak var pauseBtn: UIButton!
     @IBOutlet weak var slider: UIScrollView!
-    @IBOutlet weak var copyButton: UIButton!
     @IBOutlet weak var connectionResult: UILabel!
-    @IBOutlet weak var monitoringResult: UILabel!
     @IBOutlet weak var link: UIButton!
     
     @IBOutlet weak var sliderImg: UIView!
@@ -87,12 +85,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
 
     
-    @IBAction func CopyLink(_ sender: AnyObject) {
-        
-        UIPasteboard.general.string = connectionManager.sessionUrl
-    }
-
-    
     @IBAction func pauseClick(_ sender: AnyObject) {
         
         isSessionPaused = !isSessionPaused
@@ -102,14 +94,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             sendingManger.pauseSendingCoordinates()
             isMonitoringOn = false
             pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
-            self.monitoringResult.text = "is PAUSED"
             if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
         } else {
             
             sendingManger.startSendingCoordinates()
             isMonitoringOn = true
             pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
-            self.monitoringResult.text = "is ON"
             if let sessionTimer = self.sessionTimer { sessionTimer.start()}
         }
 
@@ -122,10 +112,37 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
             if let checkURL = URL(string: url) {
                 
-                if UIApplication.shared.openURL(checkURL) {
-                    print("url succefully opened")
-                    log.enqueue("url successfully opened")
+                //Create the AlertController
+                let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+
+                let copyLinkAction: UIAlertAction = UIAlertAction(title: "Copy URL", style: .default) { action -> Void in
+                    UIPasteboard.general.string = self.connectionManager.sessionUrl
                 }
+                actionSheetController.addAction(copyLinkAction)
+
+                let openLinkAction: UIAlertAction = UIAlertAction(title: "Open URL", style: .default)
+                { action -> Void in
+                    
+                    if UIApplication.shared.openURL(checkURL) {
+                        print("url succefully opened")
+                        self.log.enqueue("url successfully opened")
+                    }
+                    
+                }
+                actionSheetController.addAction(openLinkAction)
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                    
+                }
+                actionSheetController.addAction(cancelAction)
+
+                
+                //We need to provide a popover sourceView when using it on iPad
+                actionSheetController.popoverPresentationController?.sourceView = sender as! UIView
+                
+
+                self.present(actionSheetController, animated: true, completion: nil)
+
             }
         }
         
@@ -234,14 +251,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                     self.alert("Error", message: $0.1)
                 }
-                
             }
             
             connectionManager.sessionRun.add{
-                
                 let theChange = $0.0
                 
-                self.monitoringResult.text = theChange ? "is ON" : "is OFF"
                 self.isMonitoringOn = theChange
                 self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 print("MVC: The session was opened/closed.\(theChange)")
@@ -251,7 +265,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     if let sUrl = self.connectionManager.sessionUrl {
                         self.link.setTitle(sUrl, for: UIControlState())
                         self.link.isEnabled = true
-                        self.copyButton.isEnabled = true
                     }
                     
                     self.log.enqueue("MVC: The session was opened")
@@ -267,10 +280,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                     self.link.setTitle($0.1.isEmpty ? "session was closed" : $0.1, for: UIControlState())
                     self.link.isEnabled = false
-                    self.copyButton.isEnabled = false
                     
                     self.log.enqueue("MVC: The session was closed")
-                    
                     
                     self.pauseBtn.isHidden = true
                     self.playStopBtn.setImage(UIImage(named: "play-100"), for: UIControlState())
