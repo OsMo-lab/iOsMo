@@ -116,7 +116,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
                     //add others values
                     locationModel.accuracy = Int(theAccuracy)
-                    locationModel.speed = loc.speed * 3.6 as Double
+                    locationModel.speed = loc.speed as Double
                     locationModel.course = Float(loc.course)
                     locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
                     

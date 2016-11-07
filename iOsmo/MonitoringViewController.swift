@@ -183,7 +183,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         let locs: [LocationModel] = sendingManger.locationTracker.lastLocations
 
         if let loc = locs.last {
-            var speed = loc.speed
+            var speed = loc.speed * 3.6
             if speed < 0 {
                 speed = 0
             }
