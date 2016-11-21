@@ -94,7 +94,7 @@ open class ConnectionManager: NSObject{
     open var sessionOpened: Bool = false
  
     open func connect(_ reconnect: Bool = false){
-        log.enqueue("connect")
+        log.enqueue("ConnectionManager: connect")
         
         if !ConnectionManager.hasConnectivity() {
             
@@ -267,7 +267,7 @@ open class ConnectionManager: NSObject{
             
          }
         
-        if shouldReConnect && (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue) {
+        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
             
             log.enqueue("Reconnect action")
             print("Reconnect action from Reachability")

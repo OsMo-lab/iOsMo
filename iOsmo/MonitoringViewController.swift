@@ -41,11 +41,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     var isLoaded = false
     
+    @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
     
     @IBOutlet weak var osmoImage: UIImageView!
+    @IBOutlet weak var osmoStatus: UIImageView!
     @IBOutlet weak var gpsConnectionImage: UIImageView!
     @IBOutlet weak var serverConnectionImg: UIImageView!
     @IBOutlet weak var playStopBtn: UIButton!
@@ -238,13 +240,23 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.groupManager.groupListUpdated.remove(glUpdated)
                 }
                 
-                
+                if let user = SettingsManager.getKey(SettingKeys.user) {
+                    
+                    if user.length > 0 {
+                        self.userLabel.text = user as String
+                    } else {
+                        self.userLabel.text = ""
+                    }
+                } else {
+                    self.userLabel.text = ""
+                }
+
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
-                
-                self.connectionResult.text = theChange ? "connection is ON" :  "connection is OFF"
-                self.serverConnectionImg.image = theChange ? UIImage(named:"online-32")! : UIImage(named:"offline-32")!
+                self.osmoStatus.isHidden = !theChange
+                //self.connectionResult.text = theChange ? "connection is ON" :  "connection is OFF"
+                //self.serverConnectionImg.image = theChange ? UIImage(named:"online-32")! : UIImage(named:"offline-32")!
                 
                 
                 if !theChange && !$0.1.isEmpty {
