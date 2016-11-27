@@ -90,6 +90,8 @@ open class ConnectionManager: NSObject{
     
     open var sessionUrl: String? { get { return self.connection.getSessionUrl() } }
     
+    open var TrackerID: String? { get { return self.connection.getTrackerID() } }
+    
     open var connected: Bool = false
     open var sessionOpened: Bool = false
  
@@ -109,9 +111,20 @@ open class ConnectionManager: NSObject{
                 if connection.addCallBackOnError == nil {
                     connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
-                        self.connected = false
                         self.shouldReConnect = isError
-                        self.checkStatus(self.reachability)
+                        
+                        if (self.connected && isError) {
+                            self.log.enqueue("CallBackOnError: should be reconnected")
+                            self.shouldReConnect = true;
+                        }
+                        self.connected = false
+                        
+                        //self.checkStatus(self.reachability)
+                        self.connectionRun.notify((false, ""))
+                        /*
+                         if (self.shouldReConnect) {
+                            self.connect()
+                        }*/
                     }
                 }
                 connection.connect(tkn)
@@ -206,6 +219,8 @@ open class ConnectionManager: NSObject{
             
             self.connected = answer
             connectionRun.notify(answer, name)
+            
+            return
         }
         if tag == AnswTags.auth {
             //means response to try connecting
@@ -214,38 +229,48 @@ open class ConnectionManager: NSObject{
             
             self.connected = answer
             connectionRun.notify(answer, name)
+            
+            return
         }
         if tag == AnswTags.enterGroup{
-            
             groupEntered.notify(answer, name)
             
+            return
         }
 
         if tag == AnswTags.leaveGroup {
-            
             groupLeft.notify(answer, name)
+            
+            return
         }
+
         if tag == AnswTags.openedSession {
-        
             self.sessionOpened = answer
             sessionRun.notify(answer, name)
-        }
-        if tag == AnswTags.allGroupsEnabled {
             
+            return
+        }
+        
+        if tag == AnswTags.allGroupsEnabled {
             groupsEnabled.notify(answer)
+            
+            return
         }
         if tag == AnswTags.remoteCommand {
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 closeSession()
                 
+                return
             }
+        
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
                 openSession()
                 
+                return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
                 
-                
+                return
             }
             
         }

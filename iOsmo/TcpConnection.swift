@@ -37,8 +37,10 @@ open class TcpConnection: BaseTcpConnection {
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
     open var sessionUrlParsed: String = ""
+    open var sessionTrackerID: String = ""
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
-   
+    open func getTrackerID()-> String?{return sessionTrackerID}
+
     open override func connect(_ token: Token){
         
         super.connect(token)
@@ -139,10 +141,15 @@ open class TcpConnection: BaseTcpConnection {
             //ex: INIT|{"id":"CVH2SWG21GW","group":1,"motd":1429351583,"protocol":2,"v":0.88} || INIT|{"id":1,"error":"Token is invalid"}
             
             if let result = parseForErrorJson(output) {
-                answerObservers.notify(AnswTags.auth, result.1 , !result.0)
                 
-                if !result.0
-                {
+                
+                if !result.0 {
+                    if let trackerID = parseTag(output, key: ParseKeys.id) {
+                        sessionTrackerID = trackerID
+                    } else {
+                        sessionTrackerID = "error parsing TrackerID"
+                    }
+                    answerObservers.notify(AnswTags.auth, result.1 , !result.0)
                     if let parsed = parseJson(output)  as? [String: Any] {
                         
                         if let groupsEnabled = parsed["group"] as? Bool {
@@ -151,7 +158,10 @@ open class TcpConnection: BaseTcpConnection {
                         }
                        
                     }
+                } else {
+                    answerObservers.notify(AnswTags.auth, result.1 , !result.0)
                 }
+                
             }
             
         }

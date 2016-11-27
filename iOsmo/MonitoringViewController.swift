@@ -42,6 +42,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isLoaded = false
     
     @IBOutlet weak var userLabel: UILabel!
+    @IBOutlet weak var trackerID: UIButton!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
@@ -49,12 +50,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var osmoImage: UIImageView!
     @IBOutlet weak var osmoStatus: UIImageView!
     @IBOutlet weak var gpsConnectionImage: UIImageView!
-    @IBOutlet weak var serverConnectionImg: UIImageView!
     @IBOutlet weak var playStopBtn: UIButton!
 
     @IBOutlet weak var pauseBtn: UIButton!
     @IBOutlet weak var slider: UIScrollView!
-    @IBOutlet weak var connectionResult: UILabel!
     @IBOutlet weak var link: UIButton!
     
     @IBOutlet weak var sliderImg: UIView!
@@ -241,7 +240,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 }
                 
                 if let user = SettingsManager.getKey(SettingKeys.user) {
-                    
                     if user.length > 0 {
                         self.userLabel.text = user as String
                     } else {
@@ -250,17 +248,21 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 } else {
                     self.userLabel.text = ""
                 }
+                
+                if let trackerId = self.connectionManager.TrackerID{
+                        self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+                } else {
+                    self.trackerID.setTitle("", for: UIControlState())
+                }
+                
+                
 
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
                 self.osmoStatus.isHidden = !theChange
-                //self.connectionResult.text = theChange ? "connection is ON" :  "connection is OFF"
-                //self.serverConnectionImg.image = theChange ? UIImage(named:"online-32")! : UIImage(named:"offline-32")!
-                
                 
                 if !theChange && !$0.1.isEmpty {
-                    
                     self.alert("Error", message: $0.1)
                 }
             }

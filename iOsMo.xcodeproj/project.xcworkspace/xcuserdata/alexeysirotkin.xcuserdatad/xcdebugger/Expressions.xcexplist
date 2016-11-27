@@ -3,17 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
-      </ContextState>
-      <ContextState
-         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.view.frame">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -36,9 +25,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
-      </ContextState>
-      <ContextState
          contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -46,6 +32,28 @@
             </PersistentString>
             <PersistentString
                value = "toDisplay">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$1">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
