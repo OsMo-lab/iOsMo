@@ -1,0 +1,128 @@
+//
+//  GroupsManager.swift
+//  iOsmo
+//
+//  Created by Olga Grineva on 08/04/15.
+//  Copyright (c) 2015 Olga Grineva. All rights reserved.
+//
+
+import Foundation
+open class GroupManager{
+
+    
+    var groupsOnMap: [Int] = [Int]()
+    var allGroups: [Group]?
+    var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
+    var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
+    
+    
+    var groupListUpdated = ObserverSet<[Group]>()
+    var groupEntered = ObserverSet<(Bool, String)>()
+    var groupLeft = ObserverSet<(Bool, String)>()
+    
+    var onGroupListUpdated: ObserverSetEntry<[Group]>?
+    
+    fileprivate let log = LogQueue.sharedLogQueue
+    
+    class var sharedGroupManager : GroupManager {
+    
+        struct Static {
+            static let instance: GroupManager = GroupManager()
+        }
+        
+        return Static.instance
+    }
+    
+    let connection = ConnectionManager.sharedConnectionManager
+    
+    open func activateAllGroups(){
+        
+        connection.activateAllGroups()
+    }
+    
+    open func deactivateAllGroups(){
+    
+        connection.deactivateAllGroups()
+    }
+    
+    open func activateGroup(_ name: String){}
+    
+    open func deactivateGroup(_ name: String) {}
+    
+
+    
+    var onEnterGroup : ObserverSetEntry<(Bool, String)>?
+    var onLeaveGroup : ObserverSetEntry<(Bool, String)>?
+    
+    open func enterGroup(_ name: String, nick: String){
+    
+        self.onEnterGroup = connection.groupEntered.add{
+        
+            self.groupEntered.notify($0, $1)
+            
+            print("ENTERED! \($0) ")
+            
+            self.connection.groupEntered.remove(self.onEnterGroup!)
+        }
+        connection.enterGroup(name, nick: nick)
+    }
+    
+    open func leaveGroup(_ u: String) {
+        
+        self.onLeaveGroup = connection.groupLeft.add{
+            
+            self.groupLeft.notify($0, $1)
+            
+            print("LEFT! \($0) ")
+            
+            self.connection.groupLeft.remove(self.onLeaveGroup!)
+        }
+        connection.leaveGroup(u)
+    }
+    
+    open func groupList(){
+        
+        if self.onGroupListUpdated == nil {
+            self.onGroupListUpdated = connection.groupList.add{
+                
+                self.allGroups = $0
+                self.groupListUpdated.notify($0)
+               
+            }
+        }
+        
+        connection.getGroups()
+    }
+    
+    open func createGroup(){
+        
+        
+        
+    }
+    
+   
+    
+    open func updateGroupsOnMap(_ groups: [Int]){
+        
+        groupsOnMap = groups
+        connection.monitoringGroups = groups
+        
+        if groups.count > 0 && self.monitoringGroupsHandler == nil {
+            
+            self.monitoringGroupsHandler = connection.monitoringGroupsUpdated.add({self.monitoringGroupsUpdated.notify($0)})
+        }
+        if groups.count == 0 && self.monitoringGroupsHandler != nil {
+            
+            connection.monitoringGroupsUpdated.remove(self.monitoringGroupsHandler!)
+            self.monitoringGroupsHandler = nil
+        }
+    }
+    
+
+    open func getUser(_ group:  Int, user: Int) -> User? {
+        
+        let foundGroup = allGroups?.filter{$0.id == "\(group)"}.first
+        //return foundGroup?.users.filter{$0.device == "\(user)"}.first
+        return foundGroup?.users.filter{$0.id == "\(user)"}.first
+    }
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "count">
+            </PersistentString>
+            <PersistentString
+               value = "text">
+            </PersistentString>
+            <PersistentString
+               value = "count.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.group">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "logQueue">
+            </PersistentString>
+            <PersistentString
+               value = "toDisplay">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$1">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
