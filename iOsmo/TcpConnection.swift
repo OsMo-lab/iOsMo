@@ -71,6 +71,13 @@ open class TcpConnection: BaseTcpConnection {
         super.send(request)
     }
     
+    
+    
+    open func sendActivatePoolGroups(_ s: Int){
+        let request = "\(Tags.activatePoolGroups.rawValue)|\(s)"
+        super.send(request)
+    }
+    
     open func sendActivateAllGroups(){
         let request = "\(Tags.activateAllGroup.rawValue)"
         super.send(request)
@@ -120,7 +127,8 @@ open class TcpConnection: BaseTcpConnection {
             return false
         }
         
-        let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|")[1] == "1" }
+        //let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|")[1] == "1" }
+        let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|").last == "1" }
         
         var command = output.components(separatedBy: "|").first!
         var addict = output.components(separatedBy: "|").last!
@@ -137,12 +145,9 @@ open class TcpConnection: BaseTcpConnection {
         
         //if outputContains(AnswTags.token){
         if outputContains(AnswTags.auth){
-            
             //ex: INIT|{"id":"CVH2SWG21GW","group":1,"motd":1429351583,"protocol":2,"v":0.88} || INIT|{"id":1,"error":"Token is invalid"}
             
             if let result = parseForErrorJson(output) {
-                
-                
                 if !result.0 {
                     if let trackerID = parseTag(output, key: ParseKeys.id) {
                         sessionTrackerID = trackerID
@@ -236,7 +241,6 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.enterGroup) {
-            
             answerObservers.notify(AnswTags.enterGroup, parseCommandName(),parseBoolAnswer())
             return
         }

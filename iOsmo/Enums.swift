@@ -31,7 +31,7 @@ enum Tags: String {
     case remoteCommandResponse = "RCR:"
     case activateAllGroup = "GAA"
     case deactivateAllGroup = "GDA"
-    //case activatePoolGroup = "PG"
+    case activatePoolGroups = "PG"
 }
 
 enum KeysOld: String{
@@ -79,6 +79,7 @@ enum AnswTags: String{
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"
+    
 }
 
 enum UpdatesEnum: String {
@@ -95,6 +96,7 @@ enum SettingKeys: String {
     case user = "user"
     case sendTime = "sendTime"
     case logView = "logView"
+    case poolGroups = "poolGroups"
 }
 
 enum GroupActions: String {

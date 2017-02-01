@@ -201,7 +201,11 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    
+    open func activatePoolGroups(_ s: Int){
+        if self.connected {
+            connection.sendActivatePoolGroups(s)
+        }
+    }
     
     open func deactivateAllGroups(){
         if self.connected {

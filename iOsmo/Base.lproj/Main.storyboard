@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -488,11 +488,11 @@
                                         <rect key="frame" x="0.0" y="22" width="600" height="110"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ycF-gF-FoA" id="7cf-Lz-R3w">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="109"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Gda-CV-a0k">
-                                                    <rect key="frame" x="15" y="0.0" width="570" height="109"/>
+                                                    <rect key="frame" x="15" y="0.0" width="570" height="109.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -549,11 +549,11 @@
                                         <rect key="frame" x="0.0" y="132" width="600" height="110"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fKy-6u-m9b" id="my6-8t-IKI">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="109"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GPf-cv-TBM">
-                                                    <rect key="frame" x="15" y="0.0" width="570" height="109"/>
+                                                    <rect key="frame" x="15" y="0.0" width="570" height="109.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -567,7 +567,7 @@
                                         <rect key="frame" x="0.0" y="242" width="600" height="110"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Yms-kF-AU5" id="eyR-il-5NP">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="109"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="group" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kpg-lx-GAk">
@@ -836,8 +836,8 @@
                                     <constraint firstAttribute="height" constant="64" id="xTg-0A-aRO"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ky8-d1-c0p" userLabel="SwitchesView">
-                                <rect key="frame" x="20" y="69" width="560" height="205"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ky8-d1-c0p" userLabel="SwitchesView">
+                                <rect key="frame" x="20" y="69" width="560" height="259"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Don't turn the screen off" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzF-Z7-f5g">
                                         <rect key="frame" x="8" y="14" width="200" height="21"/>
@@ -896,14 +896,31 @@
                                             <outlet property="delegate" destination="e7e-HH-qS7" id="ThF-At-rc2"/>
                                         </connections>
                                     </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Pool groups" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8LA-DM-qly" userLabel="Pool Groups">
+                                        <rect key="frame" x="8" y="208" width="200" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.42846433080000002" green="0.42846433080000002" blue="0.42846433080000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6kH-le-jY8" userLabel="Pool groups Switch">
+                                        <rect key="frame" x="524" y="208" width="51" height="31"/>
+                                        <color key="onTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="thumbTintColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="PoolGroupsChanged:" destination="e7e-HH-qS7" eventType="valueChanged" id="5H7-qo-ooj"/>
+                                        </connections>
+                                    </switch>
                                 </subviews>
                                 <color key="backgroundColor" red="0.074509803920000006" green="0.074509803920000006" blue="0.074509803920000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="k9Q-rS-i4p" firstAttribute="width" secondItem="SKu-79-qyc" secondAttribute="width" id="13M-N2-fCU"/>
-                                    <constraint firstAttribute="height" constant="205" id="1EH-jq-2mC"/>
+                                    <constraint firstAttribute="height" constant="260" id="1EH-jq-2mC"/>
+                                    <constraint firstItem="8LA-DM-qly" firstAttribute="leading" secondItem="LWZ-te-6Dr" secondAttribute="leading" id="2u6-Nh-dOI"/>
+                                    <constraint firstItem="8LA-DM-qly" firstAttribute="top" secondItem="8sE-Lc-xYs" secondAttribute="bottom" constant="26" id="3uc-72-Aje"/>
                                     <constraint firstAttribute="trailing" secondItem="7oa-6p-5Qs" secondAttribute="trailing" constant="12" id="4Xq-p3-k4N"/>
                                     <constraint firstItem="SKu-79-qyc" firstAttribute="trailing" secondItem="FlD-Cx-NYi" secondAttribute="trailing" id="6jb-dg-2gF"/>
                                     <constraint firstItem="dzF-Z7-f5g" firstAttribute="top" secondItem="ky8-d1-c0p" secondAttribute="top" constant="14" id="CPM-kB-sPv"/>
+                                    <constraint firstItem="6kH-le-jY8" firstAttribute="leading" secondItem="SKu-79-qyc" secondAttribute="leading" id="EWL-x5-wVs"/>
                                     <constraint firstItem="8sE-Lc-xYs" firstAttribute="top" secondItem="LWZ-te-6Dr" secondAttribute="bottom" constant="29" id="MQ7-cG-9hy"/>
                                     <constraint firstItem="LWZ-te-6Dr" firstAttribute="top" secondItem="mQB-e1-7Xc" secondAttribute="bottom" constant="26" id="dPs-8i-SI1"/>
                                     <constraint firstItem="mQB-e1-7Xc" firstAttribute="leading" secondItem="ky8-d1-c0p" secondAttribute="leading" constant="12" id="dgA-vr-ufi"/>
@@ -917,6 +934,7 @@
                                     <constraint firstItem="LWZ-te-6Dr" firstAttribute="leading" secondItem="mQB-e1-7Xc" secondAttribute="leading" id="r0t-AO-bLc"/>
                                     <constraint firstItem="8sE-Lc-xYs" firstAttribute="leading" secondItem="LWZ-te-6Dr" secondAttribute="leading" id="rXw-hI-2eF"/>
                                     <constraint firstItem="7oa-6p-5Qs" firstAttribute="centerY" secondItem="dzF-Z7-f5g" secondAttribute="centerY" id="uNx-fA-hA0"/>
+                                    <constraint firstItem="6kH-le-jY8" firstAttribute="top" secondItem="k9Q-rS-i4p" secondAttribute="bottom" constant="26" id="vTZ-bm-8TU"/>
                                     <constraint firstItem="k9Q-rS-i4p" firstAttribute="trailing" secondItem="SKu-79-qyc" secondAttribute="trailing" id="z4z-fM-IHM"/>
                                 </constraints>
                             </view>
@@ -939,6 +957,7 @@
                     <connections>
                         <outlet property="awakeModeSwitcher" destination="7oa-6p-5Qs" id="39A-fT-cCB"/>
                         <outlet property="intervalTextField" destination="k9Q-rS-i4p" id="wcW-5b-qY8"/>
+                        <outlet property="poolGroupSwitcher" destination="6kH-le-jY8" id="0fK-vG-ycf"/>
                         <outlet property="resetAuthSwitcher" destination="SKu-79-qyc" id="5R6-xZ-9Gu"/>
                     </connections>
                 </viewController>

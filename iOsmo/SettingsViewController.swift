@@ -16,6 +16,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
+    @IBOutlet weak var poolGroupSwitcher: UISwitch!
     @IBOutlet weak var intervalTextField: UITextField!
     
     @IBAction func AwakeModeChanged(_ sender: AnyObject) {
@@ -42,6 +43,21 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
         }
     }
     
+    /*Изменение параметро опроса групп*/
+    @IBAction func PoolGroupsChanged(_ sender: AnyObject) {
+        var poolState:Int;
+        
+        if self.poolGroupSwitcher.isOn {
+            poolState = 1;
+        }else {
+            
+            poolState = -1;
+        }
+        SettingsManager.setKey("\(poolState)" as NSString, forKey: SettingKeys.poolGroups)
+        connectionManager.activatePoolGroups(poolState);
+    }
+    
+    
     @IBAction func textFieldEnter(_sender: UITextField){
         _sender.becomeFirstResponder()
     }
@@ -67,8 +83,10 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
         super.viewDidLoad()
         
         if let isStayAwake = SettingsManager.getKey(SettingKeys.isStayAwake) {
-            
             awakeModeSwitcher.setOn(isStayAwake.boolValue, animated: false)
+        }
+        if let isPoolGroups = SettingsManager.getKey(SettingKeys.poolGroups) {
+            poolGroupSwitcher.setOn(isPoolGroups.boolValue, animated: false)
         }
         
         if let device = SettingsManager.getKey(SettingKeys.device) {
