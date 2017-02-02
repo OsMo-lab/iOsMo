@@ -55,7 +55,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) ->Void) -> Bool {
+        
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+            let webURL = userActivity.webpageURL!;
+            if !presentViewController(url:webURL) {
+                UIApplication.shared.openURL(webURL);
+            }
+            
+        }
+        
+        return true;
+    
+    }
+    
+    func presentViewController(url:URL)->Bool {
+        
+        if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true){
+            if (url.host == "osmo.mobi" && url.pathComponents[2] == "g") {
+                return true;
+              }
+            
+        }
+        
+        return false;
+    }
+    
 
 }
 

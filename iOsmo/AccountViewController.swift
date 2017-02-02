@@ -119,8 +119,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList()
                 self.btnEnterGroup.isEnabled = true
-            }
-            else {
+            } else {
                 self.alert("error on enter group", message: $0.1)
                 
                 if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)),
