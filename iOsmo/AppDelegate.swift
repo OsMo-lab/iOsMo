@@ -73,7 +73,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func presentViewController(url:URL)->Bool {
         
         if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true){
-            if (url.host == "osmo.mobi" && url.pathComponents[2] == "g") {
+            if (url.host == "osmo.mobi" && url.pathComponents[1] == "g" && url.pathComponents[2] != "") {
+                /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let accountVC = storyboard.instantiateViewController(withIdentifier: "AccountViewController")
+                    as! AccountViewController
+                */
+                
+                if let tbc:UITabBarController = (window?.rootViewController as! UITabBarController){
+
+                    let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
+                    
+                    tbc.selectedViewController = accountVC;
+                    
+                    accountVC.btnEnterGroupPress(_sender: self, url.pathComponents[2])
+                }
                 return true;
               }
             
