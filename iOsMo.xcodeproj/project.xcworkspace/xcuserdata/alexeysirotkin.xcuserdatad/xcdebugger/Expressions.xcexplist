@@ -39,6 +39,17 @@
          contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
       </ContextState>
       <ContextState
+         contextName = "AppDelegate.presentViewController(url : URL) -&gt; Bool:AppDelegate.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "url.pathComponents[2]">
+            </PersistentString>
+            <PersistentString
+               value = "url.pathComponents[1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -56,6 +67,9 @@
                value = "self.view.frame">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(enterGroup(String, nick : String) -&gt; ()).(closure #1):GroupManager.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

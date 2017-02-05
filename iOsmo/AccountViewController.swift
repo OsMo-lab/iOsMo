@@ -10,7 +10,7 @@ import UIKit
 
 class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
 
-    var groupsEnabled = true
+    //var groupsEnabled = true
     
     let groupCell = "groupCell"
     let newGroupCell = "newGroupCell"
@@ -20,6 +20,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var successLogin: Bool = false
     
     var groupAction = GroupActions.view
+    var groupToEnter = ""
     
     @IBOutlet weak var btnEnterGroup: UIButton!
     var onConnectionRun: ObserverSetEntry<(Bool, String)>?
@@ -28,27 +29,25 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var activateSwitcher: UISwitch!
-    
-    @IBAction func btnCancelCellAdd(_ sender: AnyObject) {
+
+    public func btnEnterGroupPress(_sender: AnyObject, _ group: String?) {
+        groupToEnter = group!;
+        if btnEnterGroup.isEnabled {
+            groupAction = GroupActions.enter
+            tableView.beginUpdates()
+            
+            tableView.insertRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
+            
+            
+            tableView.endUpdates()
+            btnEnterGroup.isEnabled = false
+        }
         
-        tableView.beginUpdates()
-        
-        tableView.deleteRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
-        
-        groupAction = GroupActions.view
-        tableView.endUpdates()
-        btnEnterGroup.isEnabled = true
-        
+
     }
+    
     @IBAction func btnEnterCellAdd(_ sender: AnyObject) {
-        
-        groupAction = GroupActions.enter
-        tableView.beginUpdates()
-        
-        tableView.insertRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
-        
-        tableView.endUpdates()
-        btnEnterGroup.isEnabled = false
+        btnEnterGroupPress(_sender: sender, "")
     }
     
     
@@ -130,9 +129,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                         if let gName = cell.contentView.viewWithTag(1) as? UITextField,
                             let nick = cell.contentView.viewWithTag(2) as? UITextField {
                                 
-                                gName.text = ""
+                                gName.text = self.groupToEnter
                                 gName.isEnabled = true
-                                nick.text = ""
+                                nick.text = self.userName.text
                                 nick.isEnabled = true
                         }
                         
@@ -145,7 +144,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         
         groupManager.groupLeft.add{
-            if ($0.0) {self.groupManager.groupList()}
+            if ($0.0) {
+                self.groupManager.groupList()
+            } else {
+                self.alert("error on leave group", message: $0.1)
+            }
         }
         
        
@@ -272,25 +275,31 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                    let nick = cell!.contentView.viewWithTag(2) as? UITextField,
                    let btn = cell!.contentView.viewWithTag(4) as? UIButton {
                 
-                    gName.text = ""
+                    gName.text = groupToEnter
                     gName.isEnabled = true
-                    nick.text = ""
+                    nick.text = userName.text
                     nick.isEnabled = true
                     btn.isHidden = false
                     
             }
-        }
-        else {
+        } else {
             cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)
             if (cell == nil) {
                 cell = UITableViewCell(style:UITableViewCellStyle.subtitle, reuseIdentifier:groupCell)
             }
+            let group = (groupAction == GroupActions.enter) ? self.groups[row - 1]: self.groups[row]
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel {
                 
-                groupName.text = (groupAction == GroupActions.enter) ? self.groups[row - 1].name : self.groups[row].name
+                
+                groupName.text = group.name
             }
-            //cell.textLabel?.text = ""
-            
+            if let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel {
+                var users = ""
+                for user in group.users {
+                    users = "\(users)\(user.name);"
+                }
+                usersLabel.text = users;
+            }
         }
         cell!.selectionStyle = UITableViewCellSelectionStyle.none
         return cell!
@@ -306,24 +315,38 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return !(groupAction == GroupActions.enter && (indexPath as NSIndexPath).row == 0)
+        //return !(groupAction == GroupActions.enter && (indexPath as NSIndexPath).row == 0)
+        return true;
     }
 
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        return "leave"
+        if ((groupAction == GroupActions.enter && (indexPath as NSIndexPath).row == 0)) {
+            return "cancel"
+        } else {
+            return "leave"
+        }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-        
-            if let curRow = tableView.cellForRow(at: indexPath), let indicator = curRow.contentView.viewWithTag(3) as? UIActivityIndicatorView {
+            if ((groupAction == GroupActions.enter && (indexPath as NSIndexPath).row == 0)) {
+                tableView.beginUpdates()
                 
-                indicator.startAnimating()
+                tableView.deleteRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
+                
+                groupAction = GroupActions.view
+                tableView.endUpdates()
+                btnEnterGroup.isEnabled = true
+            }else {
+                if let curRow = tableView.cellForRow(at: indexPath), let indicator = curRow.contentView.viewWithTag(3) as? UIActivityIndicatorView {
+                    
+                    indicator.startAnimating()
+                }
+                
+                let group = groups[(indexPath as NSIndexPath).row - (groupAction == GroupActions.enter ? 1 : 0)]
+                groupManager.leaveGroup(group.id)
+                
             }
-            
-            let group = groups[(indexPath as NSIndexPath).row]
-            groupManager.leaveGroup(group.id)
-            
             tableView.setEditing(false, animated: true)
             
         }

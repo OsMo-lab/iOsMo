@@ -158,7 +158,6 @@ open class TcpConnection: BaseTcpConnection {
                     if let parsed = parseJson(output)  as? [String: Any] {
                         
                         if let groupsEnabled = parsed["group"] as? Bool {
-
                              answerObservers.notify((AnswTags.allGroupsEnabled, "", groupsEnabled))
                         }
                        
@@ -182,8 +181,9 @@ open class TcpConnection: BaseTcpConnection {
                     super.sessionOpened = true
                     if let sessionUrl = parseTag(output, key: ParseKeys.sessionUrl) {
                         sessionUrlParsed = sessionUrl
+                    } else {
+                        sessionUrlParsed = "error parsing url"
                     }
-                    else {sessionUrlParsed = "error parsing url"}
                 
                 }
                 
@@ -241,11 +241,23 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.enterGroup) {
-            answerObservers.notify(AnswTags.enterGroup, parseCommandName(),parseBoolAnswer())
+            if let result = parseForErrorJson(output){
+                answerObservers.notify(AnswTags.enterGroup, result.1 , !result.0)
+            } else {
+                print("error: enter group answer cannot be parsed")
+                log.enqueue("error: enter group asnwer cannot be parsed")
+            }
             return
         }
         if outputContains(AnswTags.leaveGroup) {
-            answerObservers.notify(AnswTags.leaveGroup, parseCommandName(), parseBoolAnswer())
+            if let result = parseForErrorJson(output){
+                answerObservers.notify(AnswTags.leaveGroup, result.1 , !result.0)
+            }else {
+                print("error: leave group answer cannot be parsed")
+                log.enqueue("error: leave group asnwer cannot be parsed")
+            }
+            
+            //answerObservers.notify(AnswTags.leaveGroup, parseCommandName(), parseBoolAnswer())
             return
         }
         
@@ -361,6 +373,10 @@ open class TcpConnection: BaseTcpConnection {
                     return (true, err)
                 }
                 return (true, "error message is not parsed")
+            }
+        } else {
+            if responce.components(separatedBy: "|").last == "1" {
+                return (false, "")
             }
         }
         return nil

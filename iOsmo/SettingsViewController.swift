@@ -18,6 +18,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
     @IBOutlet weak var poolGroupSwitcher: UISwitch!
     @IBOutlet weak var intervalTextField: UITextField!
+
     
     @IBAction func AwakeModeChanged(_ sender: AnyObject) {
     
