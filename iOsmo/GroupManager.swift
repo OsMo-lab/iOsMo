@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 08/04/15.
-//  Copyright (c) 2015 Olga Grineva. All rights reserved.
+//  Copyright (c) 2015 Olga Grineva, (c) 2017 Alexey Sirotkin All rights reserved.
 //
 
 import Foundation
@@ -19,8 +19,13 @@ open class GroupManager{
     var groupListUpdated = ObserverSet<[Group]>()
     var groupEntered = ObserverSet<(Bool, String)>()
     var groupLeft = ObserverSet<(Bool, String)>()
+    var groupActivated = ObserverSet<(Bool, String)>()
+    var groupDeactivated = ObserverSet<(Bool, String)>()
     
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
+    
+    var onActivateGroup : ObserverSetEntry<(Bool, String)>?
+    var onDeactivateGroup : ObserverSetEntry<(Bool, String)>?
     
     fileprivate let log = LogQueue.sharedLogQueue
     
@@ -45,14 +50,42 @@ open class GroupManager{
         connection.deactivateAllGroups()
     }
     
-    open func activateGroup(_ name: String){}
+    open func activateGroup(_ name: String){
+        
+        self.onActivateGroup = connection.groupActivated.add{
+            
+            self.groupActivated.notify($0, $1)
+            
+            print("ACTIVATED! \($0) ")
+            
+            self.connection.groupActivated.remove(self.onActivateGroup!)
+        }
+        connection.activateGroup(name)
+
+
+    }
     
-    open func deactivateGroup(_ name: String) {}
+    open func deactivateGroup(_ name: String) {
+        self.onDeactivateGroup = connection.groupDeactivated.add{
+            
+            self.groupDeactivated.notify($0, $1)
+            
+            print("DEACTIVATED! \($0) ")
+            
+            self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
+        }
+        
+        connection.deactivateGroup(name)
+    }
     
+    open func groupsSwitch(_ s: Int) {
+        connection.groupsSwitch(s)
+    }
 
     
     var onEnterGroup : ObserverSetEntry<(Bool, String)>?
     var onLeaveGroup : ObserverSetEntry<(Bool, String)>?
+
     
     open func enterGroup(_ name: String, nick: String){
     

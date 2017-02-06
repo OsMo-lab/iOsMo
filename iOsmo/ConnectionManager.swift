@@ -41,6 +41,8 @@ open class ConnectionManager: NSObject{
     let groupEntered = ObserverSet<(Bool, String)>()
     let groupCreated = ObserverSet<(Bool, String)>()
     let groupLeft = ObserverSet<(Bool, String)>()
+    let groupActivated = ObserverSet<(Bool, String)>()
+    let groupDeactivated = ObserverSet<(Bool, String)>()
     let groupList = ObserverSet<[Group]>()
     let connectionRun = ObserverSet<(Bool, String)>()
     let sessionRun = ObserverSet<(Bool, String)>()
@@ -207,10 +209,30 @@ open class ConnectionManager: NSObject{
         }
     }
     
+    open func groupsSwitch(_ s: Int){
+        if self.connected {
+            connection.sendGroupsSwitch(s)
+        }
+    }
+    
     open func deactivateAllGroups(){
         if self.connected {
             connection.sendDeactivateAllGroups()
         }
+    }
+    
+    open func activateGroup(_ u: String){
+        if self.connected {
+            connection.sendActivateGroup(u)
+        }
+        
+    }
+    
+    open func deactivateGroup(_ u: String){
+        if self.connected {
+            connection.sendDeactivateGroup(u)
+        }
+        
     }
     
     //MARK private methods
@@ -247,6 +269,18 @@ open class ConnectionManager: NSObject{
             
             return
         }
+        
+        if tag == AnswTags.activateGroup {
+            groupActivated.notify(answer, name)
+            
+            return
+        }
+        if tag == AnswTags.deactivateGroup {
+            groupDeactivated.notify(answer, name)
+            
+            return
+        }
+        
 
         if tag == AnswTags.openedSession {
             self.sessionOpened = answer

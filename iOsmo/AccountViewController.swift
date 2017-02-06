@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 22/12/14.
-//  Copyright (c) 2014 Olga Grineva, © 2016 Alexey Sirotkin. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, © 2017 Alexey Sirotkin. All rights reserved.
 //
 
 import UIKit
@@ -55,12 +55,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     @IBAction func activateAllSwitched(_ sender: AnyObject) {
         
         if let switcher = self.activateSwitcher {
+            groupManager.groupsSwitch( (switcher.isOn == true ? 1: -1))
 
-            if switcher.isOn {
-                groupManager.activateAllGroups()
-            } else {
-                groupManager.deactivateAllGroups()
-            }
         }
     }
     
@@ -92,8 +88,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         if self.onConnectionRun == nil {
             
             self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 {self.setLoginControls()}
-                else { print($0.1) }
+                if $0.0 {
+                    self.setLoginControls()
+                } else {
+                    print($0.1)
+                }
             }
         }
     
@@ -114,7 +113,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         groupManager.groupEntered.add{
             
             if ($0.0) {
-                
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList()
                 self.btnEnterGroup.isEnabled = true
@@ -128,7 +126,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                         
                         if let gName = cell.contentView.viewWithTag(1) as? UITextField,
                             let nick = cell.contentView.viewWithTag(2) as? UITextField {
-                                
                                 gName.text = self.groupToEnter
                                 gName.isEnabled = true
                                 nick.text = self.userName.text
@@ -150,8 +147,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.alert("error on leave group", message: $0.1)
             }
         }
-        
-       
         groupManager.groupList()
         
         //read account state
@@ -167,7 +162,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "toAuth" {
-            
             if let vC = segue.destination as? AuthViewController { vC.delegate = self}
         }
     }
@@ -289,9 +283,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
             let group = (groupAction == GroupActions.enter) ? self.groups[row - 1]: self.groups[row]
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel {
-                
-                
-                groupName.text = group.name
+                groupName.text = "\(group.name)(\(group.nick))"
             }
             if let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel {
                 var users = ""
@@ -300,6 +292,10 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
                 usersLabel.text = users;
             }
+            if (group.active) {
+                cell!.accessoryType = UITableViewCellAccessoryType.checkmark
+            }
+
         }
         cell!.selectionStyle = UITableViewCellSelectionStyle.none
         return cell!
@@ -310,7 +306,19 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        _ = (indexPath as NSIndexPath).row
+        let row = (indexPath as NSIndexPath).row
+        
+        if groupAction == GroupActions.enter && row == 0 {
+        } else {
+            let group = (groupAction == GroupActions.enter) ? self.groups[row - 1]: self.groups[row]
+            if group.active {
+                groupManager.deactivateGroup(group.id)
+            } else {
+                groupManager.activateGroup(group.id)
+            }
+            
+        }
+
         
     }
     

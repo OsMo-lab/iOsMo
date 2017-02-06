@@ -71,12 +71,27 @@ open class TcpConnection: BaseTcpConnection {
         super.send(request)
     }
     
+    open func sendActivateGroup(_ u: String){
+        let request = "\(Tags.activateGroup.rawValue)\(u)"
+        super.send(request)
+    }
+    
+    open func sendDeactivateGroup(_ u: String){
+        let request = "\(Tags.deactivateGroup.rawValue)\(u)"
+        super.send(request)
+    }
     
     
     open func sendActivatePoolGroups(_ s: Int){
         let request = "\(Tags.activatePoolGroups.rawValue)|\(s)"
         super.send(request)
     }
+    
+    open func sendGroupsSwitch(_ s: Int){
+        let request = "\(Tags.groupSwitch.rawValue)"
+        super.send(request)
+    }
+
     
     open func sendActivateAllGroups(){
         let request = "\(Tags.activateAllGroup.rawValue)"
@@ -260,6 +275,24 @@ open class TcpConnection: BaseTcpConnection {
             //answerObservers.notify(AnswTags.leaveGroup, parseCommandName(), parseBoolAnswer())
             return
         }
+        if outputContains(AnswTags.activateGroup) {
+            if let result = parseForErrorJson(output){
+                answerObservers.notify(AnswTags.activateGroup, result.1 , !result.0)
+            }else {
+                print("error: activate group answer cannot be parsed")
+                log.enqueue("error: activate group asnwer cannot be parsed")
+            }
+            return
+        }
+        if outputContains(AnswTags.deactivateGroup) {
+            if let result = parseForErrorJson(output){
+                answerObservers.notify(AnswTags.deactivateGroup, result.1 , !result.0)
+            }else {
+                print("error: deactivate group answer cannot be parsed")
+                log.enqueue("error: deactivate group asnwer cannot be parsed")
+            }
+            return
+        }
         
         if outputContains(AnswTags.getGroups){
             if let result = parseGroupsJson(output) {
@@ -441,6 +474,8 @@ open class TcpConnection: BaseTcpConnection {
                     let gName = g["name"] as! String
                     let gDescr = g["description"] as! String
                     let gPolicy = g["policy"] as! String
+                    let gNick = g["nick"] as! String
+                    let gColor = g["color"] as! String
                     let gActive = g["active"] as! String == "1"
                     let gId = g["u"] as! String
                     let jsonUsers = g["users"] as! Array<AnyObject>
@@ -449,6 +484,8 @@ open class TcpConnection: BaseTcpConnection {
                     let group = Group(id: gId, name: gName, active: gActive)
                     group.descr = gDescr
                     group.policy = gPolicy
+                    group.nick = gNick
+                    group.color = gColor
                     
                     for jsonU in jsonUsers{
                         

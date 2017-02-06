@@ -28,10 +28,13 @@ enum Tags: String {
     case getGroups = "GROUP"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
+    case activateGroup = "GA:"
+    case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
     case activateAllGroup = "GAA"
     case deactivateAllGroup = "GDA"
     case activatePoolGroups = "PG"
+    case groupSwitch = "GS"
 }
 
 enum KeysOld: String{
@@ -65,6 +68,8 @@ enum ParseKeys: String{
 enum AnswTags: String{
     case openedSession = "TO|"
     case getGroups = "GROUP"
+    case activateGroup = "GA:"
+    case deactivateGroup = "GD:"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
     case remoteCommand = "RC:"
