@@ -11,6 +11,7 @@ open class Group{
     var id: String
     var name: String
     var descr: String = ""
+    var url: String = ""
     var active: Bool
     var policy: String = ""
     var color: String = "#ffffff"

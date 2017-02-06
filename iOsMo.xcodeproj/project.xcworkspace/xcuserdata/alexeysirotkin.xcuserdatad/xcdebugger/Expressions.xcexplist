@@ -61,6 +61,9 @@
          contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
       </ContextState>
       <ContextState
+         contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -70,6 +73,14 @@
       </ContextState>
       <ContextState
          contextName = "GroupManager.(enterGroup(String, nick : String) -&gt; ()).(closure #1):GroupManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(deactivateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "name">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

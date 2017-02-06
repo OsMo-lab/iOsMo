@@ -99,11 +99,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         //setLoginControls()
         
         groupManager.groupListUpdated.add{
-
             if  self.groups.count > 0{
                 
                 self.groups = [Group]()
-                
             }
             
             self.groups = $0
@@ -111,7 +109,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         
         groupManager.groupEntered.add{
-            
             if ($0.0) {
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList()
@@ -145,6 +142,22 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.groupManager.groupList()
             } else {
                 self.alert("error on leave group", message: $0.1)
+            }
+        }
+        
+        groupManager.groupActivated.add{
+            if ($0.0) {
+                self.groupManager.groupList()
+            } else {
+                self.alert("error on activate group", message: $0.1)
+            }
+        }
+        
+        groupManager.groupDeactivated.add{
+            if ($0.0) {
+                self.tableView.reloadData()
+            } else {
+                self.alert("error on deactivate group", message: $0.1)
             }
         }
         groupManager.groupList()
@@ -292,8 +305,13 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
                 usersLabel.text = users;
             }
+            if let btnURL = cell!.contentView.viewWithTag(4) as? UIButton {
+                btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControlState.normal)
+            }
             if (group.active) {
                 cell!.accessoryType = UITableViewCellAccessoryType.checkmark
+            } else {
+                cell!.accessoryType = UITableViewCellAccessoryType.none
             }
 
         }

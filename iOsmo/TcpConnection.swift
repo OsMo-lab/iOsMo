@@ -408,7 +408,7 @@ open class TcpConnection: BaseTcpConnection {
                 return (true, "error message is not parsed")
             }
         } else {
-            if responce.components(separatedBy: "|").last == "1" {
+            if Int(responce.components(separatedBy: "|").last!)! > 0 {
                 return (false, "")
             }
         }
@@ -476,6 +476,7 @@ open class TcpConnection: BaseTcpConnection {
                     let gPolicy = g["policy"] as! String
                     let gNick = g["nick"] as! String
                     let gColor = g["color"] as! String
+                    let gURL = g["url"] as! String
                     let gActive = g["active"] as! String == "1"
                     let gId = g["u"] as! String
                     let jsonUsers = g["users"] as! Array<AnyObject>
@@ -486,6 +487,7 @@ open class TcpConnection: BaseTcpConnection {
                     group.policy = gPolicy
                     group.nick = gNick
                     group.color = gColor
+                    group.url = gURL
                     
                     for jsonU in jsonUsers{
                         

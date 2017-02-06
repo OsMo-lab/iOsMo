@@ -14,8 +14,7 @@ open class GroupManager{
     var allGroups: [Group]?
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
-    
-    
+ 
     var groupListUpdated = ObserverSet<[Group]>()
     var groupEntered = ObserverSet<(Bool, String)>()
     var groupLeft = ObserverSet<(Bool, String)>()
@@ -70,7 +69,13 @@ open class GroupManager{
             
             self.groupDeactivated.notify($0, $1)
             
-            print("DEACTIVATED! \($0) ")
+            print("DEACTIVATED \(name)! \($0) ")
+            for group in self.allGroups! {
+                if group.id == name {
+                    group.active = false;
+                    break;
+                }
+            }
             
             self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
         }
