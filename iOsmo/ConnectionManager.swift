@@ -81,10 +81,8 @@ open class ConnectionManager: NSObject{
     }
     
     open func reachabilityChanged(_ note: Notification) {
-        
         log.enqueue("reachability changed")
         if let reachability = note.object as? Reachability {
-
             checkStatus(reachability)
         }
     }
@@ -101,7 +99,6 @@ open class ConnectionManager: NSObject{
         log.enqueue("ConnectionManager: connect")
         
         if !ConnectionManager.hasConnectivity() {
-            
             shouldReConnect = true
             return
         }
@@ -109,7 +106,6 @@ open class ConnectionManager: NSObject{
        if let tkn = ConnectionHelper.connectToServ() {
         
             if tkn.error.isEmpty {
-                
                 if connection.addCallBackOnError == nil {
                     connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
@@ -123,23 +119,19 @@ open class ConnectionManager: NSObject{
                         
                         //self.checkStatus(self.reachability)
                         self.connectionRun.notify((false, ""))
-                        /*
-                         if (self.shouldReConnect) {
+                        
+                        if (self.shouldReConnect) {
                             self.connect()
-                        }*/
+                        }
                     }
                 }
                 connection.connect(tkn)
                 shouldReConnect = false //interesting why here? may after connction is successful??
             } else {
-                
                 connectionRun.notify((false, "\(tkn.error)"))
                 shouldReConnect = false
             }
-        
-        
         } else {
-        
             connectionRun.notify((false, "")) //token is missing
             shouldReConnect = true
         }
@@ -184,7 +176,6 @@ open class ConnectionManager: NSObject{
     }
     
     open func enterGroup(_ name: String, nick: String){
-        
         if self.connected{
             connection.sendEnterGroup(name, nick: nick)
         }
@@ -194,14 +185,8 @@ open class ConnectionManager: NSObject{
         if self.connected {
             connection.sendLeaveGroup(u)
         }
-        
     }
 
-    open func activateAllGroups(){
-        if self.connected {
-            connection.sendActivateAllGroups()
-        }
-    }
     
     open func activatePoolGroups(_ s: Int){
         if self.connected {
@@ -215,11 +200,6 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    open func deactivateAllGroups(){
-        if self.connected {
-            connection.sendDeactivateAllGroups()
-        }
-    }
     
     open func activateGroup(_ u: String){
         if self.connected {
@@ -289,11 +269,6 @@ open class ConnectionManager: NSObject{
             return
         }
         
-        if tag == AnswTags.allGroupsEnabled {
-            groupsEnabled.notify(answer)
-            
-            return
-        }
         if tag == AnswTags.remoteCommand {
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 closeSession()

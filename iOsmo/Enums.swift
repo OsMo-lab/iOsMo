@@ -22,6 +22,7 @@ enum TagsOld: String{
 enum Tags: String {
     case token = "INIT|"
     case auth = "AUTH|"
+    
     case openSession = "TO"
     case closeSession = "TC"
     case ping = "P"
@@ -31,8 +32,6 @@ enum Tags: String {
     case activateGroup = "GA:"
     case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
-    case activateAllGroup = "GAA"
-    case deactivateAllGroup = "GDA"
     case activatePoolGroups = "PG"
     case groupSwitch = "GS"
 }
@@ -74,13 +73,13 @@ enum AnswTags: String{
     case leaveGroup = "GL:"
     case remoteCommand = "RC:"
     //case activatePG = "PG"
-    case kick = "BYE|"
+    case bye = "BYE|"
+    case kick = "KICK|"
     case pong = "PP"
     case coordinate = "T|"
     case closeSession = "TC|"
     case token = "INIT|"
     case auth = "AUTH|"
-    case allGroupsEnabled = "allGroupsEnabled" //TODO another solution to notify about group enabled flag
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"

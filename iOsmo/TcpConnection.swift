@@ -50,7 +50,6 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     open func openSession(){
-        
         let request = "\(Tags.openSession.rawValue)"
         super.send(request)
     }
@@ -91,18 +90,6 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.groupSwitch.rawValue)"
         super.send(request)
     }
-
-    
-    open func sendActivateAllGroups(){
-        let request = "\(Tags.activateAllGroup.rawValue)"
-        super.send(request)
-    }
-    
-    open func sendDeactivateAllGroups(){
-        let request = "\(Tags.deactivateAllGroup.rawValue)"
-        super.send(request)
-    }
-    
        
     //MARK private methods
 
@@ -171,11 +158,7 @@ open class TcpConnection: BaseTcpConnection {
                     }
                     answerObservers.notify(AnswTags.auth, result.1 , !result.0)
                     if let parsed = parseJson(output)  as? [String: Any] {
-                        
-                        if let groupsEnabled = parsed["group"] as? Bool {
-                             answerObservers.notify((AnswTags.allGroupsEnabled, "", groupsEnabled))
-                        }
-                       
+  
                     }
                 } else {
                     answerObservers.notify(AnswTags.auth, result.1 , !result.0)
@@ -231,10 +214,9 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.kick){
-            
             print("connection kicked")
             log.enqueue("connection kicked")
-            
+
             return
             //should update status of session and connection
         }
@@ -302,16 +284,6 @@ open class TcpConnection: BaseTcpConnection {
                 log.enqueue("error: wrong parsing groups list")
                 print("error: wrong parsing groups list")
             }
-            return
-        }
-        if outputContains(AnswTags.gda){
-            
-           self.answerObservers.notify((AnswTags.allGroupsEnabled, "", !parseBoolAnswer()))
-            return
-        }
-        if outputContains(AnswTags.gaa){
-            
-            self.answerObservers.notify((AnswTags.allGroupsEnabled, "", parseBoolAnswer()))
             return
         }
         if outputContains(AnswTags.remoteCommand){
@@ -478,16 +450,18 @@ open class TcpConnection: BaseTcpConnection {
                     let gColor = g["color"] as! String
                     let gURL = g["url"] as! String
                     let gActive = g["active"] as! String == "1"
-                    let gId = g["u"] as! String
+                    let gU = g["u"] as! String
+                    let gId = g["id"] as! String
                     let jsonUsers = g["users"] as! Array<AnyObject>
                     
                     
-                    let group = Group(id: gId, name: gName, active: gActive)
+                    let group = Group(u: gU, name: gName, active: gActive)
                     group.descr = gDescr
                     group.policy = gPolicy
                     group.nick = gNick
                     group.color = gColor
                     group.url = gURL
+                    group.id = gId;
                     
                     for jsonU in jsonUsers{
                         

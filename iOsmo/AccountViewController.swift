@@ -32,25 +32,20 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
 
     public func btnEnterGroupPress(_sender: AnyObject, _ group: String?) {
         groupToEnter = group!;
-        if btnEnterGroup.isEnabled {
+        if !btnEnterGroup.isHidden {
             groupAction = GroupActions.enter
             tableView.beginUpdates()
             
             tableView.insertRows(at: [IndexPath(row:0, section:0)], with: UITableViewRowAnimation.automatic)
             
-            
             tableView.endUpdates()
-            btnEnterGroup.isEnabled = false
+            btnEnterGroup.isHidden = true
         }
-        
-
     }
     
     @IBAction func btnEnterCellAdd(_ sender: AnyObject) {
         btnEnterGroupPress(_sender: sender, "")
     }
-    
-    
 
     @IBAction func activateAllSwitched(_ sender: AnyObject) {
         
@@ -65,8 +60,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         groupManager.groupList()
     }
     
-    
-    
+ 
     var connectionManager = ConnectionManager.sharedConnectionManager
     var groupManager = GroupManager.sharedGroupManager
     
@@ -75,6 +69,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         setLoginControls()
     
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -112,7 +107,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if ($0.0) {
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList()
-                self.btnEnterGroup.isEnabled = true
+                self.btnEnterGroup.isHidden = false
             } else {
                 self.alert("error on enter group", message: $0.1)
                 
@@ -161,10 +156,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
         groupManager.groupList()
-        
-        //read account state
-        
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -214,15 +205,13 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 userName.text = String(user)
                 loginBtn.setImage(UIImage(named: "exit-32"), for: UIControlState())
                 self.successLogin = true
-            }
-            else {
+            } else {
                 
                 userName.text = "Unknown"
                 loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
                 self.successLogin = false
             }
-        }
-        else {
+        } else {
             
             userName.text = "Unknown"
             loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
@@ -247,8 +236,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         {
             
             if !gName.text!.isEmpty && !nick.text!.isEmpty {
-                
-                // change ui control state
                 gName.isEnabled = false
                 nick.isEnabled = false
                 btn.isHidden = true
@@ -261,6 +248,44 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
  
     }
     
+    @IBAction func GoByLink(_ sender: AnyObject) {
+        if let sessionUrl = (sender as! UIButton).titleLabel?.text, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
+            
+            if let checkURL = URL(string: url) {
+                //Create the AlertController
+                let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+                let copyLinkAction: UIAlertAction = UIAlertAction(title: "Copy URL", style: .default) { action -> Void in
+                    UIPasteboard.general.string = self.connectionManager.sessionUrl
+                }
+                actionSheetController.addAction(copyLinkAction)
+                
+                let openLinkAction: UIAlertAction = UIAlertAction(title: "Open URL", style: .default) { action -> Void in
+                    
+                    if UIApplication.shared.openURL(checkURL) {
+                        print("url succefully opened")
+                    }
+                    
+                }
+                actionSheetController.addAction(openLinkAction)
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
+                    
+                }
+                actionSheetController.addAction(cancelAction)
+                
+                
+                //We need to provide a popover sourceView when using it on iPad
+                actionSheetController.popoverPresentationController?.sourceView = sender as! UIView
+                
+                
+                self.present(actionSheetController, animated: true, completion: nil)
+                
+            }
+        } else {
+            print("error: invalid url")
+        }
+        
+    }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -299,11 +324,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 groupName.text = "\(group.name)(\(group.nick))"
             }
             if let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel {
-                var users = ""
-                for user in group.users {
-                    users = "\(users)\(user.name);"
-                }
-                usersLabel.text = users;
+                usersLabel.text = "\(group.users.count)";
             }
             if let btnURL = cell!.contentView.viewWithTag(4) as? UIButton {
                 btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControlState.normal)
@@ -330,14 +351,12 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         } else {
             let group = (groupAction == GroupActions.enter) ? self.groups[row - 1]: self.groups[row]
             if group.active {
-                groupManager.deactivateGroup(group.id)
+                groupManager.deactivateGroup(group.u)
             } else {
-                groupManager.activateGroup(group.id)
+                groupManager.activateGroup(group.u)
             }
             
         }
-
-        
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -362,7 +381,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 
                 groupAction = GroupActions.view
                 tableView.endUpdates()
-                btnEnterGroup.isEnabled = true
+                btnEnterGroup.isHidden = false
             }else {
                 if let curRow = tableView.cellForRow(at: indexPath), let indicator = curRow.contentView.viewWithTag(3) as? UIActivityIndicatorView {
                     
@@ -370,7 +389,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
                 
                 let group = groups[(indexPath as NSIndexPath).row - (groupAction == GroupActions.enter ? 1 : 0)]
-                groupManager.leaveGroup(group.id)
+                groupManager.leaveGroup(group.u)
                 
             }
             tableView.setEditing(false, animated: true)

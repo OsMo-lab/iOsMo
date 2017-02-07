@@ -8,8 +8,10 @@
 
 import Foundation
 open class Group{
-    var id: String
+    
+    var u: String
     var name: String
+    var id: String = ""
     var descr: String = ""
     var url: String = ""
     var active: Bool
@@ -18,8 +20,8 @@ open class Group{
     var nick: String = ""
     var users: [User] = [User]()
     
-    init(id: String, name: String,  active: Bool){
-        self.id = id
+    init(u: String, name: String,  active: Bool){
+        self.u = u
         self.name = name
         self.active = active
     }

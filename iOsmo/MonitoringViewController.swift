@@ -145,9 +145,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.present(actionSheetController, animated: true, completion: nil)
 
             }
-        }
-        
-        else {
+        } else {
         
             print("error: invalid url")
             log.enqueue("error: invalid url")
@@ -254,8 +252,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 } else {
                     self.trackerID.setTitle("", for: UIControlState())
                 }
-                
-                
 
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")

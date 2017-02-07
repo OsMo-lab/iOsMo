@@ -38,16 +38,7 @@ open class GroupManager{
     }
     
     let connection = ConnectionManager.sharedConnectionManager
-    
-    open func activateAllGroups(){
-        
-        connection.activateAllGroups()
-    }
-    
-    open func deactivateAllGroups(){
-    
-        connection.deactivateAllGroups()
-    }
+
     
     open func activateGroup(_ name: String){
         
@@ -71,7 +62,7 @@ open class GroupManager{
             
             print("DEACTIVATED \(name)! \($0) ")
             for group in self.allGroups! {
-                if group.id == name {
+                if group.u == name {
                     group.active = false;
                     break;
                 }
