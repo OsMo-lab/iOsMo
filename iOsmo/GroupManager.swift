@@ -61,12 +61,15 @@ open class GroupManager{
             self.groupDeactivated.notify($0, $1)
             
             print("DEACTIVATED \(name)! \($0) ")
-            for group in self.allGroups! {
-                if group.u == name {
-                    group.active = false;
-                    break;
+            if($0) {
+                for group in self.allGroups! {
+                    if group.u == name {
+                        group.active = false;
+                        break;
+                    }
                 }
             }
+            
             
             self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
         }

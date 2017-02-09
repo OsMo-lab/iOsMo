@@ -28,7 +28,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
-    @IBOutlet weak var activateSwitcher: UISwitch!
 
     public func btnEnterGroupPress(_sender: AnyObject, _ group: String?) {
         groupToEnter = group!;
@@ -47,12 +46,26 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         btnEnterGroupPress(_sender: sender, "")
     }
 
-    @IBAction func activateAllSwitched(_ sender: AnyObject) {
+    @IBAction func activateSwitched(_ sender: UISwitch) {
         
-        if let switcher = self.activateSwitcher {
-            groupManager.groupsSwitch( (switcher.isOn == true ? 1: -1))
-
+        if let indexPath = self.tableView.indexPath(for: sender.superview?.superview as! UITableViewCell) {
+            let row = (indexPath as NSIndexPath).row
+            
+            if groupAction == GroupActions.enter && row == 0 {
+            } else {
+                let group = (groupAction == GroupActions.enter) ? self.groups[row - 1]: self.groups[row]
+                if group.active {
+                    groupManager.deactivateGroup(group.u)
+                } else {
+                    groupManager.activateGroup(group.u)
+                }
+                
+            }
+            
         }
+        
+
+
     }
     
     
@@ -73,10 +86,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        /*
         connectionManager.groupsEnabled.add{
             
-            self.activateSwitcher.isOn = $0
-        }
+            //self.activateSwitcher.isOn = $0
+        }*/
         
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         // subscribe once
@@ -145,15 +159,17 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.groupManager.groupList()
             } else {
                 self.alert("error on activate group", message: $0.1)
+                self.tableView.reloadData()
             }
         }
         
         groupManager.groupDeactivated.add{
             if ($0.0) {
-                self.tableView.reloadData()
+
             } else {
                 self.alert("error on deactivate group", message: $0.1)
             }
+            self.tableView.reloadData()
         }
         groupManager.groupList()
     }
@@ -329,11 +345,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if let btnURL = cell!.contentView.viewWithTag(4) as? UIButton {
                 btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControlState.normal)
             }
+            if let activeSwitch = cell!.contentView.viewWithTag(5) as? UISwitch {
+                activeSwitch.isOn = group.active
+            }
+            /*
             if (group.active) {
                 cell!.accessoryType = UITableViewCellAccessoryType.checkmark
             } else {
                 cell!.accessoryType = UITableViewCellAccessoryType.none
-            }
+            }*/
 
         }
         cell!.selectionStyle = UITableViewCellSelectionStyle.none
@@ -350,11 +370,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         if groupAction == GroupActions.enter && row == 0 {
         } else {
             let group = (groupAction == GroupActions.enter) ? self.groups[row - 1]: self.groups[row]
-            if group.active {
-                groupManager.deactivateGroup(group.u)
-            } else {
-                groupManager.activateGroup(group.u)
-            }
             
         }
     }
