@@ -291,7 +291,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 
                 
                 //We need to provide a popover sourceView when using it on iPad
-                actionSheetController.popoverPresentationController?.sourceView = sender as! UIView
+                actionSheetController.popoverPresentationController?.sourceView = sender as? UIView
                 
                 
                 self.present(actionSheetController, animated: true, completion: nil)

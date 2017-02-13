@@ -22,11 +22,12 @@ enum TagsOld: String{
 enum Tags: String {
     case token = "INIT|"
     case auth = "AUTH|"
-    
+    case messageDay = "MD"
     case openSession = "TO"
     case closeSession = "TC"
     case ping = "P"
     case getGroups = "GROUP"
+    case push = "PUSH"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
     case activateGroup = "GA:"
@@ -52,6 +53,7 @@ enum Keys: String{
     case key = "device"
     case error = "error"
     case errorDesc = "error_description"
+    case push_token = "push_token"
 }
 
 enum ParseKeys: String{
@@ -67,6 +69,7 @@ enum ParseKeys: String{
 enum AnswTags: String{
     case openedSession = "TO|"
     case getGroups = "GROUP"
+    case push = "PUSH"
     case activateGroup = "GA:"
     case deactivateGroup = "GD:"
     case enterGroup = "GE:"
@@ -83,7 +86,7 @@ enum AnswTags: String{
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"
-    
+    case messageDay = "MD|"
 }
 
 enum UpdatesEnum: String {
@@ -95,6 +98,7 @@ enum UpdatesEnum: String {
 
 enum SettingKeys: String {
     case device = "deviceKey"
+    case pushToken = "pushToken"
     case auth = "authKey"
     case isStayAwake = "isStayAwake"
     case user = "user"

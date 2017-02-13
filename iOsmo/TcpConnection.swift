@@ -90,7 +90,16 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.groupSwitch.rawValue)"
         super.send(request)
     }
-       
+    
+    open func sendMessageOfTheDay(){
+        let request = "\(Tags.messageDay.rawValue)"
+        super.send(request)
+    }
+    
+    open func sendPush(_ token: String){
+        let request = "\(Tags.push.rawValue)|\(token)"
+        super.send(request)
+    }
     //MARK private methods
 
     fileprivate func sendToken(_ token: Token){
@@ -119,7 +128,7 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     
-    fileprivate func parseOutput(_ output: String){
+    open func parseOutput(_ output: String){
         
         let outputContains = {(tag: AnswTags) -> Bool in
             if let container = output.range(of: tag.rawValue) {
@@ -198,21 +207,25 @@ open class TcpConnection: BaseTcpConnection {
             print("session closed")
             log.enqueue("session closed answer")
             
-            answerObservers.notify((AnswTags.openedSession, "session was closed", !parseBoolAnswer()))
+            answerObservers.notify((AnswTags.closeSession, "session was closed", !parseBoolAnswer()))
             return
-//            old code - parsing status
-//            if let result = parseTag(output, key: ParseKeys.status){
-//                answerObservers.notify(AnswTags.openedSession, result, false)
-//            }
-//            else{
-//                print("error: session close tag was not parsed")
-//                log.enqueue("error: session close tag was not parsed")
-//            }
-            
-//           return
-            //should update status of session
+
         }
         
+        if outputContains(AnswTags.push){
+            
+            print("PUSH activated")
+            log.enqueue("PUSH activated")
+            
+            //answerObservers.notify((AnswTags.push, "PUSH activated", !parseBoolAnswer()))
+            if let result = parseForErrorJson(output){
+                answerObservers.notify((AnswTags.push, "" , !result.0))
+            }else {
+                print("error: PUSH answer cannot be parsed")
+                log.enqueue("error: PUSH asnwer cannot be parsed")
+            }
+            return
+        }
         if outputContains(AnswTags.kick){
             print("connection kicked")
             log.enqueue("connection kicked")
@@ -283,6 +296,16 @@ open class TcpConnection: BaseTcpConnection {
             else {
                 log.enqueue("error: wrong parsing groups list")
                 print("error: wrong parsing groups list")
+            }
+            return
+        }
+        if outputContains(AnswTags.messageDay){
+            if (command != "" && addict != "") {
+                answerObservers.notify((AnswTags.messageDay,addict, true))
+            }
+            else {
+                log.enqueue("error: wrong parsing MD")
+                print("error: wrong parsing MD")
             }
             return
         }

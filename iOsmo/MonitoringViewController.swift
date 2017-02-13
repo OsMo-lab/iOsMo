@@ -33,6 +33,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isSessionPaused = false
     var isTracked = true
     
+    var onMessageOfTheDayUpdated: ObserverSetEntry<(Bool, String)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
     var inGroup: [Group]?
@@ -46,6 +47,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
+    @IBOutlet weak var MDLabel: UILabel!
     
     @IBOutlet weak var osmoImage: UIImageView!
     @IBOutlet weak var osmoStatus: UIImageView!
@@ -173,6 +175,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
+        MDLabel.text = ""
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
@@ -231,7 +234,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
                         self.inGroup = $0
                     }
+                    
+                    self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
+                        self.MDLabel.text = $1
+                    }
                     self.groupManager.groupList()
+                    self.connectionManager.getMessageOfTheDay()
+                    
                 } else if let glUpdated = self.onGroupListUpdated {
                     
                     self.groupManager.groupListUpdated.remove(glUpdated)

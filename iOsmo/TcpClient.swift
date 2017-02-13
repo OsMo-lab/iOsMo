@@ -81,21 +81,21 @@ open class TcpClient : NSObject, StreamDelegate {
         
         case Stream.Event.openCompleted:
             
-            print("stream opened")
+            //print("stream opened")
             log.enqueue("stream opened")
         case Stream.Event.errorOccurred:
             
-            print("stream was handle error, connection is out")
+            //("stream was handle error, connection is out")
             log.enqueue("stream was handle error, connection is out")
             if callbackOnError != nil {
                 
                 callbackOnError!(true)
             }
         case Stream.Event.hasSpaceAvailable:
-            print("HasSpaceAvailable")
+            //print("HasSpaceAvailable")
             break
         case Stream.Event.hasBytesAvailable:
-            print("HasBytesAvailable")
+            //print("HasBytesAvailable")
             
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
@@ -114,7 +114,7 @@ open class TcpClient : NSObject, StreamDelegate {
                     }
                 }
             } else {
-                print("Stream is empty")
+                //print("Stream is empty")
                 log.enqueue("Stream is empty")
                 
                 return

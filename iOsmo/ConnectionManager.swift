@@ -42,17 +42,21 @@ open class ConnectionManager: NSObject{
     let groupCreated = ObserverSet<(Bool, String)>()
     let groupLeft = ObserverSet<(Bool, String)>()
     let groupActivated = ObserverSet<(Bool, String)>()
+    let pushActivated = ObserverSet<Bool>()
     let groupDeactivated = ObserverSet<(Bool, String)>()
     let groupList = ObserverSet<[Group]>()
     let connectionRun = ObserverSet<(Bool, String)>()
     let sessionRun = ObserverSet<(Bool, String)>()
     let groupsEnabled = ObserverSet<Bool>()
+    let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
     
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
     fileprivate let log = LogQueue.sharedLogQueue
     
-    fileprivate var connection = TcpConnection()
+    //fileprivate var connection = TcpConnection()
+    var connection = TcpConnection()
+
     fileprivate var reachability: Reachability
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
@@ -141,7 +145,6 @@ open class ConnectionManager: NSObject{
         log.enqueue("ConnectionManager: open session")
         
         if connected {
-            
             connection.openSession()
        }
     }
@@ -150,7 +153,6 @@ open class ConnectionManager: NSObject{
         log.enqueue("ConnectionManager: close session")
         
         if self.connected {
-           
             connection.closeSession()
         }
     }
@@ -158,15 +160,14 @@ open class ConnectionManager: NSObject{
     open func sendCoordinates(_ coordinates: [LocationModel])
     {
         if self.sessionOpened {
-            
             connection.sendCoordinates(coordinates)
         }
     }
     
+    
     // Groups funcs
     open func getGroups(){
         if self.connected {
-        
             if self.onGroupListUpdated == nil {
                 
                 self.onGroupListUpdated = connection.groupListDownloaded.add {self.groupList.notify($0)}
@@ -215,6 +216,19 @@ open class ConnectionManager: NSObject{
         
     }
     
+    open func getMessageOfTheDay(){
+        if self.connected{
+            connection.sendMessageOfTheDay()
+        }
+    }
+    
+    open func sendPush(_ token: String){
+        if self.connected{
+            connection.sendPush(token)
+        }
+    }
+
+    
     //MARK private methods
     
     fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Bool){
@@ -255,6 +269,11 @@ open class ConnectionManager: NSObject{
             
             return
         }
+        if tag == AnswTags.push {
+            pushActivated.notify(answer)
+            return
+        }
+        
         if tag == AnswTags.deactivateGroup {
             groupDeactivated.notify(answer, name)
             
@@ -265,6 +284,19 @@ open class ConnectionManager: NSObject{
         if tag == AnswTags.openedSession {
             self.sessionOpened = answer
             sessionRun.notify(answer, name)
+            
+            return
+        }
+        
+        if tag == AnswTags.closeSession {
+            self.sessionOpened = answer
+            sessionRun.notify(answer, name)
+            
+            return
+        }
+        
+        if tag == AnswTags.messageDay {
+            messageOfTheDayReceived.notify(answer, name)
             
             return
         }
@@ -285,7 +317,6 @@ open class ConnectionManager: NSObject{
                 
                 return
             }
-            
         }
         
         /// etc

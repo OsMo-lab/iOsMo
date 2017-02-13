@@ -42,7 +42,14 @@
 		29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96331A478335009BFC19 /* AccountViewController.swift */; };
 		29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96371A4784EC009BFC19 /* AuthViewController.swift */; };
 		29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */; };
-		4D94787E1E4C9E8600C89FE5 /* GoogleService-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D94787D1E4C9E8600C89FE5 /* GoogleService-info.plist */; };
+		4D4597591E4E44CD005892EE /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */; };
+		4D45975A1E4E44CD005892EE /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597541E4E44CD005892EE /* FirebaseCore.framework */; };
+		4D45975B1E4E44CD005892EE /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */; };
+		4D45975C1E4E44CD005892EE /* GoogleInterchangeUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597561E4E44CD005892EE /* GoogleInterchangeUtilities.framework */; };
+		4D45975D1E4E44CD005892EE /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597571E4E44CD005892EE /* GoogleSymbolUtilities.framework */; };
+		4D45975E1E4E44CD005892EE /* GoogleToolboxForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */; };
+		4D4597601E4E44DA005892EE /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */; };
+		4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */; };
 		F90DB7721A43410F0090146E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = F90DB7711A43410F0090146E /* Reachability.m */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
@@ -100,9 +107,16 @@
 		29FA96371A4784EC009BFC19 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAnalytics.framework; sourceTree = "<group>"; };
+		4D4597541E4E44CD005892EE /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
+		4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		4D4597561E4E44CD005892EE /* GoogleInterchangeUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleInterchangeUtilities.framework; sourceTree = "<group>"; };
+		4D4597571E4E44CD005892EE /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
+		4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleToolboxForMac.framework; sourceTree = "<group>"; };
+		4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseMessaging.framework; sourceTree = "<group>"; };
+		4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4D9359B21E43A697006C9FC9 /* apple-app-site-association */ = {isa = PBXFileReference; lastKnownFileType = text; path = "apple-app-site-association"; sourceTree = "<group>"; };
 		4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOsmo.entitlements; sourceTree = "<group>"; };
-		4D94787D1E4C9E8600C89FE5 /* GoogleService-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-info.plist"; sourceTree = "<group>"; };
 		F90DB7701A43410F0090146E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		F90DB7711A43410F0090146E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
@@ -114,7 +128,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D45975E1E4E44CD005892EE /* GoogleToolboxForMac.framework in Frameworks */,
+				4D45975D1E4E44CD005892EE /* GoogleSymbolUtilities.framework in Frameworks */,
+				4D4597591E4E44CD005892EE /* FirebaseAnalytics.framework in Frameworks */,
 				29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */,
+				4D45975A1E4E44CD005892EE /* FirebaseCore.framework in Frameworks */,
+				4D45975B1E4E44CD005892EE /* FirebaseInstanceID.framework in Frameworks */,
+				4D4597601E4E44DA005892EE /* FirebaseMessaging.framework in Frameworks */,
+				4D45975C1E4E44CD005892EE /* GoogleInterchangeUtilities.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +157,7 @@
 				293C95721A34B217005DD4CE /* iOsmo */,
 				293C958A1A34B217005DD4CE /* iOsmoTests */,
 				293C95711A34B217005DD4CE /* Products */,
+				A005A965362B6B855E2213B0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -172,7 +194,7 @@
 		293C95731A34B217005DD4CE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4D94787D1E4C9E8600C89FE5 /* GoogleService-info.plist */,
+				4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */,
 				29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */,
 				29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */,
 				293C95741A34B217005DD4CE /* Info.plist */,
@@ -278,6 +300,20 @@
 			name = Utility;
 			sourceTree = "<group>";
 		};
+		A005A965362B6B855E2213B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */,
+				4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */,
+				4D4597541E4E44CD005892EE /* FirebaseCore.framework */,
+				4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */,
+				4D4597561E4E44CD005892EE /* GoogleInterchangeUtilities.framework */,
+				4D4597571E4E44CD005892EE /* GoogleSymbolUtilities.framework */,
+				4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -303,9 +339,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */;
 			buildPhases = (
+				3F3BCA152A319C40E1C33412 /* [CP] Check Pods Manifest.lock */,
 				293C95831A34B217005DD4CE /* Sources */,
 				293C95841A34B217005DD4CE /* Frameworks */,
 				293C95851A34B217005DD4CE /* Resources */,
+				62001964648290F57DCCA74B /* [CP] Embed Pods Frameworks */,
+				F360F42EE53F7F26BFA3950D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -333,6 +372,9 @@
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 							com.apple.SafariKeychain = {
@@ -377,7 +419,7 @@
 				29CED6BD1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png in Resources */,
 				293C95821A34B217005DD4CE /* LaunchScreen.xib in Resources */,
 				293C957F1A34B217005DD4CE /* Images.xcassets in Resources */,
-				4D94787E1E4C9E8600C89FE5 /* GoogleService-info.plist in Resources */,
+				4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +433,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3F3BCA152A319C40E1C33412 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		4DC655361D6249A200A9BE10 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -403,6 +460,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "";
+		};
+		62001964648290F57DCCA74B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F360F42EE53F7F26BFA3950D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -501,7 +588,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Alexey Sirotkin (SF5DP65BZ4)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -548,7 +635,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Alexey Sirotkin (SF5DP65BZ4)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -579,13 +666,16 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -607,13 +697,16 @@
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

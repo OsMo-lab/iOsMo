@@ -92,7 +92,6 @@ open class SendingManager: NSObject{
     }
     
     open func sending(){
-        
         //MUST REFACTOR
         if connectionManager.sessionOpened && connectionManager.connected {
             
