@@ -268,33 +268,10 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         if let sessionUrl = (sender as! UIButton).titleLabel?.text, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
-                //Create the AlertController
-                let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
-                let copyLinkAction: UIAlertAction = UIAlertAction(title: "Copy URL", style: .default) { action -> Void in
-                    UIPasteboard.general.string = self.connectionManager.sessionUrl
-                }
-                actionSheetController.addAction(copyLinkAction)
-                
-                let openLinkAction: UIAlertAction = UIAlertAction(title: "Open URL", style: .default) { action -> Void in
-                    
-                    if UIApplication.shared.openURL(checkURL) {
-                        print("url succefully opened")
-                    }
-                    
-                }
-                actionSheetController.addAction(openLinkAction)
-                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-                    
-                }
-                actionSheetController.addAction(cancelAction)
-                
-                
-                //We need to provide a popover sourceView when using it on iPad
-                actionSheetController.popoverPresentationController?.sourceView = sender as? UIView
-                
-                
-                self.present(actionSheetController, animated: true, completion: nil)
+                let safariActivity = SafariActivity()
+                let activityViewController = UIActivityViewController(activityItems: [checkURL], applicationActivities: [safariActivity])
+                activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+                self.present(activityViewController, animated: true, completion: {})
                 
             }
         } else {

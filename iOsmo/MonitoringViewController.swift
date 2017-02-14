@@ -114,38 +114,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
-                
-                //Create the AlertController
-                let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                
-
-                let copyLinkAction: UIAlertAction = UIAlertAction(title: "Copy URL", style: .default) { action -> Void in
-                    UIPasteboard.general.string = self.connectionManager.sessionUrl
-                }
-                actionSheetController.addAction(copyLinkAction)
-
-                let openLinkAction: UIAlertAction = UIAlertAction(title: "Open URL", style: .default)
-                { action -> Void in
-                    
-                    if UIApplication.shared.openURL(checkURL) {
-                        print("url succefully opened")
-                        self.log.enqueue("url successfully opened")
-                    }
-                    
-                }
-                actionSheetController.addAction(openLinkAction)
-                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-                    
-                }
-                actionSheetController.addAction(cancelAction)
-
-                
-                //We need to provide a popover sourceView when using it on iPad
-                actionSheetController.popoverPresentationController?.sourceView = sender as! UIView
-                
-
-                self.present(actionSheetController, animated: true, completion: nil)
-
+                let safariActivity = SafariActivity()
+                let activityViewController = UIActivityViewController(activityItems: [checkURL], applicationActivities: [safariActivity])
+                activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+                self.present(activityViewController, animated: true, completion: {})
             }
         } else {
         
@@ -156,21 +128,15 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-               
         if isSessionPaused || isMonitoringOn {
-            
             sendingManger.stopSendingCoordinates()
             UIApplication.shared.isIdleTimerDisabled = false
-            
         } else {
-            
-            
             sendingManger.startSendingCoordinates()
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
-    
-    
+
     func uiSettings(){
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)

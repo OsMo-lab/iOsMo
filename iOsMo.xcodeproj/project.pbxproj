@@ -42,6 +42,7 @@
 		29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96331A478335009BFC19 /* AccountViewController.swift */; };
 		29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96371A4784EC009BFC19 /* AuthViewController.swift */; };
 		29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */; };
+		4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */; };
 		4D4597591E4E44CD005892EE /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */; };
 		4D45975A1E4E44CD005892EE /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597541E4E44CD005892EE /* FirebaseCore.framework */; };
 		4D45975B1E4E44CD005892EE /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */; };
@@ -107,6 +108,7 @@
 		29FA96371A4784EC009BFC19 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariActvity.swift; sourceTree = "<group>"; };
 		4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		4D4597541E4E44CD005892EE /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
 		4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseInstanceID.framework; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				29FA96091A45FAC5009BFC19 /* LogQueue.swift */,
 				293C95C91A3D2AA0005DD4CE /* SettingManager.swift */,
 				29CCA6231B1676AB00DA0C83 /* Extensions.swift */,
+				4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -524,6 +527,7 @@
 				293C95781A34B217005DD4CE /* MonitoringViewController.swift in Sources */,
 				2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */,
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
+				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
 				293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */,
 				29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */,
 				F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */,
