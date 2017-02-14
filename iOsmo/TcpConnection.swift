@@ -127,6 +127,47 @@ open class TcpConnection: BaseTcpConnection {
         super.send("\(Tags.ping.rawValue)")
     }
     
+    fileprivate func sendSystemInfo(){
+        let model = UIDevice.current.model
+        let version = UIDevice.current.systemVersion
+        
+        let jsonInfo: NSDictionary =
+            ["devicename": model, "version": "iOS \(version)"]
+        
+        do{
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+            
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
+                send(request)
+            }
+        }catch {
+            print("error generating system info")
+        }
+    }
+    
+    fileprivate func sendBatteryStatus(){
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        let level = UIDevice.current.batteryLevel * 100
+        var state = 0;
+        if (UIDevice.current.batteryState == .charging) {
+            state = 1;
+        }
+        
+        let jsonInfo: NSDictionary =
+            ["percent": level, "plugged": state]
+        
+        do{
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+            
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
+                send(request)            }
+        }catch {
+            
+            print("error generating battery info")
+        }
+    }
     
     open func parseOutput(_ output: String){
         
@@ -311,21 +352,22 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.remoteCommand){
             if param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue {
-                super.sendSystemInfo()
+                self.sendSystemInfo()
             }else if param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue {
-                super.sendBatteryStatus()
+                self.sendBatteryStatus()
             }else if param == RemoteCommand.TRACKER_SESSION_STOP.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand, param, true))
             }else if param == RemoteCommand.TRACKER_SESSION_START.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }else if param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
+            }else if param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
             
             return
         }
         if outputContains(AnswTags.grCoord) {
-
             if let monitor = monitoringGroups {
                 
                 let parseRes = parseGroupCoordinates(output)

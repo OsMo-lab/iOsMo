@@ -50,6 +50,7 @@ open class ConnectionManager: NSObject{
     let groupsEnabled = ObserverSet<Bool>()
     let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
     
+    
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
     fileprivate let log = LogQueue.sharedLogQueue
@@ -314,6 +315,15 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
+                let sendingManger = SendingManager.sharedSendingManager
+                sendingManger.pauseSendingCoordinates()
+                                
+                return
+            }
+            if (name == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){
+                let sendingManger = SendingManager.sharedSendingManager
+                sendingManger.startSendingCoordinates()
+                
                 
                 return
             }

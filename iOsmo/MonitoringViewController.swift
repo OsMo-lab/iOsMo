@@ -34,6 +34,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isTracked = true
     
     var onMessageOfTheDayUpdated: ObserverSetEntry<(Bool, String)>?
+    var onSessionPaused: ObserverSetEntry<(Bool)>?
+    var onSessionStarted: ObserverSetEntry<(Bool)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
     var inGroup: [Group]?
@@ -95,28 +97,32 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         if isMonitoringOn {
             
             sendingManger.pauseSendingCoordinates()
+            /*
             isMonitoringOn = false
             pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
             if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
+ */
         } else {
             
             sendingManger.startSendingCoordinates()
+            /*
             isMonitoringOn = true
             pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
             if let sessionTimer = self.sessionTimer { sessionTimer.start()}
+ */
         }
 
     
     }
     
-    @IBAction func GoByLink(_ sender: AnyObject) {
+    @IBAction func GoByLink(_ sender: UIButton) {
  
         if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
                 let safariActivity = SafariActivity()
                 let activityViewController = UIActivityViewController(activityItems: [checkURL], applicationActivities: [safariActivity])
-                activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+                activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: {})
             }
         } else {
@@ -280,6 +286,22 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
             }
             
+            self.onSessionPaused = sendingManger.sessionPaused.add{
+                if $0 {
+                    self.isMonitoringOn = false
+                    self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
+                    if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
+                }
+            }
+            
+            self.onSessionStarted = sendingManger.sessionStarted.add{
+                if $0 {
+                    self.isMonitoringOn = true
+                    self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
+                    if let sessionTimer = self.sessionTimer { sessionTimer.start()}
+                }
+            }
+ 
             connectionManager.connect()
             isLoaded = true
             

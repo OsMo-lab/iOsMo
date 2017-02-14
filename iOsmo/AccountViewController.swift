@@ -264,13 +264,14 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
  
     }
     
-    @IBAction func GoByLink(_ sender: AnyObject) {
+    @IBAction func GoByLink(_ sender: UIButton) {
         if let sessionUrl = (sender as! UIButton).titleLabel?.text, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
                 let safariActivity = SafariActivity()
                 let activityViewController = UIActivityViewController(activityItems: [checkURL], applicationActivities: [safariActivity])
-                activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+                activityViewController.popoverPresentationController?.sourceView = tableView
+                //activityViewController.popoverPresentationController?.sourceView = self.view
                 self.present(activityViewController, animated: true, completion: {})
                 
             }

@@ -21,6 +21,9 @@ open class SendingManager: NSObject{
     let aSelector : Selector = #selector(SendingManager.sending)
     fileprivate var onConnectionRun: ObserverSetEntry<(Bool, String)>?
     fileprivate var onSessionRun: ObserverSetEntry<(Bool, String)>?
+    let sessionStarted = ObserverSet<(Bool)>()
+    let sessionPaused = ObserverSet<(Bool)>()
+
     
     class var sharedSendingManager: SendingManager {
         struct Static {
@@ -39,13 +42,13 @@ open class SendingManager: NSObject{
         locationTracker.turnMonitorinOn() //start getting coordinates
 
         if !connectionManager.connected {
-            
             self.onConnectionRun = connectionManager.connectionRun.add{
                 if $0.0 {
                     
                     self.onSessionRun = self.connectionManager.sessionRun.add{
-                        if $0.0 {self.startSending()}
-                        
+                        if $0.0 {
+                            self.startSending()
+                        }
                     }
                     self.connectionManager.openSession()
                 }
@@ -56,12 +59,11 @@ open class SendingManager: NSObject{
                 }
             }
             connectionManager.connect()
-        }
-        else if !connectionManager.sessionOpened {
-            
+        } else if !connectionManager.sessionOpened {
             self.onSessionRun = self.connectionManager.sessionRun.add{
-                if $0.0 {self.startSending()}
-                else {
+                if $0.0 {
+                    self.startSending()
+                } else {
                     //unsibscribe when stop monitoring
                     if let onSesRun = self.onSessionRun {
                         self.connectionManager.sessionRun.remove(onSesRun)
@@ -69,8 +71,9 @@ open class SendingManager: NSObject{
                 }
             }
             self.connectionManager.openSession()
+        } else {
+            startSending()
         }
-        else {startSending()}
         
         
     }
@@ -81,6 +84,8 @@ open class SendingManager: NSObject{
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
+        sessionPaused.notify((true))
+
         
     }
     
@@ -130,7 +135,7 @@ open class SendingManager: NSObject{
 
             
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
-           
+           sessionStarted.notify((true))
        
         }
     }

@@ -60,47 +60,7 @@ open class BaseTcpConnection: NSObject {
         sendNextCoordinates()
     }
     
-    open func sendSystemInfo(){
-        let model = UIDevice.current.model
-        let version = UIDevice.current.systemVersion
-        
-        let jsonInfo: NSDictionary =
-            ["devicename": model, "version": "iOS \(version)"]
-        
-        do{
-            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
-            
-            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
-                send(request)
-            }
-        }catch {
-            print("error generating system info")
-        }
-    }
     
-    open func sendBatteryStatus(){
-        UIDevice.current.isBatteryMonitoringEnabled = true
-        let level = UIDevice.current.batteryLevel * 100
-        var state = 0;
-        if (UIDevice.current.batteryState == .charging) {
-            state = 1;
-        }
-        
-        let jsonInfo: NSDictionary =
-            ["percent": level, "plugged": state]
-        
-        do{
-            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
-            
-            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
-                send(request)            }
-        }catch {
-            
-            print("error generating battery info")
-        }
-    }
     
     open func closeSession(){
         

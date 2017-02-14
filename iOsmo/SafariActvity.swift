@@ -17,7 +17,7 @@ class SafariActivity: UIActivity {
     }
     
     override var activityTitle: String? {
-        return NSLocalizedString("Open in Safari", comment:"")
+        return "Safari"
     }
     
     override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
