@@ -265,7 +265,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                     if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
                         self.sessionTimer!.reset()
-                        self.sessionTimer!.start()
                     }
                 } else {
                     
@@ -281,30 +280,36 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
                     //self.mainAnnotation = nil
                     
-                    if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
+                    if let sessionTimer = self.sessionTimer {
+                        sessionTimer.stop()
+                    }
                 }
-                
             }
             
             self.onSessionPaused = sendingManger.sessionPaused.add{
                 if $0 {
                     self.isMonitoringOn = false
+                    self.isSessionPaused = true
                     self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
-                    if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
+                    if let sessionTimer = self.sessionTimer {
+                        sessionTimer.stop()
+                    }
                 }
             }
             
             self.onSessionStarted = sendingManger.sessionStarted.add{
                 if $0 {
                     self.isMonitoringOn = true
+                    self.isSessionPaused = false
                     self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
-                    if let sessionTimer = self.sessionTimer { sessionTimer.start()}
+                    if let sessionTimer = self.sessionTimer {
+                        sessionTimer.start()
+                    }
                 }
             }
  
             connectionManager.connect()
             isLoaded = true
-            
         }
     }
     
