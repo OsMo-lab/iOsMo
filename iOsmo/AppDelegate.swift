@@ -19,7 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var connectionManager = ConnectionManager.sharedConnectionManager
     let log = LogQueue.sharedLogQueue
-
+    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    
+    fileprivate var timer = Timer()
+    
+    
     let gcmMessageIDKey = "GCM"
 
 
@@ -91,14 +95,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FIRMessaging.messaging().disconnect()
         log.enqueue("Disconnected from FCM.")
         print("Disconnected from FCM.")
+        if (connectionManager.connected && !connectionManager.sessionOpened) {
+            backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+                self?.endBackgroundTask()
+            }
+            DispatchQueue.main.async {
+                self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
+            }
+        }
     }
 
+    func disconnectByTimer() {
+        connectionManager.closeConnection()
+        self.endBackgroundTask()
+    }
+    
+    func endBackgroundTask() {
+        print("Background task ended.")
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = UIBackgroundTaskInvalid
+    }
+    
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        if (backgroundTask != UIBackgroundTaskInvalid) {
+            UIApplication.shared.endBackgroundTask(backgroundTask)
+            backgroundTask = UIBackgroundTaskInvalid
+        }
         connectToFcm()
     }
 

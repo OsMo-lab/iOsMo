@@ -17,6 +17,7 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
     
+    
     open func createConnection(_ token: Token){
         if (token.port>0) {
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
@@ -37,6 +38,14 @@ open class TcpClient : NSObject, StreamDelegate {
             }
             
             log.enqueue("create connection, input and output streams")
+        }
+    }
+    
+    open func closeConnection() {
+        if ((inputStream != nil) && (outputStream != nil)) {
+            log.enqueue("closing input and output streams")
+            inputStream?.close()
+            outputStream?.close()
         }
     }
     

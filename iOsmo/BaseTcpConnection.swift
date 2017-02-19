@@ -48,7 +48,7 @@ open class BaseTcpConnection: NSObject {
     
     //properties
     
-    var connected: Bool = false
+    //var connected: Bool = false
     var sessionOpened: Bool = false
 
     
@@ -61,7 +61,11 @@ open class BaseTcpConnection: NSObject {
     }
     
     
-    
+    open func closeConnection(){
+
+        tcpClient.closeConnection()
+
+    }
     open func closeSession(){
         
         log.enqueue("send close session request")
