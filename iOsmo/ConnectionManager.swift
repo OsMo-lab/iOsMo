@@ -36,6 +36,7 @@ open class ConnectionManager: NSObject{
     }
     
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
+    var onGroupCreated: ObserverSetEntry<(Bool, String)>?
     
     // add name of group in return
     let groupEntered = ObserverSet<(Bool, String)>()
@@ -171,9 +172,25 @@ open class ConnectionManager: NSObject{
         if self.connected {
             if self.onGroupListUpdated == nil {
                 
-                self.onGroupListUpdated = connection.groupListDownloaded.add {self.groupList.notify($0)}
+                self.onGroupListUpdated = connection.groupListDownloaded.add {
+                    self.groupList.notify($0)
+                }
             }
             connection.sendGetGroups()
+        }
+    }
+    
+    open func createGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+        if self.connected{
+            if self.onGroupCreated == nil {
+                
+                self.onGroupCreated = connection.groupCreated.add {
+                    self.groupCreated.notify($0)
+                }
+            }
+
+            
+            connection.sendCreateGroup(name, email: email, phone: phone, gtype: gtype, priv: priv)
         }
     }
     

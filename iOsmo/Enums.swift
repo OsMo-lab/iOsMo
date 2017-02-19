@@ -28,6 +28,7 @@ enum Tags: String {
     case ping = "P"
     case getGroups = "GROUP"
     case push = "PUSH"
+    case createGroup = "GRPA"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
     case activateGroup = "GA:"
@@ -70,6 +71,7 @@ enum AnswTags: String{
     case openedSession = "TO|"
     case getGroups = "GROUP"
     case push = "PUSH"
+    case createGroup = "GRPA"
     case activateGroup = "GA:"
     case deactivateGroup = "GD:"
     case enterGroup = "GE:"
@@ -114,6 +116,12 @@ enum GroupActions: String {
     case leave = "leave"
 }
 
+enum GroupType: String {
+    case Simple = "1" //default
+    case Family = "2"
+    case POI = "5"
+    case Trip = "6"
+}
 enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"

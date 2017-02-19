@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "293C956F1A34B217005DD4CE"
-               BuildableName = "iOsmo.app"
-               BlueprintName = "iOsmo"
+               BuildableName = "iOsMo.app"
+               BlueprintName = "iOsMo"
                ReferencedContainer = "container:iOsMo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +43,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "293C956F1A34B217005DD4CE"
-            BuildableName = "iOsmo.app"
-            BlueprintName = "iOsmo"
+            BuildableName = "iOsMo.app"
+            BlueprintName = "iOsMo"
             ReferencedContainer = "container:iOsMo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -66,8 +66,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "293C956F1A34B217005DD4CE"
-            BuildableName = "iOsmo.app"
-            BlueprintName = "iOsmo"
+            BuildableName = "iOsMo.app"
+            BlueprintName = "iOsMo"
             ReferencedContainer = "container:iOsMo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -92,8 +92,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "293C956F1A34B217005DD4CE"
-            BuildableName = "iOsmo.app"
-            BlueprintName = "iOsmo"
+            BuildableName = "iOsMo.app"
+            BlueprintName = "iOsMo"
             ReferencedContainer = "container:iOsMo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

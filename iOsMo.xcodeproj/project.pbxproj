@@ -67,7 +67,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		293C95701A34B217005DD4CE /* iOsmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		293C95701A34B217005DD4CE /* iOsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C95741A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C95751A34B217005DD4CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		293C95771A34B217005DD4CE /* MonitoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitoringViewController.swift; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 		293C95711A34B217005DD4CE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				293C95701A34B217005DD4CE /* iOsmo.app */,
+				293C95701A34B217005DD4CE /* iOsMo.app */,
 				293C95871A34B217005DD4CE /* iOsmoTests.xctest */,
 			);
 			name = Products;
@@ -320,9 +320,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		293C956F1A34B217005DD4CE /* iOsmo */ = {
+		293C956F1A34B217005DD4CE /* iOsMo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmo" */;
+			buildConfigurationList = 293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsMo" */;
 			buildPhases = (
 				293C956C1A34B217005DD4CE /* Sources */,
 				293C956D1A34B217005DD4CE /* Frameworks */,
@@ -333,9 +333,9 @@
 			);
 			dependencies = (
 			);
-			name = iOsmo;
+			name = iOsMo;
 			productName = iOsmo;
-			productReference = 293C95701A34B217005DD4CE /* iOsmo.app */;
+			productReference = 293C95701A34B217005DD4CE /* iOsMo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		293C95861A34B217005DD4CE /* iOsmoTests */ = {
@@ -405,7 +405,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				293C956F1A34B217005DD4CE /* iOsmo */,
+				293C956F1A34B217005DD4CE /* iOsMo */,
 				293C95861A34B217005DD4CE /* iOsmoTests */,
 			);
 		};
@@ -548,7 +548,7 @@
 /* Begin PBXTargetDependency section */
 		293C95891A34B217005DD4CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 293C956F1A34B217005DD4CE /* iOsmo */;
+			target = 293C956F1A34B217005DD4CE /* iOsMo */;
 			targetProxy = 293C95881A34B217005DD4CE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -772,7 +772,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmo" */ = {
+		293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsMo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				293C95921A34B217005DD4CE /* Debug */,

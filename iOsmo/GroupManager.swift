@@ -20,6 +20,7 @@ open class GroupManager{
     var groupLeft = ObserverSet<(Bool, String)>()
     var groupActivated = ObserverSet<(Bool, String)>()
     var groupDeactivated = ObserverSet<(Bool, String)>()
+    var groupCreated = ObserverSet<(Bool, String)>()
     
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     
@@ -84,7 +85,22 @@ open class GroupManager{
     
     var onEnterGroup : ObserverSetEntry<(Bool, String)>?
     var onLeaveGroup : ObserverSetEntry<(Bool, String)>?
+    var onCreateGroup : ObserverSetEntry<(Bool, String)>?
 
+    open func createGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+        
+        self.onCreateGroup = connection.groupCreated.add{
+            if (!$0) {
+                self.groupList()
+            }
+            self.groupCreated.notify(!$0, $1)
+            
+            print("CREATED! \(!$0) ")
+            
+            self.connection.groupCreated.remove(self.onCreateGroup!)
+        }
+        connection.createGroup(name, email: email, phone: phone, gtype: gtype, priv: priv)
+    }
     
     open func enterGroup(_ name: String, nick: String){
     
@@ -124,12 +140,6 @@ open class GroupManager{
         }
         
         connection.getGroups()
-    }
-    
-    open func createGroup(){
-        
-        
-        
     }
     
    

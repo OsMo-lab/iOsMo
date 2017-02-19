@@ -37,6 +37,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var onSessionPaused: ObserverSetEntry<(Bool)>?
     var onSessionStarted: ObserverSetEntry<(Bool)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
+
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
     var inGroup: [Group]?
     var selectedGroupIndex: Int?
@@ -95,21 +96,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
-            
             sendingManger.pauseSendingCoordinates()
-            /*
-            isMonitoringOn = false
-            pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
-            if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
- */
         } else {
-            
             sendingManger.startSendingCoordinates()
-            /*
-            isMonitoringOn = true
-            pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
-            if let sessionTimer = self.sessionTimer { sessionTimer.start()}
- */
         }
 
     
@@ -206,7 +195,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
                         self.inGroup = $0
                     }
-                    
+
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
                         self.MDLabel.text = $1
                     }

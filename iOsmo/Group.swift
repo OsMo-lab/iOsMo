@@ -15,6 +15,7 @@ open class Group{
     var descr: String = ""
     var url: String = ""
     var active: Bool
+    var type: String = "1"
     var policy: String = ""
     var color: String = "#ffffff"
     var nick: String = ""
@@ -24,5 +25,20 @@ open class Group{
         self.u = u
         self.name = name
         self.active = active
+    }
+    
+    class func getTypeName(_ code:String) -> String {
+        switch code {
+        case GroupType.Simple.rawValue:
+            return "Simple"
+        case GroupType.Family.rawValue:
+            return "Family"
+        case GroupType.POI.rawValue:
+            return "POI"
+        case GroupType.Trip.rawValue:
+            return "Trip"
+        default:
+            return "Invalid"
+        }
     }
 }

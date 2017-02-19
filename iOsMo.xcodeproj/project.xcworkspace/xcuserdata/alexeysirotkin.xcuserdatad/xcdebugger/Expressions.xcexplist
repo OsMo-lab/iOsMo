@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "TcpConnection.parseJSONgroup(Any) -&gt; Group:TcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "g[&quot;u&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
       </ContextState>
       <ContextState

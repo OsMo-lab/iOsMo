@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 25/03/15.
-//  Copyright (c) 2015 Olga Grineva. All rights reserved.
+//  Copyright (c) 2015 Olga Grineva, (c) 2017 Alexey Sirotkin. All rights reserved.
 //
 
 import Foundation
@@ -34,6 +34,7 @@ open class TcpConnection: BaseTcpConnection {
     
     let answerObservers = ObserverSet<(AnswTags, String, Bool)>()
     let groupListDownloaded = ObserverSet<[Group]>()
+    let groupCreated = ObserverSet<(Bool, String)>()
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
     open var sessionUrlParsed: String = ""
@@ -58,6 +59,23 @@ open class TcpConnection: BaseTcpConnection {
         
         let request = "\(Tags.getGroups.rawValue)"
         super.send(request)
+    }
+    
+    open func sendCreateGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+        
+        let jsonInfo: NSDictionary =
+            ["name": name as NSString, "email": email as NSString, "telephone": phone as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+        
+        do{
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+            
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let request = "\(Tags.createGroup.rawValue):|\(jsonString)"
+                super.send(request)
+            }
+        }catch {
+            print("error generating system info")
+        }
     }
     
     open func sendEnterGroup(_ name: String, nick: String){
@@ -265,6 +283,18 @@ open class TcpConnection: BaseTcpConnection {
                 print("error: PUSH answer cannot be parsed")
                 log.enqueue("error: PUSH asnwer cannot be parsed")
             }
+            return
+        }
+        if outputContains(AnswTags.createGroup){
+            if let result = parseForErrorJson(output){
+
+                groupCreated.notify(result)
+                return
+            } else {
+                print("error: create group asnwer cannot be parsed")
+                log.enqueue("error: create group asnwer cannot be parsed")
+            }
+            
             return
         }
         if outputContains(AnswTags.kick){
@@ -483,6 +513,52 @@ open class TcpConnection: BaseTcpConnection {
         return nil
     }
     
+    func parseJSONgroup(_ jsonG: Any)->Group {
+        let g = jsonG as! Dictionary<String, AnyObject>
+        let gName = g["name"] as! String
+        let gDescr = g["description"] as! String
+        let gPolicy = g["policy"] as! String
+        let gNick = g["nick"] as! String
+        let gColor = g["color"] as! String
+        let gURL = g["url"] as! String
+        let gType = g["type"] as! String
+        let gActive = g["active"] as? String == "1"
+        var gU = g["u"] as? String
+        if (gU == nil ){
+            let gUint = g["u"] as? Int
+            gU = "\(gUint)"
+        }
+        
+        let gId = g["id"] as? String
+        let jsonUsers = g["users"] as? Array<AnyObject>
+        
+        
+        let group = Group(u: gU!, name: gName, active: gActive)
+        group.descr = gDescr
+        group.policy = gPolicy
+        group.nick = gNick
+        group.color = gColor
+        group.url = gURL
+        group.id = gId!;
+        group.type = gType;
+        
+        
+        for jsonU in jsonUsers!{
+            
+            let u = jsonU as! Dictionary<String, AnyObject>
+            let uId = u["u"] as! String
+            //let uDevice = u["device"] as? String
+            let uName = u["name"] as! String
+            let uConnected = u["connected"] as! Double
+            let uColor = u["color"] as! String
+            
+            let user = User(id: uId, name: uName, color: uColor, connected: uConnected)
+            group.users.append(user)
+            
+        }
+        return group;
+        
+    }
     func parseGroupsJson(_ responce: String) -> [Group]? {
         
         //let responceFirst = responce.componentsSeparatedByString("\n")[0] <-- has no sense because splitting in other place
@@ -500,51 +576,25 @@ open class TcpConnection: BaseTcpConnection {
         //tag.componentsSeparatedByString("|")[0]
 
         do {
-        if let data: Data = json.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers), let jsonGroups = jsonObject as? Array<Any> {
-            
-            
+        if let data: Data = json.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) {
+
                 var groups = [Group]()
-                
-                for jsonG in jsonGroups{
-                    
-                    let g = jsonG as! Dictionary<String, AnyObject>
-                    let gName = g["name"] as! String
-                    let gDescr = g["description"] as! String
-                    let gPolicy = g["policy"] as! String
-                    let gNick = g["nick"] as! String
-                    let gColor = g["color"] as! String
-                    let gURL = g["url"] as! String
-                    let gActive = g["active"] as! String == "1"
-                    let gU = g["u"] as! String
-                    let gId = g["id"] as! String
-                    let jsonUsers = g["users"] as! Array<AnyObject>
-                    
-                    
-                    let group = Group(u: gU, name: gName, active: gActive)
-                    group.descr = gDescr
-                    group.policy = gPolicy
-                    group.nick = gNick
-                    group.color = gColor
-                    group.url = gURL
-                    group.id = gId;
-                    
-                    for jsonU in jsonUsers{
+            
+                if let jsonGroups = jsonObject as? Array<Any> {
+                    for jsonG in jsonGroups{
                         
-                        let u = jsonU as! Dictionary<String, AnyObject>
-                        let uId = u["u"] as! String
-                        //let uDevice = u["device"] as? String
-                        let uName = u["name"] as! String
-                        let uConnected = u["connected"] as! Double
-                        let uColor = u["color"] as! String
-                        
-                        let user = User(id: uId, name: uName, color: uColor, connected: uConnected)
-                        group.users.append(user)
+                        let group = self.parseJSONgroup(jsonG)
+                        groups.append(group)
                     }
-                    
+            
+                } /*else {
+                    let group = self.parseJSONgroup(jsonObject as Any)
                     groups.append(group)
-                }
+                    
+            }*/
+            
                 
-                return groups
+            return groups
 
         }
     }catch {}
