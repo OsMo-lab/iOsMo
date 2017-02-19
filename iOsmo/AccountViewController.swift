@@ -195,7 +195,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.groupManager.groupList()
                 self.btnEnterGroup.isHidden = false
             } else {
-                self.alert("error on enter group", message: $0.1)
+                self.alert(NSLocalizedString("Error on enter group", comment:"Alert title for error on enter group"), message: $0.1)
+                
                 
                 if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)),
                     let indicator = cell.contentView.viewWithTag(3) as? UIActivityIndicatorView {
@@ -231,7 +232,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                     let addButton = cell.contentView.viewWithTag(4) as? UIButton {
                     addButton.isEnabled = true
                 }
-                self.alert("error on create group", message: $0.1)
+                self.alert(NSLocalizedString("Error on create group", comment:"Alert title for error on create group"), message: $0.1)
             }
             
             
@@ -240,7 +241,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if ($0.0) {
                 self.groupManager.groupList()
             } else {
-                self.alert("error on leave group", message: $0.1)
+                self.alert(NSLocalizedString("Error on leave group", comment:"Alert title for error on leave group"), message: $0.1)
             }
         }
         
@@ -248,7 +249,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if ($0.0) {
                 self.groupManager.groupList()
             } else {
-                self.alert("error on activate group", message: $0.1)
+                self.alert(NSLocalizedString("Error on activate group", comment:"Alert title for error on activate group"), message: $0.1)
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -259,7 +260,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if ($0.0) {
 
             } else {
-                self.alert("error on deactivate group", message: $0.1)
+                self.alert(NSLocalizedString("Error on deactivate group", comment:"Alert title for error on deactivate group"), message: $0.1)
                 
             }
             DispatchQueue.main.async {
@@ -303,7 +304,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         
         
         connectionManager.connect()
-        userName.text = "connecting.."
+        userName.text = NSLocalizedString("Connecting...", comment:"Connecting status")
         controller.dismiss(animated: true, completion: nil)
         
     }
@@ -318,13 +319,13 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.successLogin = true
             } else {
                 
-                userName.text = "Unknown"
+                userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
                 loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
                 self.successLogin = false
             }
         } else {
             
-            userName.text = "Unknown"
+            userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
             loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
             self.successLogin = false
         }
@@ -528,9 +529,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         let section = (indexPath as NSIndexPath).section
         if (section < 2) {
-            return "cancel"
+            return NSLocalizedString("Cancel", comment:"Cancel")
         } else {
-            return "leave"
+            return NSLocalizedString("Leave", comment:"Leave group")
         }
     }
     
@@ -572,7 +573,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
             let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
             self.present(myAlert, animated: true, completion: nil)
         } else { // iOS 7
             let alert: UIAlertView = UIAlertView()
@@ -580,7 +581,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             
             alert.title = title
             alert.message = message
-            alert.addButton(withTitle: "OK")
+            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
             
             alert.show()
         }

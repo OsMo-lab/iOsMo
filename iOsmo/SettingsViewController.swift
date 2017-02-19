@@ -29,7 +29,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
             clickCount += 1;
             if (clickCount == 7) {
                 SettingsManager.setKey("enable", forKey: SettingKeys.logView)
-                self.alert("LogView unlocked",message:"Restart iOsMo")
+                self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart iOsMo", comment:"Restart iOsMo"))
             }
         }
     }
@@ -114,7 +114,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
             let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
             self.present(myAlert, animated: true, completion: nil)
         } else { // iOS 7
             let alert: UIAlertView = UIAlertView()
@@ -122,7 +122,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
             
             alert.title = title
             alert.message = message
-            alert.addButton(withTitle: "OK")
+            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
             
             alert.show()
         }

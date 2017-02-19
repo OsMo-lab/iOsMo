@@ -229,7 +229,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.osmoStatus.isHidden = !theChange
                 
                 if !theChange && !$0.1.isEmpty {
-                    self.alert("Error", message: $0.1)
+                    self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
                 }
             }
             
@@ -257,7 +257,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     }
                 } else {
                     
-                    self.link.setTitle($0.1.isEmpty ? "session was closed" : $0.1, for: UIControlState())
+                    self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControlState())
                     self.link.isEnabled = false
                     
                     self.log.enqueue("MVC: The session was closed")
