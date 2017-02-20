@@ -102,32 +102,37 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
         }
         for loc in locations {
-                let theCoordinate = loc.coordinate
-                let theAccuracy = loc.horizontalAccuracy
-                let theAltitude = loc.altitude
+            let theCoordinate = loc.coordinate
+            let theAccuracy = loc.horizontalAccuracy
+            let theAltitude = loc.altitude
+
             
             
-                let locationAge = -loc.timestamp.timeIntervalSinceNow
+            let locationAge = -loc.timestamp.timeIntervalSinceNow
+            if locationAge > 30 {
+                continue
+            }
             
-                if locationAge > 30 {continue}
+            //select only valid location and also location with good accuracy
+            if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil))){
+                var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
+                //add others values
+                locationModel.accuracy = Int(theAccuracy)
+                locationModel.speed = loc.speed as Double
+                locationModel.course = Float(loc.course)
+                locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
                 
-                //select only valid location and also location with good accuracy
-                if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0)){
-                    var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
-                    //add others values
-                    locationModel.accuracy = Int(theAccuracy)
-                    locationModel.speed = loc.speed as Double
-                    locationModel.course = Float(loc.course)
-                    locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
-                    
-                    let distanceInMeters = loc.distance(from: prev_loc!)
-                    distance = distance + distanceInMeters / 1000
-                    prev_loc = loc
-                    
-                    self.lastLocations.append(locationModel)
-                    self.allSessionLocations.append(locationModel)
-                    
-                }
+                let distanceInMeters = loc.distance(from: prev_loc!)
+                distance = distance + distanceInMeters / 1000
+                prev_loc = loc
+                
+                self.lastLocations.append(locationModel)
+                self.allSessionLocations.append(locationModel)
+                
+            }
+            
+            
+            
         }
 
     }

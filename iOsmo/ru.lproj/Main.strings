@@ -50,7 +50,7 @@
 "FMD-q5-sW0.placeholder" = "телефон";
 
 /* Class = "UILabel"; text = "private"; ObjectID = "FUD-bK-jc9"; */
-"FUD-bK-jc9.text" = "приватная";
+"FUD-bK-jc9.text" = "закрытая";
 
 /* Class = "UIButton"; normalTitle = "Add"; ObjectID = "Gcd-W9-a1F"; */
 "Gcd-W9-a1F.normalTitle" = "Создать";

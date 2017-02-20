@@ -266,7 +266,7 @@ open class TcpConnection: BaseTcpConnection {
             print("session closed")
             log.enqueue("session closed answer")
             
-            answerObservers.notify((AnswTags.closeSession, "session was closed", !parseBoolAnswer()))
+            answerObservers.notify((AnswTags.closeSession, NSLocalizedString("session was closed", comment:"session was closed"), !parseBoolAnswer()))
             return
 
         }
@@ -546,13 +546,17 @@ open class TcpConnection: BaseTcpConnection {
         for jsonU in jsonUsers!{
             
             let u = jsonU as! Dictionary<String, AnyObject>
-            let uId = u["u"] as! String
+            var uId = u["u"] as? String
+            if (uId == nil) {
+                let uIdInt = g["u"] as? Int
+                uId = "\(uIdInt)"
+            }
             //let uDevice = u["device"] as? String
             let uName = u["name"] as! String
             let uConnected = u["connected"] as! Double
             let uColor = u["color"] as! String
             
-            let user = User(id: uId, name: uName, color: uColor, connected: uConnected)
+            let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
             group.users.append(user)
             
         }

@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 13/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2017 Alexey Sirotkin All rights reserved.
 //
 
 import Foundation
@@ -19,6 +19,7 @@ public struct LocationModel{
     
     let coordFormat = "%.6f"
     let speedFormat = "S%.2f"
+    let courseFormat = "C%d"
     
     
     init(lat: Double, lon: Double){
@@ -40,16 +41,15 @@ public struct LocationModel{
     }
     
     var getCoordinateRequest: String{
-        
         var isSimulated = false
 
         if UIDevice.current.model == "iPhone Simulator" {
             isSimulated = true
         }
         
-        
         let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
-        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
+        let formatedCourse = speed > 5 ? (NSString(format:courseFormat as NSString, course)): ""
+        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)\(formatedCourse)H\(accuracy)"
 
         return toSend
     }

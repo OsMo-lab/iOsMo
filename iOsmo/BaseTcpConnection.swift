@@ -80,7 +80,6 @@ open class BaseTcpConnection: NSObject {
             
             self.coordinates.removeAll(keepingCapacity: false)
             closeSession()
-            
         }
         
         //TODO: refactoring send best coordinates

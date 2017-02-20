@@ -125,10 +125,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if isSessionPaused || isMonitoringOn {
             sendingManger.stopSendingCoordinates()
-            UIApplication.shared.isIdleTimerDisabled = false
+            //UIApplication.shared.isIdleTimerDisabled = false
         } else {
             sendingManger.startSendingCoordinates()
-            UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
 
@@ -241,7 +241,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 print("MVC: The session was opened/closed.\(theChange)")
                 
                 if theChange {
-                    
                     if let sUrl = self.connectionManager.sessionUrl {
                         self.link.setTitle(sUrl, for: UIControlState())
                         self.link.isEnabled = true
@@ -255,6 +254,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
                         self.sessionTimer!.reset()
                     }
+                    
                 } else {
                     
                     self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControlState())

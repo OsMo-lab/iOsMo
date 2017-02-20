@@ -23,10 +23,10 @@ open class SessionTimer: NSObject{
     }
     
     func start(){
-    
-        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(SessionTimer.tick), userInfo: nil, repeats: true)
-
-        self.isStarted = true
+        if (!self.isStarted) {
+            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(SessionTimer.tick), userInfo: nil, repeats: true)
+            self.isStarted = true
+        }
     }
     
     func reset(){

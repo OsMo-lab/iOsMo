@@ -152,8 +152,7 @@ open class ConnectionManager: NSObject{
     
     open func openSession(){
         log.enqueue("ConnectionManager: open session")
-        
-        if connected {
+        if (self.connected && !self.sessionOpened) {
             connection.openSession()
        }
     }
@@ -334,8 +333,9 @@ open class ConnectionManager: NSObject{
             }
         
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
-                openSession()
-                
+                //openSession()
+                let sendingManger = SendingManager.sharedSendingManager
+                sendingManger.startSendingCoordinates()
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){

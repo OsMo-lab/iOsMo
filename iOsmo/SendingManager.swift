@@ -44,7 +44,6 @@ open class SendingManager: NSObject{
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
                 if $0.0 {
-                    
                     self.onSessionRun = self.connectionManager.sessionRun.add{
                         if $0.0 {
                             self.startSending()
@@ -79,21 +78,17 @@ open class SendingManager: NSObject{
     }
     
     open func pauseSendingCoordinates(){
-        
         locationTracker.turnMonitoringOff()
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
         sessionPaused.notify((true))
-
-        
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     open func stopSendingCoordinates(){
-        
         pauseSendingCoordinates()
         connectionManager.closeSession()
-    
     }
     
     open func sending(){
@@ -105,9 +100,8 @@ open class SendingManager: NSObject{
             log.enqueue("CoordinateManager: got \(coors.count) coordinates")
             
             if coors.count > 0 {
-           
                 log.enqueue("CoordinateManager: sending \(coors.count) coordinates")
-                self.connectionManager.sendCoordinates(Array<LocationModel>(arrayLiteral: coors.last!))
+                self.connectionManager.sendCoordinates(coors)
                 
                 for c in coors {
                     //notify about all - because it draw on map
@@ -115,7 +109,6 @@ open class SendingManager: NSObject{
                 }
            }
         }
-        
     }
     
     fileprivate func startSending(){
@@ -132,11 +125,10 @@ open class SendingManager: NSObject{
                 }
             
             }
-
-            
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
-           sessionStarted.notify((true))
-       
+            
+            sessionStarted.notify((true))
+            UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
      

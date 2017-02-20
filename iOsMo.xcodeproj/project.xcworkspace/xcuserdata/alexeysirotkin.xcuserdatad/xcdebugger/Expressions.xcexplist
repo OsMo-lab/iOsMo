@@ -80,6 +80,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">
       </ContextState>
       <ContextState
@@ -89,6 +92,17 @@
                value = "$1">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BaseTcpConnection.onSentCoordinate() -&gt; ():BaseTcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.coordinates.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
       </ContextState>
       <ContextState
          contextName = "GroupManager.(deactivateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
