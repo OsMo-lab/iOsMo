@@ -201,7 +201,7 @@ open class TcpConnection: BaseTcpConnection {
         let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|").last == "1" }
         
         var command = output.components(separatedBy: "|").first!
-        var addict = output.components(separatedBy: "|").last!
+        let addict = output.components(separatedBy: "|").last!
         var param = ""
         if command.contains(":"){
             param = command.components(separatedBy: ":").last!

@@ -156,16 +156,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        /*
-        connectionManager.groupsEnabled.add{
-            
-            //self.activateSwitcher.isOn = $0
-        }*/
-        
         tableView.tableFooterView = UIView(frame: CGRect.zero)
         // subscribe once
         if self.onConnectionRun == nil {
-            
             self.onConnectionRun = connectionManager.connectionRun.add{
                 if $0.0 {
                     self.setLoginControls()

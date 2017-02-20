@@ -54,6 +54,7 @@
 		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
 		4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */; };
 		4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB841E5A18880094FF8A /* InfoPlist.strings */; };
+		4DB5FB861E5B76C10094FF8A /* ru.xliff in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB851E5B76C10094FF8A /* ru.xliff */; };
 		F90DB7721A43410F0090146E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = F90DB7711A43410F0090146E /* Reachability.m */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
@@ -127,6 +128,7 @@
 		4DB5FB791E5A18860094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4DB5FB7E1E5A18870094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4DB5FB831E5A18880094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4DB5FB851E5B76C10094FF8A /* ru.xliff */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ru.xliff; path = "iOsMo-En/ru.xliff"; sourceTree = "<group>"; };
 		F90DB7701A43410F0090146E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		F90DB7711A43410F0090146E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 		293C95731A34B217005DD4CE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4DB5FB851E5B76C10094FF8A /* ru.xliff */,
 				4DB5FB841E5A18880094FF8A /* InfoPlist.strings */,
 				4DB5FB7A1E5A18860094FF8A /* Localizable.strings */,
 				4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */,
@@ -435,6 +438,7 @@
 				4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */,
 				293C957F1A34B217005DD4CE /* Images.xcassets in Resources */,
 				4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */,
+				4DB5FB861E5B76C10094FF8A /* ru.xliff in Resources */,
 				4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

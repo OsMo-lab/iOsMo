@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="iOsmo/Base.lproj/LaunchScreen.xib" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="8ie-xW-0ye.text">
+        <source>  Copyright © 2015 Olga Grineva, 2016 Alexey Sirotkin
+All rights reserved.</source>
+        <target>  Copyright © 2015 Olga Grineva, 2016 Alexey Sirotkin
+All rights reserved.</target>
+        <note>Class = "UILabel"; text = "  Copyright © 2015 Olga Grineva, 2016 Alexey Sirotkin\nAll rights reserved."; ObjectID = "8ie-xW-0ye";</note>
+      </trans-unit>
+      <trans-unit id="kId-c2-rCX.text">
+        <source>iOsMo</source>
+        <target>iOsMo</target>
+        <note>Class = "UILabel"; text = "iOsMo"; ObjectID = "kId-c2-rCX";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmo/Base.lproj/Main.storyboard" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="1cS-c8-csE.normalTitle">
+        <source>Reload</source>
+        <target>Обновить</target>
+        <note>Class = "UIButton"; normalTitle = "Reload"; ObjectID = "1cS-c8-csE";</note>
+      </trans-unit>
+      <trans-unit id="1rg-8O-chP.text">
+        <source>Time</source>
+        <target>Время</target>
+        <note>Class = "UILabel"; text = "Time"; ObjectID = "1rg-8O-chP";</note>
+      </trans-unit>
+      <trans-unit id="2dk-tC-xs0.normalTitle">
+        <source>Join</source>
+        <target>Вступить</target>
+        <note>Class = "UIButton"; normalTitle = "Join"; ObjectID = "2dk-tC-xs0";</note>
+      </trans-unit>
+      <trans-unit id="2lC-Vq-lGK.normalTitle">
+        <source>Groups</source>
+        <target>Группы</target>
+        <note>Class = "UIButton"; normalTitle = "Groups"; ObjectID = "2lC-Vq-lGK";</note>
+      </trans-unit>
+      <trans-unit id="2ux-Wj-WCn.text">
+        <source>type</source>
+        <target>тип</target>
+        <note>Class = "UILabel"; text = "type"; ObjectID = "2ux-Wj-WCn";</note>
+      </trans-unit>
+      <trans-unit id="4xw-df-ley.text">
+        <source>Usercount</source>
+        <target>Usercount</target>
+        <note>Class = "UILabel"; text = "Usercount"; ObjectID = "4xw-df-ley";</note>
+      </trans-unit>
+      <trans-unit id="7T6-eH-nEm.placeholder">
+        <source>Your nickname in group</source>
+        <target>Ваше имя в группе</target>
+        <note>Class = "UITextField"; placeholder = "Your nickname in group"; ObjectID = "7T6-eH-nEm";</note>
+      </trans-unit>
+      <trans-unit id="8LA-DM-qly.text">
+        <source>Pool groups</source>
+        <target>Опрос групп</target>
+        <note>Class = "UILabel"; text = "Pool groups"; ObjectID = "8LA-DM-qly";</note>
+      </trans-unit>
+      <trans-unit id="8sE-Lc-xYs.text">
+        <source>Sending interval, seconds</source>
+        <target>Период отправки, сек</target>
+        <note>Class = "UILabel"; text = "Sending interval, seconds"; ObjectID = "8sE-Lc-xYs";</note>
+      </trans-unit>
+      <trans-unit id="48f-pX-4EJ.text">
+        <source>Unknown</source>
+        <target>Неизвестен</target>
+        <note>Class = "UILabel"; text = "Unknown"; ObjectID = "48f-pX-4EJ";</note>
+      </trans-unit>
+      <trans-unit id="AJB-As-rSV.normalTitle">
+        <source>trackerID</source>
+        <target>trackerID</target>
+        <note>Class = "UIButton"; normalTitle = "trackerID"; ObjectID = "AJB-As-rSV";</note>
+      </trans-unit>
+      <trans-unit id="AxV-gG-nJV.text">
+        <source>nick</source>
+        <target>имя</target>
+        <note>Class = "UILabel"; text = "nick"; ObjectID = "AxV-gG-nJV";</note>
+      </trans-unit>
+      <trans-unit id="BYA-yY-8gh.normalTitle">
+        <source>press Start button</source>
+        <target>нажмите кнопку Старт</target>
+        <note>Class = "UIButton"; normalTitle = "press Start button"; ObjectID = "BYA-yY-8gh";</note>
+      </trans-unit>
+      <trans-unit id="CHt-yv-mdX.text">
+        <source>Unknown</source>
+        <target>Неизвестен</target>
+        <note>Class = "UILabel"; text = "Unknown"; ObjectID = "CHt-yv-mdX";</note>
+      </trans-unit>
+      <trans-unit id="DX7-T5-2pK.text">
+        <source>group</source>
+        <target>группа</target>
+        <note>Class = "UILabel"; text = "group"; ObjectID = "DX7-T5-2pK";</note>
+      </trans-unit>
+      <trans-unit id="DZb-1E-5vV.text">
+        <source>00:00:00</source>
+        <target>00:00:00</target>
+        <note>Class = "UILabel"; text = "00:00:00"; ObjectID = "DZb-1E-5vV";</note>
+      </trans-unit>
+      <trans-unit id="FMD-q5-sW0.placeholder">
+        <source>phone number</source>
+        <target>телефон</target>
+        <note>Class = "UITextField"; placeholder = "phone number"; ObjectID = "FMD-q5-sW0";</note>
+      </trans-unit>
+      <trans-unit id="FUD-bK-jc9.text">
+        <source>private</source>
+        <target>закрытая</target>
+        <note>Class = "UILabel"; text = "private"; ObjectID = "FUD-bK-jc9";</note>
+      </trans-unit>
+      <trans-unit id="Gcd-W9-a1F.normalTitle">
+        <source>Add</source>
+        <target>Создать</target>
+        <note>Class = "UIButton"; normalTitle = "Add"; ObjectID = "Gcd-W9-a1F";</note>
+      </trans-unit>
+      <trans-unit id="JBh-VC-BMZ.text">
+        <source>email</source>
+        <target>email</target>
+        <note>Class = "UILabel"; text = "email"; ObjectID = "JBh-VC-BMZ";</note>
+      </trans-unit>
+      <trans-unit id="JLp-vB-cdg.normalTitle">
+        <source>Join</source>
+        <target>Вступить</target>
+        <note>Class = "UIButton"; normalTitle = "Join"; ObjectID = "JLp-vB-cdg";</note>
+      </trans-unit>
+      <trans-unit id="JS1-jZ-Ygc.placeholder">
+        <source>Name of new group</source>
+        <target>Имя новой группы</target>
+        <note>Class = "UITextField"; placeholder = "Name of new group"; ObjectID = "JS1-jZ-Ygc";</note>
+      </trans-unit>
+      <trans-unit id="JgA-OC-PKV.text">
+        <source>iOsMo</source>
+        <target>iOsMo</target>
+        <note>Class = "UILabel"; text = "iOsMo"; ObjectID = "JgA-OC-PKV";</note>
+      </trans-unit>
+      <trans-unit id="Kpg-lx-GAk.text">
+        <source>group</source>
+        <target>группа</target>
+        <note>Class = "UILabel"; text = "group"; ObjectID = "Kpg-lx-GAk";</note>
+      </trans-unit>
+      <trans-unit id="LWZ-te-6Dr.text">
+        <source>Reset authorization</source>
+        <target>Сброс авторизации</target>
+        <note>Class = "UILabel"; text = "Reset authorization"; ObjectID = "LWZ-te-6Dr";</note>
+      </trans-unit>
+      <trans-unit id="MBA-Xb-vkb.placeholder">
+        <source>ID or URL of group to join</source>
+        <target>ID or URL of group to join</target>
+        <note>Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb";</note>
+      </trans-unit>
+      <trans-unit id="P3p-0b-A4E.text">
+        <source>Settings</source>
+        <target>Настройки</target>
+        <note>Class = "UILabel"; text = "Settings"; ObjectID = "P3p-0b-A4E";</note>
+      </trans-unit>
+      <trans-unit id="Ppm-WI-6i7.text">
+        <source>name</source>
+        <target>имя</target>
+        <note>Class = "UILabel"; text = "name"; ObjectID = "Ppm-WI-6i7";</note>
+      </trans-unit>
+      <trans-unit id="S8H-pZ-cOM.normalTitle">
+        <source>Add</source>
+        <target>Создать</target>
+        <note>Class = "UIButton"; normalTitle = "Add"; ObjectID = "S8H-pZ-cOM";</note>
+      </trans-unit>
+      <trans-unit id="VMO-OO-6cj.normalTitle">
+        <source>Refresh</source>
+        <target>Обновить</target>
+        <note>Class = "UIButton"; normalTitle = "Refresh"; ObjectID = "VMO-OO-6cj";</note>
+      </trans-unit>
+      <trans-unit id="Vjh-Tf-qLH.placeholder">
+        <source>e-mail address</source>
+        <target>адрес e-mail</target>
+        <note>Class = "UITextField"; placeholder = "e-mail address"; ObjectID = "Vjh-Tf-qLH";</note>
+      </trans-unit>
+      <trans-unit id="WVP-LT-JgZ.text">
+        <source>00.0</source>
+        <target>00.0</target>
+        <note>Class = "UILabel"; text = "00.0"; ObjectID = "WVP-LT-JgZ";</note>
+      </trans-unit>
+      <trans-unit id="ZmA-1B-N8V.normalTitle">
+        <source>Group URL</source>
+        <target>URL группы</target>
+        <note>Class = "UIButton"; normalTitle = "Group URL"; ObjectID = "ZmA-1B-N8V";</note>
+      </trans-unit>
+      <trans-unit id="aaK-Vn-Ex2.normalTitle">
+        <source>&gt;&gt;</source>
+        <target>&gt;&gt;</target>
+        <note>Class = "UIButton"; normalTitle = "&gt;&gt;"; ObjectID = "aaK-Vn-Ex2";</note>
+      </trans-unit>
+      <trans-unit id="cYK-aE-whk.text">
+        <source>...</source>
+        <target>...</target>
+        <note>Class = "UITextView"; text = "..."; ObjectID = "cYK-aE-whk";</note>
+      </trans-unit>
+      <trans-unit id="cwm-3c-oHU.text">
+        <source>phone</source>
+        <target>телефон</target>
+        <note>Class = "UILabel"; text = "phone"; ObjectID = "cwm-3c-oHU";</note>
+      </trans-unit>
+      <trans-unit id="dzF-Z7-f5g.text">
+        <source>Don't turn the screen off</source>
+        <target>Не выключать экран</target>
+        <note>Class = "UILabel"; text = "Don't turn the screen off"; ObjectID = "dzF-Z7-f5g";</note>
+      </trans-unit>
+      <trans-unit id="fu1-UL-KdI.text">
+        <source>Label</source>
+        <target>Label</target>
+        <note>Class = "UILabel"; text = "Label"; ObjectID = "fu1-UL-KdI";</note>
+      </trans-unit>
+      <trans-unit id="hyP-V3-hsV.title">
+        <source>Authorization</source>
+        <target>Авторизация</target>
+        <note>Class = "UIViewController"; title = "Authorization"; ObjectID = "hyP-V3-hsV";</note>
+      </trans-unit>
+      <trans-unit id="kHD-cd-YRb.normalTitle">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        <note>Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "kHD-cd-YRb";</note>
+      </trans-unit>
+      <trans-unit id="kKi-6z-bzq.segmentTitles[0]">
+        <source>Done</source>
+        <target>Готово</target>
+        <note>Class = "UISegmentedControl"; kKi-6z-bzq.segmentTitles[0] = "Done"; ObjectID = "kKi-6z-bzq";</note>
+      </trans-unit>
+      <trans-unit id="kKi-6z-bzq.segmentTitles[1]">
+        <source>New</source>
+        <target>New</target>
+        <note>Class = "UISegmentedControl"; kKi-6z-bzq.segmentTitles[1] = "New"; ObjectID = "kKi-6z-bzq";</note>
+      </trans-unit>
+      <trans-unit id="kKi-6z-bzq.segmentTitles[2]">
+        <source>Liked</source>
+        <target>Liked</target>
+        <note>Class = "UISegmentedControl"; kKi-6z-bzq.segmentTitles[2] = "Liked"; ObjectID = "kKi-6z-bzq";</note>
+      </trans-unit>
+      <trans-unit id="mQB-e1-7Xc.text">
+        <source>Autosave session</source>
+        <target>Автосохранение сессии</target>
+        <note>Class = "UILabel"; text = "Autosave session"; ObjectID = "mQB-e1-7Xc";</note>
+      </trans-unit>
+      <trans-unit id="mms-Em-UaN.text">
+        <source>00.0</source>
+        <target>00.0</target>
+        <note>Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN";</note>
+      </trans-unit>
+      <trans-unit id="o31-Sf-Gmk.text">
+        <source>Distance</source>
+        <target>Расстояние</target>
+        <note>Class = "UILabel"; text = "Distance"; ObjectID = "o31-Sf-Gmk";</note>
+      </trans-unit>
+      <trans-unit id="ors-8k-0GG.text">
+        <source>Load last:</source>
+        <target>Load last:</target>
+        <note>Class = "UILabel"; text = "Load last:"; ObjectID = "ors-8k-0GG";</note>
+      </trans-unit>
+      <trans-unit id="roX-H8-MZy.text">
+        <source>Account</source>
+        <target>Учетная запись</target>
+        <note>Class = "UILabel"; text = "Account"; ObjectID = "roX-H8-MZy";</note>
+      </trans-unit>
+      <trans-unit id="s0a-bC-RgU.text">
+        <source>Speed</source>
+        <target>Скорость</target>
+        <note>Class = "UILabel"; text = "Speed"; ObjectID = "s0a-bC-RgU";</note>
+      </trans-unit>
+      <trans-unit id="sQw-1p-wMi.text">
+        <source>Routes</source>
+        <target>Маршруты</target>
+        <note>Class = "UILabel"; text = "Routes"; ObjectID = "sQw-1p-wMi";</note>
+      </trans-unit>
+      <trans-unit id="voL-dJ-cjX.text">
+        <source>100</source>
+        <target>100</target>
+        <note>Class = "UITextField"; text = "100"; ObjectID = "voL-dJ-cjX";</note>
+      </trans-unit>
+      <trans-unit id="wHZ-Bj-8uU.text">
+        <source>Log</source>
+        <target>Журнал</target>
+        <note>Class = "UILabel"; text = "Log"; ObjectID = "wHZ-Bj-8uU";</note>
+      </trans-unit>
+      <trans-unit id="wSH-og-nEL.normalTitle">
+        <source>Type</source>
+        <target>Тип</target>
+        <note>Class = "UIButton"; normalTitle = "Type"; ObjectID = "wSH-og-nEL";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmo/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName">
+        <source>${PRODUCT_NAME}</source>
+      </trans-unit>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.5</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmo/Localizable.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="Cancel">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        <note>Cancel</note>
+      </trans-unit>
+      <trans-unit id="Connecting...">
+        <source>Connecting...</source>
+        <target>Соединяемся...</target>
+        <note>Connecting status</note>
+      </trans-unit>
+      <trans-unit id="Error">
+        <source>Error</source>
+        <target>Ошибка</target>
+        <note>Error title for alert</note>
+      </trans-unit>
+      <trans-unit id="Error on activate group">
+        <source>Error on activate group</source>
+        <target>Ошибка активации группы</target>
+        <note>Alert title for error on activate group</note>
+      </trans-unit>
+      <trans-unit id="Error on create group">
+        <source>Error on create group</source>
+        <target>Ошибка создания группы</target>
+        <note>Alert title for error on create group</note>
+      </trans-unit>
+      <trans-unit id="Error on deactivate group">
+        <source>Error on deactivate group</source>
+        <target>Ошибка деактивации группы</target>
+        <note>Alert title for error on deactivate group</note>
+      </trans-unit>
+      <trans-unit id="Error on enter group">
+        <source>Error on enter group</source>
+        <target>Ошибка входа в группу</target>
+        <note>Alert title for error on enter group</note>
+      </trans-unit>
+      <trans-unit id="Error on leave group">
+        <source>Error on leave group</source>
+        <target>Ошибка выхода из группы</target>
+        <note>Alert title for error on leave group</note>
+      </trans-unit>
+      <trans-unit id="Leave">
+        <source>Leave</source>
+        <target>Выйти</target>
+        <note>Leave group</note>
+      </trans-unit>
+      <trans-unit id="LogView unlocked">
+        <source>LogView unlocked</source>
+        <target>Журнал разблокирован</target>
+        <note>LogView unlocked</note>
+      </trans-unit>
+      <trans-unit id="OK">
+        <source>OK</source>
+        <note>OK</note>
+      </trans-unit>
+      <trans-unit id="Restart iOsMo">
+        <source>Restart iOsMo</source>
+        <target>Перезапустите iOsMo</target>
+        <note>Restart iOsMo</note>
+      </trans-unit>
+      <trans-unit id="Unknown">
+        <source>Unknown</source>
+        <target>Неизвестен</target>
+        <note>Unknown user</note>
+      </trans-unit>
+      <trans-unit id="session was closed">
+        <source>session was closed</source>
+        <target>сессия закрыта</target>
+        <note>session was closed</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmoTests/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.0</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
