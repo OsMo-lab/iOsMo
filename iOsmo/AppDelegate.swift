@@ -80,7 +80,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
         }
-        
+        if let url = launchOptions?[.url] as? URL {
+            presentViewController(url:url);
+        }
         return true
     }
 

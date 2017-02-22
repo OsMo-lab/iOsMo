@@ -54,10 +54,13 @@ open class TcpClient : NSObject, StreamDelegate {
         print("r: \(request)")
         let requestToSend = "\(request)\n"
         if let outputStream = outputStream, let data = requestToSend.data(using: String.Encoding.utf8) {
-             let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+            let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
             if (wb == -1 ) {
                 log.enqueue("error: write to output stream")
                 print("error: write to output stream")
+                if callbackOnError != nil {
+                    callbackOnError!(true)
+                }
             }
         } else {
             log.enqueue("error: send request")

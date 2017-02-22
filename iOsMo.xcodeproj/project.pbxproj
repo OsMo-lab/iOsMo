@@ -356,12 +356,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */;
 			buildPhases = (
-				3F3BCA152A319C40E1C33412 /* [CP] Check Pods Manifest.lock */,
 				293C95831A34B217005DD4CE /* Sources */,
 				293C95841A34B217005DD4CE /* Frameworks */,
 				293C95851A34B217005DD4CE /* Resources */,
-				62001964648290F57DCCA74B /* [CP] Embed Pods Frameworks */,
-				F360F42EE53F7F26BFA3950D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -454,21 +451,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3F3BCA152A319C40E1C33412 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		4DC655361D6249A200A9BE10 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -481,36 +463,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "";
-		};
-		62001964648290F57DCCA74B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F360F42EE53F7F26BFA3950D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -785,7 +737,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsmo.app/iOsmo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
 			};
 			name = Debug;
 		};
@@ -802,7 +754,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsmo.app/iOsmo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
 			};
 			name = Release;
 		};

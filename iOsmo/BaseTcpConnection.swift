@@ -67,8 +67,6 @@ open class BaseTcpConnection: NSObject {
 
     }
     open func closeSession(){
-        
-        log.enqueue("send close session request")
         let request = "\(Tags.closeSession.rawValue)"
         closeSession(request)
     }
@@ -76,11 +74,12 @@ open class BaseTcpConnection: NSObject {
     
     //TODO: should be in sending manager!!!
     fileprivate func sendNextCoordinates(){
-        if self.shouldCloseSession {
+        /*
+         if self.shouldCloseSession {
             
             self.coordinates.removeAll(keepingCapacity: false)
             closeSession()
-        }
+        }*/
         
         //TODO: refactoring send best coordinates
         if self.sessionOpened && self.coordinates.count > 0 {
@@ -95,15 +94,14 @@ open class BaseTcpConnection: NSObject {
     
     
     func closeSession(_ request: String){
-        
-        log.enqueue("should close session: \(shouldCloseSession)")
-        self.shouldCloseSession = self.coordinates.count == 0
-        
-        if self.shouldCloseSession   {
+        if (self.coordinates.count != 0) {
+            self.shouldCloseSession = false;
+            log.enqueue("Coordinates buffer is not empty. Canceling close session")
+        } else{
            tcpClient.send(request)
         }
         
-        shouldCloseSession = !shouldCloseSession
+        //shouldCloseSession = !shouldCloseSession
         
     }
     

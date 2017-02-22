@@ -8,12 +8,28 @@
 
 import UIKit
 import XCTest
+import Foundation
 
+@available(iOS 9.0, *)
 class iOsmoTests: XCTestCase {
+    
+    private var launched = false
+    let app = XCUIApplication()
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        continueAfterFailure = false
+        launchIfNecessary()
+    }
+    
+    private func launchIfNecessary() {
+        if !launched {
+            launched = true
+            app.launchArguments = ["https://osmo.mobi/g/xynspxrncxiodsoh"]
+            app.launchEnvironment = ["url":"https://osmo.mobi/g/xynspxrncxiodsoh"]
+            app.launch()
+        }
     }
     
     override func tearDown() {

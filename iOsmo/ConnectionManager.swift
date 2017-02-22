@@ -108,7 +108,7 @@ open class ConnectionManager: NSObject{
             shouldReConnect = true
             return
         }
-        //if (!reconnect || token == nil) { token = ConnectionHelper.getToken()} //-- "Он одноразовый"
+
        if let tkn = ConnectionHelper.connectToServ() {
         
             if tkn.error.isEmpty {
@@ -117,7 +117,7 @@ open class ConnectionManager: NSObject{
                         (isError : Bool) -> Void in
                         self.shouldReConnect = isError
                         
-                        if (self.connected && isError) {
+                        if ((self.connected || reconnect) && isError) {
                             self.log.enqueue("CallBackOnError: should be reconnected")
                             self.shouldReConnect = true;
                         }
@@ -127,7 +127,7 @@ open class ConnectionManager: NSObject{
                         self.connectionRun.notify((false, ""))
                         
                         if (self.shouldReConnect) {
-                            self.connect()
+                            self.connect(self.shouldReConnect)
                         }
                     }
                 }
