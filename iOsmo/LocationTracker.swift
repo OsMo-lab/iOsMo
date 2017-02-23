@@ -17,6 +17,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     fileprivate var allSessionLocations = [LocationModel]()
     open var lastLocations = [LocationModel]()
     open var distance = 0.0;
+    var isDeferingUpdates = false;
     
     
     class var sharedLocationManager : CLLocationManager {
@@ -33,6 +34,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func turnMonitorinOn(){
         self.distance = 0
+        isDeferingUpdates = false
        
         if CLLocationManager.locationServicesEnabled() == false {
         
@@ -74,8 +76,10 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
+        LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
         print("stopUpdatingLocation")
         log.enqueue("stopUpdatingLocation")
+        isDeferingUpdates = false
     }
     
     
@@ -127,13 +131,13 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 
                 self.lastLocations.append(locationModel)
                 self.allSessionLocations.append(locationModel)
-                
             }
-            
-            
-            
         }
-
+        //Копим изменения координат в фоне более 100 метров или 60 секунд
+        if isDeferingUpdates == false {
+            isDeferingUpdates = true
+            manager.allowDeferredLocationUpdates(untilTraveled: 100, timeout: 60)
+        }
     }
     
 
@@ -151,5 +155,12 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
     }
     
+    open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
+        if (error != nil) {
+            print("locationManager didFinishDeferredUpdatesWithError  \(error)")
+            log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error)")
+        }
+        
+    }
     
 }

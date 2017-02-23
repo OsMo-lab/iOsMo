@@ -50,8 +50,8 @@ public struct LocationModel{
             isSimulated = true
         }
         var formatedTime = ""
-        let locationAge = time.timeIntervalSinceNow
-        if locationAge > 5 {
+        let locationAge = -time.timeIntervalSinceNow
+        if locationAge > 1 {
             let t:TimeInterval = time.timeIntervalSince1970
             formatedTime = NSString(format:timeFormat as NSString, t) as String
         }
