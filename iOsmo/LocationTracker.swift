@@ -105,8 +105,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             let theCoordinate = loc.coordinate
             let theAccuracy = loc.horizontalAccuracy
             let theAltitude = loc.altitude
-
-            
             
             let locationAge = -loc.timestamp.timeIntervalSinceNow
             if locationAge > 30 {
@@ -121,6 +119,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 locationModel.speed = loc.speed as Double
                 locationModel.course = Float(loc.course)
                 locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
+                locationModel.time = loc.timestamp
                 
                 let distanceInMeters = loc.distance(from: prev_loc!)
                 distance = distance + distanceInMeters / 1000

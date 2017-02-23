@@ -8,16 +8,6 @@
 
 import Foundation
 
-enum TagsOld: String{
-    case token = "TOKEN|"
-    case openSession = "TRACKER_SESSION_OPEN|"
-    case closeSession = "TRACKER_SESSION_CLOSE"
-    case ping = "P"
-    case pong = "PP"
-    case kick = "KICK|"
-    case remotePP = "REMOTE_CONTROL|PP"
-    case coordinate = "T"
-}
 
 enum Tags: String {
     case token = "INIT|"
@@ -36,6 +26,7 @@ enum Tags: String {
     case remoteCommandResponse = "RCR:"
     case activatePoolGroups = "PG"
     case groupSwitch = "GS"
+    case coordinate = "T"
 }
 
 enum KeysOld: String{
