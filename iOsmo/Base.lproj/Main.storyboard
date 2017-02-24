@@ -1015,7 +1015,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Autosave session" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mQB-e1-7Xc">
-                                        <rect key="frame" x="8" y="60" width="119" height="24"/>
+                                        <rect key="frame" x="8" y="50" width="119" height="44"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.42846433080000002" green="0.42846433080000002" blue="0.42846433080000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -1028,6 +1028,21 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sending interval, seconds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-Lc-xYs" userLabel="Send interval">
                                         <rect key="frame" x="8" y="150" width="177" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.42846433080000002" green="0.42846433080000002" blue="0.42846433080000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Power saving" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Dm-lJ-hkP">
+                                        <rect key="frame" x="8" y="178" width="129" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="35" id="44d-nZ-dum"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
+                                        <color key="textColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location distance, meters" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ymo-ea-5EI" userLabel="Location distance">
+                                        <rect key="frame" x="8" y="223" width="177" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.42846433080000002" green="0.42846433080000002" blue="0.42846433080000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -1068,28 +1083,76 @@
                                             <outlet property="delegate" destination="e7e-HH-qS7" id="ThF-At-rc2"/>
                                         </connections>
                                     </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Osf-iu-nRW" userLabel="Distance Text Field">
+                                        <rect key="frame" x="541" y="217" width="49" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="EGn-Bt-41T"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <action selector="textFieldEnterWith_sender:" destination="e7e-HH-qS7" eventType="editingDidBegin" id="6nY-IH-ZrG"/>
+                                            <action selector="textFieldEnterWith_sender:" destination="e7e-HH-qS7" eventType="touchUpInside" id="kQd-Jz-jmK"/>
+                                            <action selector="textFieldShouldEndEditing:" destination="e7e-HH-qS7" eventType="editingDidEndOnExit" id="ydp-5R-Jyj"/>
+                                            <outlet property="delegate" destination="e7e-HH-qS7" id="WAp-zX-UdB"/>
+                                        </connections>
+                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location update interval, seconds" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zmr-4o-LwG" userLabel="Location update interval">
+                                        <rect key="frame" x="8" y="257" width="231" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.42846433080000002" green="0.42846433080000002" blue="0.42846433080000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ivz-Qc-paM" userLabel="Location Timeout Field">
+                                        <rect key="frame" x="541" y="251" width="49" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="gDA-eL-qjc"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <action selector="textFieldEnterWith_sender:" destination="e7e-HH-qS7" eventType="touchUpInside" id="SJ6-Qu-iuf"/>
+                                            <action selector="textFieldEnterWith_sender:" destination="e7e-HH-qS7" eventType="editingDidBegin" id="bzr-Ps-5jc"/>
+                                            <action selector="textFieldShouldEndEditing:" destination="e7e-HH-qS7" eventType="editingDidEndOnExit" id="VRv-Xw-580"/>
+                                            <outlet property="delegate" destination="e7e-HH-qS7" id="rrj-Ec-jrP"/>
+                                        </connections>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.074509803920000006" green="0.074509803920000006" blue="0.074509803920000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="Osf-iu-nRW" firstAttribute="leading" secondItem="k9Q-rS-i4p" secondAttribute="leading" id="0G6-Fq-nav"/>
                                     <constraint firstItem="mQB-e1-7Xc" firstAttribute="leading" secondItem="dzF-Z7-f5g" secondAttribute="leading" id="0y8-a9-19R"/>
                                     <constraint firstItem="k9Q-rS-i4p" firstAttribute="leading" secondItem="SKu-79-qyc" secondAttribute="leading" id="2RN-xq-pdm"/>
                                     <constraint firstItem="LWZ-te-6Dr" firstAttribute="centerY" secondItem="SKu-79-qyc" secondAttribute="centerY" id="3S0-Vc-rfY"/>
-                                    <constraint firstItem="mQB-e1-7Xc" firstAttribute="top" secondItem="dzF-Z7-f5g" secondAttribute="bottom" constant="26" id="9Lg-U0-DAk"/>
+                                    <constraint firstItem="mQB-e1-7Xc" firstAttribute="top" secondItem="dzF-Z7-f5g" secondAttribute="bottom" constant="16" id="9Lg-U0-DAk"/>
                                     <constraint firstItem="k9Q-rS-i4p" firstAttribute="top" secondItem="SKu-79-qyc" secondAttribute="bottom" constant="16" id="9tW-nQ-FKJ"/>
                                     <constraint firstItem="mQB-e1-7Xc" firstAttribute="centerY" secondItem="FlD-Cx-NYi" secondAttribute="centerY" id="EQu-Eh-z0A"/>
                                     <constraint firstItem="FlD-Cx-NYi" firstAttribute="leading" secondItem="SKu-79-qyc" secondAttribute="leading" id="Ewj-LF-BWc"/>
+                                    <constraint firstItem="ymo-ea-5EI" firstAttribute="leading" secondItem="8sE-Lc-xYs" secondAttribute="leading" id="FBU-UL-lrs"/>
                                     <constraint firstItem="7oa-6p-5Qs" firstAttribute="top" secondItem="ky8-d1-c0p" secondAttribute="top" constant="9" id="I6e-WZ-UfV"/>
                                     <constraint firstItem="SKu-79-qyc" firstAttribute="top" secondItem="FlD-Cx-NYi" secondAttribute="bottom" constant="16" id="P4I-sV-K3d"/>
+                                    <constraint firstItem="Ivz-Qc-paM" firstAttribute="centerY" secondItem="zmr-4o-LwG" secondAttribute="centerY" id="Q28-1E-XuO"/>
                                     <constraint firstItem="dzF-Z7-f5g" firstAttribute="centerY" secondItem="7oa-6p-5Qs" secondAttribute="centerY" id="UFc-yh-YJZ"/>
                                     <constraint firstAttribute="trailing" secondItem="7oa-6p-5Qs" secondAttribute="trailing" constant="10" id="aze-2n-v4s"/>
+                                    <constraint firstItem="ymo-ea-5EI" firstAttribute="top" secondItem="8Dm-lJ-hkP" secondAttribute="bottom" constant="10" id="cVq-mo-59h"/>
                                     <constraint firstItem="7oa-6p-5Qs" firstAttribute="leading" secondItem="FlD-Cx-NYi" secondAttribute="leading" id="dg5-5i-CI6"/>
+                                    <constraint firstItem="Osf-iu-nRW" firstAttribute="width" secondItem="k9Q-rS-i4p" secondAttribute="width" id="gEL-EA-SBB"/>
                                     <constraint firstItem="LWZ-te-6Dr" firstAttribute="leading" secondItem="8sE-Lc-xYs" secondAttribute="leading" id="hUe-dO-PpR"/>
+                                    <constraint firstItem="8Dm-lJ-hkP" firstAttribute="top" secondItem="8sE-Lc-xYs" secondAttribute="bottom" constant="10" id="j1H-to-1gg"/>
                                     <constraint firstItem="SKu-79-qyc" firstAttribute="trailing" secondItem="k9Q-rS-i4p" secondAttribute="trailing" id="jkC-z9-AgG"/>
                                     <constraint firstItem="8sE-Lc-xYs" firstAttribute="top" secondItem="k9Q-rS-i4p" secondAttribute="top" id="m93-Wz-oDe"/>
-                                    <constraint firstItem="LWZ-te-6Dr" firstAttribute="top" secondItem="mQB-e1-7Xc" secondAttribute="bottom" constant="26" id="n22-Db-dHG"/>
+                                    <constraint firstItem="LWZ-te-6Dr" firstAttribute="top" secondItem="mQB-e1-7Xc" secondAttribute="bottom" constant="16" id="n22-Db-dHG"/>
                                     <constraint firstItem="dzF-Z7-f5g" firstAttribute="leading" secondItem="ky8-d1-c0p" secondAttribute="leadingMargin" id="o5H-DD-iOg"/>
+                                    <constraint firstItem="Osf-iu-nRW" firstAttribute="centerY" secondItem="ymo-ea-5EI" secondAttribute="centerY" id="oPN-YB-ZkL"/>
+                                    <constraint firstItem="zmr-4o-LwG" firstAttribute="top" secondItem="ymo-ea-5EI" secondAttribute="bottom" constant="16" id="oV2-Wb-GFV"/>
+                                    <constraint firstItem="zmr-4o-LwG" firstAttribute="leading" secondItem="ymo-ea-5EI" secondAttribute="leading" id="ohm-L8-X2s"/>
                                     <constraint firstItem="LWZ-te-6Dr" firstAttribute="leading" secondItem="mQB-e1-7Xc" secondAttribute="leading" id="rR5-Fx-qAG"/>
+                                    <constraint firstItem="8Dm-lJ-hkP" firstAttribute="leading" secondItem="8sE-Lc-xYs" secondAttribute="leading" id="tXN-lI-7aM"/>
                                     <constraint firstItem="FlD-Cx-NYi" firstAttribute="top" secondItem="7oa-6p-5Qs" secondAttribute="bottom" constant="16" id="uMO-bn-ll2"/>
+                                    <constraint firstItem="Ivz-Qc-paM" firstAttribute="leading" secondItem="Osf-iu-nRW" secondAttribute="leading" id="vqG-Vw-Z74"/>
+                                    <constraint firstItem="Ivz-Qc-paM" firstAttribute="width" secondItem="Osf-iu-nRW" secondAttribute="width" id="xAY-GD-Phw"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1111,7 +1174,9 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="awakeModeSwitcher" destination="7oa-6p-5Qs" id="39A-fT-cCB"/>
+                        <outlet property="distanceTextField" destination="Osf-iu-nRW" id="30S-i2-F2u"/>
                         <outlet property="intervalTextField" destination="k9Q-rS-i4p" id="wcW-5b-qY8"/>
+                        <outlet property="locTimeTextField" destination="Ivz-Qc-paM" id="hFf-AW-fW5"/>
                         <outlet property="resetAuthSwitcher" destination="SKu-79-qyc" id="5R6-xZ-9Gu"/>
                     </connections>
                 </viewController>

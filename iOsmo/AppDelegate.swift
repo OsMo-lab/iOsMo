@@ -64,7 +64,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // [END add_token_refresh_observer]
         
         
-        
+        if SettingsManager.getKey(SettingKeys.locInterval)?.doubleValue == nil {
+            SettingsManager.setKey("0", forKey: SettingKeys.locInterval)
+        }
+        if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
+            SettingsManager.setKey("0", forKey: SettingKeys.locDistance)
+        }
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
            

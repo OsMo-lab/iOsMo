@@ -34,7 +34,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func turnMonitorinOn(){
         self.distance = 0
-        isDeferingUpdates = false
+        self.isDeferingUpdates = false
        
         if CLLocationManager.locationServicesEnabled() == false {
         
@@ -79,7 +79,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
         print("stopUpdatingLocation")
         log.enqueue("stopUpdatingLocation")
-        isDeferingUpdates = false
+        self.isDeferingUpdates = false
     }
     
     
@@ -133,13 +133,16 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 self.allSessionLocations.append(locationModel)
             }
         }
+        
         //Копим изменения координат в фоне более 100 метров или 60 секунд
-        if isDeferingUpdates == false {
-            isDeferingUpdates = true
-            manager.allowDeferredLocationUpdates(untilTraveled: 100, timeout: 60)
+        let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue
+        let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue
+        
+        if (isDeferingUpdates == false && (locInterval > 0.0 || locDistance > 0.0 )) {
+            self.isDeferingUpdates = true
+            manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
         }
     }
-    
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
         print("locationManager error \(error)")
@@ -160,7 +163,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             print("locationManager didFinishDeferredUpdatesWithError  \(error)")
             log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error)")
         }
-        
+        self.isDeferingUpdates = false
     }
     
 }

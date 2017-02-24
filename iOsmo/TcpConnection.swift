@@ -525,7 +525,7 @@ open class TcpConnection: BaseTcpConnection {
         let gActive = g["active"] as? String == "1"
         var gU = g["u"] as? String
         if (gU == nil ){
-            let gUint = g["u"] as? Int
+            let gUint = g["u"] as! Int
             gU = "\(gUint)"
         }
         

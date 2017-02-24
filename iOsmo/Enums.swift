@@ -96,6 +96,9 @@ enum SettingKeys: String {
     case isStayAwake = "isStayAwake"
     case user = "user"
     case sendTime = "sendTime"
+    case locDistance = "locDistance"
+    case locInterval = "locInterval"
+
     case logView = "logView"
     case poolGroups = "poolGroups"
 }
