@@ -59,14 +59,14 @@ All rights reserved.</target>
         <target>Ваше имя в группе</target>
         <note>Class = "UITextField"; placeholder = "Your nickname in group"; ObjectID = "7T6-eH-nEm";</note>
       </trans-unit>
-      <trans-unit id="8LA-DM-qly.text">
-        <source>Pool groups</source>
-        <target>Опрос групп</target>
-        <note>Class = "UILabel"; text = "Pool groups"; ObjectID = "8LA-DM-qly";</note>
+      <trans-unit id="8Dm-lJ-hkP.text">
+        <source>Power saving</source>
+        <target>Энергосбережение</target>
+        <note>Class = "UILabel"; text = "Power saving"; ObjectID = "8Dm-lJ-hkP";</note>
       </trans-unit>
       <trans-unit id="8sE-Lc-xYs.text">
         <source>Sending interval, seconds</source>
-        <target>Период отправки, сек</target>
+        <target>Интервал отправки, сек</target>
         <note>Class = "UILabel"; text = "Sending interval, seconds"; ObjectID = "8sE-Lc-xYs";</note>
       </trans-unit>
       <trans-unit id="48f-pX-4EJ.text">
@@ -151,7 +151,7 @@ All rights reserved.</target>
       </trans-unit>
       <trans-unit id="MBA-Xb-vkb.placeholder">
         <source>ID or URL of group to join</source>
-        <target>ID or URL of group to join</target>
+        <target>ID или URL группы</target>
         <note>Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb";</note>
       </trans-unit>
       <trans-unit id="P3p-0b-A4E.text">
@@ -288,6 +288,16 @@ All rights reserved.</target>
         <source>Type</source>
         <target>Тип</target>
         <note>Class = "UIButton"; normalTitle = "Type"; ObjectID = "wSH-og-nEL";</note>
+      </trans-unit>
+      <trans-unit id="ymo-ea-5EI.text">
+        <source>Location distance, meters</source>
+        <target>Расстояние, метры</target>
+        <note>Class = "UILabel"; text = "Location distance, meters"; ObjectID = "ymo-ea-5EI";</note>
+      </trans-unit>
+      <trans-unit id="zmr-4o-LwG.text">
+        <source>Location update interval, seconds</source>
+        <target>Интревал обновления координат, секунды</target>
+        <note>Class = "UILabel"; text = "Location update interval, seconds"; ObjectID = "zmr-4o-LwG";</note>
       </trans-unit>
     </body>
   </file>

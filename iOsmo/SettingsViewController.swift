@@ -106,6 +106,18 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
             }
             intervalTextField.text = sendTime as String
         }
+        if var locDistance = SettingsManager.getKey(SettingKeys.locDistance) {
+            if locDistance.length == 0 {
+                locDistance = "0"
+            }
+            distanceTextField.text = locDistance as String
+        }
+        if var locInterval = SettingsManager.getKey(SettingKeys.locInterval) {
+            if locInterval.length == 0 {
+                locInterval = "0"
+            }
+            locTimeTextField.text = locInterval as String
+        }
         //intervalTextField.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
