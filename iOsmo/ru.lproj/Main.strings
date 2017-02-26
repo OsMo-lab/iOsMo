@@ -19,8 +19,8 @@
 /* Class = "UITextField"; placeholder = "Your nickname in group"; ObjectID = "7T6-eH-nEm"; */
 "7T6-eH-nEm.placeholder" = "Ваше имя в группе";
 
-/* Class = "UILabel"; text = "Pool groups"; ObjectID = "8LA-DM-qly"; */
-"8LA-DM-qly.text" = "Опрос групп";
+/* Class = "UILabel"; text = "Power saving"; ObjectID = "8Dm-lJ-hkP"; */
+"8Dm-lJ-hkP.text" = "Энергосбережение";
 
 /* Class = "UILabel"; text = "Sending interval, seconds"; ObjectID = "8sE-Lc-xYs"; */
 "8sE-Lc-xYs.text" = "Интервал отправки, сек";
@@ -74,7 +74,7 @@
 "LWZ-te-6Dr.text" = "Сброс авторизации";
 
 /* Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb"; */
-"MBA-Xb-vkb.placeholder" = "ID or URL of group to join";
+"MBA-Xb-vkb.placeholder" = "ID или URL группы";
 
 /* Class = "UILabel"; text = "Settings"; ObjectID = "P3p-0b-A4E"; */
 "P3p-0b-A4E.text" = "Настройки";
@@ -156,4 +156,10 @@
 
 /* Class = "UIButton"; normalTitle = "Type"; ObjectID = "wSH-og-nEL"; */
 "wSH-og-nEL.normalTitle" = "Тип";
+
+/* Class = "UILabel"; text = "Location distance, meters"; ObjectID = "ymo-ea-5EI"; */
+"ymo-ea-5EI.text" = "Расстояние, метры";
+
+/* Class = "UILabel"; text = "Location update interval, seconds"; ObjectID = "zmr-4o-LwG"; */
+"zmr-4o-LwG.text" = "Интревал обновления координат, секунды";
 
