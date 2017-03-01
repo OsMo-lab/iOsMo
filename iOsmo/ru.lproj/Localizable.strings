@@ -1,0 +1,39 @@
+/* Cancel */
+"Cancel" = "Отмена";
+
+/* Connecting status */
+"Connecting..." = "Соединяемся...";
+
+/* Error title for alert */
+"Error" = "Ошибка";
+
+/* Alert title for error on activate group */
+"Error on activate group" = "Ошибка активации группы";
+
+/* Alert title for error on create group */
+"Error on create group" = "Ошибка создания группы";
+
+/* Alert title for error on deactivate group */
+"Error on deactivate group" = "Ошибка деактивации группы";
+
+/* Alert title for error on enter group */
+"Error on enter group" = "Ошибка входа в группу";
+
+/* Alert title for error on leave group */
+"Error on leave group" = "Ошибка выхода из группы";
+
+/* Leave group */
+"Leave" = "Выйти";
+
+/* LogView unlocked */
+"LogView unlocked" = "Журнал разблокирован";
+
+/* Restart iOsMo */
+"Restart iOsMo" = "Перезапустите iOsMo";
+
+/* Unknown user */
+"Unknown" = "Неизвестен";
+
+/* session was closed */
+"session was closed" = "сессия закрыта";
+

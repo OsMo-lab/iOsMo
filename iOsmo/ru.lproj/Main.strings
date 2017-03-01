@@ -1,0 +1,165 @@
+/* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "1cS-c8-csE"; */
+"1cS-c8-csE.normalTitle" = "Обновить";
+
+/* Class = "UILabel"; text = "Time"; ObjectID = "1rg-8O-chP"; */
+"1rg-8O-chP.text" = "Время";
+
+/* Class = "UIButton"; normalTitle = "Join"; ObjectID = "2dk-tC-xs0"; */
+"2dk-tC-xs0.normalTitle" = "Вступить";
+
+/* Class = "UIButton"; normalTitle = "Groups"; ObjectID = "2lC-Vq-lGK"; */
+"2lC-Vq-lGK.normalTitle" = "Группы";
+
+/* Class = "UILabel"; text = "type"; ObjectID = "2ux-Wj-WCn"; */
+"2ux-Wj-WCn.text" = "тип";
+
+/* Class = "UILabel"; text = "Usercount"; ObjectID = "4xw-df-ley"; */
+"4xw-df-ley.text" = "Usercount";
+
+/* Class = "UITextField"; placeholder = "Your nickname in group"; ObjectID = "7T6-eH-nEm"; */
+"7T6-eH-nEm.placeholder" = "Ваше имя в группе";
+
+/* Class = "UILabel"; text = "Power saving"; ObjectID = "8Dm-lJ-hkP"; */
+"8Dm-lJ-hkP.text" = "Энергосбережение";
+
+/* Class = "UILabel"; text = "Sending interval, seconds"; ObjectID = "8sE-Lc-xYs"; */
+"8sE-Lc-xYs.text" = "Интервал отправки, сек";
+
+/* Class = "UILabel"; text = "Unknown"; ObjectID = "48f-pX-4EJ"; */
+"48f-pX-4EJ.text" = "Неизвестен";
+
+/* Class = "UIButton"; normalTitle = "trackerID"; ObjectID = "AJB-As-rSV"; */
+"AJB-As-rSV.normalTitle" = "trackerID";
+
+/* Class = "UILabel"; text = "nick"; ObjectID = "AxV-gG-nJV"; */
+"AxV-gG-nJV.text" = "имя";
+
+/* Class = "UIButton"; normalTitle = "press Start button"; ObjectID = "BYA-yY-8gh"; */
+"BYA-yY-8gh.normalTitle" = "нажмите кнопку Старт";
+
+/* Class = "UILabel"; text = "Unknown"; ObjectID = "CHt-yv-mdX"; */
+"CHt-yv-mdX.text" = "Неизвестен";
+
+/* Class = "UILabel"; text = "group"; ObjectID = "DX7-T5-2pK"; */
+"DX7-T5-2pK.text" = "группа";
+
+/* Class = "UILabel"; text = "00:00:00"; ObjectID = "DZb-1E-5vV"; */
+"DZb-1E-5vV.text" = "00:00:00";
+
+/* Class = "UITextField"; placeholder = "phone number"; ObjectID = "FMD-q5-sW0"; */
+"FMD-q5-sW0.placeholder" = "телефон";
+
+/* Class = "UILabel"; text = "private"; ObjectID = "FUD-bK-jc9"; */
+"FUD-bK-jc9.text" = "закрытая";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "Gcd-W9-a1F"; */
+"Gcd-W9-a1F.normalTitle" = "Создать";
+
+/* Class = "UILabel"; text = "email"; ObjectID = "JBh-VC-BMZ"; */
+"JBh-VC-BMZ.text" = "email";
+
+/* Class = "UIButton"; normalTitle = "Join"; ObjectID = "JLp-vB-cdg"; */
+"JLp-vB-cdg.normalTitle" = "Вступить";
+
+/* Class = "UITextField"; placeholder = "Name of new group"; ObjectID = "JS1-jZ-Ygc"; */
+"JS1-jZ-Ygc.placeholder" = "Имя новой группы";
+
+/* Class = "UILabel"; text = "iOsMo"; ObjectID = "JgA-OC-PKV"; */
+"JgA-OC-PKV.text" = "iOsMo";
+
+/* Class = "UILabel"; text = "group"; ObjectID = "Kpg-lx-GAk"; */
+"Kpg-lx-GAk.text" = "группа";
+
+/* Class = "UILabel"; text = "Reset authorization"; ObjectID = "LWZ-te-6Dr"; */
+"LWZ-te-6Dr.text" = "Сброс авторизации";
+
+/* Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb"; */
+"MBA-Xb-vkb.placeholder" = "ID или URL группы";
+
+/* Class = "UILabel"; text = "Settings"; ObjectID = "P3p-0b-A4E"; */
+"P3p-0b-A4E.text" = "Настройки";
+
+/* Class = "UILabel"; text = "name"; ObjectID = "Ppm-WI-6i7"; */
+"Ppm-WI-6i7.text" = "имя";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "S8H-pZ-cOM"; */
+"S8H-pZ-cOM.normalTitle" = "Создать";
+
+/* Class = "UIButton"; normalTitle = "Refresh"; ObjectID = "VMO-OO-6cj"; */
+"VMO-OO-6cj.normalTitle" = "Обновить";
+
+/* Class = "UITextField"; placeholder = "e-mail address"; ObjectID = "Vjh-Tf-qLH"; */
+"Vjh-Tf-qLH.placeholder" = "адрес e-mail";
+
+/* Class = "UILabel"; text = "00.0"; ObjectID = "WVP-LT-JgZ"; */
+"WVP-LT-JgZ.text" = "00.0";
+
+/* Class = "UIButton"; normalTitle = "Group URL"; ObjectID = "ZmA-1B-N8V"; */
+"ZmA-1B-N8V.normalTitle" = "URL группы";
+
+/* Class = "UIButton"; normalTitle = ">>"; ObjectID = "aaK-Vn-Ex2"; */
+"aaK-Vn-Ex2.normalTitle" = ">>";
+
+/* Class = "UITextView"; text = "..."; ObjectID = "cYK-aE-whk"; */
+"cYK-aE-whk.text" = "...";
+
+/* Class = "UILabel"; text = "phone"; ObjectID = "cwm-3c-oHU"; */
+"cwm-3c-oHU.text" = "телефон";
+
+/* Class = "UILabel"; text = "Don't turn the screen off"; ObjectID = "dzF-Z7-f5g"; */
+"dzF-Z7-f5g.text" = "Не выключать экран";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fu1-UL-KdI"; */
+"fu1-UL-KdI.text" = "Label";
+
+/* Class = "UIViewController"; title = "Authorization"; ObjectID = "hyP-V3-hsV"; */
+"hyP-V3-hsV.title" = "Авторизация";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "kHD-cd-YRb"; */
+"kHD-cd-YRb.normalTitle" = "Отмена";
+
+/* Class = "UISegmentedControl"; kKi-6z-bzq.segmentTitles[0] = "Done"; ObjectID = "kKi-6z-bzq"; */
+"kKi-6z-bzq.segmentTitles[0]" = "Готово";
+
+/* Class = "UISegmentedControl"; kKi-6z-bzq.segmentTitles[1] = "New"; ObjectID = "kKi-6z-bzq"; */
+"kKi-6z-bzq.segmentTitles[1]" = "New";
+
+/* Class = "UISegmentedControl"; kKi-6z-bzq.segmentTitles[2] = "Liked"; ObjectID = "kKi-6z-bzq"; */
+"kKi-6z-bzq.segmentTitles[2]" = "Liked";
+
+/* Class = "UILabel"; text = "Autosave session"; ObjectID = "mQB-e1-7Xc"; */
+"mQB-e1-7Xc.text" = "Автосохранение сессии";
+
+/* Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN"; */
+"mms-Em-UaN.text" = "00.0";
+
+/* Class = "UILabel"; text = "Distance"; ObjectID = "o31-Sf-Gmk"; */
+"o31-Sf-Gmk.text" = "Расстояние";
+
+/* Class = "UILabel"; text = "Load last:"; ObjectID = "ors-8k-0GG"; */
+"ors-8k-0GG.text" = "Load last:";
+
+/* Class = "UILabel"; text = "Account"; ObjectID = "roX-H8-MZy"; */
+"roX-H8-MZy.text" = "Учетная запись";
+
+/* Class = "UILabel"; text = "Speed"; ObjectID = "s0a-bC-RgU"; */
+"s0a-bC-RgU.text" = "Скорость";
+
+/* Class = "UILabel"; text = "Routes"; ObjectID = "sQw-1p-wMi"; */
+"sQw-1p-wMi.text" = "Маршруты";
+
+/* Class = "UITextField"; text = "100"; ObjectID = "voL-dJ-cjX"; */
+"voL-dJ-cjX.text" = "100";
+
+/* Class = "UILabel"; text = "Log"; ObjectID = "wHZ-Bj-8uU"; */
+"wHZ-Bj-8uU.text" = "Журнал";
+
+/* Class = "UIButton"; normalTitle = "Type"; ObjectID = "wSH-og-nEL"; */
+"wSH-og-nEL.normalTitle" = "Тип";
+
+/* Class = "UILabel"; text = "Location distance, meters"; ObjectID = "ymo-ea-5EI"; */
+"ymo-ea-5EI.text" = "Расстояние, метры";
+
+/* Class = "UILabel"; text = "Location update interval, seconds"; ObjectID = "zmr-4o-LwG"; */
+"zmr-4o-LwG.text" = "Интревал обновления координат, секунды";
+

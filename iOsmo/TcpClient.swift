@@ -17,6 +17,7 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
     
+    
     open func createConnection(_ token: Token){
         if (token.port>0) {
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
@@ -40,15 +41,26 @@ open class TcpClient : NSObject, StreamDelegate {
         }
     }
     
+    open func closeConnection() {
+        if ((inputStream != nil) && (outputStream != nil)) {
+            log.enqueue("closing input and output streams")
+            inputStream?.close()
+            outputStream?.close()
+        }
+    }
+    
     open func send(_ request: String){
         log.enqueue("r: \(request)")
         print("r: \(request)")
         let requestToSend = "\(request)\n"
         if let outputStream = outputStream, let data = requestToSend.data(using: String.Encoding.utf8) {
-             let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+            let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
             if (wb == -1 ) {
                 log.enqueue("error: write to output stream")
                 print("error: write to output stream")
+                if callbackOnError != nil {
+                    callbackOnError!(true)
+                }
             }
         } else {
             log.enqueue("error: send request")
@@ -81,21 +93,21 @@ open class TcpClient : NSObject, StreamDelegate {
         
         case Stream.Event.openCompleted:
             
-            print("stream opened")
+            //print("stream opened")
             log.enqueue("stream opened")
         case Stream.Event.errorOccurred:
             
-            print("stream was handle error, connection is out")
+            //("stream was handle error, connection is out")
             log.enqueue("stream was handle error, connection is out")
             if callbackOnError != nil {
                 
                 callbackOnError!(true)
             }
         case Stream.Event.hasSpaceAvailable:
-            print("HasSpaceAvailable")
+            //print("HasSpaceAvailable")
             break
         case Stream.Event.hasBytesAvailable:
-            print("HasBytesAvailable")
+            //print("HasBytesAvailable")
             
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
@@ -114,7 +126,7 @@ open class TcpClient : NSObject, StreamDelegate {
                     }
                 }
             } else {
-                print("Stream is empty")
+                //print("Stream is empty")
                 log.enqueue("Stream is empty")
                 
                 return

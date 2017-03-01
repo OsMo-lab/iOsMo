@@ -8,30 +8,25 @@
 
 import Foundation
 
-enum TagsOld: String{
-    case token = "TOKEN|"
-    case openSession = "TRACKER_SESSION_OPEN|"
-    case closeSession = "TRACKER_SESSION_CLOSE"
-    case ping = "P"
-    case pong = "PP"
-    case kick = "KICK|"
-    case remotePP = "REMOTE_CONTROL|PP"
-    case coordinate = "T"
-}
 
 enum Tags: String {
     case token = "INIT|"
     case auth = "AUTH|"
+    case messageDay = "MD"
     case openSession = "TO"
     case closeSession = "TC"
     case ping = "P"
     case getGroups = "GROUP"
+    case push = "PUSH"
+    case createGroup = "GRPA"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
+    case activateGroup = "GA:"
+    case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
-    case activateAllGroup = "GAA"
-    case deactivateAllGroup = "GDA"
-    //case activatePoolGroup = "PG"
+    case activatePoolGroups = "PG"
+    case groupSwitch = "GS"
+    case coordinate = "T"
 }
 
 enum KeysOld: String{
@@ -50,6 +45,7 @@ enum Keys: String{
     case key = "device"
     case error = "error"
     case errorDesc = "error_description"
+    case push_token = "push_token"
 }
 
 enum ParseKeys: String{
@@ -65,20 +61,25 @@ enum ParseKeys: String{
 enum AnswTags: String{
     case openedSession = "TO|"
     case getGroups = "GROUP"
+    case push = "PUSH"
+    case createGroup = "GRPA"
+    case activateGroup = "GA:"
+    case deactivateGroup = "GD:"
     case enterGroup = "GE:"
     case leaveGroup = "GL:"
     case remoteCommand = "RC:"
     //case activatePG = "PG"
-    case kick = "BYE|"
+    case bye = "BYE|"
+    case kick = "KICK|"
     case pong = "PP"
     case coordinate = "T|"
     case closeSession = "TC|"
     case token = "INIT|"
     case auth = "AUTH|"
-    case allGroupsEnabled = "allGroupsEnabled" //TODO another solution to notify about group enabled flag
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"
+    case messageDay = "MD|"
 }
 
 enum UpdatesEnum: String {
@@ -90,11 +91,16 @@ enum UpdatesEnum: String {
 
 enum SettingKeys: String {
     case device = "deviceKey"
+    case pushToken = "pushToken"
     case auth = "authKey"
     case isStayAwake = "isStayAwake"
     case user = "user"
     case sendTime = "sendTime"
+    case locDistance = "locDistance"
+    case locInterval = "locInterval"
+
     case logView = "logView"
+    case poolGroups = "poolGroups"
 }
 
 enum GroupActions: String {
@@ -104,6 +110,12 @@ enum GroupActions: String {
     case leave = "leave"
 }
 
+enum GroupType: String {
+    case Simple = "1" //default
+    case Family = "2"
+    case POI = "5"
+    case Trip = "6"
+}
 enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"

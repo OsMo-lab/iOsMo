@@ -48,7 +48,7 @@ open class BaseTcpConnection: NSObject {
     
     //properties
     
-    var connected: Bool = false
+    //var connected: Bool = false
     var sessionOpened: Bool = false
 
     
@@ -60,51 +60,13 @@ open class BaseTcpConnection: NSObject {
         sendNextCoordinates()
     }
     
-    open func sendSystemInfo(){
-        let model = UIDevice.current.model
-        let version = UIDevice.current.systemVersion
-        
-        let jsonInfo: NSDictionary =
-            ["devicename": model, "version": "iOS \(version)"]
-        
-        do{
-            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
-            
-            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
-                send(request)
-            }
-        }catch {
-            print("error generating system info")
-        }
-    }
     
-    open func sendBatteryStatus(){
-        UIDevice.current.isBatteryMonitoringEnabled = true
-        let level = UIDevice.current.batteryLevel * 100
-        var state = 0;
-        if (UIDevice.current.batteryState == .charging) {
-            state = 1;
-        }
-        
-        let jsonInfo: NSDictionary =
-            ["percent": level, "plugged": state]
-        
-        do{
-            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
-            
-            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
-                send(request)            }
-        }catch {
-            
-            print("error generating battery info")
-        }
+    open func closeConnection(){
+
+        tcpClient.closeConnection()
+
     }
-    
     open func closeSession(){
-        
-        log.enqueue("send close session request")
         let request = "\(Tags.closeSession.rawValue)"
         closeSession(request)
     }
@@ -112,12 +74,12 @@ open class BaseTcpConnection: NSObject {
     
     //TODO: should be in sending manager!!!
     fileprivate func sendNextCoordinates(){
-        if self.shouldCloseSession {
+        /*
+         if self.shouldCloseSession {
             
             self.coordinates.removeAll(keepingCapacity: false)
             closeSession()
-            
-        }
+        }*/
         
         //TODO: refactoring send best coordinates
         if self.sessionOpened && self.coordinates.count > 0 {
@@ -132,15 +94,14 @@ open class BaseTcpConnection: NSObject {
     
     
     func closeSession(_ request: String){
-        
-        log.enqueue("should close session: \(shouldCloseSession)")
-        self.shouldCloseSession = self.coordinates.count == 0
-        
-        if self.shouldCloseSession   {
+        if (self.coordinates.count != 0) {
+            self.shouldCloseSession = false;
+            log.enqueue("Coordinates buffer is not empty. Canceling close session")
+        } else{
            tcpClient.send(request)
         }
         
-        shouldCloseSession = !shouldCloseSession
+        //shouldCloseSession = !shouldCloseSession
         
     }
     

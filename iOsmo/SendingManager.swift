@@ -21,6 +21,9 @@ open class SendingManager: NSObject{
     let aSelector : Selector = #selector(SendingManager.sending)
     fileprivate var onConnectionRun: ObserverSetEntry<(Bool, String)>?
     fileprivate var onSessionRun: ObserverSetEntry<(Bool, String)>?
+    let sessionStarted = ObserverSet<(Bool)>()
+    let sessionPaused = ObserverSet<(Bool)>()
+
     
     class var sharedSendingManager: SendingManager {
         struct Static {
@@ -39,13 +42,12 @@ open class SendingManager: NSObject{
         locationTracker.turnMonitorinOn() //start getting coordinates
 
         if !connectionManager.connected {
-            
             self.onConnectionRun = connectionManager.connectionRun.add{
                 if $0.0 {
-                    
                     self.onSessionRun = self.connectionManager.sessionRun.add{
-                        if $0.0 {self.startSending()}
-                        
+                        if $0.0 {
+                            self.startSending()
+                        }
                     }
                     self.connectionManager.openSession()
                 }
@@ -56,12 +58,11 @@ open class SendingManager: NSObject{
                 }
             }
             connectionManager.connect()
-        }
-        else if !connectionManager.sessionOpened {
-            
+        } else if !connectionManager.sessionOpened {
             self.onSessionRun = self.connectionManager.sessionRun.add{
-                if $0.0 {self.startSending()}
-                else {
+                if $0.0 {
+                    self.startSending()
+                } else {
                     //unsibscribe when stop monitoring
                     if let onSesRun = self.onSessionRun {
                         self.connectionManager.sessionRun.remove(onSesRun)
@@ -69,30 +70,28 @@ open class SendingManager: NSObject{
                 }
             }
             self.connectionManager.openSession()
+        } else {
+            startSending()
         }
-        else {startSending()}
         
         
     }
     
     open func pauseSendingCoordinates(){
-        
         locationTracker.turnMonitoringOff()
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
-        
+        sessionPaused.notify((true))
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     open func stopSendingCoordinates(){
-        
         pauseSendingCoordinates()
         connectionManager.closeSession()
-    
     }
     
     open func sending(){
-        
         //MUST REFACTOR
         if connectionManager.sessionOpened && connectionManager.connected {
             
@@ -101,9 +100,8 @@ open class SendingManager: NSObject{
             log.enqueue("CoordinateManager: got \(coors.count) coordinates")
             
             if coors.count > 0 {
-           
                 log.enqueue("CoordinateManager: sending \(coors.count) coordinates")
-                self.connectionManager.sendCoordinates(Array<LocationModel>(arrayLiteral: coors.last!))
+                self.connectionManager.sendCoordinates(coors)
                 
                 for c in coors {
                     //notify about all - because it draw on map
@@ -111,7 +109,6 @@ open class SendingManager: NSObject{
                 }
            }
         }
-        
     }
     
     fileprivate func startSending(){
@@ -128,11 +125,10 @@ open class SendingManager: NSObject{
                 }
             
             }
-
-            
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
-           
-       
+            
+            sessionStarted.notify((true))
+            UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
      

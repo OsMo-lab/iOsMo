@@ -3,6 +3,36 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "TcpConnection.parseJSONgroup(Any) -&gt; Group:TcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "g[&quot;u&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AppDelegate.presentViewController(url : URL) -&gt; Bool:AppDelegate.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "url.pathComponents[2]">
+            </PersistentString>
+            <PersistentString
+               value = "url.pathComponents[1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.group">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -13,14 +43,6 @@
             </PersistentString>
             <PersistentString
                value = "count.text">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "indexPath.group">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -39,6 +61,31 @@
          contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
       </ContextState>
       <ContextState
+         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(enterGroup(String, nick : String) -&gt; ()).(closure #1):GroupManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BaseTcpConnection.closeSession(String) -&gt; ():BaseTcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.shouldCloseSession">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -47,13 +94,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
-      </ContextState>
-      <ContextState
-         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         contextName = "BaseTcpConnection.onSentCoordinate() -&gt; ():BaseTcpConnection.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.view.frame">
+               value = "self.coordinates.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(deactivateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "name">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

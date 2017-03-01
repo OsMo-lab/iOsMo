@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 13/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2017 Alexey Sirotkin All rights reserved.
 //
 
 import Foundation
@@ -15,15 +15,18 @@ public struct LocationModel{
     var alt: Int = 0
     var course: Float = 0.0
     var accuracy: Int = 0
+    var time: Date
     
     
     let coordFormat = "%.6f"
     let speedFormat = "S%.2f"
-    
+    let courseFormat = "C%.0f"
+    let timeFormat = "T%.0f"
     
     init(lat: Double, lon: Double){
         self.lat = lat
         self.lon = lon
+        self.time = Date()
     }
     
     init(coordString: String){
@@ -36,20 +39,26 @@ public struct LocationModel{
         let coordinates = coordinatesMerged.components(separatedBy: ":")
         self.lat = atof(coordinates[0])
         self.lon = atof(coordinates[1])
+        self.time = Date()
         
     }
     
     var getCoordinateRequest: String{
-        
         var isSimulated = false
 
         if UIDevice.current.model == "iPhone Simulator" {
             isSimulated = true
         }
-        
+        var formatedTime = ""
+        let locationAge = -time.timeIntervalSinceNow
+        if locationAge > 1 {
+            let t:TimeInterval = time.timeIntervalSince1970
+            formatedTime = NSString(format:timeFormat as NSString, t) as String
+        }
         
         let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
-        let toSend = "\(TagsOld.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)H\(accuracy)"
+        let formatedCourse = (speed > 5 && course > 0)  ? (NSString(format:courseFormat as NSString, course)): ""
+        let toSend = "\(Tags.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)\(formatedCourse)H\(accuracy)\(formatedTime)"
 
         return toSend
     }

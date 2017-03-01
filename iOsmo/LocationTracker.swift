@@ -17,6 +17,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     fileprivate var allSessionLocations = [LocationModel]()
     open var lastLocations = [LocationModel]()
     open var distance = 0.0;
+    var isDeferingUpdates = false;
     
     
     class var sharedLocationManager : CLLocationManager {
@@ -33,6 +34,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func turnMonitorinOn(){
         self.distance = 0
+        self.isDeferingUpdates = false
        
         if CLLocationManager.locationServicesEnabled() == false {
         
@@ -74,8 +76,10 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
+        LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
         print("stopUpdatingLocation")
         log.enqueue("stopUpdatingLocation")
+        self.isDeferingUpdates = false
     }
     
     
@@ -102,36 +106,43 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
         }
         for loc in locations {
-                let theCoordinate = loc.coordinate
-                let theAccuracy = loc.horizontalAccuracy
-                let theAltitude = loc.altitude
+            let theCoordinate = loc.coordinate
+            let theAccuracy = loc.horizontalAccuracy
+            let theAltitude = loc.altitude
             
+            let locationAge = -loc.timestamp.timeIntervalSinceNow
+            if locationAge > 30 {
+                continue
+            }
             
-                let locationAge = -loc.timestamp.timeIntervalSinceNow
-            
-                if locationAge > 30 {continue}
+            //select only valid location and also location with good accuracy
+            if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil))){
+                var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
+                //add others values
+                locationModel.accuracy = Int(theAccuracy)
+                locationModel.speed = loc.speed as Double
+                locationModel.course = Float(loc.course)
+                locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
+                locationModel.time = loc.timestamp
                 
-                //select only valid location and also location with good accuracy
-                if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0)){
-                    var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
-                    //add others values
-                    locationModel.accuracy = Int(theAccuracy)
-                    locationModel.speed = loc.speed as Double
-                    locationModel.course = Float(loc.course)
-                    locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
-                    
-                    let distanceInMeters = loc.distance(from: prev_loc!)
-                    distance = distance + distanceInMeters / 1000
-                    prev_loc = loc
-                    
-                    self.lastLocations.append(locationModel)
-                    self.allSessionLocations.append(locationModel)
-                    
-                }
+                let distanceInMeters = loc.distance(from: prev_loc!)
+                distance = distance + distanceInMeters / 1000
+                prev_loc = loc
+                
+                self.lastLocations.append(locationModel)
+                self.allSessionLocations.append(locationModel)
+            }
         }
-
+        
+        //Копим изменения координат в фоне более 100 метров или 60 секунд
+        let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue
+        let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue
+        
+        if (isDeferingUpdates == false && (locInterval > 0.0 || locDistance > 0.0 )) {
+            self.isDeferingUpdates = true
+            manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
+        }
     }
-    
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
         print("locationManager error \(error)")
@@ -147,5 +158,12 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
     }
     
+    open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
+        if (error != nil) {
+            print("locationManager didFinishDeferredUpdatesWithError  \(error)")
+            log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error)")
+        }
+        self.isDeferingUpdates = false
+    }
     
 }

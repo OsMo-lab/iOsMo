@@ -42,6 +42,19 @@
 		29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96331A478335009BFC19 /* AccountViewController.swift */; };
 		29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96371A4784EC009BFC19 /* AuthViewController.swift */; };
 		29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */; };
+		4D19BE281E619F5B00F7599D /* ru.xliff in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE271E619F5B00F7599D /* ru.xliff */; };
+		4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */; };
+		4D4597591E4E44CD005892EE /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */; };
+		4D45975A1E4E44CD005892EE /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597541E4E44CD005892EE /* FirebaseCore.framework */; };
+		4D45975B1E4E44CD005892EE /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */; };
+		4D45975C1E4E44CD005892EE /* GoogleInterchangeUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597561E4E44CD005892EE /* GoogleInterchangeUtilities.framework */; };
+		4D45975D1E4E44CD005892EE /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597571E4E44CD005892EE /* GoogleSymbolUtilities.framework */; };
+		4D45975E1E4E44CD005892EE /* GoogleToolboxForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */; };
+		4D4597601E4E44DA005892EE /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */; };
+		4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */; };
+		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
+		4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */; };
+		4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB841E5A18880094FF8A /* InfoPlist.strings */; };
 		F90DB7721A43410F0090146E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = F90DB7711A43410F0090146E /* Reachability.m */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
@@ -58,7 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		293C95701A34B217005DD4CE /* iOsmo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsmo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		293C95701A34B217005DD4CE /* iOsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C95741A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C95751A34B217005DD4CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		293C95771A34B217005DD4CE /* MonitoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitoringViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +112,23 @@
 		29FA96371A4784EC009BFC19 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4D19BE271E619F5B00F7599D /* ru.xliff */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ru.xliff; path = "iOsMo-En/ru/ru.xliff"; sourceTree = "<group>"; };
+		4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariActvity.swift; sourceTree = "<group>"; };
+		4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAnalytics.framework; sourceTree = "<group>"; };
+		4D4597541E4E44CD005892EE /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
+		4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		4D4597561E4E44CD005892EE /* GoogleInterchangeUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleInterchangeUtilities.framework; sourceTree = "<group>"; };
+		4D4597571E4E44CD005892EE /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
+		4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleToolboxForMac.framework; sourceTree = "<group>"; };
+		4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseMessaging.framework; sourceTree = "<group>"; };
+		4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4D9359B21E43A697006C9FC9 /* apple-app-site-association */ = {isa = PBXFileReference; lastKnownFileType = text; path = "apple-app-site-association"; sourceTree = "<group>"; };
+		4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOsmo.entitlements; sourceTree = "<group>"; };
+		4DB5FB741E5A14E70094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		4DB5FB751E5A14E80094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4DB5FB791E5A18860094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4DB5FB7E1E5A18870094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4DB5FB831E5A18880094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F90DB7701A43410F0090146E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		F90DB7711A43410F0090146E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
@@ -110,7 +140,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D45975E1E4E44CD005892EE /* GoogleToolboxForMac.framework in Frameworks */,
+				4D45975D1E4E44CD005892EE /* GoogleSymbolUtilities.framework in Frameworks */,
+				4D4597591E4E44CD005892EE /* FirebaseAnalytics.framework in Frameworks */,
 				29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */,
+				4D45975A1E4E44CD005892EE /* FirebaseCore.framework in Frameworks */,
+				4D45975B1E4E44CD005892EE /* FirebaseInstanceID.framework in Frameworks */,
+				4D4597601E4E44DA005892EE /* FirebaseMessaging.framework in Frameworks */,
+				4D45975C1E4E44CD005892EE /* GoogleInterchangeUtilities.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,13 +169,14 @@
 				293C95721A34B217005DD4CE /* iOsmo */,
 				293C958A1A34B217005DD4CE /* iOsmoTests */,
 				293C95711A34B217005DD4CE /* Products */,
+				A005A965362B6B855E2213B0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		293C95711A34B217005DD4CE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				293C95701A34B217005DD4CE /* iOsmo.app */,
+				293C95701A34B217005DD4CE /* iOsMo.app */,
 				293C95871A34B217005DD4CE /* iOsmoTests.xctest */,
 			);
 			name = Products;
@@ -147,6 +185,7 @@
 		293C95721A34B217005DD4CE /* iOsmo */ = {
 			isa = PBXGroup;
 			children = (
+				4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */,
 				29520AB41AD4835500CC4136 /* Groups */,
 				2982CFB71AC89DDB0070A090 /* Session */,
 				29DAF9461A7038E500188D8A /* Location */,
@@ -167,9 +206,14 @@
 		293C95731A34B217005DD4CE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4D19BE271E619F5B00F7599D /* ru.xliff */,
+				4DB5FB841E5A18880094FF8A /* InfoPlist.strings */,
+				4DB5FB7A1E5A18860094FF8A /* Localizable.strings */,
+				4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */,
 				29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */,
 				29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */,
 				293C95741A34B217005DD4CE /* Info.plist */,
+				4D9359B21E43A697006C9FC9 /* apple-app-site-association */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -186,6 +230,7 @@
 		293C958B1A34B217005DD4CE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */,
 				293C958C1A34B217005DD4CE /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -267,16 +312,31 @@
 				29FA96091A45FAC5009BFC19 /* LogQueue.swift */,
 				293C95C91A3D2AA0005DD4CE /* SettingManager.swift */,
 				29CCA6231B1676AB00DA0C83 /* Extensions.swift */,
+				4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */,
 			);
 			name = Utility;
+			sourceTree = "<group>";
+		};
+		A005A965362B6B855E2213B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */,
+				4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */,
+				4D4597541E4E44CD005892EE /* FirebaseCore.framework */,
+				4D4597551E4E44CD005892EE /* FirebaseInstanceID.framework */,
+				4D4597561E4E44CD005892EE /* GoogleInterchangeUtilities.framework */,
+				4D4597571E4E44CD005892EE /* GoogleSymbolUtilities.framework */,
+				4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		293C956F1A34B217005DD4CE /* iOsmo */ = {
+		293C956F1A34B217005DD4CE /* iOsMo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmo" */;
+			buildConfigurationList = 293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsMo" */;
 			buildPhases = (
 				293C956C1A34B217005DD4CE /* Sources */,
 				293C956D1A34B217005DD4CE /* Frameworks */,
@@ -287,9 +347,9 @@
 			);
 			dependencies = (
 			);
-			name = iOsmo;
+			name = iOsMo;
 			productName = iOsmo;
-			productReference = 293C95701A34B217005DD4CE /* iOsmo.app */;
+			productReference = 293C95701A34B217005DD4CE /* iOsMo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		293C95861A34B217005DD4CE /* iOsmoTests */ = {
@@ -328,6 +388,12 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
 						};
 					};
 					293C95861A34B217005DD4CE = {
@@ -350,7 +416,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				293C956F1A34B217005DD4CE /* iOsmo */,
+				293C956F1A34B217005DD4CE /* iOsMo */,
 				293C95861A34B217005DD4CE /* iOsmoTests */,
 			);
 		};
@@ -366,7 +432,11 @@
 				293C95B61A34F63B005DD4CE /* settings.plist in Resources */,
 				29CED6BD1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png in Resources */,
 				293C95821A34B217005DD4CE /* LaunchScreen.xib in Resources */,
+				4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */,
 				293C957F1A34B217005DD4CE /* Images.xcassets in Resources */,
+				4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */,
+				4D19BE281E619F5B00F7599D /* ru.xliff in Resources */,
+				4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +444,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +497,7 @@
 				293C95781A34B217005DD4CE /* MonitoringViewController.swift in Sources */,
 				2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */,
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
+				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
 				293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */,
 				29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */,
 				F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */,
@@ -446,7 +518,7 @@
 /* Begin PBXTargetDependency section */
 		293C95891A34B217005DD4CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 293C956F1A34B217005DD4CE /* iOsmo */;
+			target = 293C956F1A34B217005DD4CE /* iOsMo */;
 			targetProxy = 293C95881A34B217005DD4CE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -456,6 +528,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				293C957C1A34B217005DD4CE /* Base */,
+				4DB5FB741E5A14E70094FF8A /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -464,8 +537,33 @@
 			isa = PBXVariantGroup;
 			children = (
 				293C95811A34B217005DD4CE /* Base */,
+				4DB5FB751E5A14E80094FF8A /* ru */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		4DB5FB7A1E5A18860094FF8A /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4DB5FB791E5A18860094FF8A /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4DB5FB7E1E5A18870094FF8A /* ru */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4DB5FB841E5A18880094FF8A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4DB5FB831E5A18880094FF8A /* ru */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -475,6 +573,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -490,7 +589,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Alexey Sirotkin (SF5DP65BZ4)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -522,6 +621,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -537,7 +637,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Alexey Sirotkin (SF5DP65BZ4)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -562,17 +662,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = iOsmo/iOsmo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -588,17 +693,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = iOsmo/iOsmo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -627,7 +737,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsmo.app/iOsmo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
 			};
 			name = Debug;
 		};
@@ -644,7 +754,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsmo.app/iOsmo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
 			};
 			name = Release;
 		};
@@ -660,7 +770,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmo" */ = {
+		293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsMo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				293C95921A34B217005DD4CE /* Debug */,

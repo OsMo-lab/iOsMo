@@ -33,7 +33,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isSessionPaused = false
     var isTracked = true
     
+    var onMessageOfTheDayUpdated: ObserverSetEntry<(Bool, String)>?
+    var onSessionPaused: ObserverSetEntry<(Bool)>?
+    var onSessionStarted: ObserverSetEntry<(Bool)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
+
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
     var inGroup: [Group]?
     var selectedGroupIndex: Int?
@@ -46,6 +50,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
+    @IBOutlet weak var MDLabel: UILabel!
     
     @IBOutlet weak var osmoImage: UIImageView!
     @IBOutlet weak var osmoStatus: UIImageView!
@@ -91,63 +96,25 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
-            
             sendingManger.pauseSendingCoordinates()
-            isMonitoringOn = false
-            pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
-            if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
         } else {
-            
             sendingManger.startSendingCoordinates()
-            isMonitoringOn = true
-            pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
-            if let sessionTimer = self.sessionTimer { sessionTimer.start()}
         }
 
     
     }
     
-    @IBAction func GoByLink(_ sender: AnyObject) {
+    @IBAction func GoByLink(_ sender: UIButton) {
  
         if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
-                
-                //Create the AlertController
-                let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-                
-
-                let copyLinkAction: UIAlertAction = UIAlertAction(title: "Copy URL", style: .default) { action -> Void in
-                    UIPasteboard.general.string = self.connectionManager.sessionUrl
-                }
-                actionSheetController.addAction(copyLinkAction)
-
-                let openLinkAction: UIAlertAction = UIAlertAction(title: "Open URL", style: .default)
-                { action -> Void in
-                    
-                    if UIApplication.shared.openURL(checkURL) {
-                        print("url succefully opened")
-                        self.log.enqueue("url successfully opened")
-                    }
-                    
-                }
-                actionSheetController.addAction(openLinkAction)
-                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-                    
-                }
-                actionSheetController.addAction(cancelAction)
-
-                
-                //We need to provide a popover sourceView when using it on iPad
-                actionSheetController.popoverPresentationController?.sourceView = sender as! UIView
-                
-
-                self.present(actionSheetController, animated: true, completion: nil)
-
+                let safariActivity = SafariActivity()
+                let activityViewController = UIActivityViewController(activityItems: [checkURL], applicationActivities: [safariActivity])
+                activityViewController.popoverPresentationController?.sourceView = sender
+                self.present(activityViewController, animated: true, completion: {})
             }
-        }
-        
-        else {
+        } else {
         
             print("error: invalid url")
             log.enqueue("error: invalid url")
@@ -156,25 +123,20 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-               
         if isSessionPaused || isMonitoringOn {
-            
             sendingManger.stopSendingCoordinates()
-            UIApplication.shared.isIdleTimerDisabled = false
-            
+            //UIApplication.shared.isIdleTimerDisabled = false
         } else {
-            
-            
             sendingManger.startSendingCoordinates()
-            UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
-    
-    
+
     func uiSettings(){
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
+        MDLabel.text = ""
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
@@ -233,7 +195,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
                         self.inGroup = $0
                     }
+
+                    self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
+                        self.MDLabel.text = $1
+                    }
                     self.groupManager.groupList()
+                    self.connectionManager.getMessageOfTheDay()
+                    
                 } else if let glUpdated = self.onGroupListUpdated {
                     
                     self.groupManager.groupListUpdated.remove(glUpdated)
@@ -254,8 +222,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 } else {
                     self.trackerID.setTitle("", for: UIControlState())
                 }
-                
-                
 
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
@@ -263,7 +229,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.osmoStatus.isHidden = !theChange
                 
                 if !theChange && !$0.1.isEmpty {
-                    self.alert("Error", message: $0.1)
+                    self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
                 }
             }
             
@@ -275,7 +241,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 print("MVC: The session was opened/closed.\(theChange)")
                 
                 if theChange {
-                    
                     if let sUrl = self.connectionManager.sessionUrl {
                         self.link.setTitle(sUrl, for: UIControlState())
                         self.link.isEnabled = true
@@ -288,11 +253,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                     if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
                         self.sessionTimer!.reset()
-                        self.sessionTimer!.start()
                     }
+                    
                 } else {
                     
-                    self.link.setTitle($0.1.isEmpty ? "session was closed" : $0.1, for: UIControlState())
+                    self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControlState())
                     self.link.isEnabled = false
                     
                     self.log.enqueue("MVC: The session was closed")
@@ -304,14 +269,36 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
                     //self.mainAnnotation = nil
                     
-                    if let sessionTimer = self.sessionTimer { sessionTimer.stop()}
+                    if let sessionTimer = self.sessionTimer {
+                        sessionTimer.stop()
+                    }
                 }
-                
             }
             
+            self.onSessionPaused = sendingManger.sessionPaused.add{
+                if $0 {
+                    self.isMonitoringOn = false
+                    self.isSessionPaused = true
+                    self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
+                    if let sessionTimer = self.sessionTimer {
+                        sessionTimer.stop()
+                    }
+                }
+            }
+            
+            self.onSessionStarted = sendingManger.sessionStarted.add{
+                if $0 {
+                    self.isMonitoringOn = true
+                    self.isSessionPaused = false
+                    self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
+                    if let sessionTimer = self.sessionTimer {
+                        sessionTimer.start()
+                    }
+                }
+            }
+ 
             connectionManager.connect()
             isLoaded = true
-            
         }
     }
     

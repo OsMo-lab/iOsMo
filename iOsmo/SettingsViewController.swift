@@ -17,6 +17,9 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
     @IBOutlet weak var intervalTextField: UITextField!
+    @IBOutlet weak var distanceTextField: UITextField!
+    @IBOutlet weak var locTimeTextField: UITextField!
+
     
     @IBAction func AwakeModeChanged(_ sender: AnyObject) {
     
@@ -27,7 +30,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
             clickCount += 1;
             if (clickCount == 7) {
                 SettingsManager.setKey("enable", forKey: SettingKeys.logView)
-                self.alert("LogView unlocked",message:"Restart iOsMo")
+                self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart iOsMo", comment:"Restart iOsMo"))
             }
         }
     }
@@ -47,27 +50,47 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     }
     
     @IBAction func textFieldShouldEndEditing(_ textField: UITextField){
+        var value: Double = Double(textField.text!)!;
         
-        //Требуется остановить - заново запустить трекинг, для активизации введенного значения
-        var sendTime: Double = Double(textField.text!)!;
-        if (sendTime < 5) {
-            sendTime = 5
-        }else if (sendTime > 60) {
-            sendTime = 60
+        if textField == intervalTextField {
+            //Требуется остановить - заново запустить трекинг, для активизации введенного значения
+            if (value < 5) {
+                value = 5
+            }else if (value > 60) {
+                value = 60
+            }
+            SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.sendTime)
+        
+        } else if textField == distanceTextField {
+            
+            if (value < 0) {
+                value = 0
+            }else if (value > 1000) {
+                value = 500
+            }
+            SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
+
+        
+        }else if textField == locTimeTextField {
+            
+            if (value < 0) {
+                value = 0
+            }else if (value > 120) {
+                value = 120
+            }
+            SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locInterval)
         }
-        SettingsManager.setKey(String(sendTime) as NSString, forKey: SettingKeys.sendTime)
-        intervalTextField.resignFirstResponder()
+        textField.resignFirstResponder()
     
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        intervalTextField.resignFirstResponder();
+        textField.resignFirstResponder();
         return true;
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let isStayAwake = SettingsManager.getKey(SettingKeys.isStayAwake) {
-            
             awakeModeSwitcher.setOn(isStayAwake.boolValue, animated: false)
         }
         
@@ -83,6 +106,18 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
             }
             intervalTextField.text = sendTime as String
         }
+        if var locDistance = SettingsManager.getKey(SettingKeys.locDistance) {
+            if locDistance.length == 0 {
+                locDistance = "0"
+            }
+            distanceTextField.text = locDistance as String
+        }
+        if var locInterval = SettingsManager.getKey(SettingKeys.locInterval) {
+            if locInterval.length == 0 {
+                locInterval = "0"
+            }
+            locTimeTextField.text = locInterval as String
+        }
         //intervalTextField.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
@@ -95,7 +130,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
             let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
             self.present(myAlert, animated: true, completion: nil)
         } else { // iOS 7
             let alert: UIAlertView = UIAlertView()
@@ -103,7 +138,7 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
             
             alert.title = title
             alert.message = message
-            alert.addButton(withTitle: "OK")
+            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
             
             alert.show()
         }
