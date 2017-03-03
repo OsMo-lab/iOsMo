@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 13/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, © 2017 Alexey Sirotkin. All rights reserved.
 //
 
 import Foundation
@@ -132,4 +132,11 @@ enum RemoteCommand: String {
     case TRACKER_SESSION_PAUSE = "6"
     case TRACKER_SESSION_START = "1"
     case TRACKER_SESSION_STOP = "2"
+}
+
+enum MapStyle: String {
+    case Outdoor = "mapbox://styles/alesir/cizr8vw9g00mb2sqji5539sj4"
+    case Satellite = "mapbox://styles/alesir/cizr906j900mc2sqjct7nbux6"
+    case Streets = "mapbox://styles/alesir/cizr8v0z6003w2st6ytibx85a"
+    case Bright = "mapbox://styles/alesir/cizr8s765004h2rkwl1ob0zat"
 }

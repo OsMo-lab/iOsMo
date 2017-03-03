@@ -16,7 +16,9 @@ open class ConnectionManager: NSObject{
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroups: [Int] {
         
-        get {return self.connection.monitoringGroups!}
+        get {
+            return self.connection.monitoringGroups!
+        }
         set (newValue){
             
             self.connection.monitoringGroups = newValue

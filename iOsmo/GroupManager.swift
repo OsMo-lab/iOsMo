@@ -163,7 +163,7 @@ open class GroupManager{
 
     open func getUser(_ group:  Int, user: Int) -> User? {
         
-        let foundGroup = allGroups?.filter{$0.id == "\(group)"}.first
+        let foundGroup = allGroups?.filter{$0.u == "\(group)"}.first
         //return foundGroup?.users.filter{$0.device == "\(user)"}.first
         return foundGroup?.users.filter{$0.id == "\(user)"}.first
     }

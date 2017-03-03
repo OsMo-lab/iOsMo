@@ -38,11 +38,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var onSessionStarted: ObserverSetEntry<(Bool)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
 
-    var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
-    var inGroup: [Group]?
-    var selectedGroupIndex: Int?
-    var onMapNow = [String]()
     
+        
     var isLoaded = false
     
     @IBOutlet weak var userLabel: UILabel!
@@ -66,29 +63,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBOutlet weak var trackingModeBtn: UIButton!
 
-    @IBAction func selectGroupsClick(_ sender: AnyObject) {
-        
-        //let selectedGroupName = (selectedGroupIndex != nil) ? inGroup?[selectedGroupIndex!].name : nil
-        
-        let actionSheet = UIActionSheet(title: "select group", delegate: self, cancelButtonTitle: "cancel", destructiveButtonTitle: nil)
-        
-        if selectedGroupIndex != nil {
-            
-            actionSheet.destructiveButtonIndex = selectedGroupIndex! + 1
-        }
-        
-        if let groups = inGroup {
-            
-            for group in groups{
-                
-                actionSheet.addButton(withTitle: group.name)
-            }
-            
-            if selectedGroupIndex != nil { actionSheet.addButton(withTitle: "clear all") }
-        }
-        
-        //actionSheet.showInView(self.mapView)
-    }
+    
 
     
     @IBAction func pauseClick(_ sender: AnyObject) {
@@ -191,17 +166,17 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 let theChange = $0.0
                 
                 if theChange {
-                    
+                    /*
                     self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
-                        self.inGroup = $0
+                        //self.inGroup = $0
                     }
-
+                    */
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
                         self.MDLabel.text = $1
                     }
                     self.groupManager.groupList()
                     self.connectionManager.getMessageOfTheDay()
-                    
+
                 } else if let glUpdated = self.onGroupListUpdated {
                     
                     self.groupManager.groupListUpdated.remove(glUpdated)
@@ -408,24 +383,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         return nil
     }
     */
+
     
-    // This delegate method is where you tell the map to load a view for a specific annotation. To load a static MGLAnnotationImage, you would use `-mapView:imageForAnnotation:`.
-    
-    
-    func clearPeople(_ people: String){
-        /*
-        let ann = mapView.annotations.filter{$0.title == "\(people)"}
-        
-        if ann.count > 0 {
-            
-            mapView.removeAnnotations(ann)
-            if let element = onMapNow.indexOf("\(people)") {
-                
-                onMapNow.removeAtIndex(element)
-            }
-        }
- */
-    }
     
     
     /*
@@ -444,55 +403,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
     }
     */
-    func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
-        
-        if actionSheet.buttonTitle(at: buttonIndex) == "clear all" {
-            self.selectedGroupIndex = nil
-            
-            groupManager.updateGroupsOnMap([])
-            
-            if self.onMonitoringGroupsUpdated != nil {
-                
-                groupManager.monitoringGroupsUpdated.remove(self.onMonitoringGroupsUpdated!)
-                self.onMonitoringGroupsUpdated = nil
-            }
-            for p in onMapNow {
-                clearPeople("\(p)")
-            }
-            
-            return
-        }
-        
-        if buttonIndex != actionSheet.cancelButtonIndex {
-            /*
-            let group = inGroup?[buttonIndex - 1];
-            let intValue = group!.id as Int;
-            */
-            if let group = inGroup?[buttonIndex - 1]  {
-            
-                let intValue = Int (group.id);
-            
-                groupManager.updateGroupsOnMap([intValue!])
-                self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
-                    
-                    for coord in $0 {
-                        
-                        //self.drawPeoples(coord)
-                        
-                    }
-                }
-                
-                for p in onMapNow {
-                    clearPeople("\(p)")
-                }
-                
-                self.selectedGroupIndex = buttonIndex - 1
-
-            }
-        }
-        
-        
-    }
+    
     
     func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8

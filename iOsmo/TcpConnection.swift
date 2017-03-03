@@ -548,7 +548,7 @@ open class TcpConnection: BaseTcpConnection {
             let u = jsonU as! Dictionary<String, AnyObject>
             var uId = u["u"] as? String
             if (uId == nil) {
-                let uIdInt = g["u"] as? Int
+                let uIdInt = u["u"] as! Int
                 uId = "\(uIdInt)"
             }
             //let uDevice = u["device"] as? String
@@ -558,6 +558,27 @@ open class TcpConnection: BaseTcpConnection {
             
             let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
             group.users.append(user)
+            
+        }
+        if let jsonPoints = g["point"] as? Array<AnyObject> {
+            for jsonP in jsonPoints{
+                let u = jsonP as! Dictionary<String, AnyObject>
+                var uId = u["u"] as? String
+                if (uId == nil) {
+                    let uIdInt = u["u"] as! Int
+                    uId = "\(uIdInt)"
+                }
+                /*
+                //let uDevice = u["device"] as? String
+                let uName = u["name"] as! String
+                let uConnected = u["connected"] as! Double
+
+                
+                let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
+                group.users.append(user)
+ */
+                
+            }
             
         }
         return group;

@@ -1171,7 +1171,6 @@
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="5"/>
                     </tabBarItem>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="awakeModeSwitcher" destination="7oa-6p-5Qs" id="39A-fT-cCB"/>
                         <outlet property="distanceTextField" destination="Osf-iu-nRW" id="30S-i2-F2u"/>
@@ -1263,6 +1262,7 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="Sgt-SC-42k" kind="relationship" relationship="viewControllers" id="cNQ-wW-jgX"/>
+                        <segue destination="9VQ-qR-6dQ" kind="relationship" relationship="viewControllers" id="xja-lL-5Y3"/>
                         <segue destination="e7e-HH-qS7" kind="relationship" relationship="viewControllers" id="iX8-TE-675"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="WQB-xD-jff"/>
                     </connections>
@@ -1270,6 +1270,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-440" y="-360"/>
+        </scene>
+        <!--MapView Controller-->
+        <scene sceneID="AeK-dH-zNv">
+            <objects>
+                <viewController id="9VQ-qR-6dQ" userLabel="MapView Controller" customClass="MapViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="a9V-JZ-1yi"/>
+                        <viewControllerLayoutGuide type="bottom" id="bX4-Td-wAe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wBv-Bj-z3u" customClass="MGLMapView">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
+                            <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/alesir/cizr8vw9g00mb2sqji5539sj4"/>
+                            <userDefinedRuntimeAttribute type="number" keyPath="zoomLevel">
+                                <real key="value" value="11"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="waypoint_map-32" id="MNn-4Q-B12">
+                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                    </tabBarItem>
+                    <connections>
+                        <outlet property="mapView" destination="wBv-Bj-z3u" id="uh6-i7-d8s"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AsR-wN-gFO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>
@@ -1285,6 +1315,7 @@
         <image name="small-black" width="85" height="85"/>
         <image name="small-white" width="85" height="85"/>
         <image name="user_male_4-64" width="64" height="64"/>
+        <image name="waypoint_map-32" width="32" height="32"/>
     </resources>
     <color key="tintColor" red="0.1960784314" green="0.45882352939999999" blue="0.75686274509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

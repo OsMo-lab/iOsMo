@@ -9,12 +9,12 @@
 import Foundation
 open class User{
 
-    var id: String
+    var id: String!
     var name: String
     var color: String
     var connected: Double //time of connected in UNIX time format
     
-    init(id: String, name: String, color: String, connected: Double){
+    init(id: String!, name: String, color: String, connected: Double){
         self.id = id
         self.name = name
         self.color = color
