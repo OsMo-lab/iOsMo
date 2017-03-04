@@ -7,18 +7,22 @@
 //
 
 import Foundation
+
 open class Point {
     var lat: Double
     var lon: Double
     var descr: String = ""
+    var color: String = "#ffffff"
     var name: String = ""
     var url: String = ""
     var start: Date?
     var finish: Date?
 
-    init(lat: Double, lon: Double){
+    init(lat: Double, lon: Double, name: String, color: String){
         self.lat = lat
         self.lon = lon
+        self.name = name;
+        self.color = color;
 
     }
 

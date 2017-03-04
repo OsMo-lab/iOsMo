@@ -49,6 +49,7 @@
 		4D19BE301E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE2F1E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx */; };
 		4D19BE321E69C93600F7599D /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D19BE311E69C93600F7599D /* Point.swift */; };
 		4D19BE341E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE331E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx */; };
+		4D19BE361E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE351E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx */; };
 		4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */; };
 		4D4597591E4E44CD005892EE /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */; };
 		4D45975A1E4E44CD005892EE /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597541E4E44CD005892EE /* FirebaseCore.framework */; };
@@ -138,6 +139,7 @@
 		4D19BE2F1E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "RK_gpx _2017-03-01_2007.gpx"; sourceTree = "<group>"; };
 		4D19BE311E69C93600F7599D /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		4D19BE331E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx; sourceTree = "<group>"; };
+		4D19BE351E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "RK_gpx _2017-02-23_2111.gpx"; path = "../../Downloads/RK_gpx _2017-02-23_2111.gpx"; sourceTree = "<group>"; };
 		4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariActvity.swift; sourceTree = "<group>"; };
 		4D4597531E4E44CD005892EE /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		4D4597541E4E44CD005892EE /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 		293C95671A34B217005DD4CE = {
 			isa = PBXGroup;
 			children = (
+				4D19BE351E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx */,
 				4D19BE331E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx */,
 				4D19BE2F1E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx */,
 				4D19BE291E67353900F7599D /* Mapbox.framework */,
@@ -459,6 +462,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D19BE361E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx in Resources */,
 				4D19BE341E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx in Resources */,
 				29CED6BB1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png in Resources */,
 				293C957D1A34B217005DD4CE /* Main.storyboard in Resources */,

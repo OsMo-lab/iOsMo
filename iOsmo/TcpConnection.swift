@@ -403,7 +403,7 @@ open class TcpConnection: BaseTcpConnection {
                 let parseRes = parseGroupCoordinates(output)
                     if let grId = parseRes.0, let res = parseRes.1 {
                         
-                        if monitor.contains(grId){
+                        //if monitor.contains(grId){
                             if let groups = parseCoordinate(grId, coordinates: res) {
                                 monitoringGroupsUpdated.notify(groups)
                             }
@@ -411,7 +411,7 @@ open class TcpConnection: BaseTcpConnection {
                                 log.enqueue("error: wrong parsing coordinate array")
                                 print("error: wrong parsing coordinate array")
                             }
-                        }
+                        //}
                     }
                                 
             }

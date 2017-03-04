@@ -92,8 +92,8 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "Moscow, Russia"
-         referenceType = "1">
+         identifier = "../../../../Downloads/RK_gpx _2017-02-23_2111.gpx"
+         referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction

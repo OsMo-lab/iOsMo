@@ -9,18 +9,47 @@
 import UIKit
 import Mapbox
 
+
+enum AnnotationType: Int{
+    case user = 1
+    case point = 2
+}
+
+extension String {
+    var hexColor: UIColor {
+        let hex = trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt32()
+        Scanner(string: hex).scanHexInt32(&int)
+        let a, r, g, b: UInt32
+        switch hex.characters.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            return .clear
+        }
+        return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
+}
 // MGLAnnotation protocol reimplementation
 class OSMOAnnotation: NSObject, MGLAnnotation {
     
     // As a reimplementation of the MGLAnnotation protocol, we have to add mutable coordinate and (sub)title properties ourselves.
     var coordinate: CLLocationCoordinate2D
     var title: String?
+    var polyline: CustomPolyline?
 
     // Custom properties that we will use to customize the annotation's image.
     var image: UIImage?
     var objId: String?
+    var type: AnnotationType;
+    var color: String? = "#ff0000"
     
-    init(coordinate: CLLocationCoordinate2D, title: String?, objId: String) {
+    init(type: AnnotationType, coordinate: CLLocationCoordinate2D, title: String?, objId: String) {
+        self.type = type
         self.coordinate = coordinate
         self.title = title
         self.objId = objId
@@ -36,8 +65,17 @@ class OSMOAnnotationView: MGLAnnotationView {
         
         // Use CALayer’s corner radius to turn this view into a circle.
         layer.cornerRadius = frame.width / 2
-        layer.borderWidth = 3
+        layer.borderWidth = 2
         layer.borderColor = UIColor.white.cgColor
+        let ann = self.annotation as! OSMOAnnotation;
+        
+        if let title = ann.title {
+            let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+            letter.textAlignment = NSTextAlignment.center
+            letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
+            letter.text = title.substring(to: title.index(title.startIndex, offsetBy: 1))
+            self.addSubview(letter);
+        }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -104,6 +142,11 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
             }
         }
 
+    }
+    override func viewWillDisappear(_ animated: Bool){
+        super.viewWillDisappear(animated)
+        groupManager.updateGroupsOnMap([])
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -198,15 +241,29 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
                 
                 for ann in self.pointAnnotations {
                     if ann.objId == "u\(location.userId)" {
+                        if ann.polyline == nil {
+                            var coordinates = [ann.coordinate, clLocation]
+                            
+                            let polyline = CustomPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
+                            
+                            // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
+                            polyline.color = user.color.hexColor.withAlphaComponent(0.8)
+
+                            // Add the polyline to the map. Note that this method name is singular.
+                            mapView.addAnnotation(polyline)
+                            ann.polyline = polyline;
+                            
+                        } else {
+                            ann.polyline?.appendCoordinates([clLocation], count: 1)
+                        }
                         ann.coordinate = clLocation;
                         annVisible = true;
                         break;
-
                     }
-                    
                 }
                 if !annVisible {
-                    let annotation = OSMOAnnotation(coordinate: clLocation, title: userName, objId: "u\(location.userId)");
+                    let annotation = OSMOAnnotation(type:AnnotationType.user,  coordinate: clLocation, title: userName, objId: "u\(location.userId)");
+                    annotation.color = user.color
                     self.pointAnnotations.append(annotation)
                     self.mapView.addAnnotation(annotation)
                 }
@@ -266,9 +323,9 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
         guard annotation is OSMOAnnotation else {
             return nil
         }
-        
+        let ann = annotation as! OSMOAnnotation
         // Use the point annotation’s longitude value (as a string) as the reuse identifier for its view.
-        let reuseIdentifier = "user"
+        let reuseIdentifier = "type\(ann.type)"
         
         // For better performance, always try to reuse existing annotations.
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
@@ -281,10 +338,24 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
             // Set the annotation view’s background color to a value determined by its longitude.
             //let hue = CGFloat(annotation.coordinate.longitude) / 100
             //annotationView!.backgroundColor = UIColor(hue: hue, saturation: 0.5, brightness: 1, alpha: 1)
-            annotationView!.backgroundColor = UIColor(colorLiteralRed: 0.31, green: 0.68, blue: 0.41, alpha: 1)
+            
+            //annotationView!.backgroundColor = UIColor(colorLiteralRed: 0.31, green: 0.68, blue: 0.41, alpha: 1)
+            annotationView?.backgroundColor = ann.color?.hexColor;
         }
         
         return annotationView
     }
     
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        return true
+    }
+    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        if let annotation = annotation as? CustomPolyline {
+            // Return orange if the polyline does not have a custom color.
+            return annotation.color ?? .orange
+        }
+        
+        // Fallback to the default tint color.
+        return mapView.tintColor
+    }
 }
