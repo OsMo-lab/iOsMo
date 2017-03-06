@@ -52,8 +52,6 @@ open class GroupManager{
             self.connection.groupActivated.remove(self.onActivateGroup!)
         }
         connection.activateGroup(name)
-
-
     }
     
     open func deactivateGroup(_ name: String) {
@@ -70,8 +68,6 @@ open class GroupManager{
                     }
                 }
             }
-            
-            
             self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
         }
         
@@ -138,7 +134,6 @@ open class GroupManager{
                
             }
         }
-        
         connection.getGroups()
     }
     
@@ -162,7 +157,6 @@ open class GroupManager{
     
 
     open func getUser(_ group:  Int, user: Int) -> User? {
-        
         let foundGroup = allGroups?.filter{$0.u == "\(group)"}.first
         //return foundGroup?.users.filter{$0.device == "\(user)"}.first
         return foundGroup?.users.filter{$0.id == "\(user)"}.first

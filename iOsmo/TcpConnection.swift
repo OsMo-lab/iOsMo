@@ -272,7 +272,6 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.push){
-            
             print("PUSH activated")
             log.enqueue("PUSH activated")
             
@@ -399,7 +398,6 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.grCoord) {
             if let monitor = monitoringGroups {
-                
                 let parseRes = parseGroupCoordinates(output)
                     if let grId = parseRes.0, let res = parseRes.1 {
                         
@@ -413,17 +411,37 @@ open class TcpConnection: BaseTcpConnection {
                             }
                         //}
                     }
-                                
             }
             
         //D:47580|L37.33018:-122.032582S1.3A9H5C
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
             return
         }
+        if outputContains(AnswTags.updateGroup) {
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                let g = res as! Dictionary<String, AnyObject>
+                if let jsonUsers = g["users"] as? Array<AnyObject> {
+                    for jsonU in jsonUsers{
+                        let u = jsonU as! Dictionary<String, AnyObject>
+                        var uId = u["u"] as? String
+                        if (uId == nil) {
+                            let uIdInt = u["u"] as! Int
+                            uId = "\(uIdInt)"
+                        }
+                        print(uId!)
+                    }
+                }
+                
+            }else {
+                log.enqueue("error parsing GP")
+                print("error parsing GP")
+            }
+            return
+        }
     }
     
     func parseCoordinate(_ group: Int, coordinates: Any) -> [UserGroupCoordinate]? {
-        
         if let users = coordinates as? Array<String> {
             var res = [UserGroupCoordinate]()
         
@@ -453,6 +471,15 @@ open class TcpConnection: BaseTcpConnection {
 
     
     func parseGroupCoordinates(_ responce: String) -> (Int?, Any?){
+        
+        let index = responce.components(separatedBy: "|")[0].characters.count
+        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
+        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
+        
+        return (groupId, parseJson(responce))
+    }
+    
+    func parseGroupUpdate(_ responce: String) -> (Int?, Any?){
         
         let index = responce.components(separatedBy: "|")[0].characters.count
         let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))

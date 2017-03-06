@@ -79,6 +79,7 @@ enum AnswTags: String{
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"
+    case updateGroup = "GP:"
     case messageDay = "MD|"
 }
 

@@ -67,15 +67,12 @@ class OSMOAnnotationView: MGLAnnotationView {
         layer.cornerRadius = frame.width / 2
         layer.borderWidth = 2
         layer.borderColor = UIColor.white.cgColor
-        let ann = self.annotation as! OSMOAnnotation;
         
-        if let title = ann.title {
-            let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
-            letter.textAlignment = NSTextAlignment.center
-            letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
-            letter.text = title.substring(to: title.index(title.startIndex, offsetBy: 1))
-            self.addSubview(letter);
-        }
+        let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+        letter.textAlignment = NSTextAlignment.center
+        letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
+        letter.tag = 1
+        self.addSubview(letter);
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -299,9 +296,7 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
                 
                 groupManager.updateGroupsOnMap([intValue!])
                 self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
-                    
                     for coord in $0 {
-                        
                         self.drawPeoples(location: coord)
                     }
                 }
@@ -309,13 +304,9 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
                 for p in onMapNow {
                     clearPeople("\(p)")
                 }
-                
                 self.selectedGroupIndex = buttonIndex - 1
-                
             }
         }
-        
-        
     }
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
@@ -340,7 +331,14 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
             //annotationView!.backgroundColor = UIColor(hue: hue, saturation: 0.5, brightness: 1, alpha: 1)
             
             //annotationView!.backgroundColor = UIColor(colorLiteralRed: 0.31, green: 0.68, blue: 0.41, alpha: 1)
-            annotationView?.backgroundColor = ann.color?.hexColor;
+            
+        }
+        annotationView?.backgroundColor = ann.color?.hexColor;
+        
+        if let title = ann.title {
+            if let letter = annotationView?.viewWithTag(1) as? UILabel{
+                letter.text = title.substring(to: title.index(title.startIndex, offsetBy: 1))
+            }
         }
         
         return annotationView

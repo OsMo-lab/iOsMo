@@ -375,8 +375,8 @@
 				293C956C1A34B217005DD4CE /* Sources */,
 				293C956D1A34B217005DD4CE /* Frameworks */,
 				293C956E1A34B217005DD4CE /* Resources */,
-				4DC655361D6249A200A9BE10 /* ShellScript */,
 				4D19BE2C1E67353B00F7599D /* Embed Frameworks */,
+				4D19BE371E6B0FCE00F7599D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -489,7 +489,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4DC655361D6249A200A9BE10 /* ShellScript */ = {
+		4D19BE371E6B0FCE00F7599D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -500,7 +500,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework/strip-frameworks.sh\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -732,6 +732,7 @@
 		293C95931A34B217005DD4CE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"ADDITIONAL_SDKS[arch=*]" = "";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = iOsmo/iOsmo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
