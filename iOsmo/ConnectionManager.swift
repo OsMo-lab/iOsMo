@@ -48,6 +48,7 @@ open class ConnectionManager: NSObject{
     let pushActivated = ObserverSet<Bool>()
     let groupDeactivated = ObserverSet<(Bool, String)>()
     let groupList = ObserverSet<[Group]>()
+    
     let connectionRun = ObserverSet<(Bool, String)>()
     let sessionRun = ObserverSet<(Bool, String)>()
     let groupsEnabled = ObserverSet<Bool>()

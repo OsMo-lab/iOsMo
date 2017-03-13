@@ -109,6 +109,7 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
     var onMapNow = [String]()
     
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
+    var onUserLeave: ObserverSetEntry<User>?
     var inGroup: [Group]?
     var selectedGroupIndex: Int?
     
@@ -128,18 +129,20 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
     }
     override func viewWillAppear(_ animated:Bool) {
         super.viewWillAppear(animated)
-        self.connectionManager.activatePoolGroups(1)
         
-        groupManager.updateGroupsOnMap([1])
-        self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
+        if (groupManager.allGroups?.count)! > 0 {
+            self.connectionManager.activatePoolGroups(1)
+
+            groupManager.updateGroupsOnMap([1])
             
-            for coord in $0 {
-                
-                self.drawPeoples(location: coord)
+            self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
+                for coord in $0 {
+                    self.drawPeoples(location: coord)
+                }
             }
         }
-
     }
+    
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         groupManager.updateGroupsOnMap([])
@@ -198,6 +201,7 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
     
     func setupMapView(){
         self.mapView.delegate = self
+        self.mapView.styleURL = URL(string: MapStyle.Bright.rawValue)
         self.mapView.showsUserLocation = true
     }
     
@@ -274,7 +278,7 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
         
         if actionSheet.buttonTitle(at: buttonIndex) == "clear all" {
             self.selectedGroupIndex = nil
-            
+ 
             groupManager.updateGroupsOnMap([])
             
             if self.onMonitoringGroupsUpdated != nil {
@@ -310,12 +314,10 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
     }
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        // This example is only concerned with point annotations.
         guard annotation is OSMOAnnotation else {
             return nil
         }
         let ann = annotation as! OSMOAnnotation
-        // Use the point annotation’s longitude value (as a string) as the reuse identifier for its view.
         let reuseIdentifier = "type\(ann.type)"
         
         // For better performance, always try to reuse existing annotations.
@@ -325,13 +327,6 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
         if annotationView == nil {
             annotationView = OSMOAnnotationView(reuseIdentifier: reuseIdentifier)
             annotationView!.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            
-            // Set the annotation view’s background color to a value determined by its longitude.
-            //let hue = CGFloat(annotation.coordinate.longitude) / 100
-            //annotationView!.backgroundColor = UIColor(hue: hue, saturation: 0.5, brightness: 1, alpha: 1)
-            
-            //annotationView!.backgroundColor = UIColor(colorLiteralRed: 0.31, green: 0.68, blue: 0.41, alpha: 1)
-            
         }
         annotationView?.backgroundColor = ann.color?.hexColor;
         
@@ -349,7 +344,6 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
     }
     func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if let annotation = annotation as? CustomPolyline {
-            // Return orange if the polyline does not have a custom color.
             return annotation.color ?? .orange
         }
         

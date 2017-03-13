@@ -36,6 +36,7 @@ open class TcpConnection: BaseTcpConnection {
     let groupListDownloaded = ObserverSet<[Group]>()
     let groupCreated = ObserverSet<(Bool, String)>()
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
+    let groupsUpdated = ObserverSet<(Int, Any)>()
     
     open var sessionUrlParsed: String = ""
     open var sessionTrackerID: String = ""
@@ -60,6 +61,13 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.getGroups.rawValue)"
         super.send(request)
     }
+    
+    open func sendUpdateGroupResponse(group: Int, event:Int){
+        
+        let request = "\(Tags.updateGroupResponse.rawValue):\(group)|\(event)"
+        super.send(request)
+    }
+
     
     open func sendCreateGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
         
@@ -417,22 +425,11 @@ open class TcpConnection: BaseTcpConnection {
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
             return
         }
-        if outputContains(AnswTags.updateGroup) {
+        if command == AnswTags.updateGroup.rawValue {
             let parseRes = parseGroupUpdate(output)
             if let grId = parseRes.0, let res = parseRes.1 {
-                let g = res as! Dictionary<String, AnyObject>
-                if let jsonUsers = g["users"] as? Array<AnyObject> {
-                    for jsonU in jsonUsers{
-                        let u = jsonU as! Dictionary<String, AnyObject>
-                        var uId = u["u"] as? String
-                        if (uId == nil) {
-                            let uIdInt = u["u"] as! Int
-                            uId = "\(uIdInt)"
-                        }
-                        print(uId!)
-                    }
-                }
                 
+                groupsUpdated.notify((grId, res))
             }else {
                 log.enqueue("error parsing GP")
                 print("error parsing GP")
@@ -578,12 +575,17 @@ open class TcpConnection: BaseTcpConnection {
                 let uIdInt = u["u"] as! Int
                 uId = "\(uIdInt)"
             }
-            //let uDevice = u["device"] as? String
             let uName = u["name"] as! String
             let uConnected = u["connected"] as! Double
             let uColor = u["color"] as! String
+            let uOnline = (u["online"] as? Int) ?? 0
+            let uState = (u["state"] as? Int) ?? 0
             
             let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
+            
+            user.state = uState
+            user.online = uOnline
+            
             group.users.append(user)
             
         }

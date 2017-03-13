@@ -25,6 +25,7 @@ enum Tags: String {
     case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
     case activatePoolGroups = "PG"
+    case updateGroupResponse = "GPR"
     case groupSwitch = "GS"
     case coordinate = "T"
 }
@@ -79,7 +80,7 @@ enum AnswTags: String{
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"
-    case updateGroup = "GP:"
+    case updateGroup = "GP"
     case messageDay = "MD|"
 }
 
