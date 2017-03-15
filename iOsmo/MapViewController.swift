@@ -8,7 +8,7 @@
 
 import UIKit
 import Mapbox
-
+import FirebaseAnalytics
 
 enum AnnotationType: Int{
     case user = 1
@@ -129,6 +129,7 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
     }
     override func viewWillAppear(_ animated:Bool) {
         super.viewWillAppear(animated)
+        FIRAnalytics.logEvent(withName: "map_open", parameters: nil)
         
         if (groupManager.allGroups?.count)! > 0 {
             self.connectionManager.activatePoolGroups(1)

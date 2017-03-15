@@ -9,6 +9,7 @@
 
 import UIKit
 import CoreLocation
+import FirebaseAnalytics
 
 class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMapViewDelegate*/{
     
@@ -71,6 +72,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
+            FIRAnalytics.logEvent(withName: "trip_pause", parameters: nil)
             sendingManger.pauseSendingCoordinates()
         } else {
             sendingManger.startSendingCoordinates()
@@ -80,7 +82,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func GoByLink(_ sender: UIButton) {
- 
         if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
@@ -99,10 +100,14 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if isSessionPaused || isMonitoringOn {
+            FIRAnalytics.logEvent(withName: "trip_stop", parameters: nil)
             sendingManger.stopSendingCoordinates()
+            
             //UIApplication.shared.isIdleTimerDisabled = false
         } else {
+            FIRAnalytics.logEvent(withName: "trip_start", parameters: nil)
             sendingManger.startSendingCoordinates()
+            
             //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }

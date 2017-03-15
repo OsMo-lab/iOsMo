@@ -83,6 +83,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
         }
+        FIRAnalytics.logEvent(withName: "app_open", parameters: nil)
+        
         if let url = launchOptions?[.url] as? URL {
             presentViewController(url:url);
         }
