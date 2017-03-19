@@ -52,10 +52,12 @@ open class BaseTcpConnection: NSObject {
     var sessionOpened: Bool = false
 
     
-    func onSentCoordinate(){
+    func onSentCoordinate(cnt: Int){
     
-        if self.coordinates.count > 0 {
-            self.coordinates.remove(at: 0)
+        for _ in 1...cnt {
+            if self.coordinates.count > 0 {
+                self.coordinates.remove(at: 0)
+            }
         }
         sendNextCoordinates()
     }
@@ -82,12 +84,25 @@ open class BaseTcpConnection: NSObject {
         }*/
         
         //TODO: refactoring send best coordinates
-        if self.sessionOpened && self.coordinates.count > 0 {
-            
-            if let theCoordinate = self.coordinates.first {
-                
-                send(theCoordinate.getCoordinateRequest)
+        let cnt = self.coordinates.count;
+        if self.sessionOpened && cnt > 0 {
+            var req = ""
+            var sep = ""
+            if cnt > 1 {
+                sep = "\""
             }
+            for theCoordinate in self.coordinates {
+                if req != "" {
+                    req = "\(req),"
+                }
+                req = "\(req)\(sep)\(theCoordinate.getCoordinateRequest)\(sep)"
+            }
+            if cnt > 1 {
+                req = "\(Tags.buffer.rawValue)|[\(req)]"
+            } else {
+                req = "\(Tags.coordinate.rawValue)|\(req)"
+            }
+            send(req)
         }
     }
     

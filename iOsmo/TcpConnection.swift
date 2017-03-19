@@ -323,8 +323,18 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         
-        if outputContains(AnswTags.coordinate) {
-            super.onSentCoordinate()
+        if command == AnswTags.coordinate.rawValue {
+            let cnt = Int(addict)
+            if cnt > 0 {
+                super.onSentCoordinate(cnt:cnt!)
+            }
+            return
+        }
+        if command == AnswTags.buffer.rawValue {
+            let cnt = Int(addict)
+            if cnt > 0 {
+                super.onSentCoordinate(cnt:cnt!)
+            }
             return
         }
         

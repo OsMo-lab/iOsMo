@@ -28,6 +28,7 @@ enum Tags: String {
     case updateGroupResponse = "GPR"
     case groupSwitch = "GS"
     case coordinate = "T"
+    case buffer = "B"
 }
 
 enum KeysOld: String{
@@ -73,7 +74,8 @@ enum AnswTags: String{
     case bye = "BYE|"
     case kick = "KICK|"
     case pong = "PP"
-    case coordinate = "T|"
+    case coordinate = "T"
+    case buffer = "B"
     case closeSession = "TC|"
     case token = "INIT|"
     case auth = "AUTH|"

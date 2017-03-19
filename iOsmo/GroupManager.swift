@@ -210,6 +210,7 @@ open class GroupManager{
             self.monitoringGroupsHandler = nil
             connection.connection.groupsUpdated.remove(self.onUpdateGroup!)
             self.onUpdateGroup = nil
+            self.connection.activatePoolGroups(-1)
         }
     }
     
