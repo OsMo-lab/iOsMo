@@ -410,6 +410,8 @@ open class TcpConnection: BaseTcpConnection {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }else if param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
+            }else if param == RemoteCommand.TRACKER_GCM_ID.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
             
             return

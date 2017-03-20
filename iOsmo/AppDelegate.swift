@@ -217,23 +217,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // [END receive_message]
     // [START refresh_token]
     func tokenRefreshNotification(_ notification: Notification) {
-        if let refreshedToken = FIRInstanceID.instanceID().token() {
-            print("InstanceID token: \(refreshedToken)")
-            SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
-            connectionManager.sendPush(refreshedToken)
-        }
-        
-        // Connect to FCM since connection may have failed when attempted before having a token.
+         // Connect to FCM since connection may have failed when attempted before having a token.
         connectToFcm()
     }
     // [END refresh_token]
     // [START connect_to_fcm]
     func connectToFcm() {
         // Won't connect since there is no token
-        guard FIRInstanceID.instanceID().token() != nil else {
+        guard let token = FIRInstanceID.instanceID().token() else {
             return;
         }
-        
+        SettingsManager.setKey(token as NSString, forKey: SettingKeys.pushToken)
         // Disconnect previous FCM connection if it exists.
         FIRMessaging.messaging().disconnect()
         
@@ -242,8 +236,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Unable to connect with FCM. \(error)")
                 self.log.enqueue("Unable to connect with FCM. \(error)")
             } else {
-                print("Connected to FCM.")
-                self.log.enqueue("Connected to FCM")
+                print("Connected to FCM:\(token)")
+                self.log.enqueue("Connected to FCM:\(token)")
             }
         }
     }
@@ -261,7 +255,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
         
         // With swizzling disabled you must set the APNs token here.
-        // FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.sandbox)
+        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.prod)
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+            SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
+            connectionManager.sendPush(refreshedToken)
+        }
+
     }
     
 
@@ -299,6 +299,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
             log.enqueue(messageID as! String)
+            connectionManager.connection.parseOutput(messageID as! String)
         }
         
         // Print full message.

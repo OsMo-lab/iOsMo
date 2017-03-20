@@ -10,6 +10,7 @@
 
 
 import Foundation
+import FirebaseInstanceID
 
 open class ConnectionManager: NSObject{
 
@@ -353,7 +354,7 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
-                if let token:String = SettingsManager.getKey(SettingKeys.pushToken) as String? {
+                if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
                     self.sendPush(token)
                 }
                 
