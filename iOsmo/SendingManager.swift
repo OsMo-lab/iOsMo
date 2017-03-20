@@ -73,8 +73,6 @@ open class SendingManager: NSObject{
         } else {
             startSending()
         }
-        
-        
     }
     
     open func pauseSendingCoordinates(){

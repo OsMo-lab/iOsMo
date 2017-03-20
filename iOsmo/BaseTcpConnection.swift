@@ -88,14 +88,21 @@ open class BaseTcpConnection: NSObject {
         if self.sessionOpened && cnt > 0 {
             var req = ""
             var sep = ""
+            var idx = 0;
             if cnt > 1 {
                 sep = "\""
             }
             for theCoordinate in self.coordinates {
+                
                 if req != "" {
                     req = "\(req),"
                 }
                 req = "\(req)\(sep)\(theCoordinate.getCoordinateRequest)\(sep)"
+                idx = idx + 1
+                //Ограничиваем количество отправляемых точек в одном пакете
+                if idx > 500 {
+                    break;
+                }
             }
             if cnt > 1 {
                 req = "\(Tags.buffer.rawValue)|[\(req)]"

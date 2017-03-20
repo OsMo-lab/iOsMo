@@ -334,11 +334,10 @@ open class ConnectionManager: NSObject{
                 
                 return
             }
-        
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
-                //openSession()
                 let sendingManger = SendingManager.sharedSendingManager
                 sendingManger.startSendingCoordinates()
+                
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
@@ -351,12 +350,16 @@ open class ConnectionManager: NSObject{
                 let sendingManger = SendingManager.sharedSendingManager
                 sendingManger.startSendingCoordinates()
                 
+                return
+            }
+            if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
+                if let token:String = SettingsManager.getKey(SettingKeys.pushToken) as String? {
+                    self.sendPush(token)
+                }
                 
                 return
             }
         }
-        
-        /// etc
     }
 
 
