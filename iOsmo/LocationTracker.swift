@@ -101,43 +101,54 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         //print("didUpdateLocation")
         log.enqueue("didUpdateLocation")
+        var prevLM = allSessionLocations.last
         var prev_loc = locations.first
+        
         if ((lastLocations.last) != nil) {
-            prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
+            //prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
+            
+            prev_loc = CLLocation(coordinate: CLLocationCoordinate2D(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!), altitude: CLLocationDistance((lastLocations.last?.alt)!), horizontalAccuracy: CLLocationAccuracy((lastLocations.last?.accuracy)!), verticalAccuracy: 0, timestamp: (lastLocations.last?.time)!)
+ 
         }
+        
+        let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue;
+        let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue;
+        
         for loc in locations {
             let theCoordinate = loc.coordinate
             let theAccuracy = loc.horizontalAccuracy
             let theAltitude = loc.altitude
             
-            let locationAge = -loc.timestamp.timeIntervalSinceNow
-            if locationAge > 30 {
+            
+            if (-loc.timestamp.timeIntervalSinceNow > 60){
                 continue
             }
+            //let locationAge = loc.timestamp.timeIntervalSince((prev_loc?.timestamp)!)
+            let prevAge = (prevLM != nil ? loc.timestamp.timeIntervalSince((prevLM?.time)!):0)
             
             //select only valid location and also location with good accuracy
             if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil))){
-                var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
-                //add others values
-                locationModel.accuracy = Int(theAccuracy)
-                locationModel.speed = loc.speed as Double
-                locationModel.course = Float(loc.course)
-                locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
-                locationModel.time = loc.timestamp
-                
-                let distanceInMeters = loc.distance(from: prev_loc!)
-                distance = distance + distanceInMeters / 1000
-                prev_loc = loc
-                
-                self.lastLocations.append(locationModel)
-                self.allSessionLocations.append(locationModel)
+                if ((prevAge >= locInterval) || (lastLocations.last == nil)) {
+                    var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
+                    //add others values
+                    locationModel.accuracy = Int(theAccuracy)
+                    locationModel.speed = loc.speed as Double
+                    locationModel.course = Float(loc.course)
+                    locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
+                    locationModel.time = loc.timestamp
+                    
+                    let distanceInMeters = loc.distance(from: prev_loc!)
+                    distance = distance + distanceInMeters / 1000
+                    prev_loc = loc
+                    
+                    self.lastLocations.append(locationModel)
+                    self.allSessionLocations.append(locationModel)
+                    prevLM = locationModel;
+                }
             }
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
-        let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue
-        let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue
-        
         if (isDeferingUpdates == false && (locInterval > 0.0 || locDistance > 0.0 )) {
             self.isDeferingUpdates = true
             manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)

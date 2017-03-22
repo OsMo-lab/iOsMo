@@ -13,6 +13,10 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
 
     var connectionManager = ConnectionManager.sharedConnectionManager
     var clickCount = 0;
+    let MIN_SEND_TIME = 5;
+    let MIN_LOC_TIME = 4;
+    let MIN_LOC_DISTANCE = 10;
+    
     
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
@@ -50,39 +54,35 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     }
     
     @IBAction func textFieldShouldEndEditing(_ textField: UITextField){
-        var value: Double = Double(textField.text!)!;
+        var value: Int = Int(textField.text!)!;
         
         if textField == intervalTextField {
             //Требуется остановить - заново запустить трекинг, для активизации введенного значения
-            if (value < 5) {
-                value = 5
+            if (value < MIN_SEND_TIME) {
+                value = MIN_SEND_TIME
             }else if (value > 60) {
                 value = 60
             }
             SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.sendTime)
         
         } else if textField == distanceTextField {
-            
-            if (value < 0) {
-                value = 0
+            if (value < MIN_LOC_DISTANCE) {
+                value = MIN_LOC_DISTANCE
             }else if (value > 1000) {
-                value = 500
+                value = 1000
             }
             SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
-
-        
-        }else if textField == locTimeTextField {
-            
-            if (value < 0) {
-                value = 0
+        } else if textField == locTimeTextField {
+            if (value < MIN_LOC_TIME) {
+                value = MIN_LOC_TIME
             }else if (value > 120) {
                 value = 120
             }
             SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locInterval)
         }
         textField.resignFirstResponder()
-    
     }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder();
         return true;
@@ -102,19 +102,19 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
         
         if var sendTime = SettingsManager.getKey(SettingKeys.sendTime) {
             if sendTime.length == 0 {
-                sendTime = "5"
+                sendTime = String(MIN_SEND_TIME) as NSString
             }
             intervalTextField.text = sendTime as String
         }
         if var locDistance = SettingsManager.getKey(SettingKeys.locDistance) {
             if locDistance.length == 0 {
-                locDistance = "0"
+                locDistance = String(MIN_LOC_DISTANCE) as NSString
             }
             distanceTextField.text = locDistance as String
         }
         if var locInterval = SettingsManager.getKey(SettingKeys.locInterval) {
             if locInterval.length == 0 {
-                locInterval = "0"
+                locInterval = String(MIN_LOC_TIME) as NSString
             }
             locTimeTextField.text = locInterval as String
         }
