@@ -47,6 +47,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -80,9 +83,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
-      </ContextState>
-      <ContextState
          contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">
       </ContextState>
       <ContextState
@@ -103,6 +103,17 @@
       </ContextState>
       <ContextState
          contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.getUser(Int, user : Int) -&gt; User?:GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "foundGroup?.users.filter{$0.id == &quot;\(user)&quot;}">
+            </PersistentString>
+            <PersistentString
+               value = "allGroups">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "GroupManager.(deactivateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">

@@ -9,6 +9,8 @@
 //used lib from https://mikeash.com/pyblog/friday-qa-2015-01-23-lets-build-swift-notifications.html
 
 import Foundation
+import UIKit
+
 open class SendingManager: NSObject{
     //used lib
     let sentObservers = ObserverSet<LocationModel>()
@@ -126,7 +128,12 @@ open class SendingManager: NSObject{
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
             
             sessionStarted.notify((true))
+            
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            
+            
+            
+            
         }
     }
      

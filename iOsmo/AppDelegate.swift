@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var connectionManager = ConnectionManager.sharedConnectionManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var localNotification: UILocalNotification? = nil;
     
     fileprivate var timer = Timer()
     
@@ -106,7 +107,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         log.enqueue("Disconnected from FCM.")
         print("Disconnected from FCM.")
         self.connectionManager.activatePoolGroups(-1)
-        if (connectionManager.connected && !connectionManager.sessionOpened) {
+        if (connectionManager.connected && connectionManager.sessionOpened) {
+            if self.localNotification == nil {
+                self.localNotification = UILocalNotification()
+                //localNotification.fireDate = NSDate(timeIntervalSinceNow:0) as Date
+                //localNotification.timeZone = NSTimeZone.default
+                self.localNotification?.alertBody = NSLocalizedString("Tracking location", comment: "Tracking location")
+                
+                //set the notification
+                UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
+            }
+        }
+        
+                if (connectionManager.connected && !connectionManager.sessionOpened) {
             backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                 self?.endBackgroundTask()
             }
@@ -138,7 +151,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             backgroundTask = UIBackgroundTaskInvalid
         }
         connectToFcm()
-    }
+        if (self.localNotification != nil) {
+            UIApplication.shared.cancelLocalNotification(self.localNotification!)
+            self.localNotification = nil
+        }
+        UIApplication.shared.cancelAllLocalNotifications()
+     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
@@ -244,6 +262,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     // [END connect_to_fcm]
+    
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+        if notificationSettings.types != .none {
+            application.registerForRemoteNotifications()
+        }
+    }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Unable to register for remote notifications: \(error.localizedDescription)")
         log.enqueue("Unable to register for remote notifications: \(error.localizedDescription)")
@@ -254,6 +278,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // the InstanceID token.
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("APNs token retrieved: \(deviceToken)")
+        log.enqueue("APNs token retrieved: \(deviceToken)")
         //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
         
         // With swizzling disabled you must set the APNs token here.
@@ -316,6 +341,8 @@ extension AppDelegate : FIRMessagingDelegate {
     // Receive data message on iOS 10 devices while app is in the foreground.
     func applicationReceivedRemoteMessage(_ remoteMessage: FIRMessagingRemoteMessage) {
         print(remoteMessage.appData)
+        print("Received remote message: \(remoteMessage.appData)")
+
     }
 }
 // [END ios_10_data_message_handling]

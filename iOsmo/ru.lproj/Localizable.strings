@@ -37,3 +37,6 @@
 /* session was closed */
 "session was closed" = "сессия закрыта";
 
+/* Tracking location */
+"Tracking location" = "Местоположение отслеживается";
+
