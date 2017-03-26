@@ -150,7 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = UIBackgroundTaskInvalid
         }
-        connectToFcm()
+        self.connectToFcm()
         if (self.localNotification != nil) {
             UIApplication.shared.cancelLocalNotification(self.localNotification!)
             self.localNotification = nil
@@ -208,10 +208,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
         }
-        
         // Print full message.
         //print(userInfo)
     }
@@ -223,12 +223,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
             
             connectionManager.connection.parseOutput(messageID as! String)
         }
-        
+        FIRMessaging.messaging().appDidReceiveMessage(userInfo)
         // Print full message.
         //print(userInfo)
         
@@ -237,6 +238,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // [END receive_message]
     // [START refresh_token]
     func tokenRefreshNotification(_ notification: Notification) {
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+            SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
+            connectionManager.sendPush(refreshedToken)
+        }
          // Connect to FCM since connection may have failed when attempted before having a token.
         connectToFcm()
     }
@@ -264,7 +270,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // [END connect_to_fcm]
     
     func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        if notificationSettings.types != .none {
+        if notificationSettings.types != [.alert, .badge, .sound] {
             application.registerForRemoteNotifications()
         }
     }
@@ -277,17 +283,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // If swizzling is disabled then this function must be implemented so that the APNs token can be paired to
     // the InstanceID token.
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("APNs token retrieved: \(deviceToken)")
-        log.enqueue("APNs token retrieved: \(deviceToken)")
+        var token: String = ""
+        for i in 0..<deviceToken.count {
+            token += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
+        }
+        
+        print("APNs token retrieved: \(token)")
+        log.enqueue("APNs token retrieved: \(token)")
         //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
         
         // With swizzling disabled you must set the APNs token here.
-        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.prod)
+        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: .prod)
+        /*
         if let refreshedToken = FIRInstanceID.instanceID().token() {
             print("InstanceID token: \(refreshedToken)")
             SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
             connectionManager.sendPush(refreshedToken)
-        }
+        }*/
 
     }
     
@@ -307,7 +319,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
         }
         
@@ -324,11 +337,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-            log.enqueue(messageID as! String)
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
         }
-        
+        FIRMessaging.messaging().appDidReceiveMessage(userInfo)
         // Print full message.
         //print(userInfo)
         
@@ -341,7 +354,7 @@ extension AppDelegate : FIRMessagingDelegate {
     // Receive data message on iOS 10 devices while app is in the foreground.
     func applicationReceivedRemoteMessage(_ remoteMessage: FIRMessagingRemoteMessage) {
         print(remoteMessage.appData)
-        print("Received remote message: \(remoteMessage.appData)")
+        log.enqueue("Received remote message: \(remoteMessage.appData)")
 
     }
 }

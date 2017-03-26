@@ -138,6 +138,10 @@ open class TcpConnection: BaseTcpConnection {
         log.enqueue("send token")
     }
     
+    open func sendRemoteCommandResponse(_ rc: String) {
+        let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)"
+        super.send(request)
+    }
     fileprivate func sendAuth(_ token: Token){
 
         let request = "\(Tags.auth.rawValue)\(token.device_key)"

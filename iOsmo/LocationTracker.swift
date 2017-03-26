@@ -103,12 +103,18 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         log.enqueue("didUpdateLocation")
         var prevLM = allSessionLocations.last
         var prev_loc = locations.first
-        
+        /*
         if ((lastLocations.last) != nil) {
             //prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
             
             prev_loc = CLLocation(coordinate: CLLocationCoordinate2D(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!), altitude: CLLocationDistance((lastLocations.last?.alt)!), horizontalAccuracy: CLLocationAccuracy((lastLocations.last?.accuracy)!), verticalAccuracy: 0, timestamp: (lastLocations.last?.time)!)
  
+        }*/
+        if (prevLM != nil) {
+            //prev_loc = CLLocation(latitude: (lastLocations.last?.lat)!, longitude: (lastLocations.last?.lon)!)
+            
+            prev_loc = CLLocation(coordinate: CLLocationCoordinate2D(latitude: (prevLM?.lat)!, longitude: (prevLM?.lon)!), altitude: CLLocationDistance((prevLM?.alt)!), horizontalAccuracy: CLLocationAccuracy((prevLM?.accuracy)!), verticalAccuracy: 0, timestamp: (prevLM?.time)!)
+            
         }
         
         let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue;
@@ -139,6 +145,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     
                     let distanceInMeters = loc.distance(from: prev_loc!)
                     distance = distance + distanceInMeters / 1000
+                    print("\(prev_loc?.coordinate.latitude)","\(prev_loc?.coordinate.longitude)-\(loc.coordinate.latitude)","\(loc.coordinate.longitude):\(distance)")
                     prev_loc = loc
                     
                     self.lastLocations.append(locationModel)
@@ -150,12 +157,14 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
         if (isDeferingUpdates == false && (locInterval > 0.0 || locDistance > 0.0 )) {
+            
             self.isDeferingUpdates = true
             manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
         }
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
+
         print("locationManager error \(error)")
         log.enqueue("locationManager error \(error)")
         
@@ -171,8 +180,10 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         if (error != nil) {
+
             print("locationManager didFinishDeferredUpdatesWithError  \(error)")
             log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error)")
+            
         }
         self.isDeferingUpdates = false
     }

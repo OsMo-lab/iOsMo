@@ -330,30 +330,33 @@ open class ConnectionManager: NSObject{
         }
         
         if tag == AnswTags.remoteCommand {
+            let sendingManger = SendingManager.sharedSendingManager
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
+                connection.sendRemoteCommandResponse(name)
                 closeSession()
                 
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
-                let sendingManger = SendingManager.sharedSendingManager
+                connection.sendRemoteCommandResponse(name)
                 sendingManger.startSendingCoordinates()
                 
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
-                let sendingManger = SendingManager.sharedSendingManager
+                connection.sendRemoteCommandResponse(name)
                 sendingManger.pauseSendingCoordinates()
                                 
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){
-                let sendingManger = SendingManager.sharedSendingManager
+                connection.sendRemoteCommandResponse(name)
                 sendingManger.startSendingCoordinates()
                 
                 return
             }
             if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
+                connection.sendRemoteCommandResponse(name)
                 if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
                     self.sendPush(token)
                 }
