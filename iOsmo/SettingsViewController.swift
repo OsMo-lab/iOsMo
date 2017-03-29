@@ -13,9 +13,9 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
 
     var connectionManager = ConnectionManager.sharedConnectionManager
     var clickCount = 0;
-    let MIN_SEND_TIME = 5;
-    let MIN_LOC_TIME = 4;
-    let MIN_LOC_DISTANCE = 10;
+    let MIN_SEND_TIME = 4;
+    let MIN_LOC_TIME = 0;
+    let MIN_LOC_DISTANCE = 0;
     
     
     @IBOutlet weak var awakeModeSwitcher: UISwitch!

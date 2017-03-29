@@ -117,11 +117,11 @@ open class SendingManager: NSObject{
             log.enqueue("CoordinateManager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
-            var sendTime:TimeInterval = 5.0;
+            var sendTime:TimeInterval = 4;
             if let sT = SettingsManager.getKey(SettingKeys.sendTime) {
                 sendTime  = sT.doubleValue
-                if sendTime < 1 {
-                    sendTime = 5;
+                if sendTime < 4 {
+                    sendTime = 4;
                 }
             
             }

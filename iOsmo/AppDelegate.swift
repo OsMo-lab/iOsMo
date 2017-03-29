@@ -34,6 +34,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             //self.activateSwitcher.isOn = $0
         }
+        connectionManager.sessionRun.add{
+            let theChange = $0.0
+            
+            if theChange {
+                self.displayNotification()
+                
+            } else {
+                
+            }
+        }
 
         if #available(iOS 10.0, *) {
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -66,10 +76,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
         }
         if SettingsManager.getKey(SettingKeys.locInterval)?.doubleValue == nil {
-            SettingsManager.setKey("5", forKey: SettingKeys.locInterval)
+            SettingsManager.setKey("3", forKey: SettingKeys.locInterval)
         }
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
-            SettingsManager.setKey("10", forKey: SettingKeys.locDistance)
+            SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
@@ -108,15 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("Disconnected from FCM.")
         self.connectionManager.activatePoolGroups(-1)
         if (connectionManager.connected && connectionManager.sessionOpened) {
-            if self.localNotification == nil {
-                self.localNotification = UILocalNotification()
-                //localNotification.fireDate = NSDate(timeIntervalSinceNow:0) as Date
-                //localNotification.timeZone = NSTimeZone.default
-                self.localNotification?.alertBody = NSLocalizedString("Tracking location", comment: "Tracking location")
-                
-                //set the notification
-                UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
-            }
+            self.displayNotification()
         }
         
                 if (connectionManager.connected && !connectionManager.sessionOpened) {
@@ -129,6 +131,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func displayNotification() {
+        if self.localNotification == nil {
+            self.localNotification = UILocalNotification()
+            self.localNotification?.alertBody = NSLocalizedString("Tracking location", comment: "Tracking location")
+            
+            //set the notification
+            UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
+        }
+    }
+    
     func disconnectByTimer() {
         connectionManager.closeConnection()
         self.endBackgroundTask()
