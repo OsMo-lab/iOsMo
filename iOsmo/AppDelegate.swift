@@ -86,18 +86,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
            
             
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
-                
-                
                 var vcs = tbc.viewControllers
                 vcs?.removeLast()
                 
                 tbc.setViewControllers(vcs, animated: false)
-                
             }
-            
         }
         FIRAnalytics.logEvent(withName: "app_open", parameters: nil)
-        
+        UIApplication.shared.applicationIconBadgeNumber = 0
         if let url = launchOptions?[.url] as? URL {
             presentViewController(url:url);
         }

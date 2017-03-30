@@ -376,7 +376,7 @@ open class ConnectionManager: NSObject{
             log.enqueue("should be reconnected")
             shouldReConnect = true;
             
-            connectionRun.notify((false, "reconnect")) //error but is not need to be popuped
+            connectionRun.notify((false, "")) //error but is not need to be popuped
             
          }
         

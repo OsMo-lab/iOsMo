@@ -1290,12 +1290,15 @@
                                 <real key="value" value="11"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
+                        <connections>
+                            <outlet property="delegate" destination="9VQ-qR-6dQ" id="Dkt-Pf-xEK"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="waypoint_map-32" id="MNn-4Q-B12">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <connections>
-                        <outlet property="mapView" destination="wBv-Bj-z3u" id="uh6-i7-d8s"/>
+                        <outlet property="mapView" destination="wBv-Bj-z3u" id="dGp-Sg-5jX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AsR-wN-gFO" userLabel="First Responder" sceneMemberID="firstResponder"/>

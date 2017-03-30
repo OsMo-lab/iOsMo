@@ -123,6 +123,7 @@ enum GroupType: String {
 enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"
+    case WHERE = "12"
     case TRACKER_SATELLITES_INFO = "13"
     case TRACKER_SYSTEM_INFO = "14"
     case TRACKER_WIFI_INFO = "20"

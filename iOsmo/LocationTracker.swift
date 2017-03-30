@@ -145,7 +145,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     
                     let distanceInMeters = loc.distance(from: prev_loc!)
                     distance = distance + distanceInMeters / 1000
-                    print("\(prev_loc?.coordinate.latitude)","\(prev_loc?.coordinate.longitude)-\(loc.coordinate.latitude)","\(loc.coordinate.longitude):\(distance)")
                     prev_loc = loc
                     
                     self.lastLocations.append(locationModel)
@@ -156,7 +155,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
-        if (isDeferingUpdates == false && (locInterval > 0.0 || locDistance > 0.0 )) {
+        if (isDeferingUpdates == false && (locInterval > 10 || locDistance > 50 )) {
             
             self.isDeferingUpdates = true
             manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
