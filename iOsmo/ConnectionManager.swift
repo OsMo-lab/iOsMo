@@ -54,7 +54,9 @@ open class ConnectionManager: NSObject{
     let sessionRun = ObserverSet<(Bool, String)>()
     let groupsEnabled = ObserverSet<Bool>()
     let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
-    
+    let connectionStart = ObserverSet<()>()
+    let dataSendStart = ObserverSet<()>()
+    let dataSendEnd = ObserverSet<()>()
     
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
@@ -107,6 +109,7 @@ open class ConnectionManager: NSObject{
  
     open func connect(_ reconnect: Bool = false){
         log.enqueue("ConnectionManager: connect")
+        self.connectionStart.notify(())
         
         if !ConnectionManager.hasConnectivity() {
             shouldReConnect = true
@@ -114,7 +117,6 @@ open class ConnectionManager: NSObject{
         }
 
        if let tkn = ConnectionHelper.connectToServ() {
-        
             if tkn.error.isEmpty {
                 if connection.addCallBackOnError == nil {
                     connection.addCallBackOnError = {
@@ -133,6 +135,18 @@ open class ConnectionManager: NSObject{
                         if (self.shouldReConnect) {
                             self.connect(self.shouldReConnect)
                         }
+                    }
+                }
+                if connection.addCallBackOnSendStart == nil {
+                    connection.addCallBackOnSendStart = {
+                        () -> Void in
+                        self.dataSendStart.notify(())
+                    }
+                }
+                if connection.addCallBackOnSendEnd == nil {
+                    connection.addCallBackOnSendEnd = {
+                        () -> Void in
+                        self.dataSendEnd.notify(())
                     }
                 }
                 connection.connect(tkn)

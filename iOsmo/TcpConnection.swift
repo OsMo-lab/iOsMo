@@ -44,7 +44,6 @@ open class TcpConnection: BaseTcpConnection {
     open func getTrackerID()-> String?{return sessionTrackerID}
 
     open override func connect(_ token: Token){
-        
         super.connect(token)
         super.tcpClient.callbackOnParse = parseOutput
         //sendToken(token)
@@ -523,8 +522,6 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     func parseJson(_ responce: String) -> Any? {
-        
-        
         // server can accumulate some messages, so should define it
         //let responceFirst = responce.componentsSeparatedByString("\n")[0] <-- has no sense because splitting in other place
         

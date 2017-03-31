@@ -16,9 +16,9 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="iOsMo-AppIcon.svg"
-   inkscape:export-filename="/Users/alexeysirotkin/Documents/OsMoiOs/iOsmo/Images.xcassets/AppIcon.appiconset/iOsMo-AppIcon.png"
-   inkscape:export-xdpi="314.42999"
-   inkscape:export-ydpi="314.42999">
+   inkscape:export-filename="/Users/alexeysirotkin/Documents/iOsMo/iOsmo/Images.xcassets/small-blue.imageset/smal-blue.png"
+   inkscape:export-xdpi="329.95001"
+   inkscape:export-ydpi="329.95001">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -29,18 +29,18 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="31.701347"
-     inkscape:cx="11.592567"
+     inkscape:cx="5.772625"
      inkscape:cy="11.592567"
      inkscape:document-units="px"
-     inkscape:current-layer="layer7"
+     inkscape:current-layer="g3351"
      showgrid="true"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
      showguides="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="975"
+     inkscape:window-width="1920"
+     inkscape:window-height="1031"
      inkscape:window-x="0"
      inkscape:window-y="1"
      inkscape:window-maximized="1">
@@ -122,11 +122,41 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Green"
-     style="display:inline"
+     style="display:none"
      transform="translate(-1.3436546,-0.52344337)">
     <ellipse
        id="ellipse4197"
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#33cc33;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       ry="3.8724597"
+       rx="3.9490139"
+       cy="8.7678347"
+       cx="14.084494"
+       transform="translate(1.3436546,0.52344337)" />
+  </g>
+  <g
+     transform="translate(-1.3436546,-0.52344337)"
+     style="display:inline"
+     inkscape:label="Blue"
+     id="g3351"
+     inkscape:groupmode="layer">
+    <ellipse
+       transform="translate(1.3436546,0.52344337)"
+       cx="14.084494"
+       cy="8.7678347"
+       rx="3.9490139"
+       ry="3.8724597"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="ellipse3353" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g3355"
+     inkscape:label="Yellow"
+     style="display:none"
+     transform="translate(-1.3436546,-0.52344337)">
+    <ellipse
+       id="ellipse3357"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#ffd42a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        ry="3.8724597"
        rx="3.9490139"
        cy="8.7678347"
@@ -165,7 +195,7 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="Eye"
-     style="display:inline">
+     style="display:none">
     <ellipse
        transform="translate(-1.3436546,-0.52344337)"
        style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"

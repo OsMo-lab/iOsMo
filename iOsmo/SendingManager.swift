@@ -131,9 +131,6 @@ open class SendingManager: NSObject{
             
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
             
-            
-            
-            
         }
     }
      

@@ -21,6 +21,22 @@ open class BaseTcpConnection: NSObject {
         }
     }
     
+    open var addCallBackOnSendStart: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnSendStart
+        } set {
+            tcpClient.callbackOnSendStart = newValue
+        }
+    }
+    
+    open var addCallBackOnSendEnd: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnSendEnd
+        } set {
+            tcpClient.callbackOnSendEnd = newValue
+        }
+    }
+    
     open var shouldCloseSession = false
     
     let log = LogQueue.sharedLogQueue
@@ -53,7 +69,6 @@ open class BaseTcpConnection: NSObject {
 
     
     func onSentCoordinate(cnt: Int){
-    
         for _ in 1...cnt {
             if self.coordinates.count > 0 {
                 self.coordinates.remove(at: 0)
@@ -64,10 +79,9 @@ open class BaseTcpConnection: NSObject {
     
     
     open func closeConnection(){
-
         tcpClient.closeConnection()
-
     }
+
     open func closeSession(){
         let request = "\(Tags.closeSession.rawValue)"
         closeSession(request)

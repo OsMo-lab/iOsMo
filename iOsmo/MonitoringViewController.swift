@@ -39,8 +39,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var onSessionStarted: ObserverSetEntry<(Bool)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
 
-    
-        
     var isLoaded = false
     
     @IBOutlet weak var userLabel: UILabel!
@@ -165,8 +163,16 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         super.viewDidAppear(false)
         if !isLoaded {
-            
             //setup handler for open connection
+            connectionManager.dataSendStart.add {
+                self.osmoImage.image = UIImage(named:"small-blue")
+            }
+            connectionManager.dataSendEnd.add {
+                self.osmoImage.image = UIImage(named:"small-green")
+            }
+            connectionManager.connectionStart.add{
+                self.osmoImage.image = UIImage(named:"small-yellow")
+            }
             connectionManager.connectionRun.add{
                 let theChange = $0.0
                 
@@ -202,11 +208,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 } else {
                     self.trackerID.setTitle("", for: UIControlState())
                 }
-
+                self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
+                
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
-                self.osmoStatus.isHidden = !theChange
+                //self.osmoStatus.isHidden = !theChange
                 
                 if !theChange && !$0.1.isEmpty {
                     self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
@@ -217,7 +224,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 let theChange = $0.0
                 
                 self.isMonitoringOn = theChange
-                self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 print("MVC: The session was opened/closed.\(theChange)")
                 
                 if theChange {

@@ -16,6 +16,8 @@ open class TcpClient : NSObject, StreamDelegate {
     // MARK: - NSStreamDelegate
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
+    open var callbackOnSendStart: (() -> Void)?
+    open var callbackOnSendEnd: (() -> Void)?
     
     
     open func createConnection(_ token: Token){
@@ -54,6 +56,9 @@ open class TcpClient : NSObject, StreamDelegate {
         print("r: \(request)")
         let requestToSend = "\(request)\n"
         if let outputStream = outputStream, let data = requestToSend.data(using: String.Encoding.utf8) {
+            if (callbackOnSendStart != nil) {
+                callbackOnSendStart!()
+            }
             let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
             if (wb == -1 ) {
                 log.enqueue("error: write to output stream")
@@ -61,6 +66,9 @@ open class TcpClient : NSObject, StreamDelegate {
                 if callbackOnError != nil {
                     callbackOnError!(true)
                 }
+            }
+            if (callbackOnSendEnd != nil) {
+                callbackOnSendEnd!()
             }
         } else {
             log.enqueue("error: send request")
@@ -114,6 +122,9 @@ open class TcpClient : NSObject, StreamDelegate {
             var len: Int = 0
             
             if let iStream = inputStream {
+                if (callbackOnSendStart != nil) {
+                    callbackOnSendStart!()
+                }
                
                 while(iStream.hasBytesAvailable)
                 {
@@ -124,6 +135,9 @@ open class TcpClient : NSObject, StreamDelegate {
                             message = "\(message)\(output)"
                         }
                     }
+                }
+                if (callbackOnSendEnd != nil) {
+                    callbackOnSendEnd!()
                 }
             } else {
                 //print("Stream is empty")

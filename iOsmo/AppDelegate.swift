@@ -61,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        
+        UIApplication.shared.applicationIconBadgeNumber = 0
         application.registerForRemoteNotifications()
         // Use Firebase library to configure APIs
         FIRApp.configure()
@@ -81,10 +81,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
+        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
         if SettingsManager.getKey(SettingKeys.logView) == nil {
-            UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
-           
-            
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
                 var vcs = tbc.viewControllers
                 vcs?.removeLast()
@@ -92,8 +90,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 tbc.setViewControllers(vcs, animated: false)
             }
         }
+        
+
         FIRAnalytics.logEvent(withName: "app_open", parameters: nil)
-        UIApplication.shared.applicationIconBadgeNumber = 0
         if let url = launchOptions?[.url] as? URL {
             presentViewController(url:url);
         }
