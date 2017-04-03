@@ -165,13 +165,19 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         if !isLoaded {
             //setup handler for open connection
             connectionManager.dataSendStart.add {
-                self.osmoImage.image = UIImage(named:"small-blue")
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-blue")
+                }
             }
             connectionManager.dataSendEnd.add {
-                self.osmoImage.image = UIImage(named:"small-green")
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-green")
+                }
             }
             connectionManager.connectionStart.add{
-                self.osmoImage.image = UIImage(named:"small-yellow")
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-yellow")
+                }
             }
             connectionManager.connectionRun.add{
                 let theChange = $0.0
@@ -192,23 +198,25 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                     self.groupManager.groupListUpdated.remove(glUpdated)
                 }
-                
-                if let user = SettingsManager.getKey(SettingKeys.user) {
-                    if user.length > 0 {
-                        self.userLabel.text = user as String
+                DispatchQueue.main.async {
+                    if let user = SettingsManager.getKey(SettingKeys.user) {
+                        if user.length > 0 {
+                            self.userLabel.text = user as String
+                        } else {
+                            self.userLabel.text = ""
+                        }
                     } else {
                         self.userLabel.text = ""
                     }
-                } else {
-                    self.userLabel.text = ""
-                }
-                
-                if let trackerId = self.connectionManager.TrackerID{
+                    
+                    if let trackerId = self.connectionManager.TrackerID{
                         self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
-                } else {
-                    self.trackerID.setTitle("", for: UIControlState())
+                    } else {
+                        self.trackerID.setTitle("", for: UIControlState())
+                    }
+                    self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
+                    
                 }
-                self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")

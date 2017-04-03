@@ -283,8 +283,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 SettingsManager.setKey("", forKey: SettingKeys.auth)
                 connectionManager.connect()
                 return false
+            } else {
+                return true
             }
-            else {return true}
         }
         
         //by default
@@ -294,8 +295,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void {
        
         SettingsManager.setKey(info.accountName as NSString, forKey: SettingKeys.user)
-        
-        
+
         connectionManager.connect()
         userName.text = NSLocalizedString("Connecting...", comment:"Connecting status")
         controller.dismiss(animated: true, completion: nil)

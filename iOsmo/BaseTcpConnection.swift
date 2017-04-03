@@ -37,6 +37,14 @@ open class BaseTcpConnection: NSObject {
         }
     }
     
+    open var addCallBackOnConnect: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnConnect
+        } set {
+            tcpClient.callbackOnConnect = newValue
+        }
+    }
+    
     open var shouldCloseSession = false
     
     let log = LogQueue.sharedLogQueue

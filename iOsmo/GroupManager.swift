@@ -11,7 +11,7 @@ open class GroupManager{
 
     
     var groupsOnMap: [Int] = [Int]()
-    var allGroups: [Group]?
+    var allGroups: [Group] = [Group]()
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
  
@@ -62,7 +62,7 @@ open class GroupManager{
             
             print("DEACTIVATED \(name)! \($0) ")
             if($0) {
-                for group in self.allGroups! {
+                for group in self.allGroups {
                     if group.u == name {
                         group.active = false;
                         break;
@@ -147,7 +147,7 @@ open class GroupManager{
             self.onUpdateGroup = connection.connection.groupsUpdated.add({
                 let g = $1 as! Dictionary<String, AnyObject>
                 let group = $0
-                let foundGroup = self.allGroups?.filter{$0.u == "\(group)"}.first
+                let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
 
                 if let jsonUsers = g["users"] as? Array<AnyObject> {
                     for jsonU in jsonUsers{
@@ -216,7 +216,7 @@ open class GroupManager{
     
 
     open func getUser(_ group:  Int, user: Int) -> User? {
-        let foundGroup = allGroups?.filter{$0.u == "\(group)"}.first
+        let foundGroup = allGroups.filter{$0.u == "\(group)"}.first
         return foundGroup?.users.filter{$0.id == "\(user)"}.first
     }
 }

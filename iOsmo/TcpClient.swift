@@ -18,28 +18,32 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnError: ((Bool) -> Void)?
     open var callbackOnSendStart: (() -> Void)?
     open var callbackOnSendEnd: (() -> Void)?
+    open var callbackOnConnect: (() -> Void)?
     
     
     open func createConnection(_ token: Token){
         if (token.port>0) {
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
             if let inputStream = self.inputStream {
-
                 inputStream.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 
                 inputStream.delegate = self
-                inputStream.schedule(in: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+                inputStream.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
                 inputStream.open()
+                print("opening input stream")
             }
             
             if let outputStream = self.outputStream {
                 outputStream.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 outputStream.delegate = self
-                outputStream.schedule(in: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+                //RunLoop.current
+                outputStream.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
                 outputStream.open()
+                print("opening output stream")
             }
             
             log.enqueue("create connection, input and output streams")
+            print("create connection, input and output streams")
         }
     }
     
@@ -66,7 +70,9 @@ open class TcpClient : NSObject, StreamDelegate {
                 if callbackOnError != nil {
                     callbackOnError!(true)
                 }
+                return
             }
+            print("sended")
             if (callbackOnSendEnd != nil) {
                 callbackOnSendEnd!()
             }
@@ -85,7 +91,6 @@ open class TcpClient : NSObject, StreamDelegate {
             
         case Stream.Event():
             print ("None")
-
    
         case Stream.Event.endEncountered:
             print ("EndEncountered")
@@ -93,29 +98,31 @@ open class TcpClient : NSObject, StreamDelegate {
             inputStream?.close()
             outputStream?.close()
             if callbackOnError != nil {
-                
                 callbackOnError!(true)
             }
             return
-        
-        
+   
         case Stream.Event.openCompleted:
-            
-            //print("stream opened")
+            print("stream opened")
             log.enqueue("stream opened")
+            if (aStream === outputStream) {
+                if (callbackOnConnect != nil) {
+                    callbackOnConnect!()
+                }
+            }
+
         case Stream.Event.errorOccurred:
-            
             //("stream was handle error, connection is out")
+            print("stream was handle error, connection is out")
             log.enqueue("stream was handle error, connection is out")
             if callbackOnError != nil {
-                
                 callbackOnError!(true)
             }
         case Stream.Event.hasSpaceAvailable:
-            //print("HasSpaceAvailable")
+            print("HasSpaceAvailable")
             break
         case Stream.Event.hasBytesAvailable:
-            //print("HasBytesAvailable")
+            print("HasBytesAvailable")
             
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
@@ -140,7 +147,7 @@ open class TcpClient : NSObject, StreamDelegate {
                     callbackOnSendEnd!()
                 }
             } else {
-                //print("Stream is empty")
+                print("Stream is empty")
                 log.enqueue("Stream is empty")
                 
                 return

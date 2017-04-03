@@ -117,7 +117,6 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
 
     @IBOutlet weak var mapView: MGLMapView!
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -131,7 +130,7 @@ class MapViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDele
         super.viewWillAppear(animated)
         FIRAnalytics.logEvent(withName: "map_open", parameters: nil)
         
-        if (groupManager.allGroups?.count)! > 0 {
+        if (groupManager.allGroups.count) > 0 {
             self.connectionManager.activatePoolGroups(1)
 
             groupManager.updateGroupsOnMap([1])

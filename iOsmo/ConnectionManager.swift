@@ -115,11 +115,11 @@ open class ConnectionManager: NSObject{
             shouldReConnect = true
             return
         }
-
-       if let tkn = ConnectionHelper.connectToServ() {
-            if tkn.error.isEmpty {
-                if connection.addCallBackOnError == nil {
-                    connection.addCallBackOnError = {
+        ConnectionHelper.getServerInfo(completed: {result, token -> Void in
+            if (result) {
+                /*Информация о сервере получена*/
+                if self.connection.addCallBackOnError == nil {
+                    self.connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
                         self.shouldReConnect = isError
                         
@@ -137,28 +137,47 @@ open class ConnectionManager: NSObject{
                         }
                     }
                 }
-                if connection.addCallBackOnSendStart == nil {
-                    connection.addCallBackOnSendStart = {
+                if self.connection.addCallBackOnSendStart == nil {
+                    self.connection.addCallBackOnSendStart = {
                         () -> Void in
                         self.dataSendStart.notify(())
                     }
                 }
-                if connection.addCallBackOnSendEnd == nil {
-                    connection.addCallBackOnSendEnd = {
+                if self.connection.addCallBackOnSendEnd == nil {
+                    self.connection.addCallBackOnSendEnd = {
                         () -> Void in
                         self.dataSendEnd.notify(())
                     }
                 }
-                connection.connect(tkn)
-                shouldReConnect = false //interesting why here? may after connction is successful??
+                if self.connection.addCallBackOnConnect == nil {
+                    self.connection.addCallBackOnConnect = {
+                        () -> Void in
+                        //self.connection.sendAuth(token!.device_key as String)
+                    }
+                }
+
+                self.connection.connect(token!)
+                self.shouldReConnect = false //interesting why here? may after connction is successful??
             } else {
-                connectionRun.notify((false, "\(tkn.error)"))
-                shouldReConnect = false
+                if (token?.error.isEmpty)! {
+                    self.connectionRun.notify((false, ""))
+                    self.shouldReConnect = false
+                } else {
+                    print("getServerInfo Error:\(token?.error)")
+                    self.log.enqueue("getServerInfo Error:\(token?.error)")
+                    if (token?.error == "Wrong device key") {
+                        
+                        SettingsManager.setKey("", forKey: SettingKeys.device)
+                        self.connectionRun.notify((false, ""))
+                        self.shouldReConnect = true
+                    } else {
+                        self.connectionRun.notify((false, "\(token?.error)"))
+                        self.shouldReConnect = false
+                    }
+                    
+                }
             }
-        } else {
-            connectionRun.notify((false, "")) //token is missing
-            shouldReConnect = true
-        }
+        })
     }
     
     open func closeConnection() {

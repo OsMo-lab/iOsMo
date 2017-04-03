@@ -39,15 +39,16 @@ open class TcpConnection: BaseTcpConnection {
     let groupsUpdated = ObserverSet<(Int, Any)>()
     
     open var sessionUrlParsed: String = ""
+    open var device_key: String = ""
     open var sessionTrackerID: String = ""
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
     open func getTrackerID()-> String?{return sessionTrackerID}
 
     open override func connect(_ token: Token){
-        super.connect(token)
         super.tcpClient.callbackOnParse = parseOutput
-        //sendToken(token)
-        sendAuth(token)
+        super.connect(token)
+        
+        sendAuth(token.device_key as String)
     }
     
     open func openSession(){
@@ -141,14 +142,10 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)"
         super.send(request)
     }
-    fileprivate func sendAuth(_ token: Token){
-
-        let request = "\(Tags.auth.rawValue)\(token.device_key)"
-        
+    
+    open func sendAuth(_ device_key: String){
+        let request = "\(Tags.auth.rawValue)\(device_key)"
         super.send(request)
-        
-        print("send auth \(request)")
-        log.enqueue("send auth")
     }
 
     //probably should be refactored and moved to ReconnectManager
