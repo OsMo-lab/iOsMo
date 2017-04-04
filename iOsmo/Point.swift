@@ -9,6 +9,7 @@
 import Foundation
 
 open class Point {
+    var u: Int
     var lat: Double
     var lon: Double
     var descr: String = ""
@@ -18,7 +19,8 @@ open class Point {
     var start: Date?
     var finish: Date?
 
-    init(lat: Double, lon: Double, name: String, color: String){
+    init(u: Int, lat: Double, lon: Double, name: String, color: String){
+        self.u = u;
         self.lat = lat
         self.lon = lon
         self.name = name;

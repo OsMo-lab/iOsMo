@@ -591,10 +591,18 @@ open class TcpConnection: BaseTcpConnection {
             let uOnline = (u["online"] as? Int) ?? 0
             let uState = (u["state"] as? Int) ?? 0
             
+    
+            
             let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
             
             user.state = uState
             user.online = uOnline
+            
+            if let lat = u["lat"] as? String, let lon = u["lon"] as? String {
+                user.lat = atof(lat);
+                user.lon = atof(lon);
+            }
+            
             
             group.users.append(user)
             
@@ -602,23 +610,16 @@ open class TcpConnection: BaseTcpConnection {
         if let jsonPoints = g["point"] as? Array<AnyObject> {
             for jsonP in jsonPoints{
                 let u = jsonP as! Dictionary<String, AnyObject>
-                var uId = u["u"] as? String
-                if (uId == nil) {
-                    let uIdInt = u["u"] as! Int
-                    uId = "\(uIdInt)"
-                }
-                /*
-                //let uDevice = u["device"] as? String
-                let uName = u["name"] as! String
-                let uConnected = u["connected"] as! Double
-
+                let uId = u["u"] as! Int
+                let lat = atof(u["lat"] as! String)
+                let lon = atof(u["lon"] as! String)
+                let uName = u["name"] as? String
+                let uColor = u["color"] as! String
                 
-                let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
-                group.users.append(user)
- */
-                
+                let point = Point (u: uId, lat: lat, lon: lon, name: uName!, color: uColor)
+                group.points.append(point)
+               
             }
-            
         }
         return group;
         

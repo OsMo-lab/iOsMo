@@ -50,8 +50,14 @@ open class TcpClient : NSObject, StreamDelegate {
     open func closeConnection() {
         if ((inputStream != nil) && (outputStream != nil)) {
             log.enqueue("closing input and output streams")
+            print("closing input and output streams")
+            inputStream?.delegate = nil
             inputStream?.close()
+            inputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            
+            outputStream?.delegate = nil
             outputStream?.close()
+            outputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
         }
     }
     

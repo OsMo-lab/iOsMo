@@ -73,7 +73,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             FIRAnalytics.logEvent(withName: "trip_pause", parameters: nil)
             sendingManger.pauseSendingCoordinates()
         } else {
-            sendingManger.startSendingCoordinates()
+            sendingManger.startSendingCoordinates("")
         }
 
     
@@ -104,7 +104,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             //UIApplication.shared.isIdleTimerDisabled = false
         } else {
             FIRAnalytics.logEvent(withName: "trip_start", parameters: nil)
-            sendingManger.startSendingCoordinates()
+            sendingManger.startSendingCoordinates("")
             
             //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }

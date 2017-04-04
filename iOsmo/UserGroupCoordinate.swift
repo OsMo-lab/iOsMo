@@ -12,9 +12,9 @@ open class UserGroupCoordinate{
     let groupId: Int
     let userId: Int
     let location: LocationModel
+    var recent = true;
     
     init(group: Int, user: Int, location: LocationModel){
-        
         self.groupId = group
         self.userId = user
         self.location = location

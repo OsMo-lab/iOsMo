@@ -15,6 +15,8 @@ open class User: Equatable{
     var state: Int = 0
     var online: Int = 0
     var connected: Double //time of connected in UNIX time format
+    var lat: Double = -3000
+    var lon: Double = -3000
     
     init(id: String!, name: String, color: String, connected: Double){
         self.id = id

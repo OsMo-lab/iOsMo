@@ -45,7 +45,6 @@
 		4D19BE281E619F5B00F7599D /* ru.xliff in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE271E619F5B00F7599D /* ru.xliff */; };
 		4D19BE2A1E67353900F7599D /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D19BE291E67353900F7599D /* Mapbox.framework */; };
 		4D19BE2B1E67353900F7599D /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4D19BE291E67353900F7599D /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4D19BE2E1E67442500F7599D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D19BE2D1E67442500F7599D /* MapViewController.swift */; };
 		4D19BE301E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE2F1E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx */; };
 		4D19BE321E69C93600F7599D /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D19BE311E69C93600F7599D /* Point.swift */; };
 		4D19BE341E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE331E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx */; };
@@ -59,6 +58,7 @@
 		4D45975E1E4E44CD005892EE /* GoogleToolboxForMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */; };
 		4D4597601E4E44DA005892EE /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */; };
 		4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */; };
+		4D8D7F781E9414A6007FE4FA /* MapBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8D7F771E9414A6007FE4FA /* MapBoxViewController.swift */; };
 		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
 		4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */; };
 		4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB841E5A18880094FF8A /* InfoPlist.strings */; };
@@ -135,7 +135,6 @@
 		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4D19BE271E619F5B00F7599D /* ru.xliff */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ru.xliff; path = "iOsMo-En/ru/ru.xliff"; sourceTree = "<group>"; };
 		4D19BE291E67353900F7599D /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
-		4D19BE2D1E67442500F7599D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		4D19BE2F1E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "RK_gpx _2017-03-01_2007.gpx"; sourceTree = "<group>"; };
 		4D19BE311E69C93600F7599D /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		4D19BE331E69EEBC00F7599D /* ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = ZDYk533VOdWvviBnrNu5dud2k1XvdMOV.gpx; sourceTree = "<group>"; };
@@ -149,6 +148,7 @@
 		4D4597581E4E44CD005892EE /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleToolboxForMac.framework; sourceTree = "<group>"; };
 		4D45975F1E4E44DA005892EE /* FirebaseMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseMessaging.framework; sourceTree = "<group>"; };
 		4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4D8D7F771E9414A6007FE4FA /* MapBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapBoxViewController.swift; sourceTree = "<group>"; };
 		4D9359B21E43A697006C9FC9 /* apple-app-site-association */ = {isa = PBXFileReference; lastKnownFileType = text; path = "apple-app-site-association"; sourceTree = "<group>"; };
 		4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOsmo.entitlements; sourceTree = "<group>"; };
 		4DB5FB741E5A14E70094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
@@ -271,7 +271,7 @@
 		293C959A1A34BD4A005DD4CE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				4D19BE2D1E67442500F7599D /* MapViewController.swift */,
+				4D8D7F771E9414A6007FE4FA /* MapBoxViewController.swift */,
 				293C95771A34B217005DD4CE /* MonitoringViewController.swift */,
 				293C95791A34B217005DD4CE /* LogViewController.swift */,
 				29FA96331A478335009BFC19 /* AccountViewController.swift */,
@@ -524,7 +524,6 @@
 				293C95C41A3C6FB1005DD4CE /* LocationModel.swift in Sources */,
 				293C95CD1A3E3660005DD4CE /* Token.swift in Sources */,
 				293C95761A34B217005DD4CE /* AppDelegate.swift in Sources */,
-				4D19BE2E1E67442500F7599D /* MapViewController.swift in Sources */,
 				2982CFBB1AC89E8E0070A090 /* SessionManager.swift in Sources */,
 				2982CFB91AC89E740070A090 /* SessionStatus.swift in Sources */,
 				F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */,
@@ -538,6 +537,7 @@
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
 				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
 				293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */,
+				4D8D7F781E9414A6007FE4FA /* MapBoxViewController.swift in Sources */,
 				4D19BE321E69C93600F7599D /* Point.swift in Sources */,
 				29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */,
 				F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */,

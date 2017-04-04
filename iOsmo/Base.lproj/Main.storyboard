@@ -1271,10 +1271,10 @@
             </objects>
             <point key="canvasLocation" x="-440" y="-360"/>
         </scene>
-        <!--MapView Controller-->
+        <!--MapBoxView Controller-->
         <scene sceneID="AeK-dH-zNv">
             <objects>
-                <viewController id="9VQ-qR-6dQ" userLabel="MapView Controller" customClass="MapViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="9VQ-qR-6dQ" userLabel="MapBoxView Controller" customClass="MapBoxViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="a9V-JZ-1yi"/>
                         <viewControllerLayoutGuide type="bottom" id="bX4-Td-wAe"/>

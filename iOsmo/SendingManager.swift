@@ -40,7 +40,7 @@ open class SendingManager: NSObject{
         super.init()
     }
 
-    open func startSendingCoordinates(){
+    open func startSendingCoordinates(_ rc: String){
         locationTracker.turnMonitorinOn() //start getting coordinates
 
         if !connectionManager.connected {
@@ -49,6 +49,9 @@ open class SendingManager: NSObject{
                     self.onSessionRun = self.connectionManager.sessionRun.add{
                         if $0.0 {
                             self.startSending()
+                            if rc != "" {
+                                self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                            }
                         }
                     }
                     self.connectionManager.openSession()
@@ -64,6 +67,9 @@ open class SendingManager: NSObject{
             self.onSessionRun = self.connectionManager.sessionRun.add{
                 if $0.0 {
                     self.startSending()
+                    if rc != "" {
+                        self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                    }
                 } else {
                     //unsibscribe when stop monitoring
                     if let onSesRun = self.onSessionRun {
@@ -74,6 +80,9 @@ open class SendingManager: NSObject{
             self.connectionManager.openSession()
         } else {
             startSending()
+            if rc != "" {
+                self.connectionManager.connection.sendRemoteCommandResponse(rc)
+            }
         }
     }
     
