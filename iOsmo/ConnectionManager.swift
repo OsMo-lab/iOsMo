@@ -152,7 +152,7 @@ open class ConnectionManager: NSObject{
                 if self.connection.addCallBackOnConnect == nil {
                     self.connection.addCallBackOnConnect = {
                         () -> Void in
-                        //self.connection.sendAuth(token!.device_key as String)
+                        self.connection.sendAuth(token!.device_key as String)
                     }
                 }
 

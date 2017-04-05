@@ -104,7 +104,9 @@ struct ConnectionHelper {
     
     static func getServerInfo( completed : @escaping (_ succeeded: Bool, _ res: Token?) -> ()) -> Void {
         authenticate(completed: {key -> Void in
+            
             if (key != nil) {
+                LogQueue.sharedLogQueue.enqueue("Authenticated with key")
                 let requestString = "app=\(iOsmoAppKey)"
                 
                 postRequest(servUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
@@ -142,6 +144,7 @@ struct ConnectionHelper {
                 })
                 
             } else {
+                LogQueue.sharedLogQueue.enqueue("Authentication key not received")
                 let tkn = Token(tokenString: "", address: "", port: 0, key: "")
                 tkn.error = "Unable to receive token"
 

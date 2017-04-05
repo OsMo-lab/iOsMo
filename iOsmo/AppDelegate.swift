@@ -116,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.displayNotification()
         }
         
-                if (connectionManager.connected && !connectionManager.sessionOpened) {
+        if (connectionManager.connected && !connectionManager.sessionOpened) {
             backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                 self?.endBackgroundTask()
             }

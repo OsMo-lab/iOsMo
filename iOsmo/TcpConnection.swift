@@ -48,7 +48,7 @@ open class TcpConnection: BaseTcpConnection {
         super.tcpClient.callbackOnParse = parseOutput
         super.connect(token)
         
-        sendAuth(token.device_key as String)
+        //sendAuth(token.device_key as String)
     }
     
     open func openSession(){

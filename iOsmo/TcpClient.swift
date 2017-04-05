@@ -11,8 +11,9 @@ import Foundation
 open class TcpClient : NSObject, StreamDelegate {
 
     let log = LogQueue.sharedLogQueue
-    var inputStream: InputStream?
-    var outputStream: OutputStream?
+    private var inputStream: InputStream?
+    private var outputStream: OutputStream?
+    private var openedStreams = 0;
     // MARK: - NSStreamDelegate
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
@@ -21,29 +22,58 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnConnect: (() -> Void)?
     
     
+    deinit{
+        if let inputStr = self.inputStream{
+            inputStr.close()
+            inputStr.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        }
+        if let outputStr = self.outputStream{
+            outputStr.close()
+            outputStr.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+        }
+    }
+    
     open func createConnection(_ token: Token){
+        openedStreams = 0
         if (token.port>0) {
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
-            if let inputStream = self.inputStream {
-                inputStream.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+            if inputStream != nil && outputStream != nil {
                 
-                inputStream.delegate = self
-                inputStream.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-                inputStream.open()
-                print("opening input stream")
-            }
-            
-            if let outputStream = self.outputStream {
-                outputStream.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-                outputStream.delegate = self
+                inputStream!.delegate = self
+                outputStream!.delegate = self
+
+                inputStream!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
                 //RunLoop.current
-                outputStream.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-                outputStream.open()
+                outputStream!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+                
+                inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+                
+                
+                
+                inputStream!.open()
+                print("opening input stream")
+            
+                outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+                
+                
+                outputStream!.open()
                 print("opening output stream")
             }
             
             log.enqueue("create connection, input and output streams")
             print("create connection, input and output streams")
+        }
+    }
+    
+    final func openCompleted(stream: Stream){
+        if(self.inputStream?.streamStatus == .open && self.outputStream?.streamStatus == .open && openedStreams == 2){
+            print("streams opened")
+            log.enqueue("streams opened")
+            if (self.callbackOnConnect != nil) {
+                DispatchQueue.main.async {
+                    self.callbackOnConnect!()
+                }
+            }
         }
     }
     
@@ -109,13 +139,8 @@ open class TcpClient : NSObject, StreamDelegate {
             return
    
         case Stream.Event.openCompleted:
-            print("stream opened")
-            log.enqueue("stream opened")
-            if (aStream === outputStream) {
-                if (callbackOnConnect != nil) {
-                    callbackOnConnect!()
-                }
-            }
+            openedStreams = openedStreams + 1
+            openCompleted(stream: aStream)
 
         case Stream.Event.errorOccurred:
             //("stream was handle error, connection is out")
