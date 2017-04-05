@@ -155,6 +155,9 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
 
                     }
                 }
+                for point in group.points {
+                    drawPoint(point: point)
+                }
             }
         }
     }
@@ -250,6 +253,26 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         }
     }
     
+    func drawPoint(point: Point){
+        print("MapBox drawPoint")
+        let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
+        if (self.mapView) != nil {
+            var annVisible = false;
+            for ann in self.pointAnnotations {
+                if ann.objId == "p\(point.u)" {
+                    ann.coordinate = clLocation
+                }
+            }
+            if !annVisible {
+                let annotation = OSMOAnnotation(type:AnnotationType.point,  coordinate: clLocation, title: point.name, objId: "p\(point.u)");
+                annotation.color = point.color
+                self.pointAnnotations.append(annotation)
+                self.mapView.addAnnotation(annotation)
+            }
+            
+        }
+    }
+    
     func drawPeoples(location: UserGroupCoordinate){
         print("MapBox drawPeoples")
         let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
@@ -291,7 +314,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                     self.pointAnnotations.append(annotation)
                     self.mapView.addAnnotation(annotation)
                 }
-                //clearPeople("\(user.name)")
             }
         }
     }
@@ -351,6 +373,10 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         if annotationView == nil {
             annotationView = OSMOAnnotationView(reuseIdentifier: reuseIdentifier)
             annotationView!.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        }
+        if ann.type == AnnotationType.point {
+            annotationView?.layer.cornerRadius = 0
+            annotationView?.layer.borderWidth = 1
         }
         annotationView?.backgroundColor = ann.color?.hexColor;
         

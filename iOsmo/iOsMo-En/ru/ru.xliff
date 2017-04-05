@@ -388,7 +388,7 @@ All rights reserved.</target>
       </trans-unit>
       <trans-unit id="session was closed">
         <source>session was closed</source>
-        <target>сессия закрыта</target>
+        <target>поездка завершена</target>
         <note>session was closed</note>
       </trans-unit>
     </body>

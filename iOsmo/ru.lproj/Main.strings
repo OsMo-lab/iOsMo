@@ -128,7 +128,7 @@
 "kKi-6z-bzq.segmentTitles[2]" = "Liked";
 
 /* Class = "UILabel"; text = "Autosave session"; ObjectID = "mQB-e1-7Xc"; */
-"mQB-e1-7Xc.text" = "Автосохранение сессии";
+"mQB-e1-7Xc.text" = "Автосохранение поездки";
 
 /* Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN"; */
 "mms-Em-UaN.text" = "00.0";

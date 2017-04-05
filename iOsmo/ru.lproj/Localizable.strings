@@ -35,8 +35,8 @@
 "Unknown" = "Неизвестен";
 
 /* session was closed */
-"session was closed" = "сессия закрыта";
+"session was closed" = "поездка завершена";
 
 /* Tracking location */
-"Tracking location" = "Местоположение отслеживается";
+"Tracking location" = "Поездка отслеживается";
 

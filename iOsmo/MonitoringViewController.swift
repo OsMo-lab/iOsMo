@@ -146,7 +146,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 speed = 0
             }
             if let speedLabel = self.avgSpeedLabel {
-                speedLabel.text = String(format:"%.2f", speed)
+                speedLabel.text = String(format:"%.0f", speed)
             }
            
         }
