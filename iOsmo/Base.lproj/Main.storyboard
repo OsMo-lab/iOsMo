@@ -195,12 +195,6 @@
                                             <action selector="pauseClick:" destination="9pv-A4-QxB" eventType="touchUpInside" id="DHX-zH-cKy"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="fu1-UL-KdI" userLabel="MessageOfTheDay">
-                                        <rect key="frame" x="10" y="384" width="580" height="21"/>
-                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqI-48-1cC">
                                         <rect key="frame" x="10" y="284" width="100" height="100"/>
                                         <constraints>
@@ -215,24 +209,32 @@
                                             <action selector="MonitoringAction:" destination="9pv-A4-QxB" eventType="touchUpInside" id="6jq-wC-X4c"/>
                                         </connections>
                                     </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Message of the Day" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8rt-C4-f7P" userLabel="MessageOfTheDay">
+                                        <rect key="frame" x="10" y="389" width="580" height="170"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="170" id="QnT-cd-wbc"/>
+                                        </constraints>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                                    </textView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="fu1-UL-KdI" firstAttribute="top" secondItem="lqI-48-1cC" secondAttribute="bottom" id="2Yo-Hi-8WM"/>
                                     <constraint firstAttribute="trailing" secondItem="5Xg-ff-LKZ" secondAttribute="trailing" constant="10" id="2bQ-Pi-Zi6"/>
                                     <constraint firstItem="94X-Lr-3Ab" firstAttribute="leading" secondItem="lqI-48-1cC" secondAttribute="trailing" constant="18" id="3ZM-CH-KIy"/>
                                     <constraint firstItem="Ykq-s7-yG8" firstAttribute="top" secondItem="1rg-8O-chP" secondAttribute="bottom" constant="8" symbolic="YES" id="4kk-Al-j0s"/>
                                     <constraint firstItem="AJB-As-rSV" firstAttribute="trailing" secondItem="BYA-yY-8gh" secondAttribute="trailing" id="5Fb-e7-TPV"/>
                                     <constraint firstItem="s0a-bC-RgU" firstAttribute="leading" secondItem="5Xg-ff-LKZ" secondAttribute="leading" id="6PS-oJ-qix"/>
                                     <constraint firstItem="1rg-8O-chP" firstAttribute="leading" secondItem="nfj-ia-vgM" secondAttribute="leading" constant="10" id="6ZQ-ge-3cm"/>
+                                    <constraint firstAttribute="bottom" secondItem="8rt-C4-f7P" secondAttribute="bottom" id="992-r0-LRm"/>
                                     <constraint firstItem="5Xg-ff-LKZ" firstAttribute="leading" secondItem="7R6-Ay-seI" secondAttribute="trailing" constant="10" id="9EA-o7-KsX"/>
                                     <constraint firstItem="7R6-Ay-seI" firstAttribute="leading" secondItem="nfj-ia-vgM" secondAttribute="leading" constant="10" id="CwW-1V-5FM"/>
                                     <constraint firstItem="lqI-48-1cC" firstAttribute="leading" secondItem="7R6-Ay-seI" secondAttribute="leading" id="FOJ-Q6-OAp"/>
                                     <constraint firstItem="o31-Sf-Gmk" firstAttribute="baseline" secondItem="s0a-bC-RgU" secondAttribute="baseline" id="KUB-9D-QUC"/>
-                                    <constraint firstItem="fu1-UL-KdI" firstAttribute="trailing" secondItem="Ykq-s7-yG8" secondAttribute="trailing" id="Kcb-yp-PVg"/>
                                     <constraint firstItem="1rg-8O-chP" firstAttribute="top" secondItem="uJd-A2-nGg" secondAttribute="bottom" id="Meq-b3-Qba"/>
                                     <constraint firstItem="5Xg-ff-LKZ" firstAttribute="width" secondItem="7R6-Ay-seI" secondAttribute="width" id="PIW-oC-GsV"/>
                                     <constraint firstItem="AJB-As-rSV" firstAttribute="top" secondItem="BYA-yY-8gh" secondAttribute="bottom" id="RH3-q4-DNA"/>
-                                    <constraint firstItem="fu1-UL-KdI" firstAttribute="leading" secondItem="Ykq-s7-yG8" secondAttribute="leading" id="Rmx-WK-SMz"/>
                                     <constraint firstItem="94X-Lr-3Ab" firstAttribute="bottom" secondItem="lqI-48-1cC" secondAttribute="bottom" id="Rn5-Zm-9IH"/>
                                     <constraint firstItem="Ykq-s7-yG8" firstAttribute="leading" secondItem="nfj-ia-vgM" secondAttribute="leading" constant="10" id="SpT-Qk-ZxJ"/>
                                     <constraint firstItem="s0a-bC-RgU" firstAttribute="width" secondItem="5Xg-ff-LKZ" secondAttribute="width" id="UiY-Yo-sVc"/>
@@ -249,12 +251,14 @@
                                     <constraint firstItem="BYA-yY-8gh" firstAttribute="top" secondItem="7R6-Ay-seI" secondAttribute="bottom" id="g5f-vY-OZU"/>
                                     <constraint firstItem="7R6-Ay-seI" firstAttribute="centerY" secondItem="QjS-eD-ISk" secondAttribute="centerY" id="hRO-dy-u3O"/>
                                     <constraint firstItem="1rg-8O-chP" firstAttribute="width" secondItem="Ykq-s7-yG8" secondAttribute="width" id="hUD-EV-vbG"/>
-                                    <constraint firstAttribute="bottom" secondItem="fu1-UL-KdI" secondAttribute="bottom" id="hzA-Lv-hMo"/>
                                     <constraint firstItem="uJd-A2-nGg" firstAttribute="centerX" secondItem="nfj-ia-vgM" secondAttribute="centerX" id="jJZ-Si-0oD"/>
+                                    <constraint firstItem="8rt-C4-f7P" firstAttribute="leading" secondItem="BYA-yY-8gh" secondAttribute="leading" id="jJh-Uw-mA7"/>
                                     <constraint firstItem="o31-Sf-Gmk" firstAttribute="top" secondItem="1rg-8O-chP" secondAttribute="bottom" constant="69" id="kfQ-g6-S81"/>
+                                    <constraint firstItem="8rt-C4-f7P" firstAttribute="top" secondItem="lqI-48-1cC" secondAttribute="bottom" constant="5" id="nfZ-So-Bh5"/>
                                     <constraint firstItem="lqI-48-1cC" firstAttribute="top" secondItem="AJB-As-rSV" secondAttribute="bottom" id="ovj-EC-IL8"/>
                                     <constraint firstItem="o31-Sf-Gmk" firstAttribute="firstBaseline" secondItem="s0a-bC-RgU" secondAttribute="firstBaseline" id="puF-6i-jzr"/>
                                     <constraint firstItem="uJd-A2-nGg" firstAttribute="leading" secondItem="nfj-ia-vgM" secondAttribute="leading" id="qfY-J8-U22"/>
+                                    <constraint firstItem="8rt-C4-f7P" firstAttribute="width" secondItem="BYA-yY-8gh" secondAttribute="width" id="tp5-Fc-45b"/>
                                     <constraint firstItem="uJd-A2-nGg" firstAttribute="top" secondItem="nfj-ia-vgM" secondAttribute="top" id="u0k-Wh-ufU"/>
                                     <constraint firstItem="QjS-eD-ISk" firstAttribute="leading" secondItem="7R6-Ay-seI" secondAttribute="trailing" constant="60" id="vR9-fe-fgW"/>
                                     <constraint firstItem="7R6-Ay-seI" firstAttribute="bottom" secondItem="5Xg-ff-LKZ" secondAttribute="bottom" id="xpH-Bk-5ZX"/>
@@ -268,15 +272,18 @@
                         <constraints>
                             <constraint firstItem="nfj-ia-vgM" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="3q5-kx-oQk"/>
                             <constraint firstItem="NS6-Sg-xXz" firstAttribute="top" secondItem="nfj-ia-vgM" secondAttribute="bottom" id="DOA-Em-iry"/>
+                            <constraint firstAttribute="trailing" secondItem="nfj-ia-vgM" secondAttribute="trailing" id="LOn-a9-NK9"/>
+                            <constraint firstItem="nfj-ia-vgM" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="aBK-pv-Z2f"/>
                             <constraint firstAttribute="trailing" secondItem="nfj-ia-vgM" secondAttribute="trailing" id="aLg-TI-OgU"/>
-                            <constraint firstItem="nfj-ia-vgM" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="topMargin" id="jXM-qh-0Xb"/>
+                            <constraint firstItem="nfj-ia-vgM" firstAttribute="width" secondItem="tsR-hK-woN" secondAttribute="width" id="tsv-aQ-eAf"/>
+                            <constraint firstItem="nfj-ia-vgM" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="uYx-8z-HPp"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Menu" id="acW-dT-cKf" userLabel="Session">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <connections>
-                        <outlet property="MDLabel" destination="fu1-UL-KdI" id="kCc-v0-Npt"/>
+                        <outlet property="MDView" destination="8rt-C4-f7P" id="K27-LF-sGF"/>
                         <outlet property="avgSpeedLabel" destination="WVP-LT-JgZ" id="2i6-4K-FeT"/>
                         <outlet property="distanceLabel" destination="mms-Em-UaN" id="X4X-La-K3G"/>
                         <outlet property="gpsConnectionImage" destination="QjS-eD-ISk" id="9Ux-kA-V71"/>

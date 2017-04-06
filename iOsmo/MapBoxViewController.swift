@@ -96,6 +96,7 @@ class CustomPolyline: MGLPolyline {
 
 class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDelegate {
     
+    
     required init(coder aDecoder: NSCoder) {
         print("mapBox init")
         connectionManager = ConnectionManager.sharedConnectionManager
@@ -130,7 +131,15 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     }
     override func viewWillAppear(_ animated:Bool) {
         super.viewWillAppear(animated)
-        print("MapBox viewWillAppear")
+        if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let zoom = SettingsManager.getKey(SettingKeys.zoom)?.doubleValue {
+            if ((lat != 0) && (lon != 0) && (zoom != 0)) {
+                
+                mapView.setCenter(CLLocationCoordinate2D(latitude: lat,longitude: lon), zoomLevel: zoom, animated: false)
+            }
+
+            
+        }
+                print("MapBox viewWillAppear")
         FIRAnalytics.logEvent(withName: "map_open", parameters: nil)
         
         if (groupManager.allGroups.count) > 0 {
@@ -166,6 +175,10 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         super.viewWillDisappear(animated)
         print("MapBox viewWillDisappear")
         groupManager.updateGroupsOnMap([])
+        SettingsManager.setKey("\(self.mapView.centerCoordinate.latitude)" as NSString, forKey: SettingKeys.lat)
+        SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
+        SettingsManager.setKey("\(self.mapView.zoomLevel)" as NSString, forKey: SettingKeys.zoom)
+        
         
     }
     override func didReceiveMemoryWarning() {

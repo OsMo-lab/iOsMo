@@ -46,7 +46,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
-    @IBOutlet weak var MDLabel: UILabel!
+    @IBOutlet weak var MDView: UITextView!
     
     @IBOutlet weak var osmoImage: UIImageView!
     @IBOutlet weak var osmoStatus: UIImageView!
@@ -114,7 +114,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
-        MDLabel.text = ""
+        MDView.text = ""
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
@@ -189,7 +189,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     }
                     */
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
-                        self.MDLabel.text = $1
+                        self.MDView.text = $1
                     }
                     self.groupManager.groupList()
                     self.connectionManager.getMessageOfTheDay()

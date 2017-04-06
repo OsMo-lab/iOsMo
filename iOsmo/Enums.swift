@@ -105,6 +105,10 @@ enum SettingKeys: String {
 
     case logView = "logView"
     case poolGroups = "poolGroups"
+    
+    case lat = "lat"
+    case lon = "lon"
+    case zoom = "zoom"
 }
 
 enum GroupActions: String {
@@ -120,6 +124,7 @@ enum GroupType: String {
     case POI = "5"
     case Trip = "6"
 }
+
 enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"
