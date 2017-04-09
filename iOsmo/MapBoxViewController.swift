@@ -40,6 +40,7 @@ class OSMOAnnotation: NSObject, MGLAnnotation {
     // As a reimplementation of the MGLAnnotation protocol, we have to add mutable coordinate and (sub)title properties ourselves.
     var coordinate: CLLocationCoordinate2D
     var title: String?
+    var subtitle: String?
     var polyline: CustomPolyline?
 
     // Custom properties that we will use to customize the annotation's image.
@@ -65,14 +66,22 @@ class OSMOAnnotationView: MGLAnnotationView {
         scalesWithViewingDistance = false
         
         // Use CALayer’s corner radius to turn this view into a circle.
-        layer.cornerRadius = frame.width / 2
-        layer.borderWidth = 2
+        
         layer.borderColor = UIColor.white.cgColor
         
         let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
         letter.textAlignment = NSTextAlignment.center
         letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
         letter.tag = 1
+        if self.reuseIdentifier == "type\(AnnotationType.point)" {
+            layer.cornerRadius = 0
+            layer.borderWidth = 1
+            letter.font = letter.font.withSize(10)
+        } else {
+            layer.cornerRadius = frame.width / 2
+            layer.borderWidth = 2
+            letter.font = letter.font.withSize(14)
+        }
         self.addSubview(letter);
     }
     
@@ -123,6 +132,23 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         
         super.viewDidLoad()
         print ("mapBox viewDidLoad")
+        if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let zoom = SettingsManager.getKey(SettingKeys.zoom)?.doubleValue {
+            if ((lat != 0) && (lon != 0) && (zoom != 0)) {
+                
+                mapView.setCenter(CLLocationCoordinate2D(latitude: lat,longitude: lon), zoomLevel: zoom, animated: false)
+            }
+        }
+        self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
+            for coord in $0 {
+                self.drawPeoples(location: coord)
+            }
+        }
+        groupManager.groupListUpdated.add{
+            let groups = $0
+            DispatchQueue.main.async {
+                self.updateGroupsOnMap(groups: groups)
+            }
+        }
         setupMapView()
         setupLocationTrackingSettings()
         
@@ -131,46 +157,62 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     }
     override func viewWillAppear(_ animated:Bool) {
         super.viewWillAppear(animated)
-        if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let zoom = SettingsManager.getKey(SettingKeys.zoom)?.doubleValue {
-            if ((lat != 0) && (lon != 0) && (zoom != 0)) {
-                
-                mapView.setCenter(CLLocationCoordinate2D(latitude: lat,longitude: lon), zoomLevel: zoom, animated: false)
-            }
-
-            
-        }
-                print("MapBox viewWillAppear")
-        FIRAnalytics.logEvent(withName: "map_open", parameters: nil)
         
+        print("MapBox viewWillAppear")
+        FIRAnalytics.logEvent(withName: "map_open", parameters: nil)
+
         if (groupManager.allGroups.count) > 0 {
             self.connectionManager.activatePoolGroups(1)
 
             groupManager.updateGroupsOnMap([1])
             
-            self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
-                for coord in $0 {
-                    self.drawPeoples(location: coord)
-                }
-            }
-            for group in groupManager.allGroups {
-                for user in group.users {
-                    if user.lat > -3000 && user.lon > -3000 {
-                        let location = LocationModel(lat: user.lat, lon: user.lon)
-                        let gid = Int(group.u)
-                        let uid = Int(user.id)
-                        let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
-                        ugc.recent = false
-                        self.drawPeoples(location: ugc)
-
-                    }
-                }
-                for point in group.points {
-                    drawPoint(point: point)
-                }
-            }
+            self.updateGroupsOnMap(groups: groupManager.allGroups )
         }
     }
     
+    func updateGroupsOnMap(groups: [Group]) {
+        print("updateGroupsOnMap")
+        var curAnnotations = [String]()
+        
+        for group in groups{
+            for user in group.users {
+                if user.lat > -3000 && user.lon > -3000 {
+                    let location = LocationModel(lat: user.lat, lon: user.lon)
+                    let gid = Int(group.u)
+                    let uid = Int(user.id)
+                    let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
+                    ugc.recent = false
+                    self.drawPeoples(location: ugc)
+                    curAnnotations.append("u\(uid)")
+                    
+                }
+            }
+            for point in group.points {
+                drawPoint(point: point, group:group)
+                curAnnotations.append("p\(point.u)")
+            }
+            
+        }
+        var idx = 0;
+        for ann in pointAnnotations {
+        
+            var delete = true;
+            for objId in curAnnotations {
+                if ann.objId == objId {
+                    delete = false;
+                    break;
+                }
+            }
+            if (delete == true) {
+                self.mapView.removeAnnotation(ann)
+                pointAnnotations.remove(at: idx)
+                print("removing \(ann.objId)")
+            } else {
+                idx = idx + 1
+            }
+        }
+        
+    }
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         print("MapBox viewWillDisappear")
@@ -203,9 +245,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     }
     
     @IBAction func selectGroupsClick(_ sender: AnyObject) {
-        
         //let selectedGroupName = (selectedGroupIndex != nil) ? inGroup?[selectedGroupIndex!].name : nil
-        
         let actionSheet = UIActionSheet(title: "select group", delegate: self, cancelButtonTitle: "cancel", destructiveButtonTitle: nil)
         
         if selectedGroupIndex != nil {
@@ -266,7 +306,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         }
     }
     
-    func drawPoint(point: Point){
+    func drawPoint(point: Point, group: Group){
         print("MapBox drawPoint")
         let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
         if (self.mapView) != nil {
@@ -274,15 +314,17 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             for ann in self.pointAnnotations {
                 if ann.objId == "p\(point.u)" {
                     ann.coordinate = clLocation
+                    annVisible = true;
+                    break;
                 }
             }
             if !annVisible {
                 let annotation = OSMOAnnotation(type:AnnotationType.point,  coordinate: clLocation, title: point.name, objId: "p\(point.u)");
                 annotation.color = point.color
+                annotation.subtitle = "\(group.name) \(point.descr)"
                 self.pointAnnotations.append(annotation)
                 self.mapView.addAnnotation(annotation)
             }
-            
         }
     }
     
@@ -333,7 +375,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     
     
     func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
-        
         if actionSheet.buttonTitle(at: buttonIndex) == "clear all" {
             self.selectedGroupIndex = nil
  
@@ -387,16 +428,30 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             annotationView = OSMOAnnotationView(reuseIdentifier: reuseIdentifier)
             annotationView!.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         }
+        /*
         if ann.type == AnnotationType.point {
             annotationView?.layer.cornerRadius = 0
             annotationView?.layer.borderWidth = 1
+        } else {
+            annotationView?.layer.cornerRadius = (annotationView?.frame.width)! / 2
+            annotationView?.layer.borderWidth = 2
+            
         }
+ */
         annotationView?.backgroundColor = ann.color?.hexColor;
         
         if let title = ann.title {
             if let letter = annotationView?.viewWithTag(1) as? UILabel{
-                letter.text = title.substring(to: title.index(title.startIndex, offsetBy: 1))
+                
                 letter.textColor = ann.labelColor?.hexColor
+                if ann.type == AnnotationType.point {
+                    //letter.font = letter.font.withSize(10)
+                    letter.text = title.substring(to: title.index(title.startIndex, offsetBy: title.characters.count>2 ? 2 : 1))
+                } else {
+                    //letter.font = letter.font.withSize(14)
+                    letter.text = title.substring(to: title.index(title.startIndex, offsetBy: 1))
+                    
+                }
             }
         }
         

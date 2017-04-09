@@ -614,9 +614,11 @@ open class TcpConnection: BaseTcpConnection {
                 let lat = atof(u["lat"] as! String)
                 let lon = atof(u["lon"] as! String)
                 let uName = u["name"] as? String
+                let descr = u["description"] as? String
                 let uColor = u["color"] as! String
                 
                 let point = Point (u: uId, lat: lat, lon: lon, name: uName!, color: uColor)
+                point.descr = descr!
                 group.points.append(point)
                
             }
