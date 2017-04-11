@@ -122,7 +122,6 @@ open class TcpClient : NSObject, StreamDelegate {
     fileprivate var message: String = ""
     
     open func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        //print(aStream.description, eventCode)
         switch (eventCode) {
             
         case Stream.Event():

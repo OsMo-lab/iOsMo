@@ -149,6 +149,13 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 self.updateGroupsOnMap(groups: groups)
             }
         }
+        connectionManager.connectionRun.add{
+            let theChange = $0.0
+            
+            if theChange {
+                self.connectionManager.activatePoolGroups(1)
+            }
+        }
         setupMapView()
         setupLocationTrackingSettings()
         
