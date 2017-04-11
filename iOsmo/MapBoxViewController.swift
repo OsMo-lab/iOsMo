@@ -59,6 +59,7 @@ class OSMOAnnotation: NSObject, MGLAnnotation {
 }
 // MGLAnnotationView subclass
 class OSMOAnnotationView: MGLAnnotationView {
+
     override func layoutSubviews() {
         super.layoutSubviews()
         print("OSMOAnnotationView layoutSubviews")
@@ -88,10 +89,10 @@ class OSMOAnnotationView: MGLAnnotationView {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         print ("OSMOAnnotationView setSelected")
-        // Animate the border width in/out, creating an iris effect.
+
         let animation = CABasicAnimation(keyPath: "borderWidth")
         animation.duration = 0.1
-        layer.borderWidth = selected ? frame.width / 4 : 3
+        layer.borderWidth = selected ? frame.width / 4 : 2
         layer.add(animation, forKey: "borderWidth")
     }
 }
@@ -104,8 +105,6 @@ class CustomPolyline: MGLPolyline {
 }
 
 class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDelegate {
-    
-    
     required init(coder aDecoder: NSCoder) {
         print("mapBox init")
         connectionManager = ConnectionManager.sharedConnectionManager
@@ -123,6 +122,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     var onUserLeave: ObserverSetEntry<User>?
     var inGroup: [Group]?
     var selectedGroupIndex: Int?
+    var trackedUser: String = ""
     
     var pointAnnotations = [OSMOAnnotation]()
 
@@ -215,8 +215,8 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 idx = idx + 1
             }
         }
-        
     }
+ 
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         print("MapBox viewWillDisappear")
@@ -224,18 +224,21 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         SettingsManager.setKey("\(self.mapView.centerCoordinate.latitude)" as NSString, forKey: SettingKeys.lat)
         SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
         SettingsManager.setKey("\(self.mapView.zoomLevel)" as NSString, forKey: SettingKeys.zoom)
-        
-        
-    }
+     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     @IBAction func locateClick(sender: AnyObject) {
+        
+        self.trackedUser = "" //Перестаем следить за выбранным пользователем
+        mapView.setUserTrackingMode(MGLUserTrackingMode.follow, animated: true)
+        mapView.setNeedsDisplay()
+        /*
         if let location = mapView.userLocation?.location {
             mapView.setCenter(location.coordinate, animated: true)
-        }
+        }*/
     }
 
     @IBAction func changeTrackingModeClick(sender: AnyObject) {
@@ -253,7 +256,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         let actionSheet = UIActionSheet(title: "select group", delegate: self, cancelButtonTitle: "cancel", destructiveButtonTitle: nil)
         
         if selectedGroupIndex != nil {
-            
             actionSheet.destructiveButtonIndex = selectedGroupIndex! + 1
         }
         
@@ -293,22 +295,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         // Pass the selected object to the new view controller.
     }
     */
-    
-    func clearPeople(_ people: String){
-        var idx = 0;
-        
-        for ann in self.pointAnnotations {
-            
-            if ann.title == people {
-                self.mapView.removeAnnotation(ann as MGLAnnotation);
-                self.pointAnnotations.remove(at: idx)
-
-                break;
-                
-            }
-            idx = idx + 1;
-        }
-    }
     
     func drawPoint(point: Point, group: Group){
         print("MapBox drawPoint")
@@ -358,6 +344,9 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                             //Не добавляем в конец трека координаты пользователя из GROUP.users
                             if location.recent == true {
                                 ann.polyline?.appendCoordinates([clLocation], count: 1)
+                                if self.trackedUser == ann.objId {
+                                    self.mapView.setCenter(clLocation, animated: true)
+                                }
                             }
                         }
                         ann.coordinate = clLocation;
@@ -374,50 +363,13 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                     }
                     self.pointAnnotations.append(annotation)
                     self.mapView.addAnnotation(annotation)
+                    
                     print("add u\(location.userId)")
                 }
             }
         }
     }
     
-    
-    func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
-        if actionSheet.buttonTitle(at: buttonIndex) == "clear all" {
-            self.selectedGroupIndex = nil
- 
-            groupManager.updateGroupsOnMap([])
-            
-            if self.onMonitoringGroupsUpdated != nil {
-                
-                groupManager.monitoringGroupsUpdated.remove(self.onMonitoringGroupsUpdated!)
-                self.onMonitoringGroupsUpdated = nil
-            }
-            for p in onMapNow {
-                clearPeople("\(p)")
-            }
-            
-            return
-        }
-        
-        if buttonIndex != actionSheet.cancelButtonIndex {
-            if let group = inGroup?[buttonIndex - 1]  {
-                
-                let intValue = Int (group.id);
-                
-                groupManager.updateGroupsOnMap([intValue!])
-                self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
-                    for coord in $0 {
-                        self.drawPeoples(location: coord)
-                    }
-                }
-                
-                for p in onMapNow {
-                    clearPeople("\(p)")
-                }
-                self.selectedGroupIndex = buttonIndex - 1
-            }
-        }
-    }
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         print ("mapBox viewFor annotation")
@@ -435,29 +387,23 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             annotationView = OSMOAnnotationView(reuseIdentifier: reuseIdentifier)
             annotationView!.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         }
-        /*
-        if ann.type == AnnotationType.point {
-            annotationView?.layer.cornerRadius = 0
-            annotationView?.layer.borderWidth = 1
-        } else {
-            annotationView?.layer.cornerRadius = (annotationView?.frame.width)! / 2
-            annotationView?.layer.borderWidth = 2
-            
-        }
- */
-        annotationView?.backgroundColor = ann.color?.hexColor;
+
+        annotationView!.backgroundColor = ann.color?.hexColor;
         
         if let title = ann.title {
-            if let letter = annotationView?.viewWithTag(1) as? UILabel{
+            let v = annotationView!.viewWithTag(1)
+            if let letter = v as? UILabel{
                 
                 letter.textColor = ann.labelColor?.hexColor
                 if ann.type == AnnotationType.point {
-                    //letter.font = letter.font.withSize(10)
                     letter.text = title.substring(to: title.index(title.startIndex, offsetBy: title.characters.count>2 ? 2 : 1))
                 } else {
-                    //letter.font = letter.font.withSize(14)
                     letter.text = title.substring(to: title.index(title.startIndex, offsetBy: 1))
-                    
+                    if ann.objId == self.trackedUser {
+                        annotationView!.layer.borderColor = UIColor.red.cgColor
+                    } else {
+                        annotationView!.layer.borderColor = UIColor.white.cgColor
+                    }
                 }
             }
         }
@@ -478,5 +424,22 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         
         // Fallback to the default tint color.
         return mapView.tintColor
+    }
+    
+    func mapView(_ mapView: MGLMapView!, didSelect annotation: MGLAnnotation!) {
+        guard annotation is OSMOAnnotation else {
+            return
+        }
+        let ann = annotation as! OSMOAnnotation
+        if (ann.type == AnnotationType.user) {
+            if self.trackedUser != ann.objId! {
+                self.trackedUser = ann.objId!
+            } else {
+                self.trackedUser = ""
+            }
+            mapView.setNeedsDisplay()
+        }
+
+        
     }
 }
