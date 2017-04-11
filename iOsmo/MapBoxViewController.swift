@@ -179,7 +179,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     
     func updateGroupsOnMap(groups: [Group]) {
         print("updateGroupsOnMap")
-        var curAnnotations = [String]()
+        var curAnnotations = [String!]()
         
         for group in groups{
             for user in group.users {
@@ -190,19 +190,16 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                     let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
                     ugc.recent = false
                     self.drawPeoples(location: ugc)
-                    curAnnotations.append("u\(uid)")
-                    
+                    curAnnotations.append("u\(uid!)")
                 }
             }
             for point in group.points {
                 drawPoint(point: point, group:group)
                 curAnnotations.append("p\(point.u)")
             }
-            
         }
         var idx = 0;
         for ann in pointAnnotations {
-        
             var delete = true;
             for objId in curAnnotations {
                 if ann.objId == objId {
@@ -342,7 +339,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 let userName = user.name
                 var annVisible = false;
-                
                 for ann in self.pointAnnotations {
                     if ann.objId == "u\(location.userId)" {
                         
@@ -359,7 +355,10 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                             ann.polyline = polyline;
                             
                         } else {
-                            ann.polyline?.appendCoordinates([clLocation], count: 1)
+                            //Не добавляем в конец трека координаты пользователя из GROUP.users
+                            if location.recent == true {
+                                ann.polyline?.appendCoordinates([clLocation], count: 1)
+                            }
                         }
                         ann.coordinate = clLocation;
                         annVisible = true;
@@ -375,6 +374,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                     }
                     self.pointAnnotations.append(annotation)
                     self.mapView.addAnnotation(annotation)
+                    print("add u\(location.userId)")
                 }
             }
         }
