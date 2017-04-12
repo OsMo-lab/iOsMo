@@ -75,8 +75,8 @@ struct ConnectionHelper {
     
     static func authenticate(completed : @escaping (_ key: NSString?) -> ()) -> Void{
         LogQueue.sharedLogQueue.enqueue("authenticate")
-        let key = SettingsManager.getKey(SettingKeys.device)
-        if key == nil || key!.length == 0{
+        let device = SettingsManager.getKey(SettingKeys.device)
+        if device == nil || device!.length == 0{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
             let model = UIDevice.current.model
             let version = UIDevice.current.systemVersion
@@ -84,7 +84,7 @@ struct ConnectionHelper {
             let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
             self.postRequest(authUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
                 if result {
-                    if let newKey = responceData.object(forKey: Keys.key.rawValue) as? NSString {
+                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? NSString {
                         print ("got key by post request \(newKey)")
                         LogQueue.sharedLogQueue.enqueue("got key by post request")
                         SettingsManager.setKey(newKey, forKey: SettingKeys.device)
@@ -97,8 +97,8 @@ struct ConnectionHelper {
                 }
             })
         } else {
-            print("Authenticate:using local key")
-            completed(key)
+            print("Authenticate:using local key \(device)")
+            completed(device)
         }
     }
     

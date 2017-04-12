@@ -44,7 +44,7 @@ enum Keys: String{
     case address = "address"
     case uid = "uid"
     case name = "name"
-    case key = "device"
+    case device = "device"
     case error = "error"
     case errorDesc = "error_description"
     case push_token = "push_token"
@@ -96,7 +96,6 @@ enum UpdatesEnum: String {
 enum SettingKeys: String {
     case device = "deviceKey"
     case pushToken = "pushToken"
-    case auth = "authKey"
     case isStayAwake = "isStayAwake"
     case user = "user"
     case sendTime = "sendTime"

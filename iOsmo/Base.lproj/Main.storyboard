@@ -1291,7 +1291,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nWW-Ja-AUZ" userLabel="Center">
-                                <rect key="frame" x="561" y="32" width="32" height="32"/>
+                                <rect key="frame" x="8" y="8" width="32" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="D0n-51-uJr"/>
                                     <constraint firstAttribute="width" constant="32" id="jWF-ah-YWA"/>
@@ -1304,8 +1304,8 @@
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="nWW-Ja-AUZ" firstAttribute="top" secondItem="a9V-JZ-1yi" secondAttribute="bottom" constant="12" id="Jrx-9F-mYF"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="nWW-Ja-AUZ" secondAttribute="trailing" constant="-13" id="xMR-aE-y2x"/>
+                            <constraint firstItem="nWW-Ja-AUZ" firstAttribute="top" secondItem="a9V-JZ-1yi" secondAttribute="bottom" constant="-12" id="ICU-pt-Bmj"/>
+                            <constraint firstItem="nWW-Ja-AUZ" firstAttribute="leading" secondItem="wBv-Bj-z3u" secondAttribute="leadingMargin" constant="-12" id="jwH-FI-1TD"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>

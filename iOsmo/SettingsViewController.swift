@@ -9,7 +9,7 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController ,UITextFieldDelegate {
+class SettingsViewController: UIViewController, UITextFieldDelegate {
 
     var connectionManager = ConnectionManager.sharedConnectionManager
     var clickCount = 0;
@@ -42,10 +42,15 @@ class SettingsViewController: UIViewController ,UITextFieldDelegate {
     /*Сброс авторизации устройства*/
     @IBAction func ResetModeChanged(_ sender: AnyObject) {
         if self.resetAuthSwitcher.isOn {
-            SettingsManager.setKey("", forKey: SettingKeys.device)
-            SettingsManager.setKey("", forKey: SettingKeys.user)
-            SettingsManager.setKey("", forKey: SettingKeys.auth)
-            connectionManager.connect()
+            if connectionManager.sessionOpened {
+                alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
+                self.resetAuthSwitcher.isOn = false
+            } else {
+                SettingsManager.setKey("", forKey: SettingKeys.user)
+                SettingsManager.setKey("", forKey: SettingKeys.device)
+                connectionManager.closeConnection()
+                connectionManager.connect()
+            }
         }
     }
     

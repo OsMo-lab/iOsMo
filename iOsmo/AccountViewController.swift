@@ -279,15 +279,20 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         if identifier == "toAuth" {
             
             if successLogin {
-                SettingsManager.setKey("", forKey: SettingKeys.user)
-                SettingsManager.setKey("", forKey: SettingKeys.auth)
-                connectionManager.connect()
+                if connectionManager.sessionOpened {
+                    alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
+                } else {
+                    SettingsManager.setKey("", forKey: SettingKeys.user)
+                    SettingsManager.setKey("", forKey: SettingKeys.device)
+                    connectionManager.closeConnection()
+                    connectionManager.connect()
+                }
                 return false
             } else {
                 return true
             }
+
         }
-        
         //by default
         return true
     }
@@ -305,13 +310,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func setLoginControls(){
         
         if let user = SettingsManager.getKey(SettingKeys.user) {
-            
             if user.length > 0 {
                 userName.text = String(user)
                 loginBtn.setImage(UIImage(named: "exit-32"), for: UIControlState())
                 self.successLogin = true
             } else {
-                
                 userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
                 loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
                 self.successLogin = false

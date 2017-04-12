@@ -161,5 +161,5 @@
 "ymo-ea-5EI.text" = "Расстояние, метры";
 
 /* Class = "UILabel"; text = "Location update interval, seconds"; ObjectID = "zmr-4o-LwG"; */
-"zmr-4o-LwG.text" = "Интревал обновления координат, секунды";
+"zmr-4o-LwG.text" = "Интервал обновления координат, сек";
 

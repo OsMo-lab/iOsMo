@@ -40,3 +40,11 @@
 /* Tracking location */
 "Tracking location" = "Поездка отслеживается";
 
+/*  Alert title for Error on logout */
+"Error on logout" = "Ошибка выхода";
+
+/* Stop current trip, before logout */
+"Stop current trip, before logout" = "Остановите поездку, до выхода";
+
+
+

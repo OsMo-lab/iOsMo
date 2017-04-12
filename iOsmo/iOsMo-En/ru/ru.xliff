@@ -391,6 +391,16 @@ All rights reserved.</target>
         <target>поездка завершена</target>
         <note>session was closed</note>
       </trans-unit>
+      <trans-unit id="Error on logout">
+          <source>Error on logout</source>
+          <target>Ошибка</target>
+          <note>Alert title for Error on logout</note>
+      </trans-unit>
+      <trans-unit id="Stop current trip, before logout">
+          <source>Stop current trip, before logout</source>
+          <target>Остановите поездку, до выхода</target>
+          <note>Stop current trip, before logout</note>
+      </trans-unit>
     </body>
   </file>
   <file original="iOsmoTests/Info.plist" source-language="en" datatype="plaintext" target-language="ru">

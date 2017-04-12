@@ -183,6 +183,7 @@ open class ConnectionManager: NSObject{
     open func closeConnection() {
         if (self.connected && !self.sessionOpened) {
             connection.closeConnection()
+            self.connection.addCallBackOnConnect = nil
             self.connected = false
         }
     }

@@ -92,7 +92,15 @@ class OSMOAnnotationView: MGLAnnotationView {
 
         let animation = CABasicAnimation(keyPath: "borderWidth")
         animation.duration = 0.1
-        layer.borderWidth = selected ? frame.width / 4 : 2
+        if self.reuseIdentifier == "type\(AnnotationType.point)" {
+            layer.cornerRadius = 0
+            layer.borderWidth = selected ? frame.width / 5 : 1
+        } else {
+            layer.borderColor = selected ? UIColor.red.cgColor : UIColor.white.cgColor
+            layer.cornerRadius = frame.width / 2
+            layer.borderWidth = selected ? frame.width / 5 : 2
+
+        }
         layer.add(animation, forKey: "borderWidth")
     }
 }
@@ -179,7 +187,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     
     func updateGroupsOnMap(groups: [Group]) {
         print("updateGroupsOnMap")
-        var curAnnotations = [String!]()
+        var curAnnotations = [String]()
         
         for group in groups{
             for user in group.users {
@@ -201,12 +209,15 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         var idx = 0;
         for ann in pointAnnotations {
             var delete = true;
-            for objId in curAnnotations {
-                if ann.objId == objId {
-                    delete = false;
-                    break;
+            if curAnnotations.count > 0 {
+                for objId in curAnnotations {
+                    if ann.objId == objId {
+                        delete = false;
+                        break;
+                    }
                 }
             }
+            
             if (delete == true) {
                 self.mapView.removeAnnotation(ann)
                 pointAnnotations.remove(at: idx)
@@ -282,6 +293,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     func setupMapView(){
         self.mapView.delegate = self
         self.mapView.styleURL = URL(string: MapStyle.Bright.rawValue)
+        
         self.mapView.showsUserLocation = true
     }
     
