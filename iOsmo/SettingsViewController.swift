@@ -59,33 +59,36 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func textFieldShouldEndEditing(_ textField: UITextField){
-        var value: Int = Int(textField.text!)!;
-        
-        if textField == intervalTextField {
-            //Требуется остановить - заново запустить трекинг, для активизации введенного значения
-            if (value < MIN_SEND_TIME) {
-                value = MIN_SEND_TIME
-            }else if (value > 60) {
-                value = 60
+        if var value: Int = Int(textField.text!) {
+            if textField == intervalTextField {
+                //Требуется остановить - заново запустить трекинг, для активизации введенного значения
+                if (value < MIN_SEND_TIME) {
+                    value = MIN_SEND_TIME
+                } else if (value > 60) {
+                    value = 60
+                }
+                SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.sendTime)
+                
+            } else if textField == distanceTextField {
+                if (value < MIN_LOC_DISTANCE) {
+                    value = MIN_LOC_DISTANCE
+                }else if (value > 1000) {
+                    value = 1000
+                }
+                SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
+            } else if textField == locTimeTextField {
+                if (value < MIN_LOC_TIME) {
+                    value = MIN_LOC_TIME
+                }else if (value > 120) {
+                    value = 120
+                }
+                SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locInterval)
             }
-            SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.sendTime)
-        
-        } else if textField == distanceTextField {
-            if (value < MIN_LOC_DISTANCE) {
-                value = MIN_LOC_DISTANCE
-            }else if (value > 1000) {
-                value = 1000
-            }
-            SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
-        } else if textField == locTimeTextField {
-            if (value < MIN_LOC_TIME) {
-                value = MIN_LOC_TIME
-            }else if (value > 120) {
-                value = 120
-            }
-            SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locInterval)
+            textField.resignFirstResponder()
+            
         }
-        textField.resignFirstResponder()
+        
+        
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
