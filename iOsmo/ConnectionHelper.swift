@@ -132,25 +132,18 @@ struct ConnectionHelper {
                                     completed(true,tkn)
                                 }
                             }
-                            
                         }
-                        
                     } else {
+                        LogQueue.sharedLogQueue.enqueue("Unable to connect to server")
                         let tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                        tkn.error = "Unable to connect to server"
-                        
                         completed(false,tkn)
                     }
                 })
-                
             } else {
-                LogQueue.sharedLogQueue.enqueue("Authentication key not received")
+                LogQueue.sharedLogQueue.enqueue("Unable to receive token")
                 let tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                tkn.error = "Unable to receive token"
-
                 completed(false,tkn)
             }
-            
         })
     }
 }

@@ -34,6 +34,157 @@ extension String {
         return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
 }
+
+class OSMOCalloutView: UIView, MGLCalloutView {
+    var representedObject: MGLAnnotation
+    
+    // Lazy initialization of optional vars for protocols causes segmentation fault: 11s in Swift 3.0. https://bugs.swift.org/browse/SR-1825
+    
+    var leftAccessoryView = UIView() /* unused */
+    var rightAccessoryView = UIView() /* unused */
+    
+    weak var delegate: MGLCalloutViewDelegate?
+    
+    let tipHeight: CGFloat = 10.0
+    let tipWidth: CGFloat = 20.0
+    
+    let mainBody: UITextView //UIButton
+    
+    required init(representedObject: MGLAnnotation) {
+        self.representedObject = representedObject
+        
+        let ann = representedObject as! OSMOAnnotation
+        if ann.type == AnnotationType.user {
+            self.mainBody = UITextView(frame: CGRect(x: 0, y: 0, width: 80, height: 20))
+        } else {
+            self.mainBody = UITextView(frame: CGRect(x: 0, y: 0, width: 200, height: 160))
+        }
+        
+        super.init(frame: .zero)
+        
+        guard representedObject is OSMOAnnotation else {
+            return
+        }
+        mainBody.textColor = .white
+        if let title = representedObject.title, let subtitle = representedObject.subtitle {
+            if ann.type == AnnotationType.user {
+                mainBody.text = title;
+            } else {
+                mainBody.text = "\(title!)\n\(subtitle!)";
+                mainBody.dataDetectorTypes = [UIDataDetectorTypes.link, UIDataDetectorTypes.phoneNumber]
+            }
+        }
+        backgroundColor = .clear
+        mainBody.backgroundColor = .darkGray
+        mainBody.tintColor = .white
+        //mainBody.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+        mainBody.layer.cornerRadius = 4.0
+        
+        addSubview(mainBody)
+    }
+    
+    required init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - MGLCalloutView API
+    func presentCallout(from rect: CGRect, in view: UIView, constrainedTo constrainedView: UIView, animated: Bool) {
+        if !representedObject.responds(to: Selector("title")) {
+            return
+        }
+        view.addSubview(self)
+
+        // Prepare title label
+        //mainBody.text = representedObject.title!;
+        
+        //mainBody.setTitle(representedObject.title!, for: .normal)
+        //mainBody.frame = CGRect(x: 0, y: 0, width: 200, height: 300)
+        
+        print("\(mainBody.frame.width)x\(mainBody.frame.height) -\(view.frame.width)x\(view.frame.height) - \(constrainedView.frame.width)x\(constrainedView.frame.height)")
+        //mainBody.sizeToFit()
+        
+        /* if isCalloutTappable() {
+            // Handle taps and eventually try to send them to the delegate (usually the map view)
+            mainBody.addTarget(self, action: #selector(OSMOCalloutView.calloutTapped), for: .touchUpInside)
+        } else {
+            // Disable tapping and highlighting
+            mainBody.isUserInteractionEnabled = false
+        }*/
+        
+        // Prepare our frame, adding extra space at the bottom for the tip
+        //let frameWidth = CGFloat(150)
+        //let frameHeight = CGFloat(100)
+        
+        let frameWidth = mainBody.bounds.size.width
+        let frameHeight = mainBody.bounds.size.height + tipHeight
+        
+        let frameOriginX = rect.origin.x + (rect.size.width/2.0) - (frameWidth/2.0)
+        let frameOriginY = rect.origin.y - frameHeight
+        frame = CGRect(x: frameOriginX, y: frameOriginY, width: frameWidth, height: frameHeight)
+        
+        if animated {
+            alpha = 0
+            
+            UIView.animate(withDuration: 0.2) { [weak self] in
+                self?.alpha = 1
+            }
+        }
+    }
+    
+    func dismissCallout(animated: Bool) {
+        if (superview != nil) {
+            if animated {
+                UIView.animate(withDuration: 0.2, animations: { [weak self] in
+                    self?.alpha = 0
+                    }, completion: { [weak self] _ in
+                        self?.removeFromSuperview()
+                })
+            } else {
+                removeFromSuperview()
+            }
+        }
+    }
+    
+    // MARK: - Callout interaction handlers
+    
+    func isCalloutTappable() -> Bool {
+        if let delegate = delegate {
+            if delegate.responds(to: #selector(MGLCalloutViewDelegate.calloutViewShouldHighlight)) {
+                return delegate.calloutViewShouldHighlight!(self)
+            }
+        }
+        return false
+    }
+    
+    func calloutTapped() {
+        if isCalloutTappable() && delegate!.responds(to: #selector(MGLCalloutViewDelegate.calloutViewTapped)) {
+            delegate!.calloutViewTapped!(self)
+        }
+    }
+    
+    // MARK: - Custom view styling
+    
+    override func draw(_ rect: CGRect) {
+        // Рисуем стрелку под тултипом маркера
+        let fillColor : UIColor = .darkGray
+        
+        let tipLeft = rect.origin.x + (rect.size.width / 2.0) - (tipWidth / 2.0)
+        let tipBottom = CGPoint(x: rect.origin.x + (rect.size.width / 2.0), y: rect.origin.y + rect.size.height)
+        let heightWithoutTip = rect.size.height - tipHeight
+        
+        let currentContext = UIGraphicsGetCurrentContext()!
+        
+        let tipPath = CGMutablePath()
+        tipPath.move(to: CGPoint(x: tipLeft, y: heightWithoutTip))
+        tipPath.addLine(to: CGPoint(x: tipBottom.x, y: tipBottom.y))
+        tipPath.addLine(to: CGPoint(x: tipLeft + tipWidth, y: heightWithoutTip))
+        tipPath.closeSubpath()
+        
+        fillColor.setFill()
+        currentContext.addPath(tipPath)
+        currentContext.fillPath()
+    }
+}
 // MGLAnnotation protocol reimplementation
 class OSMOAnnotation: NSObject, MGLAnnotation {
     
@@ -60,16 +211,8 @@ class OSMOAnnotation: NSObject, MGLAnnotation {
 // MGLAnnotationView subclass
 class OSMOAnnotationView: MGLAnnotationView {
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        print("OSMOAnnotationView layoutSubviews")
-        // Force the annotation view to maintain a constant size when the map is tilted.
-        scalesWithViewingDistance = false
-        
-        // Use CALayer’s corner radius to turn this view into a circle.
-        
-        layer.borderColor = UIColor.white.cgColor
-        
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
         let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
         letter.textAlignment = NSTextAlignment.center
         letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
@@ -77,13 +220,37 @@ class OSMOAnnotationView: MGLAnnotationView {
         if self.reuseIdentifier == "type\(AnnotationType.point)" {
             layer.cornerRadius = 0
             layer.borderWidth = 1
-            letter.font = letter.font.withSize(10)
         } else {
             layer.cornerRadius = frame.width / 2
             layer.borderWidth = 2
-            letter.font = letter.font.withSize(14)
         }
         self.addSubview(letter);
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        print("OSMOAnnotationView layoutSubviews")
+        // Force the annotation view to maintain a constant size when the map is tilted.
+        scalesWithViewingDistance = false
+        
+        // Use CALayer’s corner radius to turn this view into a circle.
+        layer.borderColor = UIColor.white.cgColor
+       
+        if let letter = self.viewWithTag(1) as? UILabel{
+            if self.reuseIdentifier == "type\(AnnotationType.point)" {
+                letter.font = letter.font.withSize(10)
+            } else {
+                letter.font = letter.font.withSize(14)
+            }
+        }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -93,12 +260,10 @@ class OSMOAnnotationView: MGLAnnotationView {
         let animation = CABasicAnimation(keyPath: "borderWidth")
         animation.duration = 0.1
         if self.reuseIdentifier == "type\(AnnotationType.point)" {
-            layer.cornerRadius = 0
-            layer.borderWidth = selected ? frame.width / 5 : 1
+            layer.borderWidth = selected ? 3 : 1
         } else {
             layer.borderColor = selected ? UIColor.red.cgColor : UIColor.white.cgColor
-            layer.cornerRadius = frame.width / 2
-            layer.borderWidth = selected ? frame.width / 5 : 2
+            layer.borderWidth = selected ? 3 : 2
 
         }
         layer.add(animation, forKey: "borderWidth")
@@ -323,7 +488,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             if !annVisible {
                 let annotation = OSMOAnnotation(type:AnnotationType.point,  coordinate: clLocation, title: point.name, objId: "p\(point.u)");
                 annotation.color = point.color
-                annotation.subtitle = "\(group.name) \(point.descr)"
+                annotation.subtitle = "\(group.name)\n\(point.descr)"
                 self.pointAnnotations.append(annotation)
                 self.mapView.addAnnotation(annotation)
             }
@@ -438,7 +603,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         return mapView.tintColor
     }
     
-    func mapView(_ mapView: MGLMapView!, didSelect annotation: MGLAnnotation!) {
+    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
         guard annotation is OSMOAnnotation else {
             return
         }
@@ -451,7 +616,20 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             }
             mapView.setNeedsDisplay()
         }
+    }
 
+    func mapView(_ mapView: MGLMapView, calloutViewFor annotation: MGLAnnotation) -> UIView? {
+        guard annotation is OSMOAnnotation else {
+            return nil
+        }
+        return OSMOCalloutView(representedObject: annotation)
+    }
+    
+    func mapView(_ mapView: MGLMapView, tapOnCalloutFor annotation: MGLAnnotation) {
+        // Optionally handle taps on the callout
+        print("Tapped the callout for: \(annotation)")
         
+        // Hide the callout
+        mapView.deselectAnnotation(annotation, animated: true)
     }
 }

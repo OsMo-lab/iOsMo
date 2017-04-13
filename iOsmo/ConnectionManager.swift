@@ -166,7 +166,6 @@ open class ConnectionManager: NSObject{
                     print("getServerInfo Error:\(token?.error)")
                     self.log.enqueue("getServerInfo Error:\(token?.error)")
                     if (token?.error == "Wrong device key") {
-                        
                         SettingsManager.setKey("", forKey: SettingKeys.device)
                         self.connectionRun.notify((false, ""))
                         self.shouldReConnect = true
