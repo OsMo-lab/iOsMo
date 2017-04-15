@@ -81,7 +81,7 @@ All rights reserved.</target>
       </trans-unit>
       <trans-unit id="AxV-gG-nJV.text">
         <source>nick</source>
-        <target>имя</target>
+        <target>ник</target>
         <note>Class = "UILabel"; text = "nick"; ObjectID = "AxV-gG-nJV";</note>
       </trans-unit>
       <trans-unit id="BYA-yY-8gh.normalTitle">
@@ -396,10 +396,20 @@ All rights reserved.</target>
           <target>Ошибка</target>
           <note>Alert title for Error on logout</note>
       </trans-unit>
-      <trans-unit id="Stop current trip, before logout">
+      <trans-unit id="Stop current trip, before logout!">
           <source>Stop current trip, before logout</source>
           <target>Остановите поездку, до выхода</target>
           <note>Stop current trip, before logout</note>
+      </trans-unit>
+      <trans-unit id="Passwords didn't match!">
+          <source>Passwords didn't match!</source>
+          <target>Пароли не совпадают!</target>
+          <note>Passwords didn't match!</note>
+      </trans-unit>
+      <trans-unit id="Enter nick!">
+          <source>Enter nick!</source>
+          <target>Введите ник!</target>
+          <note>Enter nick!</note>
       </trans-unit>
     </body>
   </file>
