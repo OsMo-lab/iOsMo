@@ -27,6 +27,7 @@ open class GroupManager{
     var onActivateGroup : ObserverSetEntry<(Bool, String)>?
     var onDeactivateGroup : ObserverSetEntry<(Bool, String)>?
     var onUpdateGroup : ObserverSetEntry<(Int, Any)>?
+    var trackDownloaded : ObserverSet<(Track)>?
     
     fileprivate let log = LogQueue.sharedLogQueue
     
@@ -132,10 +133,59 @@ open class GroupManager{
                 
                 self.allGroups = $0
                 self.groupListUpdated.notify($0)
-               
+                for group in $0 {
+                    for track in group.tracks{
+                        self.downloadIfNeeded(track)
+                    }
+                }
             }
         }
+        
         connection.getGroups()
+    }
+    
+    func downloadIfNeeded(_ track:Track) {
+        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let filename = "\(track.u).gpx"
+        let path =  "\(paths[0])/channelsgpx/"
+        let fileManager = FileManager.default;
+        var shouldDownload = true;
+        
+        if fileManager.fileExists(atPath: "\(path)\(filename)") {
+            do {
+                let attr = try fileManager.attributesOfItem(atPath: "\(path)\(filename)")
+                let fileSize:Int = attr[FileAttributeKey.size] as! Int
+                if fileSize == track.size {
+                    shouldDownload = false
+                }
+            } catch {
+            
+            }
+        } else {
+            var isDir : ObjCBool = false
+            if !fileManager.fileExists(atPath: path, isDirectory:&isDir) {
+                do {
+                    try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    print ("can't create directory \(path)")
+                }
+            }
+        }
+        if shouldDownload == true {
+            if let url = URL(string: track.url){
+                ConnectionHelper.downloadRequest(url, completed: {result, data in
+                    if result {
+                        let fileURL = URL(fileURLWithPath: "\(path)\(filename)")
+                        do {
+                            try data?.write(to: fileURL)
+                            self.trackDownloaded?.notify(track)
+                        } catch{
+                            print("Error saving \(filename)")
+                        }
+                    }
+                })
+            }
+        }
     }
  
     open func updateGroupsOnMap(_ groups: [Int]){

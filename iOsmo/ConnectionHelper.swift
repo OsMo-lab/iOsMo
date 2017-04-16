@@ -73,6 +73,26 @@ struct ConnectionHelper {
         task.resume()
     }
     
+    static func downloadRequest (_ url: URL, completed : @escaping (_ succeeded: Bool, _ res: Data?) -> ()) {
+        let session = URLSession.shared;
+        var urlReq = URLRequest(url: url);
+        
+        urlReq.httpMethod = "GET"
+        urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+        let task = session.downloadTask(with: urlReq, completionHandler:  {(url, response, error) in
+            if url != nil {
+                let data:Data! = try? Data(contentsOf: url!)
+                do {
+                    completed(true, data)
+                } catch {
+                    completed(false, nil)
+                }
+                
+            }
+        })
+        task.resume()
+    }
+    
     static func authenticate(completed : @escaping (_ key: NSString?) -> ()) -> Void{
         LogQueue.sharedLogQueue.enqueue("authenticate")
         let device = SettingsManager.getKey(SettingKeys.device)

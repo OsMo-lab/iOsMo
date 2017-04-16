@@ -623,6 +623,23 @@ open class TcpConnection: BaseTcpConnection {
                
             }
         }
+        if let jsonTracks = g["track"] as? Array<AnyObject> {
+            for jsonT in jsonTracks{
+                let u = jsonT as! Dictionary<String, AnyObject>
+                let uId = u["u"] as! Int
+                let uSize:Int! = Int(u["size"] as! String)
+                let uName = u["name"] as! String
+                let descr = u["description"] as? String
+                let uColor = u["color"] as! String
+                let uUrl = u["url"] as! String
+                let uType = u["type"] as! String
+                
+                let track = Track(u: uId, name: uName, type: uType, color: uColor, url: uUrl, size: uSize)
+                track.descr = descr!
+                group.tracks.append(track)
+                
+            }
+        }
         return group;
         
     }

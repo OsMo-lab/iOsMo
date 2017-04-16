@@ -49,6 +49,7 @@ open class ConnectionManager: NSObject{
     let pushActivated = ObserverSet<Bool>()
     let groupDeactivated = ObserverSet<(Bool, String)>()
     let groupList = ObserverSet<[Group]>()
+    let trackDownoaded = ObserverSet<(Track)>()
     
     let connectionRun = ObserverSet<(Bool, String)>()
     let sessionRun = ObserverSet<(Bool, String)>()
@@ -217,6 +218,7 @@ open class ConnectionManager: NSObject{
                 
                 self.onGroupListUpdated = connection.groupListDownloaded.add {
                     self.groupList.notify($0)
+                    
                 }
             }
             connection.sendGetGroups()

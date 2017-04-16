@@ -370,6 +370,9 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 drawPoint(point: point, group:group)
                 curAnnotations.append("p\(point.u)")
             }
+            for track in group.tracks {
+                drawTrack(track: track)
+            }
         }
         var idx = 0;
         for ann in pointAnnotations {
@@ -473,6 +476,37 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     }
     */
     
+    func drawTrack(track:Track) {
+        print ("MapBox drawTrack")
+        if (self.mapView != nil) {
+            let xml = track.getTrackData()
+            let gpx = xml?.children[0]
+            for trk in (gpx?.children)! {
+                for trkseg in trk.children {
+                    var coordinates = [CLLocationCoordinate2D]()
+                    
+                    for trkpt in trkseg.children {
+                        print (trkpt)
+                        let lat = atof(trkpt["lat"]?.text)
+                        let lon = atof(trkpt["lon"]?.text)
+                        coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
+                    }
+
+                    let polyline = CustomPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
+                    polyline.title = track.name
+                    
+                    // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
+                    polyline.color = track.color.hexColor.withAlphaComponent(0.8)
+                    
+                    // Add the polyline to the map. Note that this method name is singular.
+                    self.mapView.addAnnotation(polyline)
+                    
+                }
+            }
+            
+            
+        }
+    }
     func drawPoint(point: Point, group: Group){
         print("MapBox drawPoint")
         let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
