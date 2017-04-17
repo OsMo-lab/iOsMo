@@ -192,7 +192,7 @@ class OSMOAnnotation: NSObject, MGLAnnotation {
     var coordinate: CLLocationCoordinate2D
     var title: String?
     var subtitle: String?
-    var polyline: CustomPolyline?
+    var polyline: OSMPolyline?
 
     // Custom properties that we will use to customize the annotation's image.
     var image: UIImage?
@@ -270,11 +270,16 @@ class OSMOAnnotationView: MGLAnnotationView {
     }
 }
 // MGLPolyline subclass
-class CustomPolyline: MGLPolyline {
+class OSMPolyline: MGLPolyline {
     // Because this is a subclass of MGLPolyline, there is no need to redeclare its properties.
     
     // Custom property that we will use when drawing the polyline.
     var color: UIColor?
+    var objId: String = ""
+}
+
+class OSMMultiPolyline: MGLMultiPolyline {
+    var objId: String = ""
 }
 
 class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewDelegate {
@@ -298,6 +303,8 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     var trackedUser: String = ""
     
     var pointAnnotations = [OSMOAnnotation]()
+    var trackAnnotations = [OSMPolyline]()
+    
 
     @IBOutlet weak var mapView: MGLMapView!
     
@@ -353,6 +360,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     func updateGroupsOnMap(groups: [Group]) {
         print("updateGroupsOnMap")
         var curAnnotations = [String]()
+        var curTracks = [String]()
         
         for group in groups{
             for user in group.users {
@@ -372,6 +380,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             }
             for track in group.tracks {
                 drawTrack(track: track)
+                curTracks.append("t\(track.u)")
             }
         }
         var idx = 0;
@@ -392,6 +401,148 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 print("removing \(ann.objId)")
             } else {
                 idx = idx + 1
+            }
+        }
+        idx = 0;
+        for ann in trackAnnotations {
+            var delete = true;
+            if curTracks.count > 0 {
+                for objId in curTracks {
+                    if ann.objId == objId {
+                        delete = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (delete == true) {
+                self.mapView.removeAnnotation(ann)
+                trackAnnotations.remove(at: idx)
+                print("removing \(ann.objId)")
+            } else {
+                idx = idx + 1
+            }
+        }
+    }
+    
+    func drawTrack(track:Track) {
+        print ("MapBox drawTrack")
+        if (self.mapView != nil) {
+            let xml = track.getTrackData()
+            let gpx = xml?.children[0]
+            for trk in (gpx?.children)! {
+                var polylines = [OSMPolyline]()
+                
+                for trkseg in trk.children {
+                    var coordinates = [CLLocationCoordinate2D]()
+                    
+                    for trkpt in trkseg.children {
+                        print (trkpt)
+                        let lat = atof(trkpt.attributes["lat"])
+                        let lon = atof(trkpt.attributes["lon"])
+                        coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
+                    }
+                    
+                    let polyline = OSMPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
+                    // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
+                    polyline.color = track.color.hexColor.withAlphaComponent(0.8)
+                    polyline.title = track.name
+                    polyline.objId = "t\(track.u)"
+                    
+                    self.mapView.addAnnotation(polyline)
+                    self.trackAnnotations.append(polyline)
+                    
+                    polylines.append(polyline)
+                    
+                }
+                /*
+                let multiPolyline = OSMMultiPolyline(polylines: polylines)
+                multiPolyline.objId = "t\(track.u)"
+                multiPolyline.title = track.name
+                let source = MGLShapeSource(identifier: multiPolyline.objId, shapes: polylines, options: nil)
+                mapView.style?.addSource(source)
+                
+                let layer = MGLFillStyleLayer(identifier: multiPolyline.objId, source: source)
+                
+                layer.fillColor = MGLStyleValue<UIColor>(rawValue: track.color.hexColor.withAlphaComponent(0.8))
+                layer.fillOutlineColor = MGLStyleValue<UIColor>(rawValue:track.color.hexColor.withAlphaComponent(0.8))
+                mapView.style?.addLayer(layer)
+
+                self.trackAnnotations.append(multiPolyline)
+*/
+            }
+        }
+    }
+    func drawPoint(point: Point, group: Group){
+        print("MapBox drawPoint")
+        let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
+        if (self.mapView) != nil {
+            var annVisible = false;
+            for ann in self.pointAnnotations {
+                if ann.objId == "p\(point.u)" {
+                    ann.coordinate = clLocation
+                    annVisible = true;
+                    break;
+                }
+            }
+            if !annVisible {
+                let annotation = OSMOAnnotation(type:AnnotationType.point,  coordinate: clLocation, title: point.name, objId: "p\(point.u)");
+                annotation.color = point.color
+                annotation.subtitle = "\(group.name)\n\(point.descr)"
+                self.pointAnnotations.append(annotation)
+                self.mapView.addAnnotation(annotation)
+            }
+        }
+    }
+    
+    func drawPeoples(location: UserGroupCoordinate){
+        print("MapBox drawPeoples")
+        let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
+        if (self.mapView) != nil {
+            if let user = groupManager.getUser(location.groupId, user: location.userId){
+                let userName = user.name
+                var annVisible = false;
+                for ann in self.pointAnnotations {
+                    if ann.objId == "u\(location.userId)" {
+                        
+                        if ann.polyline == nil {
+                            var coordinates = [ann.coordinate, clLocation]
+                            
+                            let polyline = OSMPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
+                            
+                            // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
+                            polyline.color = user.color.hexColor.withAlphaComponent(0.8)
+                            
+                            // Add the polyline to the map. Note that this method name is singular.
+                            mapView.addAnnotation(polyline)
+                            ann.polyline = polyline;
+                            
+                        } else {
+                            //Не добавляем в конец трека координаты пользователя из GROUP.users
+                            if location.recent == true {
+                                ann.polyline?.appendCoordinates([clLocation], count: 1)
+                                if self.trackedUser == ann.objId {
+                                    self.mapView.setCenter(clLocation, animated: true)
+                                }
+                            }
+                        }
+                        ann.coordinate = clLocation;
+                        annVisible = true;
+                        ann.labelColor = "#000000"
+                        break;
+                    }
+                }
+                if !annVisible {
+                    let annotation = OSMOAnnotation(type:AnnotationType.user,  coordinate: clLocation, title: userName, objId: "u\(location.userId)");
+                    annotation.color = user.color
+                    if location.recent == false {
+                        annotation.labelColor = "#AAAAAA"
+                    }
+                    self.pointAnnotations.append(annotation)
+                    self.mapView.addAnnotation(annotation)
+                    
+                    print("add u\(location.userId)")
+                }
             }
         }
     }
@@ -476,110 +627,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     }
     */
     
-    func drawTrack(track:Track) {
-        print ("MapBox drawTrack")
-        if (self.mapView != nil) {
-            let xml = track.getTrackData()
-            let gpx = xml?.children[0]
-            for trk in (gpx?.children)! {
-                for trkseg in trk.children {
-                    var coordinates = [CLLocationCoordinate2D]()
-                    
-                    for trkpt in trkseg.children {
-                        print (trkpt)
-                        let lat = atof(trkpt["lat"]?.text)
-                        let lon = atof(trkpt["lon"]?.text)
-                        coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
-                    }
-
-                    let polyline = CustomPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-                    polyline.title = track.name
-                    
-                    // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
-                    polyline.color = track.color.hexColor.withAlphaComponent(0.8)
-                    
-                    // Add the polyline to the map. Note that this method name is singular.
-                    self.mapView.addAnnotation(polyline)
-                    
-                }
-            }
-            
-            
-        }
-    }
-    func drawPoint(point: Point, group: Group){
-        print("MapBox drawPoint")
-        let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
-        if (self.mapView) != nil {
-            var annVisible = false;
-            for ann in self.pointAnnotations {
-                if ann.objId == "p\(point.u)" {
-                    ann.coordinate = clLocation
-                    annVisible = true;
-                    break;
-                }
-            }
-            if !annVisible {
-                let annotation = OSMOAnnotation(type:AnnotationType.point,  coordinate: clLocation, title: point.name, objId: "p\(point.u)");
-                annotation.color = point.color
-                annotation.subtitle = "\(group.name)\n\(point.descr)"
-                self.pointAnnotations.append(annotation)
-                self.mapView.addAnnotation(annotation)
-            }
-        }
-    }
     
-    func drawPeoples(location: UserGroupCoordinate){
-        print("MapBox drawPeoples")
-        let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
-        if (self.mapView) != nil {
-            if let user = groupManager.getUser(location.groupId, user: location.userId){
-                let userName = user.name
-                var annVisible = false;
-                for ann in self.pointAnnotations {
-                    if ann.objId == "u\(location.userId)" {
-                        
-                        if ann.polyline == nil {
-                            var coordinates = [ann.coordinate, clLocation]
-                            
-                            let polyline = CustomPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-                            
-                            // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
-                            polyline.color = user.color.hexColor.withAlphaComponent(0.8)
-
-                            // Add the polyline to the map. Note that this method name is singular.
-                            mapView.addAnnotation(polyline)
-                            ann.polyline = polyline;
-                            
-                        } else {
-                            //Не добавляем в конец трека координаты пользователя из GROUP.users
-                            if location.recent == true {
-                                ann.polyline?.appendCoordinates([clLocation], count: 1)
-                                if self.trackedUser == ann.objId {
-                                    self.mapView.setCenter(clLocation, animated: true)
-                                }
-                            }
-                        }
-                        ann.coordinate = clLocation;
-                        annVisible = true;
-                        ann.labelColor = "#000000"
-                        break;
-                    }
-                }
-                if !annVisible {
-                    let annotation = OSMOAnnotation(type:AnnotationType.user,  coordinate: clLocation, title: userName, objId: "u\(location.userId)");
-                    annotation.color = user.color
-                    if location.recent == false {
-                        annotation.labelColor = "#AAAAAA"
-                    }
-                    self.pointAnnotations.append(annotation)
-                    self.mapView.addAnnotation(annotation)
-                    
-                    print("add u\(location.userId)")
-                }
-            }
-        }
-    }
     
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
@@ -629,7 +677,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     
     func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         print ("mapBox strokeColorForShapeAnnotation")
-        if let annotation = annotation as? CustomPolyline {
+        if let annotation = annotation as? OSMPolyline {
             return annotation.color ?? .orange
         }
         
