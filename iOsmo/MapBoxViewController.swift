@@ -54,6 +54,8 @@ class OSMOCalloutView: UIView, MGLCalloutView {
         self.representedObject = representedObject
         
         let ann = representedObject as! OSMOAnnotation
+        print ("Init callout view for \(ann.objId)")
+        
         if ann.type == AnnotationType.user {
             self.mainBody = UITextView(frame: CGRect(x: 0, y: 0, width: 80, height: 20))
         } else {
@@ -208,11 +210,12 @@ class OSMOAnnotation: NSObject, MGLAnnotation {
         self.objId = objId
     }
 }
+
 // MGLAnnotationView subclass
 class OSMOAnnotationView: MGLAnnotationView {
-
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+
         let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
         letter.textAlignment = NSTextAlignment.center
         letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
@@ -237,7 +240,13 @@ class OSMOAnnotationView: MGLAnnotationView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        print("OSMOAnnotationView layoutSubviews")
+        if let ann = self.annotation as? OSMOAnnotation {
+            print("OSMOAnnotationView layoutSubviews \(ann.objId)")
+            
+        } else {
+            print("OSMOAnnotationView layoutSubviews for \(reuseIdentifier!)")
+        }
+        
         // Force the annotation view to maintain a constant size when the map is tilted.
         scalesWithViewingDistance = false
         
@@ -320,7 +329,9 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         }
         self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
             for coord in $0 {
-                self.drawPeoples(location: coord)
+                DispatchQueue.main.async {
+                    self.drawPeoples(location: coord)
+                }
             }
         }
         groupManager.groupListUpdated.add{
@@ -333,9 +344,12 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             let theChange = $0.0
             
             if theChange {
-                self.connectionManager.activatePoolGroups(1)
+                DispatchQueue.main.async {
+                    self.connectionManager.activatePoolGroups(1)
+                }
             }
         }
+        self.automaticallyAdjustsScrollViewInsets = false;
         setupMapView()
         setupLocationTrackingSettings()
         
@@ -396,9 +410,12 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             }
             
             if (delete == true) {
-                self.mapView.removeAnnotation(ann)
-                pointAnnotations.remove(at: idx)
-                print("removing \(ann.objId)")
+                
+                if !(ann.objId?.contains("wpt"))! {
+                    self.mapView.removeAnnotation(ann)
+                    pointAnnotations.remove(at: idx)
+                    print("removing \(ann.objId)")
+                }
             } else {
                 idx = idx + 1
             }
@@ -428,49 +445,74 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     func drawTrack(track:Track) {
         print ("MapBox drawTrack")
         if (self.mapView != nil) {
-            let xml = track.getTrackData()
-            let gpx = xml?.children[0]
-            for trk in (gpx?.children)! {
-                var polylines = [OSMPolyline]()
-                
-                for trkseg in trk.children {
-                    var coordinates = [CLLocationCoordinate2D]()
-                    
-                    for trkpt in trkseg.children {
-                        print (trkpt)
-                        let lat = atof(trkpt.attributes["lat"])
-                        let lon = atof(trkpt.attributes["lon"])
-                        coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
+            if let xml = track.getTrackData() {
+                let gpx = xml.children[0]
+                for trk in gpx.children {
+                    if trk.name == "trk" {
+                        //var polylines = [OSMPolyline]()
+                        
+                        for trkseg in trk.children {
+                            if trkseg.name == "trkseg" {
+                                var coordinates = [CLLocationCoordinate2D]()
+                                
+                                for trkpt in trkseg.children {
+                                    if trkpt.name == "trkpt" {
+                                        let lat = atof(trkpt.attributes["lat"])
+                                        let lon = atof(trkpt.attributes["lon"])
+                                        coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
+                                    }
+                                    
+                                }
+                                if coordinates.count > 0 {
+                                    let polyline = OSMPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
+                                    // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
+                                    polyline.color = track.color.hexColor.withAlphaComponent(0.8)
+                                    polyline.title = track.name
+                                    polyline.objId = "t\(track.u)"
+                                    
+                                    self.mapView.addAnnotation(polyline)
+                                    self.trackAnnotations.append(polyline)
+                                    
+                                    //polylines.append(polyline)
+                                }
+                                
+                            }
+                            
+                        }
                     }
-                    
-                    let polyline = OSMPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-                    // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
-                    polyline.color = track.color.hexColor.withAlphaComponent(0.8)
-                    polyline.title = track.name
-                    polyline.objId = "t\(track.u)"
-                    
-                    self.mapView.addAnnotation(polyline)
-                    self.trackAnnotations.append(polyline)
-                    
-                    polylines.append(polyline)
-                    
-                }
-                /*
-                let multiPolyline = OSMMultiPolyline(polylines: polylines)
-                multiPolyline.objId = "t\(track.u)"
-                multiPolyline.title = track.name
-                let source = MGLShapeSource(identifier: multiPolyline.objId, shapes: polylines, options: nil)
-                mapView.style?.addSource(source)
-                
-                let layer = MGLFillStyleLayer(identifier: multiPolyline.objId, source: source)
-                
-                layer.fillColor = MGLStyleValue<UIColor>(rawValue: track.color.hexColor.withAlphaComponent(0.8))
-                layer.fillOutlineColor = MGLStyleValue<UIColor>(rawValue:track.color.hexColor.withAlphaComponent(0.8))
-                mapView.style?.addLayer(layer)
+                    if trk.name == "wpt" {
+                        let lat = atof(trk.attributes["lat"])
+                        let lon = atof(trk.attributes["lon"])
+                        let name = trk["name"]?.text
+                        let clLocation = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                        let annotation = OSMOAnnotation(type:AnnotationType.point,  coordinate: clLocation, title: name, objId: "wpt\(track.u)");
+                        annotation.subtitle = "Waypoint"
+                        annotation.color = track.color
 
-                self.trackAnnotations.append(multiPolyline)
-*/
+                        self.pointAnnotations.append(annotation)
+                        self.mapView.addAnnotation(annotation)
+                        
+
+                    }
+                    /*
+                     let multiPolyline = OSMMultiPolyline(polylines: polylines)
+                     multiPolyline.objId = "t\(track.u)"
+                     multiPolyline.title = track.name
+                     let source = MGLShapeSource(identifier: multiPolyline.objId, shapes: polylines, options: nil)
+                     mapView.style?.addSource(source)
+                     
+                     let layer = MGLFillStyleLayer(identifier: multiPolyline.objId, source: source)
+                     
+                     layer.fillColor = MGLStyleValue<UIColor>(rawValue: track.color.hexColor.withAlphaComponent(0.8))
+                     layer.fillOutlineColor = MGLStyleValue<UIColor>(rawValue:track.color.hexColor.withAlphaComponent(0.8))
+                     mapView.style?.addLayer(layer)
+                     
+                     self.trackAnnotations.append(multiPolyline)
+                     */
+                }
+                
             }
+            
         }
     }
     func drawPoint(point: Point, group: Group){
@@ -540,7 +582,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                     }
                     self.pointAnnotations.append(annotation)
                     self.mapView.addAnnotation(annotation)
-                    
+
                     print("add u\(location.userId)")
                 }
             }
@@ -610,9 +652,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     }
     
     func setupMapView(){
-        self.mapView.delegate = self
         self.mapView.styleURL = URL(string: MapStyle.Bright.rawValue)
-        
         self.mapView.showsUserLocation = true
     }
     
@@ -631,11 +671,12 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        print ("mapBox viewFor annotation")
+        
         guard annotation is OSMOAnnotation else {
             return nil
         }
         let ann = annotation as! OSMOAnnotation
+        print ("mapBox viewFor annotation \(ann.objId!)")
         let reuseIdentifier = "type\(ann.type)"
         
         // For better performance, always try to reuse existing annotations.
@@ -696,6 +737,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             } else {
                 self.trackedUser = ""
             }
+            mapView.setCenter(annotation.coordinate, animated: true)
             mapView.setNeedsDisplay()
         }
     }

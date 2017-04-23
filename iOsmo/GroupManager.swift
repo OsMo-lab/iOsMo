@@ -157,6 +157,7 @@ open class GroupManager{
                 let fileSize:Int = attr[FileAttributeKey.size] as! Int
                 if fileSize == track.size {
                     shouldDownload = false
+                    print("Found cached \(path)\(filename)")
                 }
             } catch {
             
@@ -179,8 +180,9 @@ open class GroupManager{
                         do {
                             try data?.write(to: fileURL)
                             self.trackDownloaded?.notify(track)
+                            print("Saved file \(path)\(filename)")
                         } catch{
-                            print("Error saving \(filename)")
+                            print("Error saving \(path)\(filename)")
                         }
                     }
                 })

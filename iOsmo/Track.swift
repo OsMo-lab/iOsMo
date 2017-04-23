@@ -49,17 +49,6 @@ open class Track {
         else {
             return nil
         }
-        /*
-        let fileURL = URL(string: "\(path)\(filename)")
-        
-        do {
-            let data = try Data.init(contentsOf: fileURL!)
-            let xml = XML(data: data)
-            return xml;
-        } catch {
-            return nil
-        }
- */
         
     }
     
