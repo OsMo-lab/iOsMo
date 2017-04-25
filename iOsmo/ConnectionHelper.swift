@@ -8,6 +8,7 @@
 //
 
 import Foundation
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -32,170 +33,137 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 struct ConnectionHelper {
     
     static let authUrl = URL(string: "https://api.osmo.mobi/new?")
-    static let prepareUrl = URL(string: "https://api.osmo.mobi/init?") // to get token
     static let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
     static let iOsmoAppKey = "gg74527-jJRrqJ18kApQ1o7"
     /// [Register device to the server]
-    static func authenticate() -> NSString? {
+    
+    static func postRequest (_ url: URL, requestBody: NSString, postCompleted : @escaping (_ succeeded: Bool, _ res: NSDictionary) -> ()) {
+        let session = URLSession.shared;
+        var urlReq = URLRequest(url: url);
         
-        LogQueue.sharedLogQueue.enqueue("get key")
-        var key = SettingsManager.getKey(SettingKeys.device)
-        if key == nil || key!.length == 0{
+        urlReq.httpMethod = "POST"
+        urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+        //urlReq.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        //urlReq.setValue("application/json", forHTTPHeaderField: "Accept")
+        urlReq.httpBody = requestBody.data(using: String.Encoding.utf8.rawValue)
+        let task = session.dataTask(with: urlReq as URLRequest) {(data, response, error) in
+            var res : NSDictionary = [:]
+            guard let data = data, let _:URLResponse = response, error == nil else {
+                print("error: on send post request")
+                LogQueue.sharedLogQueue.enqueue("error: on send post request")
+                postCompleted(false, res)
+                return
+            }
+            let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             
+            print("send post request \(url.absoluteURL):\(requestBody)\n answer: \(dataStr)")
+            LogQueue.sharedLogQueue.enqueue("send post request \(requestBody), answer: \(dataStr)")
+
+            do {
+                let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
+                res = (jsonDict as? NSDictionary)!
+                postCompleted(true, res)
+            } catch {
+                print("error serializing JSON from POST")
+                LogQueue.sharedLogQueue.enqueue("error serializing JSON from POST")
+                postCompleted(false, res)
+                return
+            }
+        }
+        task.resume()
+    }
+    
+    static func downloadRequest (_ url: URL, completed : @escaping (_ succeeded: Bool, _ res: Data?) -> ()) {
+        let session = URLSession.shared;
+        var urlReq = URLRequest(url: url);
+        
+        urlReq.httpMethod = "GET"
+        urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+        let task = session.downloadTask(with: urlReq, completionHandler:  {(url, response, error) in
+            if url != nil {
+                let data:Data! = try? Data(contentsOf: url!)
+                do {
+                    completed(true, data)
+                } catch {
+                    completed(false, nil)
+                }
+                
+            }
+        })
+        task.resume()
+    }
+    
+    static func authenticate(completed : @escaping (_ key: NSString?) -> ()) -> Void{
+        LogQueue.sharedLogQueue.enqueue("authenticate")
+        let device = SettingsManager.getKey(SettingKeys.device)
+        if device == nil || device!.length == 0{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
             let model = UIDevice.current.model
             let version = UIDevice.current.systemVersion
-            
-            let responseData = sendPostRequest(authUrl!, requestBody: "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)" as NSString)
-            
-            if let response = responseData, let newKey = response.object(forKey: Keys.key.rawValue) as? NSString {
-                print ("got auth response")
-                LogQueue.sharedLogQueue.enqueue("got key by post request")
-                SettingsManager.setKey(newKey, forKey: SettingKeys.device)
-                key = newKey
-            } else {
-                return nil
-            }
+            print("Authenticate:getting key from server")
+            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
+            self.postRequest(authUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
+                if result {
+                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? NSString {
+                        print ("got key by post request \(newKey)")
+                        LogQueue.sharedLogQueue.enqueue("got key by post request")
+                        SettingsManager.setKey(newKey, forKey: SettingKeys.device)
+                        completed(newKey)
+                    } else {
+                        completed(nil)
+                    }
+                } else {
+                    completed(nil)
+                }
+            })
+        } else {
+            print("Authenticate:using local key \(device)")
+            completed(device)
         }
-        print("device key\(key)")
-        
-        //5 = 9C7tNWXcxRziR6rkG7PiQXzP7Vriy3FgF5WLhYeXOz3lDJOidx3kiCJNccPQsORj
-        //iPad = j1aZppa8cdti5MqkfHjRj86LJIKv2OFmjnsjrDRzLmws4E4ipYwLnrjBJ70WOnAJ
-        return key
-        
     }
     
-    static func getToken() -> Token? {
-        
-        if let key = authenticate() {
+    static func getServerInfo( completed : @escaping (_ succeeded: Bool, _ res: Token?) -> ()) -> Void {
+        authenticate(completed: {key -> Void in
             
-            var requestString = "app=\(iOsmoAppKey)&device=\(key)"
-            
-            let auth = SettingsManager.getKey(SettingKeys.auth)
-            if auth != nil && auth?.length > 0 {
+            if (key != nil) {
+                LogQueue.sharedLogQueue.enqueue("Authenticated with key")
+                let requestString = "app=\(iOsmoAppKey)"
                 
-                requestString += "&user=\(auth!)"
-            }
-            
-            if let responceData = sendPostRequest(prepareUrl!, requestBody: requestString as NSString) {
-                
-                LogQueue.sharedLogQueue.enqueue("get token by post request")
-                
-                if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
-                    
-                    let tkn = Token(tokenString: "", address: "", port: 0, key:"")
-                    tkn.error = errDesc as String
-                    return tkn
-                }
-                else {
-                    
-                    if let usr = responceData.object(forKey: Keys.name.rawValue) as? NSString {
+                postRequest(servUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
+                    if result {
+                        LogQueue.sharedLogQueue.enqueue("get server info by post request")
                         
-                        SettingsManager.setKey(usr, forKey: SettingKeys.user)
-                    }
-                    else {  SettingsManager.setKey("", forKey: SettingKeys.user)}
-                    
-                    if let tkn = responceData.object(forKey: Keys.token.rawValue) as? NSString,
-                        let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
+                        if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
                             
-                            LogQueue.sharedLogQueue.enqueue("token is \(tkn)")
+                            let tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                            tkn.error = errDesc as String
                             
-                            let server = server.components(separatedBy: ":")
-                            let tknAddress = server[0]
-                            if let tknPort = Int(server[1]) {
+                            completed(false,tkn)
+                        }  else {
+                            if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
+                                print("server is \(server)")
+                                LogQueue.sharedLogQueue.enqueue("server is \(server)")
                                 
-                                return Token(tokenString: tkn, address: tknAddress as NSString, port: tknPort, key:"")
+                                let server = server.components(separatedBy: ":")
+                                
+                                if let tknAddress = server[0] as? String, let tknPort = Int(server[1]) {
+                                    
+                                    let tkn =  Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key!)
+                                    completed(true,tkn)
+                                }
                             }
-                    }
-
-                }
-                
-            }
-        }
-        
-        return nil
-    }
-    
-    static func connectToServ() -> Token? {
-        
-        if let key = authenticate() {
-            
-            let requestString = "app=\(iOsmoAppKey)"
-            
-            if let responceData = sendPostRequest(servUrl!, requestBody: requestString as NSString) {
-                
-                LogQueue.sharedLogQueue.enqueue("get server info by post request")
-                
-                if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
-                    
-                    let tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                    tkn.error = errDesc as String
-                    return tkn
-                }
-                else {
-                    if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
-                        
-                        LogQueue.sharedLogQueue.enqueue("server is \(server)")
-                        
-                        let server = server.components(separatedBy: ":")
-                        
-                        if let tknAddress = server[0] as? String, let tknPort = Int(server[1]) {
-                            
-                            return Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key)
                         }
+                    } else {
+                        LogQueue.sharedLogQueue.enqueue("Unable to connect to server")
+                        let tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                        completed(false,tkn)
                     }
-                    
-                }
-                
+                })
+            } else {
+                LogQueue.sharedLogQueue.enqueue("Unable to receive token")
+                let tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                completed(false,tkn)
             }
-        }
-        
-        return nil
-    }
-    
-    static func sendPostRequest(_ url: URL, requestBody: NSString) -> NSDictionary? {
-        
-        let request = NSMutableURLRequest(url: url)
-        
-        if let data = NSString(string: requestBody).data(using: String.Encoding.utf8.rawValue){
-            
-            request.httpMethod = "POST"
-            request.httpBody = data
-            
-            var responce: URLResponse?
-            do {
-               
-                let responseData = try NSURLConnection.sendSynchronousRequest(request as URLRequest, returning: &responce);
-                    
-                    if let responseString = NSString(data: responseData, encoding: String.Encoding.utf8.rawValue){
-                    
-                        print("send post request \(requestBody), answer: \(responseString)")
-                        LogQueue.sharedLogQueue.enqueue("send post request, answer: \(responseString)")
-                        
-                    }
-                    else {
-                        
-                        print("error: on parsing answer of post request")
-                        LogQueue.sharedLogQueue.enqueue("error: on parsing answer of post request")
-                    }
-                
-                do {
-                    let jsonDict = try JSONSerialization.jsonObject(with: responseData, options: JSONSerialization.ReadingOptions.mutableContainers);
-                    
-                        
-                    return jsonDict as? NSDictionary;
-                    
-                    
-                }catch {
-                    print("error serializing JSON: \(error)")
-                }
-                
-
-            } catch (let _) {
-                
-            }
-        }
-        
-        return nil
+        })
     }
 }

@@ -9,6 +9,7 @@
 
 import UIKit
 import CoreLocation
+import FirebaseAnalytics
 
 class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMapViewDelegate*/{
     
@@ -38,11 +39,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var onSessionStarted: ObserverSetEntry<(Bool)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
 
-    var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
-    var inGroup: [Group]?
-    var selectedGroupIndex: Int?
-    var onMapNow = [String]()
-    
     var isLoaded = false
     
     @IBOutlet weak var userLabel: UILabel!
@@ -50,7 +46,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
-    @IBOutlet weak var MDLabel: UILabel!
+    @IBOutlet weak var MDView: UITextView!
     
     @IBOutlet weak var osmoImage: UIImageView!
     @IBOutlet weak var osmoStatus: UIImageView!
@@ -66,29 +62,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBOutlet weak var trackingModeBtn: UIButton!
 
-    @IBAction func selectGroupsClick(_ sender: AnyObject) {
-        
-        //let selectedGroupName = (selectedGroupIndex != nil) ? inGroup?[selectedGroupIndex!].name : nil
-        
-        let actionSheet = UIActionSheet(title: "select group", delegate: self, cancelButtonTitle: "cancel", destructiveButtonTitle: nil)
-        
-        if selectedGroupIndex != nil {
-            
-            actionSheet.destructiveButtonIndex = selectedGroupIndex! + 1
-        }
-        
-        if let groups = inGroup {
-            
-            for group in groups{
-                
-                actionSheet.addButton(withTitle: group.name)
-            }
-            
-            if selectedGroupIndex != nil { actionSheet.addButton(withTitle: "clear all") }
-        }
-        
-        //actionSheet.showInView(self.mapView)
-    }
+    
 
     
     @IBAction func pauseClick(_ sender: AnyObject) {
@@ -96,16 +70,16 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
+            FIRAnalytics.logEvent(withName: "trip_pause", parameters: nil)
             sendingManger.pauseSendingCoordinates()
         } else {
-            sendingManger.startSendingCoordinates()
+            sendingManger.startSendingCoordinates("")
         }
 
     
     }
     
     @IBAction func GoByLink(_ sender: UIButton) {
- 
         if let sessionUrl = connectionManager.sessionUrl, let url = sessionUrl.addingPercentEncoding (withAllowedCharacters: CharacterSet.urlQueryAllowed) {
             
             if let checkURL = URL(string: url) {
@@ -124,10 +98,14 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if isSessionPaused || isMonitoringOn {
+            FIRAnalytics.logEvent(withName: "trip_stop", parameters: nil)
             sendingManger.stopSendingCoordinates()
+            
             //UIApplication.shared.isIdleTimerDisabled = false
         } else {
-            sendingManger.startSendingCoordinates()
+            FIRAnalytics.logEvent(withName: "trip_start", parameters: nil)
+            sendingManger.startSendingCoordinates("")
+            
             //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
         }
     }
@@ -136,7 +114,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
-        MDLabel.text = ""
+        MDView.text = ""
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
@@ -168,7 +146,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 speed = 0
             }
             if let speedLabel = self.avgSpeedLabel {
-                speedLabel.text = String(format:"%.2f", speed)
+                speedLabel.text = String(format:"%.0f", speed)
             }
            
         }
@@ -185,48 +163,65 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         super.viewDidAppear(false)
         if !isLoaded {
-            
             //setup handler for open connection
+            connectionManager.dataSendStart.add {
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-blue")
+                }
+            }
+            connectionManager.dataSendEnd.add {
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-green")
+                }
+            }
+            connectionManager.connectionStart.add{
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-yellow")
+                }
+            }
             connectionManager.connectionRun.add{
                 let theChange = $0.0
                 
                 if theChange {
-                    
+                    /*
                     self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
-                        self.inGroup = $0
+                        //self.inGroup = $0
                     }
-
+                    */
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
-                        self.MDLabel.text = $1
+                        self.MDView.text = $1
                     }
                     self.groupManager.groupList()
                     self.connectionManager.getMessageOfTheDay()
-                    
+
                 } else if let glUpdated = self.onGroupListUpdated {
                     
                     self.groupManager.groupListUpdated.remove(glUpdated)
                 }
-                
-                if let user = SettingsManager.getKey(SettingKeys.user) {
-                    if user.length > 0 {
-                        self.userLabel.text = user as String
+                DispatchQueue.main.async {
+                    if let user = SettingsManager.getKey(SettingKeys.user) {
+                        if user.length > 0 {
+                            self.userLabel.text = user as String
+                        } else {
+                            self.userLabel.text = ""
+                        }
                     } else {
                         self.userLabel.text = ""
                     }
-                } else {
-                    self.userLabel.text = ""
+                    
+                    if let trackerId = self.connectionManager.TrackerID{
+                        self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+                    } else {
+                        self.trackerID.setTitle("", for: UIControlState())
+                    }
+                    self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
+                    
                 }
                 
-                if let trackerId = self.connectionManager.TrackerID{
-                        self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
-                } else {
-                    self.trackerID.setTitle("", for: UIControlState())
-                }
-
                 print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
-                self.osmoStatus.isHidden = !theChange
+                //self.osmoStatus.isHidden = !theChange
                 
                 if !theChange && !$0.1.isEmpty {
                     self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
@@ -237,7 +232,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 let theChange = $0.0
                 
                 self.isMonitoringOn = theChange
-                self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 print("MVC: The session was opened/closed.\(theChange)")
                 
                 if theChange {
@@ -408,24 +402,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         return nil
     }
     */
+
     
-    // This delegate method is where you tell the map to load a view for a specific annotation. To load a static MGLAnnotationImage, you would use `-mapView:imageForAnnotation:`.
-    
-    
-    func clearPeople(_ people: String){
-        /*
-        let ann = mapView.annotations.filter{$0.title == "\(people)"}
-        
-        if ann.count > 0 {
-            
-            mapView.removeAnnotations(ann)
-            if let element = onMapNow.indexOf("\(people)") {
-                
-                onMapNow.removeAtIndex(element)
-            }
-        }
- */
-    }
     
     
     /*
@@ -444,55 +422,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
     }
     */
-    func actionSheet(_ actionSheet: UIActionSheet, clickedButtonAt buttonIndex: Int) {
-        
-        if actionSheet.buttonTitle(at: buttonIndex) == "clear all" {
-            self.selectedGroupIndex = nil
-            
-            groupManager.updateGroupsOnMap([])
-            
-            if self.onMonitoringGroupsUpdated != nil {
-                
-                groupManager.monitoringGroupsUpdated.remove(self.onMonitoringGroupsUpdated!)
-                self.onMonitoringGroupsUpdated = nil
-            }
-            for p in onMapNow {
-                clearPeople("\(p)")
-            }
-            
-            return
-        }
-        
-        if buttonIndex != actionSheet.cancelButtonIndex {
-            /*
-            let group = inGroup?[buttonIndex - 1];
-            let intValue = group!.id as Int;
-            */
-            if let group = inGroup?[buttonIndex - 1]  {
-            
-                let intValue = Int (group.id);
-            
-                groupManager.updateGroupsOnMap([intValue!])
-                self.onMonitoringGroupsUpdated = groupManager.monitoringGroupsUpdated.add{
-                    
-                    for coord in $0 {
-                        
-                        //self.drawPeoples(coord)
-                        
-                    }
-                }
-                
-                for p in onMapNow {
-                    clearPeople("\(p)")
-                }
-                
-                self.selectedGroupIndex = buttonIndex - 1
-
-            }
-        }
-        
-        
-    }
+    
     
     func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8

@@ -11,7 +11,7 @@ open class GroupManager{
 
     
     var groupsOnMap: [Int] = [Int]()
-    var allGroups: [Group]?
+    var allGroups: [Group] = [Group]()
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
  
@@ -21,11 +21,13 @@ open class GroupManager{
     var groupActivated = ObserverSet<(Bool, String)>()
     var groupDeactivated = ObserverSet<(Bool, String)>()
     var groupCreated = ObserverSet<(Bool, String)>()
-    
+    var groupsUpdated = ObserverSet<(Int, Any)>()
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     
     var onActivateGroup : ObserverSetEntry<(Bool, String)>?
     var onDeactivateGroup : ObserverSetEntry<(Bool, String)>?
+    var onUpdateGroup : ObserverSetEntry<(Int, Any)>?
+    var trackDownloaded : ObserverSet<(Track)>?
     
     fileprivate let log = LogQueue.sharedLogQueue
     
@@ -52,8 +54,6 @@ open class GroupManager{
             self.connection.groupActivated.remove(self.onActivateGroup!)
         }
         connection.activateGroup(name)
-
-
     }
     
     open func deactivateGroup(_ name: String) {
@@ -63,15 +63,13 @@ open class GroupManager{
             
             print("DEACTIVATED \(name)! \($0) ")
             if($0) {
-                for group in self.allGroups! {
+                for group in self.allGroups {
                     if group.u == name {
                         group.active = false;
                         break;
                     }
                 }
             }
-            
-            
             self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
         }
         
@@ -135,36 +133,142 @@ open class GroupManager{
                 
                 self.allGroups = $0
                 self.groupListUpdated.notify($0)
-               
+                for group in $0 {
+                    for track in group.tracks{
+                        self.downloadIfNeeded(track)
+                    }
+                }
             }
         }
         
         connection.getGroups()
     }
     
-   
-    
-    open func updateGroupsOnMap(_ groups: [Int]){
+    func downloadIfNeeded(_ track:Track) {
+        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let filename = "\(track.u).gpx"
+        let path =  "\(paths[0])/channelsgpx/"
+        let fileManager = FileManager.default;
+        var shouldDownload = true;
         
+        if fileManager.fileExists(atPath: "\(path)\(filename)") {
+            do {
+                let attr = try fileManager.attributesOfItem(atPath: "\(path)\(filename)")
+                let fileSize:Int = attr[FileAttributeKey.size] as! Int
+                if fileSize == track.size {
+                    shouldDownload = false
+                    print("Found cached \(path)\(filename)")
+                }
+            } catch {
+            
+            }
+        } else {
+            var isDir : ObjCBool = false
+            if !fileManager.fileExists(atPath: path, isDirectory:&isDir) {
+                do {
+                    try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    print ("can't create directory \(path)")
+                }
+            }
+        }
+        if shouldDownload == true {
+            if let url = URL(string: track.url){
+                ConnectionHelper.downloadRequest(url, completed: {result, data in
+                    if result {
+                        let fileURL = URL(fileURLWithPath: "\(path)\(filename)")
+                        do {
+                            try data?.write(to: fileURL)
+                            self.trackDownloaded?.notify(track)
+                            print("Saved file \(path)\(filename)")
+                        } catch{
+                            print("Error saving \(path)\(filename)")
+                        }
+                    }
+                })
+            }
+        }
+    }
+ 
+    open func updateGroupsOnMap(_ groups: [Int]){
         groupsOnMap = groups
         connection.monitoringGroups = groups
         
         if groups.count > 0 && self.monitoringGroupsHandler == nil {
-            
             self.monitoringGroupsHandler = connection.monitoringGroupsUpdated.add({self.monitoringGroupsUpdated.notify($0)})
+            self.onUpdateGroup = connection.connection.groupsUpdated.add({
+                let g = $1 as! Dictionary<String, AnyObject>
+                let group = $0
+                let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
+
+                if let jsonUsers = g["users"] as? Array<AnyObject> {
+                    for jsonU in jsonUsers{
+                        
+                        let u = jsonU as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        let uE = (u["e"] as? Int) ?? 0
+
+                        if let user = self.getUser($0,user: uId) {
+                            if let uDeleted = u["deleted"] as? String {
+                                let uIdx = foundGroup?.users.index(of: user)
+                                if uIdx! > -1 {
+                                    foundGroup?.users.remove(at: uIdx!)
+                                }
+                            } else {
+                                if let uName = u["name"] as? String {
+                                    let uConnected = (u["connected"] as? Double) ?? 0
+                                    let uColor = u["color"] as! String
+                                    let uState = (u["state"] as? Int) ?? 0
+                                    let nUser = User(id: "\(uId)", name: uName, color: uColor, connected: uConnected)
+                                    nUser.state = uState
+                                    foundGroup?.users.append(nUser)
+                                }
+                            }
+                        }
+                        if uE > 0 {
+                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        }
+                    }
+                } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
+                    for jsonL in jsonLeave{
+                        let u = jsonL as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        
+                        let uE = (u["e"] as? Int) ?? 0
+                        if let user = self.getUser($0,user: uId) {
+                            let uIdx = foundGroup?.users.index(of: user)
+                            if uIdx! > -1 {
+                                foundGroup?.users.remove(at: uIdx!)
+                            }
+                        }
+                        if uE > 0 {
+                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        }
+
+                    }
+                    
+                }
+                self.groupsUpdated.notify(($0,$1))
+            })
         }
         if groups.count == 0 && self.monitoringGroupsHandler != nil {
-            
             connection.monitoringGroupsUpdated.remove(self.monitoringGroupsHandler!)
             self.monitoringGroupsHandler = nil
+            connection.connection.groupsUpdated.remove(self.onUpdateGroup!)
+            self.onUpdateGroup = nil
+            self.connection.activatePoolGroups(-1)
         }
     }
     
 
     open func getUser(_ group:  Int, user: Int) -> User? {
-        
-        let foundGroup = allGroups?.filter{$0.id == "\(group)"}.first
-        //return foundGroup?.users.filter{$0.device == "\(user)"}.first
+        let foundGroup = allGroups.filter{$0.u == "\(group)"}.first
         return foundGroup?.users.filter{$0.id == "\(user)"}.first
     }
 }

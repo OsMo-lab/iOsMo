@@ -21,6 +21,30 @@ open class BaseTcpConnection: NSObject {
         }
     }
     
+    open var addCallBackOnSendStart: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnSendStart
+        } set {
+            tcpClient.callbackOnSendStart = newValue
+        }
+    }
+    
+    open var addCallBackOnSendEnd: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnSendEnd
+        } set {
+            tcpClient.callbackOnSendEnd = newValue
+        }
+    }
+    
+    open var addCallBackOnConnect: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnConnect
+        } set {
+            tcpClient.callbackOnConnect = newValue
+        }
+    }
+    
     open var shouldCloseSession = false
     
     let log = LogQueue.sharedLogQueue
@@ -52,20 +76,20 @@ open class BaseTcpConnection: NSObject {
     var sessionOpened: Bool = false
 
     
-    func onSentCoordinate(){
-    
-        if self.coordinates.count > 0 {
-            self.coordinates.remove(at: 0)
+    func onSentCoordinate(cnt: Int){
+        for _ in 1...cnt {
+            if self.coordinates.count > 0 {
+                self.coordinates.remove(at: 0)
+            }
         }
         sendNextCoordinates()
     }
     
     
     open func closeConnection(){
-
         tcpClient.closeConnection()
-
     }
+
     open func closeSession(){
         let request = "\(Tags.closeSession.rawValue)"
         closeSession(request)
@@ -82,12 +106,32 @@ open class BaseTcpConnection: NSObject {
         }*/
         
         //TODO: refactoring send best coordinates
-        if self.sessionOpened && self.coordinates.count > 0 {
-            
-            if let theCoordinate = self.coordinates.first {
-                
-                send(theCoordinate.getCoordinateRequest)
+        let cnt = self.coordinates.count;
+        if self.sessionOpened && cnt > 0 {
+            var req = ""
+            var sep = ""
+            var idx = 0;
+            if cnt > 1 {
+                sep = "\""
             }
+            for theCoordinate in self.coordinates {
+                
+                if req != "" {
+                    req = "\(req),"
+                }
+                req = "\(req)\(sep)\(theCoordinate.getCoordinateRequest)\(sep)"
+                idx = idx + 1
+                //Ограничиваем количество отправляемых точек в одном пакете
+                if idx > 500 {
+                    break;
+                }
+            }
+            if cnt > 1 {
+                req = "\(Tags.buffer.rawValue)|[\(req)]"
+            } else {
+                req = "\(Tags.coordinate.rawValue)|\(req)"
+            }
+            send(req)
         }
     }
     

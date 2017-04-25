@@ -8,6 +8,11 @@
 
 import UIKit
 
+
+enum SignActions: Int {
+    case SignIn = 1 //default
+    case SignUp = 2
+}
 protocol AuthResultProtocol {
     
     func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void
@@ -16,12 +21,28 @@ protocol AuthResultProtocol {
     
 }
 
-open class AuthViewController: UIViewController, UIWebViewDelegate {
+open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDelegate {
 
     let authAnswerScheme = "api.osmo.mobi"
     let log = LogQueue.sharedLogQueue
     
+    @IBOutlet weak var emailField: UITextField!
+    @IBOutlet weak var passField: UITextField!
+    @IBOutlet weak var nickField: UITextField!
+    @IBOutlet weak var pass2Field: UITextField!
+    @IBOutlet weak var signButton: UIButton!
+    @IBOutlet weak var actButton: UIButton!
+    
+    @IBOutlet weak var sexSwitch: UISwitch!
+    @IBOutlet weak var signLabel: UILabel!
+    @IBOutlet weak var sexLabel: UILabel!
+    @IBOutlet weak var registerView: UIView!
+    @IBOutlet weak var signToRegConstraint: NSLayoutConstraint!
+    @IBOutlet weak var signToPassConstraint: NSLayoutConstraint!
+
+    
     @IBOutlet weak var authView: UIWebView!
+    var signAction: SignActions = SignActions.SignIn
     
     @IBAction func OnReload(_ sender: AnyObject) {
         reload()
@@ -36,9 +57,8 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
-        reload()
+        //reload()
     }
 
     override open func didReceiveMemoryWarning() {
@@ -46,6 +66,125 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    //Смена режима формы с логина на регистрацию и обратоно
+    @IBAction func setSignMode(_ sender: UIButton) {
+        if signAction == SignActions.SignIn {
+            signAction = SignActions.SignUp
+        } else {
+            signAction = SignActions.SignIn
+        }
+        switch signAction {
+        case SignActions.SignIn:
+            signButton.setTitle(NSLocalizedString("Register", comment: "Register label"), for: .normal)
+            actButton.setTitle(NSLocalizedString("Sign-In", comment: "Sign-in label"), for: .normal)
+            
+            signLabel.text = NSLocalizedString("Sign-In", comment: "Sign-in label")
+            signToRegConstraint.priority = 500
+            signToPassConstraint.priority = 999
+            
+            registerView.isHidden = true
+        default:
+            signButton.setTitle(NSLocalizedString("Sign-In", comment: "Sign-in label"), for: .normal)
+            actButton.setTitle(NSLocalizedString("Register", comment: "Register label"), for: .normal)
+            
+            signLabel.text = NSLocalizedString("Register", comment: "Register label")
+            signToRegConstraint.priority = 999
+            signToPassConstraint.priority = 500
+            
+            registerView.isHidden = false
+        }
+        
+    }
+
+    //Выбор пола
+    @IBAction func setSex(_ sender: UISwitch) {
+        if sender.isOn {
+            sexLabel.text = NSLocalizedString("male", comment: "male")
+        } else {
+            sexLabel.text = NSLocalizedString("female", comment: "female")
+        }
+    }
+    
+    @IBAction func signAction(_ sender: UIButton) {
+        if (signAction == SignActions.SignUp ) {
+            if (passField.text != pass2Field.text) {
+                self.alert("OsMo registration", message: NSLocalizedString("Passwords didn't match!", comment: "Passwords didn't match!"))
+                return
+            }
+            if (nickField.text == "") {
+                self.alert("OsMo registration", message: NSLocalizedString("Enter nick!", comment: "Enter nick!"))
+                return
+            }
+        }
+        
+        let device = SettingsManager.getKey(SettingKeys.device) as! String
+        let url = URL(string: signAction == SignActions.SignIn ? "https://api.osmo.mobi/signin?" : "https://api.osmo.mobi/signup?")
+        let session = URLSession.shared;
+        var urlReq = URLRequest(url: url!);
+        var requestBody:String = "key=\(device)&email=\(emailField.text!)&password=\(passField.text!)"
+        if (signAction == SignActions.SignUp) {
+            requestBody = "\(requestBody)&nick=\(nickField.text!)&gender=\(sexSwitch.isOn ? 1 : 0)"
+        }
+        
+        urlReq.httpMethod = "POST"
+        urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+
+        urlReq.httpBody = requestBody.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+        let task = session.dataTask(with: urlReq as URLRequest) {(data, response, error) in
+            var res : NSDictionary = [:]
+            guard let data = data, let _:URLResponse = response, error == nil else {
+                print("error: on send post request")
+                LogQueue.sharedLogQueue.enqueue("error: on send post request")
+
+                return
+            }
+            let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            
+            print("send post request \(url?.absoluteURL):\(requestBody)\n answer: \(dataStr!)")
+            LogQueue.sharedLogQueue.enqueue("send post request \(requestBody), answer: \(dataStr!)")
+            
+            do {
+                let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
+                res = (jsonDict as? NSDictionary)!
+                print(res)
+                if let user = res["nick"] {
+                    DispatchQueue.main.async {
+                        self.delegate?.succesfullLoginWithToken(self, info: AuthInfo(accountName: user as! String, key: ""))
+                    }
+                } else {
+                    if let error = res["error_description"] {
+                        DispatchQueue.main.async {
+                            self.alert("OsMo registration", message: error as! String )
+                        }
+                    }
+                }
+            } catch {
+                print("error serializing JSON from POST")
+                LogQueue.sharedLogQueue.enqueue("error serializing JSON from POST")
+
+                return
+            }
+        }
+        task.resume()
+        
+    }
+    
+    func alert(_ title: String, message: String) {
+        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
+            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
+            self.present(myAlert, animated: true, completion: nil)
+        } else { // iOS 7
+            let alert: UIAlertView = UIAlertView()
+            alert.delegate = self
+            
+            alert.title = title
+            alert.message = message
+            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
+            
+            alert.show()
+        }
+    }
 
     /*
     // MARK: - Navigation
@@ -130,6 +269,11 @@ open class AuthViewController: UIViewController, UIWebViewDelegate {
     open func webViewDidFinishLoad(_ webView: UIWebView) {
         //hide loading indicator
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+    //MARK UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

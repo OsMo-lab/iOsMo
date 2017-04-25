@@ -128,7 +128,7 @@
 "kKi-6z-bzq.segmentTitles[2]" = "Liked";
 
 /* Class = "UILabel"; text = "Autosave session"; ObjectID = "mQB-e1-7Xc"; */
-"mQB-e1-7Xc.text" = "Автосохранение сессии";
+"mQB-e1-7Xc.text" = "Автосохранение поездки";
 
 /* Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN"; */
 "mms-Em-UaN.text" = "00.0";
@@ -161,5 +161,5 @@
 "ymo-ea-5EI.text" = "Расстояние, метры";
 
 /* Class = "UILabel"; text = "Location update interval, seconds"; ObjectID = "zmr-4o-LwG"; */
-"zmr-4o-LwG.text" = "Интревал обновления координат, секунды";
+"zmr-4o-LwG.text" = "Интервал обновления координат, сек";
 

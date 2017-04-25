@@ -20,12 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var connectionManager = ConnectionManager.sharedConnectionManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var localNotification: UILocalNotification? = nil;
     
     fileprivate var timer = Timer()
     
-    
     let gcmMessageIDKey = "GCM"
-
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -34,6 +33,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 SettingsManager.setKey("", forKey: SettingKeys.pushToken)
             }
             //self.activateSwitcher.isOn = $0
+        }
+        connectionManager.sessionRun.add{
+            let theChange = $0.0
+            
+            if theChange {
+                self.displayNotification()
+                
+            } else {
+                
+            }
         }
 
         if #available(iOS 10.0, *) {
@@ -52,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        
+        UIApplication.shared.applicationIconBadgeNumber = 0
         application.registerForRemoteNotifications()
         // Use Firebase library to configure APIs
         FIRApp.configure()
@@ -63,28 +72,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                object: nil)
         // [END add_token_refresh_observer]
         
-        
+        if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
+            SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
+        }
         if SettingsManager.getKey(SettingKeys.locInterval)?.doubleValue == nil {
-            SettingsManager.setKey("0", forKey: SettingKeys.locInterval)
+            SettingsManager.setKey("3", forKey: SettingKeys.locInterval)
         }
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
-            SettingsManager.setKey("0", forKey: SettingKeys.locDistance)
+            SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
+        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
         if SettingsManager.getKey(SettingKeys.logView) == nil {
-            UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
-           
-            
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
-                
-                
                 var vcs = tbc.viewControllers
                 vcs?.removeLast()
                 
                 tbc.setViewControllers(vcs, animated: false)
-                
             }
-            
         }
+        
+
+        FIRAnalytics.logEvent(withName: "app_open", parameters: nil)
         if let url = launchOptions?[.url] as? URL {
             presentViewController(url:url);
         }
@@ -92,6 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
+        
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
@@ -102,6 +111,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FIRMessaging.messaging().disconnect()
         log.enqueue("Disconnected from FCM.")
         print("Disconnected from FCM.")
+        self.connectionManager.activatePoolGroups(-1)
+        if (connectionManager.connected && connectionManager.sessionOpened) {
+            self.displayNotification()
+        }
+        
         if (connectionManager.connected && !connectionManager.sessionOpened) {
             backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                 self?.endBackgroundTask()
@@ -112,6 +126,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func displayNotification() {
+        if self.localNotification == nil {
+            self.localNotification = UILocalNotification()
+            self.localNotification?.alertBody = NSLocalizedString("Tracking location", comment: "Tracking location")
+            
+            //set the notification
+            UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
+        }
+    }
+    
     func disconnectByTimer() {
         connectionManager.closeConnection()
         self.endBackgroundTask()
@@ -133,8 +157,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = UIBackgroundTaskInvalid
         }
-        connectToFcm()
-    }
+        self.connectToFcm()
+        if (self.localNotification != nil) {
+            UIApplication.shared.cancelLocalNotification(self.localNotification!)
+            self.localNotification = nil
+        }
+        UIApplication.shared.cancelAllLocalNotifications()
+     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
@@ -186,10 +215,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
         }
-        
         // Print full message.
         //print(userInfo)
     }
@@ -201,12 +230,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
             
             connectionManager.connection.parseOutput(messageID as! String)
         }
-        
+        FIRMessaging.messaging().appDidReceiveMessage(userInfo)
         // Print full message.
         //print(userInfo)
         
@@ -220,18 +250,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
             connectionManager.sendPush(refreshedToken)
         }
-        
-        // Connect to FCM since connection may have failed when attempted before having a token.
+         // Connect to FCM since connection may have failed when attempted before having a token.
         connectToFcm()
     }
     // [END refresh_token]
     // [START connect_to_fcm]
     func connectToFcm() {
         // Won't connect since there is no token
-        guard FIRInstanceID.instanceID().token() != nil else {
+        guard let token = FIRInstanceID.instanceID().token() else {
             return;
         }
-        
+        SettingsManager.setKey(token as NSString, forKey: SettingKeys.pushToken)
         // Disconnect previous FCM connection if it exists.
         FIRMessaging.messaging().disconnect()
         
@@ -240,12 +269,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Unable to connect with FCM. \(error)")
                 self.log.enqueue("Unable to connect with FCM. \(error)")
             } else {
-                print("Connected to FCM.")
-                self.log.enqueue("Connected to FCM")
+                print("Connected to FCM:\(token)")
+                self.log.enqueue("Connected to FCM:\(token)")
             }
         }
     }
     // [END connect_to_fcm]
+    
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+        if notificationSettings.types != [.alert, .badge, .sound] {
+            application.registerForRemoteNotifications()
+        }
+    }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Unable to register for remote notifications: \(error.localizedDescription)")
         log.enqueue("Unable to register for remote notifications: \(error.localizedDescription)")
@@ -255,11 +290,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // If swizzling is disabled then this function must be implemented so that the APNs token can be paired to
     // the InstanceID token.
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("APNs token retrieved: \(deviceToken)")
+        var token: String = ""
+        for i in 0..<deviceToken.count {
+            token += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
+        }
+        
+        print("APNs token retrieved: \(token)")
+        log.enqueue("APNs token retrieved: \(token)")
         //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
         
         // With swizzling disabled you must set the APNs token here.
-        // FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: FIRInstanceIDAPNSTokenType.sandbox)
+        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: .prod)
+        /*
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+            SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
+            connectionManager.sendPush(refreshedToken)
+        }*/
+
     }
     
 
@@ -278,7 +326,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
         }
         
@@ -295,10 +344,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-            log.enqueue(messageID as! String)
+            print("FCM: \(messageID)")
+            log.enqueue("FCM: \(messageID)")
+            connectionManager.connection.parseOutput(messageID as! String)
         }
-        
+        FIRMessaging.messaging().appDidReceiveMessage(userInfo)
         // Print full message.
         //print(userInfo)
         
@@ -311,6 +361,8 @@ extension AppDelegate : FIRMessagingDelegate {
     // Receive data message on iOS 10 devices while app is in the foreground.
     func applicationReceivedRemoteMessage(_ remoteMessage: FIRMessagingRemoteMessage) {
         print(remoteMessage.appData)
+        log.enqueue("Received remote message: \(remoteMessage.appData)")
+
     }
 }
 // [END ios_10_data_message_handling]

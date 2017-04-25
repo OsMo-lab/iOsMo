@@ -35,5 +35,16 @@
 "Unknown" = "Неизвестен";
 
 /* session was closed */
-"session was closed" = "сессия закрыта";
+"session was closed" = "поездка завершена";
+
+/* Tracking location */
+"Tracking location" = "Поездка отслеживается";
+
+/*  Alert title for Error on logout */
+"Error on logout" = "Ошибка выхода";
+
+/* Stop current trip, before logout */
+"Stop current trip, before logout" = "Остановите поездку, до выхода";
+
+
 

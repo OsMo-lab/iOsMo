@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 13/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, © 2017 Alexey Sirotkin. All rights reserved.
 //
 
 import Foundation
@@ -25,8 +25,10 @@ enum Tags: String {
     case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
     case activatePoolGroups = "PG"
+    case updateGroupResponse = "GPR"
     case groupSwitch = "GS"
     case coordinate = "T"
+    case buffer = "B"
 }
 
 enum KeysOld: String{
@@ -42,7 +44,7 @@ enum Keys: String{
     case address = "address"
     case uid = "uid"
     case name = "name"
-    case key = "device"
+    case device = "device"
     case error = "error"
     case errorDesc = "error_description"
     case push_token = "push_token"
@@ -72,13 +74,15 @@ enum AnswTags: String{
     case bye = "BYE|"
     case kick = "KICK|"
     case pong = "PP"
-    case coordinate = "T|"
+    case coordinate = "T"
+    case buffer = "B"
     case closeSession = "TC|"
     case token = "INIT|"
     case auth = "AUTH|"
     case gda = "GDA|"
     case gaa = "GAA|"
     case grCoord = "G:"
+    case updateGroup = "GP"
     case messageDay = "MD|"
 }
 
@@ -92,7 +96,6 @@ enum UpdatesEnum: String {
 enum SettingKeys: String {
     case device = "deviceKey"
     case pushToken = "pushToken"
-    case auth = "authKey"
     case isStayAwake = "isStayAwake"
     case user = "user"
     case sendTime = "sendTime"
@@ -101,6 +104,10 @@ enum SettingKeys: String {
 
     case logView = "logView"
     case poolGroups = "poolGroups"
+    
+    case lat = "lat"
+    case lon = "lon"
+    case zoom = "zoom"
 }
 
 enum GroupActions: String {
@@ -116,9 +123,11 @@ enum GroupType: String {
     case POI = "5"
     case Trip = "6"
 }
+
 enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"
+    case WHERE = "12"
     case TRACKER_SATELLITES_INFO = "13"
     case TRACKER_SYSTEM_INFO = "14"
     case TRACKER_WIFI_INFO = "20"
@@ -132,4 +141,11 @@ enum RemoteCommand: String {
     case TRACKER_SESSION_PAUSE = "6"
     case TRACKER_SESSION_START = "1"
     case TRACKER_SESSION_STOP = "2"
+}
+
+enum MapStyle: String {
+    case Outdoor = "mapbox://styles/alesir/cizr8vw9g00mb2sqji5539sj4"
+    case Satellite = "mapbox://styles/alesir/cizr906j900mc2sqjct7nbux6"
+    case Streets = "mapbox://styles/alesir/cizr8v0z6003w2st6ytibx85a"
+    case Bright = "mapbox://styles/alesir/cizr8s765004h2rkwl1ob0zat"
 }

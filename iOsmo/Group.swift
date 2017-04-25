@@ -20,6 +20,8 @@ open class Group{
     var color: String = "#ffffff"
     var nick: String = ""
     var users: [User] = [User]()
+    var points: [Point] = [Point]()
+    var tracks: [Track] = [Track]()
     
     init(u: String, name: String,  active: Bool){
         self.u = u

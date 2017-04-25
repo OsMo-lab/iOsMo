@@ -50,15 +50,15 @@ public struct LocationModel{
             isSimulated = true
         }
         var formatedTime = ""
-        let locationAge = -time.timeIntervalSinceNow
-        if locationAge > 1 {
+        //let locationAge = -time.timeIntervalSinceNow
+        //if locationAge > 1 {
             let t:TimeInterval = time.timeIntervalSince1970
             formatedTime = NSString(format:timeFormat as NSString, t) as String
-        }
+        //}
         
         let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
         let formatedCourse = (speed > 5 && course > 0)  ? (NSString(format:courseFormat as NSString, course)): ""
-        let toSend = "\(Tags.coordinate.rawValue)|L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)\(formatedCourse)H\(accuracy)\(formatedTime)"
+        let toSend = "L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)\(formatedCourse)H\(accuracy)\(formatedTime)"
 
         return toSend
     }

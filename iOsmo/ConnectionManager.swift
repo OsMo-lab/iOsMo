@@ -10,13 +10,16 @@
 
 
 import Foundation
+import FirebaseInstanceID
 
 open class ConnectionManager: NSObject{
 
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroups: [Int] {
         
-        get {return self.connection.monitoringGroups!}
+        get {
+            return self.connection.monitoringGroups!
+        }
         set (newValue){
             
             self.connection.monitoringGroups = newValue
@@ -46,11 +49,15 @@ open class ConnectionManager: NSObject{
     let pushActivated = ObserverSet<Bool>()
     let groupDeactivated = ObserverSet<(Bool, String)>()
     let groupList = ObserverSet<[Group]>()
+    let trackDownoaded = ObserverSet<(Track)>()
+    
     let connectionRun = ObserverSet<(Bool, String)>()
     let sessionRun = ObserverSet<(Bool, String)>()
     let groupsEnabled = ObserverSet<Bool>()
     let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
-    
+    let connectionStart = ObserverSet<()>()
+    let dataSendStart = ObserverSet<()>()
+    let dataSendEnd = ObserverSet<()>()
     
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     
@@ -103,17 +110,17 @@ open class ConnectionManager: NSObject{
  
     open func connect(_ reconnect: Bool = false){
         log.enqueue("ConnectionManager: connect")
+        self.connectionStart.notify(())
         
         if !ConnectionManager.hasConnectivity() {
             shouldReConnect = true
             return
         }
-
-       if let tkn = ConnectionHelper.connectToServ() {
-        
-            if tkn.error.isEmpty {
-                if connection.addCallBackOnError == nil {
-                    connection.addCallBackOnError = {
+        ConnectionHelper.getServerInfo(completed: {result, token -> Void in
+            if (result) {
+                /*Информация о сервере получена*/
+                if self.connection.addCallBackOnError == nil {
+                    self.connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
                         self.shouldReConnect = isError
                         
@@ -131,21 +138,52 @@ open class ConnectionManager: NSObject{
                         }
                     }
                 }
-                connection.connect(tkn)
-                shouldReConnect = false //interesting why here? may after connction is successful??
+                if self.connection.addCallBackOnSendStart == nil {
+                    self.connection.addCallBackOnSendStart = {
+                        () -> Void in
+                        self.dataSendStart.notify(())
+                    }
+                }
+                if self.connection.addCallBackOnSendEnd == nil {
+                    self.connection.addCallBackOnSendEnd = {
+                        () -> Void in
+                        self.dataSendEnd.notify(())
+                    }
+                }
+                if self.connection.addCallBackOnConnect == nil {
+                    self.connection.addCallBackOnConnect = {
+                        () -> Void in
+                        self.connection.sendAuth(token!.device_key as String)
+                    }
+                }
+
+                self.connection.connect(token!)
+                self.shouldReConnect = false //interesting why here? may after connction is successful??
             } else {
-                connectionRun.notify((false, "\(tkn.error)"))
-                shouldReConnect = false
+                if (token?.error.isEmpty)! {
+                    self.connectionRun.notify((false, ""))
+                    self.shouldReConnect = false
+                } else {
+                    print("getServerInfo Error:\(token?.error)")
+                    self.log.enqueue("getServerInfo Error:\(token?.error)")
+                    if (token?.error == "Wrong device key") {
+                        SettingsManager.setKey("", forKey: SettingKeys.device)
+                        self.connectionRun.notify((false, ""))
+                        self.shouldReConnect = true
+                    } else {
+                        self.connectionRun.notify((false, "\(token?.error)"))
+                        self.shouldReConnect = false
+                    }
+                    
+                }
             }
-        } else {
-            connectionRun.notify((false, "")) //token is missing
-            shouldReConnect = true
-        }
+        })
     }
     
     open func closeConnection() {
         if (self.connected && !self.sessionOpened) {
             connection.closeConnection()
+            self.connection.addCallBackOnConnect = nil
             self.connected = false
         }
     }
@@ -180,6 +218,7 @@ open class ConnectionManager: NSObject{
                 
                 self.onGroupListUpdated = connection.groupListDownloaded.add {
                     self.groupList.notify($0)
+                    
                 }
             }
             connection.sendGetGroups()
@@ -326,34 +365,38 @@ open class ConnectionManager: NSObject{
         }
         
         if tag == AnswTags.remoteCommand {
+            let sendingManger = SendingManager.sharedSendingManager
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 closeSession()
-                
+                connection.sendRemoteCommandResponse(name)
+
                 return
             }
-        
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
-                //openSession()
-                let sendingManger = SendingManager.sharedSendingManager
-                sendingManger.startSendingCoordinates()
+                sendingManger.startSendingCoordinates(name)
+                connection.sendRemoteCommandResponse(name)
+                
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
-                let sendingManger = SendingManager.sharedSendingManager
                 sendingManger.pauseSendingCoordinates()
-                                
+                connection.sendRemoteCommandResponse(name)
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){
-                let sendingManger = SendingManager.sharedSendingManager
-                sendingManger.startSendingCoordinates()
+                sendingManger.startSendingCoordinates(name)
+                connection.sendRemoteCommandResponse(name)
+                return
+            }
+            if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
                 
-                
+                if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
+                    self.sendPush(token)
+                }
+                connection.sendRemoteCommandResponse(name)
                 return
             }
         }
-        
-        /// etc
     }
 
 
@@ -366,7 +409,7 @@ open class ConnectionManager: NSObject{
             log.enqueue("should be reconnected")
             shouldReConnect = true;
             
-            connectionRun.notify((false, "reconnect")) //error but is not need to be popuped
+            connectionRun.notify((false, "")) //error but is not need to be popuped
             
          }
         

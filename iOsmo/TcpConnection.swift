@@ -36,18 +36,19 @@ open class TcpConnection: BaseTcpConnection {
     let groupListDownloaded = ObserverSet<[Group]>()
     let groupCreated = ObserverSet<(Bool, String)>()
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
+    let groupsUpdated = ObserverSet<(Int, Any)>()
     
     open var sessionUrlParsed: String = ""
+    open var device_key: String = ""
     open var sessionTrackerID: String = ""
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
     open func getTrackerID()-> String?{return sessionTrackerID}
 
     open override func connect(_ token: Token){
-        
-        super.connect(token)
         super.tcpClient.callbackOnParse = parseOutput
-        //sendToken(token)
-        sendAuth(token)
+        super.connect(token)
+        
+        //sendAuth(token.device_key as String)
     }
     
     open func openSession(){
@@ -60,6 +61,13 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.getGroups.rawValue)"
         super.send(request)
     }
+    
+    open func sendUpdateGroupResponse(group: Int, event:Int){
+        
+        let request = "\(Tags.updateGroupResponse.rawValue):\(group)|\(event)"
+        super.send(request)
+    }
+
     
     open func sendCreateGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
         
@@ -130,14 +138,14 @@ open class TcpConnection: BaseTcpConnection {
         log.enqueue("send token")
     }
     
-    fileprivate func sendAuth(_ token: Token){
-
-        let request = "\(Tags.auth.rawValue)\(token.device_key)"
-        
+    open func sendRemoteCommandResponse(_ rc: String) {
+        let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)"
         super.send(request)
-        
-        print("send auth \(request)")
-        log.enqueue("send auth")
+    }
+    
+    open func sendAuth(_ device_key: String){
+        let request = "\(Tags.auth.rawValue)\(device_key)"
+        super.send(request)
     }
 
     //probably should be refactored and moved to ReconnectManager
@@ -272,7 +280,6 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.push){
-            
             print("PUSH activated")
             log.enqueue("PUSH activated")
             
@@ -316,8 +323,18 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         
-        if outputContains(AnswTags.coordinate) {
-            super.onSentCoordinate()
+        if command == AnswTags.coordinate.rawValue {
+            let cnt = Int(addict)
+            if cnt > 0 {
+                super.onSentCoordinate(cnt:cnt!)
+            }
+            return
+        }
+        if command == AnswTags.buffer.rawValue {
+            let cnt = Int(addict)
+            if cnt > 0 {
+                super.onSentCoordinate(cnt:cnt!)
+            }
             return
         }
         
@@ -393,17 +410,18 @@ open class TcpConnection: BaseTcpConnection {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }else if param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
+            }else if param == RemoteCommand.TRACKER_GCM_ID.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
             
             return
         }
         if outputContains(AnswTags.grCoord) {
             if let monitor = monitoringGroups {
-                
                 let parseRes = parseGroupCoordinates(output)
                     if let grId = parseRes.0, let res = parseRes.1 {
                         
-                        if monitor.contains(grId){
+                        //if monitor.contains(grId){
                             if let groups = parseCoordinate(grId, coordinates: res) {
                                 monitoringGroupsUpdated.notify(groups)
                             }
@@ -411,19 +429,28 @@ open class TcpConnection: BaseTcpConnection {
                                 log.enqueue("error: wrong parsing coordinate array")
                                 print("error: wrong parsing coordinate array")
                             }
-                        }
+                        //}
                     }
-                                
             }
             
         //D:47580|L37.33018:-122.032582S1.3A9H5C
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
             return
         }
+        if command == AnswTags.updateGroup.rawValue {
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                
+                groupsUpdated.notify((grId, res))
+            }else {
+                log.enqueue("error parsing GP")
+                print("error parsing GP")
+            }
+            return
+        }
     }
     
     func parseCoordinate(_ group: Int, coordinates: Any) -> [UserGroupCoordinate]? {
-        
         if let users = coordinates as? Array<String> {
             var res = [UserGroupCoordinate]()
         
@@ -461,6 +488,15 @@ open class TcpConnection: BaseTcpConnection {
         return (groupId, parseJson(responce))
     }
     
+    func parseGroupUpdate(_ responce: String) -> (Int?, Any?){
+        
+        let index = responce.components(separatedBy: "|")[0].characters.count
+        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
+        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
+        
+        return (groupId, parseJson(responce))
+    }
+    
     func parseForErrorJson(_ responce: String) -> (Bool, String)? {
         if let dic = parseJson(responce) as? Dictionary<String, Any>{
 
@@ -483,8 +519,6 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     func parseJson(_ responce: String) -> Any? {
-        
-        
         // server can accumulate some messages, so should define it
         //let responceFirst = responce.componentsSeparatedByString("\n")[0] <-- has no sense because splitting in other place
         
@@ -548,17 +582,63 @@ open class TcpConnection: BaseTcpConnection {
             let u = jsonU as! Dictionary<String, AnyObject>
             var uId = u["u"] as? String
             if (uId == nil) {
-                let uIdInt = g["u"] as? Int
+                let uIdInt = u["u"] as! Int
                 uId = "\(uIdInt)"
             }
-            //let uDevice = u["device"] as? String
             let uName = u["name"] as! String
             let uConnected = u["connected"] as! Double
             let uColor = u["color"] as! String
+            let uOnline = (u["online"] as? Int) ?? 0
+            let uState = (u["state"] as? Int) ?? 0
+            
+    
             
             let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
+            
+            user.state = uState
+            user.online = uOnline
+            
+            if let lat = u["lat"] as? String, let lon = u["lon"] as? String {
+                user.lat = atof(lat);
+                user.lon = atof(lon);
+            }
+            
+            
             group.users.append(user)
             
+        }
+        if let jsonPoints = g["point"] as? Array<AnyObject> {
+            for jsonP in jsonPoints{
+                let u = jsonP as! Dictionary<String, AnyObject>
+                let uId = u["u"] as! Int
+                let lat = atof(u["lat"] as! String)
+                let lon = atof(u["lon"] as! String)
+                let uName = u["name"] as? String
+                let descr = u["description"] as? String
+                let uColor = u["color"] as! String
+                
+                let point = Point (u: uId, lat: lat, lon: lon, name: uName!, color: uColor)
+                point.descr = descr!
+                group.points.append(point)
+               
+            }
+        }
+        if let jsonTracks = g["track"] as? Array<AnyObject> {
+            for jsonT in jsonTracks{
+                let u = jsonT as! Dictionary<String, AnyObject>
+                let uId = u["u"] as! Int
+                let uSize:Int! = Int(u["size"] as! String)
+                let uName = u["name"] as! String
+                let descr = u["description"] as? String
+                let uColor = u["color"] as! String
+                let uUrl = u["url"] as! String
+                let uType = u["type"] as! String
+                
+                let track = Track(u: uId, name: uName, type: uType, color: uColor, url: uUrl, size: uSize)
+                track.descr = descr!
+                group.tracks.append(track)
+                
+            }
         }
         return group;
         

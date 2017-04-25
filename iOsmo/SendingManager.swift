@@ -9,6 +9,8 @@
 //used lib from https://mikeash.com/pyblog/friday-qa-2015-01-23-lets-build-swift-notifications.html
 
 import Foundation
+import UIKit
+
 open class SendingManager: NSObject{
     //used lib
     let sentObservers = ObserverSet<LocationModel>()
@@ -38,7 +40,7 @@ open class SendingManager: NSObject{
         super.init()
     }
 
-    open func startSendingCoordinates(){
+    open func startSendingCoordinates(_ rc: String){
         locationTracker.turnMonitorinOn() //start getting coordinates
 
         if !connectionManager.connected {
@@ -47,6 +49,9 @@ open class SendingManager: NSObject{
                     self.onSessionRun = self.connectionManager.sessionRun.add{
                         if $0.0 {
                             self.startSending()
+                            if rc != "" {
+                                self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                            }
                         }
                     }
                     self.connectionManager.openSession()
@@ -62,6 +67,9 @@ open class SendingManager: NSObject{
             self.onSessionRun = self.connectionManager.sessionRun.add{
                 if $0.0 {
                     self.startSending()
+                    if rc != "" {
+                        self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                    }
                 } else {
                     //unsibscribe when stop monitoring
                     if let onSesRun = self.onSessionRun {
@@ -72,9 +80,10 @@ open class SendingManager: NSObject{
             self.connectionManager.openSession()
         } else {
             startSending()
+            if rc != "" {
+                self.connectionManager.connection.sendRemoteCommandResponse(rc)
+            }
         }
-        
-        
     }
     
     open func pauseSendingCoordinates(){
@@ -117,18 +126,20 @@ open class SendingManager: NSObject{
             log.enqueue("CoordinateManager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
-            var sendTime:TimeInterval = 5.0;
+            var sendTime:TimeInterval = 4;
             if let sT = SettingsManager.getKey(SettingKeys.sendTime) {
                 sendTime  = sT.doubleValue
-                if sendTime < 1 {
-                    sendTime = 5;
+                if sendTime < 4 {
+                    sendTime = 4;
                 }
             
             }
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
             
             sessionStarted.notify((true))
+            
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            
         }
     }
      
