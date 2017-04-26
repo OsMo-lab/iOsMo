@@ -34,6 +34,11 @@ All rights reserved.</target>
         <target>Время</target>
         <note>Class = "UILabel"; text = "Time"; ObjectID = "1rg-8O-chP";</note>
       </trans-unit>
+      <trans-unit id="2C7-Iq-l0C.normalTitle">
+        <source>Sign-in</source>
+        <target>Войти</target>
+        <note>Class = "UIButton"; normalTitle = "Sign-in"; ObjectID = "2C7-Iq-l0C";</note>
+      </trans-unit>
       <trans-unit id="2dk-tC-xs0.normalTitle">
         <source>Join</source>
         <target>Вступить</target>
@@ -64,6 +69,11 @@ All rights reserved.</target>
         <target>Энергосбережение</target>
         <note>Class = "UILabel"; text = "Power saving"; ObjectID = "8Dm-lJ-hkP";</note>
       </trans-unit>
+      <trans-unit id="8rt-C4-f7P.text">
+        <source>Message of the Day</source>
+        <target>Сообщение дня</target>
+        <note>Class = "UITextView"; text = "Message of the Day"; ObjectID = "8rt-C4-f7P";</note>
+      </trans-unit>
       <trans-unit id="8sE-Lc-xYs.text">
         <source>Sending interval, seconds</source>
         <target>Интервал отправки, сек</target>
@@ -81,7 +91,7 @@ All rights reserved.</target>
       </trans-unit>
       <trans-unit id="AxV-gG-nJV.text">
         <source>nick</source>
-        <target>ник</target>
+        <target>имя</target>
         <note>Class = "UILabel"; text = "nick"; ObjectID = "AxV-gG-nJV";</note>
       </trans-unit>
       <trans-unit id="BYA-yY-8gh.normalTitle">
@@ -149,15 +159,29 @@ All rights reserved.</target>
         <target>Сброс авторизации</target>
         <note>Class = "UILabel"; text = "Reset authorization"; ObjectID = "LWZ-te-6Dr";</note>
       </trans-unit>
+      <trans-unit id="Lqr-TY-UXf.text">
+        <source>Nick</source>
+        <target>Ник</target>
+        <note>Class = "UILabel"; text = "Nick"; ObjectID = "Lqr-TY-UXf";</note>
+      </trans-unit>
       <trans-unit id="MBA-Xb-vkb.placeholder">
         <source>ID or URL of group to join</source>
         <target>ID или URL группы</target>
         <note>Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb";</note>
       </trans-unit>
+      <trans-unit id="Nrg-GG-v8J.normalTitle">
+        <source>Forgot?</source>
+        <target>Забыли?</target>
+        <note>Class = "UIButton"; normalTitle = "Forgot?"; ObjectID = "Nrg-GG-v8J";</note>
+      </trans-unit>
       <trans-unit id="P3p-0b-A4E.text">
         <source>Settings</source>
         <target>Настройки</target>
         <note>Class = "UILabel"; text = "Settings"; ObjectID = "P3p-0b-A4E";</note>
+      </trans-unit>
+      <trans-unit id="PM8-tD-Glc.text">
+        <source>E-mail</source>
+        <note>Class = "UILabel"; text = "E-mail"; ObjectID = "PM8-tD-Glc";</note>
       </trans-unit>
       <trans-unit id="Ppm-WI-6i7.text">
         <source>name</source>
@@ -168,6 +192,11 @@ All rights reserved.</target>
         <source>Add</source>
         <target>Создать</target>
         <note>Class = "UIButton"; normalTitle = "Add"; ObjectID = "S8H-pZ-cOM";</note>
+      </trans-unit>
+      <trans-unit id="TRf-Ht-0I1.normalTitle">
+        <source>Register</source>
+        <target>Регистрация</target>
+        <note>Class = "UIButton"; normalTitle = "Register"; ObjectID = "TRf-Ht-0I1";</note>
       </trans-unit>
       <trans-unit id="VMO-OO-6cj.normalTitle">
         <source>Refresh</source>
@@ -180,9 +209,28 @@ All rights reserved.</target>
         <note>Class = "UITextField"; placeholder = "e-mail address"; ObjectID = "Vjh-Tf-qLH";</note>
       </trans-unit>
       <trans-unit id="WVP-LT-JgZ.text">
-        <source>00.0</source>
+        <source>0</source>
         <target>00.0</target>
-        <note>Class = "UILabel"; text = "00.0"; ObjectID = "WVP-LT-JgZ";</note>
+        <note>Class = "UILabel"; text = "0"; ObjectID = "WVP-LT-JgZ";</note>
+      </trans-unit>
+      <trans-unit id="Wuc-tR-7kP.text">
+        <source>Sex</source>
+        <target>Пол</target>
+        <note>Class = "UILabel"; text = "Sex"; ObjectID = "Wuc-tR-7kP";</note>
+      </trans-unit>
+      <trans-unit id="Y2L-T9-ft9.text">
+        <source>Password</source>
+        <target>Пароль</target>
+        <note>Class = "UILabel"; text = "Password"; ObjectID = "Y2L-T9-ft9";</note>
+      </trans-unit>
+      <trans-unit id="YML-d4-xYR.placeholder">
+        <source>Superman</source>
+        <note>Class = "UITextField"; placeholder = "Superman"; ObjectID = "YML-d4-xYR";</note>
+      </trans-unit>
+      <trans-unit id="ZaF-6E-x27.text">
+        <source>male</source>
+        <target>муж.</target>
+        <note>Class = "UILabel"; text = "male"; ObjectID = "ZaF-6E-x27";</note>
       </trans-unit>
       <trans-unit id="ZmA-1B-N8V.normalTitle">
         <source>Group URL</source>
@@ -208,11 +256,6 @@ All rights reserved.</target>
         <source>Don't turn the screen off</source>
         <target>Не выключать экран</target>
         <note>Class = "UILabel"; text = "Don't turn the screen off"; ObjectID = "dzF-Z7-f5g";</note>
-      </trans-unit>
-      <trans-unit id="fu1-UL-KdI.text">
-        <source>Label</source>
-        <target>Label</target>
-        <note>Class = "UILabel"; text = "Label"; ObjectID = "fu1-UL-KdI";</note>
       </trans-unit>
       <trans-unit id="hyP-V3-hsV.title">
         <source>Authorization</source>
@@ -241,13 +284,18 @@ All rights reserved.</target>
       </trans-unit>
       <trans-unit id="mQB-e1-7Xc.text">
         <source>Autosave session</source>
-        <target>Автосохранение сессии</target>
+        <target>Автосохранение поездки</target>
         <note>Class = "UILabel"; text = "Autosave session"; ObjectID = "mQB-e1-7Xc";</note>
       </trans-unit>
       <trans-unit id="mms-Em-UaN.text">
         <source>00.0</source>
         <target>00.0</target>
         <note>Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN";</note>
+      </trans-unit>
+      <trans-unit id="nCc-nC-2GY.text">
+        <source>Re-enter password</source>
+        <target>Повторите пароль</target>
+        <note>Class = "UILabel"; text = "Re-enter password"; ObjectID = "nCc-nC-2GY";</note>
       </trans-unit>
       <trans-unit id="o31-Sf-Gmk.text">
         <source>Distance</source>
@@ -258,6 +306,11 @@ All rights reserved.</target>
         <source>Load last:</source>
         <target>Load last:</target>
         <note>Class = "UILabel"; text = "Load last:"; ObjectID = "ors-8k-0GG";</note>
+      </trans-unit>
+      <trans-unit id="qyj-mE-UvE.text">
+        <source>Sign-in</source>
+        <target>Вход</target>
+        <note>Class = "UILabel"; text = "Sign-in"; ObjectID = "qyj-mE-UvE";</note>
       </trans-unit>
       <trans-unit id="roX-H8-MZy.text">
         <source>Account</source>
@@ -273,6 +326,11 @@ All rights reserved.</target>
         <source>Routes</source>
         <target>Маршруты</target>
         <note>Class = "UILabel"; text = "Routes"; ObjectID = "sQw-1p-wMi";</note>
+      </trans-unit>
+      <trans-unit id="vfZ-dH-OQh.normalTitle">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        <note>Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "vfZ-dH-OQh";</note>
       </trans-unit>
       <trans-unit id="voL-dJ-cjX.text">
         <source>100</source>
@@ -296,7 +354,7 @@ All rights reserved.</target>
       </trans-unit>
       <trans-unit id="zmr-4o-LwG.text">
         <source>Location update interval, seconds</source>
-        <target>Интревал обновления координат, секунды</target>
+        <target>Интервал обновления координат, сек</target>
         <note>Class = "UILabel"; text = "Location update interval, seconds"; ObjectID = "zmr-4o-LwG";</note>
       </trans-unit>
     </body>
@@ -313,7 +371,7 @@ All rights reserved.</target>
         <source>$(PRODUCT_NAME)</source>
       </trans-unit>
       <trans-unit id="CFBundleShortVersionString">
-        <source>1.5</source>
+        <source>1.7</source>
       </trans-unit>
     </body>
   </file>
@@ -331,6 +389,11 @@ All rights reserved.</target>
         <source>Connecting...</source>
         <target>Соединяемся...</target>
         <note>Connecting status</note>
+      </trans-unit>
+      <trans-unit id="Enter nick!">
+        <source>Enter nick!</source>
+        <target>Введите ник!</target>
+        <note>Enter nick!</note>
       </trans-unit>
       <trans-unit id="Error">
         <source>Error</source>
@@ -362,6 +425,11 @@ All rights reserved.</target>
         <target>Ошибка выхода из группы</target>
         <note>Alert title for error on leave group</note>
       </trans-unit>
+      <trans-unit id="Error on logout">
+        <source>Error on logout</source>
+        <target>Ошибка выхода</target>
+        <note>Alert title for Error on logout</note>
+      </trans-unit>
       <trans-unit id="Leave">
         <source>Leave</source>
         <target>Выйти</target>
@@ -376,40 +444,55 @@ All rights reserved.</target>
         <source>OK</source>
         <note>OK</note>
       </trans-unit>
+      <trans-unit id="Passwords didn't match!">
+        <source>Passwords didn't match!</source>
+        <target>Пароли не совпадают!</target>
+        <note>Passwords didn't match!</note>
+      </trans-unit>
+      <trans-unit id="Register">
+        <source>Register</source>
+        <target>Регистрация</target>
+        <note>Register label</note>
+      </trans-unit>
       <trans-unit id="Restart iOsMo">
         <source>Restart iOsMo</source>
         <target>Перезапустите iOsMo</target>
         <note>Restart iOsMo</note>
+      </trans-unit>
+      <trans-unit id="Sign-In">
+        <source>Sign-In</source>
+        <target>Вход</target>
+        <note>Sign-in label</note>
+      </trans-unit>
+      <trans-unit id="Stop current trip, before logout">
+        <source>Stop current trip, before logout</source>
+        <target>Остановите поездку, до выхода</target>
+        <note>Stop current trip, before logout</note>
+      </trans-unit>
+      <trans-unit id="Tracking location">
+        <source>Tracking location</source>
+        <target>Поездка отслеживается</target>
+        <note>Tracking location</note>
       </trans-unit>
       <trans-unit id="Unknown">
         <source>Unknown</source>
         <target>Неизвестен</target>
         <note>Unknown user</note>
       </trans-unit>
+      <trans-unit id="female">
+        <source>female</source>
+        <target>жен.</target>
+        <note>female</note>
+      </trans-unit>
+      <trans-unit id="male">
+        <source>male</source>
+        <target>муж.</target>
+        <note>male</note>
+      </trans-unit>
       <trans-unit id="session was closed">
         <source>session was closed</source>
         <target>поездка завершена</target>
         <note>session was closed</note>
-      </trans-unit>
-      <trans-unit id="Error on logout">
-          <source>Error on logout</source>
-          <target>Ошибка</target>
-          <note>Alert title for Error on logout</note>
-      </trans-unit>
-      <trans-unit id="Stop current trip, before logout!">
-          <source>Stop current trip, before logout</source>
-          <target>Остановите поездку, до выхода</target>
-          <note>Stop current trip, before logout</note>
-      </trans-unit>
-      <trans-unit id="Passwords didn't match!">
-          <source>Passwords didn't match!</source>
-          <target>Пароли не совпадают!</target>
-          <note>Passwords didn't match!</note>
-      </trans-unit>
-      <trans-unit id="Enter nick!">
-          <source>Enter nick!</source>
-          <target>Введите ник!</target>
-          <note>Enter nick!</note>
       </trans-unit>
     </body>
   </file>
