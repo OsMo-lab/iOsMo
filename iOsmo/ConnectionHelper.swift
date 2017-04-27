@@ -50,24 +50,19 @@ struct ConnectionHelper {
             var res : NSDictionary = [:]
             guard let data = data, let _:URLResponse = response, error == nil else {
                 print("error: on send post request")
-                LogQueue.sharedLogQueue.enqueue("error: on send post request")
                 postCompleted(false, res)
                 return
             }
             let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             
             print("send post request \(url.absoluteURL):\(requestBody)\n answer: \(dataStr)")
-            LogQueue.sharedLogQueue.enqueue("send post request \(requestBody), answer: \(dataStr)")
-
             do {
                 let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
                 res = (jsonDict as? NSDictionary)!
                 postCompleted(true, res)
             } catch {
                 print("error serializing JSON from POST")
-                LogQueue.sharedLogQueue.enqueue("error serializing JSON from POST")
                 postCompleted(false, res)
-                return
             }
         }
         task.resume()
@@ -94,7 +89,6 @@ struct ConnectionHelper {
     }
     
     static func authenticate(completed : @escaping (_ key: NSString?) -> ()) -> Void{
-        LogQueue.sharedLogQueue.enqueue("authenticate")
         let device = SettingsManager.getKey(SettingKeys.device)
         if device == nil || device!.length == 0{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
@@ -106,7 +100,6 @@ struct ConnectionHelper {
                 if result {
                     if let newKey = responceData.object(forKey: Keys.device.rawValue) as? NSString {
                         print ("got key by post request \(newKey)")
-                        LogQueue.sharedLogQueue.enqueue("got key by post request")
                         SettingsManager.setKey(newKey, forKey: SettingKeys.device)
                         completed(newKey)
                     } else {
@@ -126,12 +119,12 @@ struct ConnectionHelper {
         authenticate(completed: {key -> Void in
             
             if (key != nil) {
-                LogQueue.sharedLogQueue.enqueue("Authenticated with key")
+                print("Authenticated with key")
                 let requestString = "app=\(iOsmoAppKey)"
                 
                 postRequest(servUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
                     if result {
-                        LogQueue.sharedLogQueue.enqueue("get server info by post request")
+                        print("get server info by post request")
                         
                         if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
                             
@@ -142,7 +135,6 @@ struct ConnectionHelper {
                         }  else {
                             if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
                                 print("server is \(server)")
-                                LogQueue.sharedLogQueue.enqueue("server is \(server)")
                                 
                                 let server = server.components(separatedBy: ":")
                                 
@@ -154,13 +146,13 @@ struct ConnectionHelper {
                             }
                         }
                     } else {
-                        LogQueue.sharedLogQueue.enqueue("Unable to connect to server")
+                        print("Unable to connect to server")
                         let tkn = Token(tokenString: "", address: "", port: 0, key: "")
                         completed(false,tkn)
                     }
                 })
             } else {
-                LogQueue.sharedLogQueue.enqueue("Unable to receive token")
+                print("Unable to receive token")
                 let tkn = Token(tokenString: "", address: "", port: 0, key: "")
                 completed(false,tkn)
             }

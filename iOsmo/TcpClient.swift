@@ -10,7 +10,7 @@ import Foundation
 
 open class TcpClient : NSObject, StreamDelegate {
 
-    let log = LogQueue.sharedLogQueue
+    fileprivate let log = LogQueue.sharedLogQueue
     private var inputStream: InputStream?
     private var outputStream: OutputStream?
     private var openedStreams = 0;

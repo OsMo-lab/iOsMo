@@ -440,7 +440,6 @@ open class TcpConnection: BaseTcpConnection {
         if command == AnswTags.updateGroup.rawValue {
             let parseRes = parseGroupUpdate(output)
             if let grId = parseRes.0, let res = parseRes.1 {
-                
                 groupsUpdated.notify((grId, res))
             }else {
                 log.enqueue("error parsing GP")

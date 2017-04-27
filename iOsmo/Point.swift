@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class Point {
+open class Point: Equatable {
     var u: Int
     var lat: Double
     var lon: Double
@@ -26,6 +26,10 @@ open class Point {
         self.name = name;
         self.color = color;
 
+    }
+    
+    public static func == (left: Point, right: Point) -> Bool {
+        return left.u == right.u
     }
 
 }
