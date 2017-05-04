@@ -577,66 +577,20 @@ open class TcpConnection: BaseTcpConnection {
         
         
         for jsonU in jsonUsers!{
-            
-            let u = jsonU as! Dictionary<String, AnyObject>
-            var uId = u["u"] as? String
-            if (uId == nil) {
-                let uIdInt = u["u"] as! Int
-                uId = "\(uIdInt)"
-            }
-            let uName = u["name"] as! String
-            let uConnected = u["connected"] as! Double
-            let uColor = u["color"] as! String
-            let uOnline = (u["online"] as? Int) ?? 0
-            let uState = (u["state"] as? Int) ?? 0
-            
-    
-            
-            let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
-            
-            user.state = uState
-            user.online = uOnline
-            
-            if let lat = u["lat"] as? String, let lon = u["lon"] as? String {
-                user.lat = atof(lat);
-                user.lon = atof(lon);
-            }
-            
-            
+            let user = User(json:jsonU as! Dictionary<String, AnyObject>)
             group.users.append(user)
-            
         }
         if let jsonPoints = g["point"] as? Array<AnyObject> {
             for jsonP in jsonPoints{
-                let u = jsonP as! Dictionary<String, AnyObject>
-                let uId = u["u"] as! Int
-                let lat = atof(u["lat"] as! String)
-                let lon = atof(u["lon"] as! String)
-                let uName = u["name"] as? String
-                let descr = u["description"] as? String
-                let uColor = u["color"] as! String
-                
-                let point = Point (u: uId, lat: lat, lon: lon, name: uName!, color: uColor)
-                point.descr = descr!
+                let point = Point (json:jsonP as! Dictionary<String, AnyObject>)
                 group.points.append(point)
                
             }
         }
         if let jsonTracks = g["track"] as? Array<AnyObject> {
             for jsonT in jsonTracks{
-                let u = jsonT as! Dictionary<String, AnyObject>
-                let uId = u["u"] as! Int
-                let uSize:Int! = Int(u["size"] as! String)
-                let uName = u["name"] as! String
-                let descr = u["description"] as? String
-                let uColor = u["color"] as! String
-                let uUrl = u["url"] as! String
-                let uType = u["type"] as! String
-                
-                let track = Track(u: uId, name: uName, type: uType, color: uColor, url: uUrl, size: uSize)
-                track.descr = descr!
+                let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
                 group.tracks.append(track)
-                
             }
         }
         return group;

@@ -19,12 +19,13 @@ open class Point: Equatable {
     var start: Date?
     var finish: Date?
 
-    init(u: Int, lat: Double, lon: Double, name: String, color: String){
-        self.u = u;
-        self.lat = lat
-        self.lon = lon
-        self.name = name;
-        self.color = color;
+    init(json: Dictionary<String, AnyObject>) {
+        self.u = json["u"] as! Int
+        self.lat = atof(json["lat"] as! String)
+        self.lon = atof(json["lon"] as! String)
+        self.name = json["name"] as! String
+        self.descr = json["description"] as! String
+        self.color = json["color"] as! String
 
     }
     

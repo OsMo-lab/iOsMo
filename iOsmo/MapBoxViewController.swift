@@ -307,7 +307,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
     
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
     var onUserLeave: ObserverSetEntry<User>?
-    var inGroup: [Group]?
     var selectedGroupIndex: Int?
     var trackedUser: String = ""
     
@@ -332,6 +331,13 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 DispatchQueue.main.async {
                     self.drawPeoples(location: coord)
                 }
+            }
+        }
+        groupManager.groupsUpdated.add{
+            _ = $0
+            _ = $1
+            DispatchQueue.main.async {
+                self.updateGroupsOnMap(groups: self.groupManager.allGroups )
             }
         }
         groupManager.groupListUpdated.add{
@@ -621,27 +627,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
             sender.setImage(UIImage(named: "lock-25"), for: UIControlState.normal)
         }
         setupLocationTrackingSettings()
-    }
-    
-    @IBAction func selectGroupsClick(_ sender: AnyObject) {
-        //let selectedGroupName = (selectedGroupIndex != nil) ? inGroup?[selectedGroupIndex!].name : nil
-        let actionSheet = UIActionSheet(title: "select group", delegate: self, cancelButtonTitle: "cancel", destructiveButtonTitle: nil)
-        
-        if selectedGroupIndex != nil {
-            actionSheet.destructiveButtonIndex = selectedGroupIndex! + 1
-        }
-        
-        if let groups = inGroup {
-            
-            for group in groups{
-                
-                actionSheet.addButton(withTitle: group.name)
-            }
-            
-            if selectedGroupIndex != nil { actionSheet.addButton(withTitle: "clear all") }
-        }
-        
-        //actionSheet.showInView(self.mapView)
     }
     
     func setupLocationTrackingSettings()

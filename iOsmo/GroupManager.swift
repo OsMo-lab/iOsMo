@@ -208,7 +208,10 @@ open class GroupManager{
                         if (uId == 0) {
                             uId = Int(u["u"] as! String)!
                         }
-                        let uE = (u["e"] as? Int) ?? 0
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
 
                         if let user = self.getUser($0,user: uId) {
                             if let uDeleted = u["deleted"] as? String {
@@ -228,15 +231,9 @@ open class GroupManager{
                                 }
                             }
                         } else {
-                            if let uName = u["name"] as? String {
-                                let uConnected = (u["connected"] as? Double) ?? 0
-                                let uColor = u["color"] as! String
-                                let uState = (u["state"] as? Int) ?? 0
-                                let nUser = User(id: "\(uId)", name: uName, color: uColor, connected: uConnected)
-                                nUser.state = uState
-                                foundGroup?.users.append(nUser)
-                            }
-
+         
+                            let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
+                            foundGroup?.users.append(nUser)
                             
                         }
                         if uE > 0 {
@@ -251,7 +248,10 @@ open class GroupManager{
                             uId = Int(u["u"] as! String)!
                         }
                         
-                        let uE = (u["e"] as? Int) ?? 0
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
                         if let user = self.getUser($0,user: uId) {
                             let uIdx = foundGroup?.users.index(of: user)
                             if uIdx! > -1 {
@@ -271,7 +271,10 @@ open class GroupManager{
                             uId = Int(u["u"] as! String)!
                         }
                         
-                        let uE = (u["e"] as? Int) ?? 0
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
                         if let point = self.getPoint($0,point: uId) {
                             if let uDeleted = u["deleted"] as? String {
                                 let uIdx = foundGroup?.points.index(of: point)
@@ -293,27 +296,46 @@ open class GroupManager{
                                 point.descr = descr!
 
                             }
-                            
                         } else {
-                            let lat = atof(u["lat"] as! String)
-                            let lon = atof(u["lon"] as! String)
-                            let uName = u["name"] as? String
-                            let descr = u["description"] as? String
-                            let uColor = u["color"] as! String
-                            
-                            let pointNew = Point (u: uId, lat: lat, lon: lon, name: uName!, color: uColor)
-                            pointNew.descr = descr!
+                            let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
                             foundGroup?.points.append(pointNew)
                         }
-                        
-                        
-                        
                         if uE > 0 {
                             self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
                         }
-
                     }
-                    
+                } else if let jsonTracks = g["track"] as? Array<AnyObject> {
+                    for jsonT in jsonTracks {
+                        let u = jsonT as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
+                        if let track = self.getTrack($0,track: uId) {
+                            if let uDeleted = u["deleted"] as? String {
+                                let uIdx = foundGroup?.tracks.index(of: track)
+                                if uIdx! > -1 {
+                                    foundGroup?.tracks.remove(at: uIdx!)
+                                }
+                            } else {
+                                let uName = u["name"] as! String
+                                let uColor = u["color"] as! String
+                                track.name = uName
+                                track.color = uColor
+                            }
+                        } else {
+                            let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
+                            foundGroup?.tracks.append(track)
+                        }
+                        if uE > 0 {
+                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        }
+                    }
                 }
                 self.groupsUpdated.notify(($0,$1))
             })
@@ -336,5 +358,10 @@ open class GroupManager{
     open func getPoint(_ group:  Int, point: Int) -> Point? {
         let foundGroup = allGroups.filter{$0.u == "\(group)"}.first
         return foundGroup?.points.filter{$0.u == point}.first
+    }
+    
+    open func getTrack(_ group:  Int, track: Int) -> Track? {
+        let foundGroup = allGroups.filter{$0.u == "\(group)"}.first
+        return foundGroup?.tracks.filter{$0.u == track}.first
     }
 }
