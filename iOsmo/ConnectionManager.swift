@@ -69,6 +69,7 @@ open class ConnectionManager: NSObject{
     fileprivate var reachability: Reachability
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
+    open var isGettingLocation = false
     
     class var sharedConnectionManager : ConnectionManager{
         
@@ -201,6 +202,10 @@ open class ConnectionManager: NSObject{
         if self.connected {
             connection.closeSession()
         }
+    }
+    
+    open func sendCoordinate(_ coordinate: LocationModel) {
+        connection.sendCoordinate(coordinate)
     }
     
     open func sendCoordinates(_ coordinates: [LocationModel])
@@ -369,13 +374,11 @@ open class ConnectionManager: NSObject{
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 closeSession()
                 connection.sendRemoteCommandResponse(name)
-
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
                 sendingManger.startSendingCoordinates(name)
                 connection.sendRemoteCommandResponse(name)
-                
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
@@ -389,11 +392,16 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
-                
                 if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
                     self.sendPush(token)
                 }
                 connection.sendRemoteCommandResponse(name)
+                return
+            }
+            if (name == RemoteCommand.WHERE.rawValue) {
+                self.isGettingLocation = true
+                sendingManger.startSendingCoordinates(name)
+
                 return
             }
         }

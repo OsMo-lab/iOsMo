@@ -41,7 +41,9 @@ open class SendingManager: NSObject{
     }
 
     open func startSendingCoordinates(_ rc: String){
-        locationTracker.turnMonitorinOn() //start getting coordinates
+        
+        let once = (!connectionManager.sessionOpened && rc == RemoteCommand.WHERE.rawValue) ? true : false;
+        locationTracker.turnMonitorinOn(once: once) //start getting coordinates
 
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
@@ -54,7 +56,12 @@ open class SendingManager: NSObject{
                             }
                         }
                     }
-                    self.connectionManager.openSession()
+                    if rc != RemoteCommand.WHERE.rawValue {
+                        self.connectionManager.openSession()
+                    }else{
+                        self.startSending()
+                    }
+                    
                 }
                 
                 // unsubscribe because it is single event
@@ -77,7 +84,11 @@ open class SendingManager: NSObject{
                     }
                 }
             }
-            self.connectionManager.openSession()
+            if rc != RemoteCommand.WHERE.rawValue {
+                self.connectionManager.openSession()
+            }else{
+                self.startSending()
+            }
         } else {
             startSending()
             if rc != "" {
@@ -102,26 +113,34 @@ open class SendingManager: NSObject{
     
     open func sending(){
         //MUST REFACTOR
-        if connectionManager.sessionOpened && connectionManager.connected {
-            
+        if (connectionManager.sessionOpened || connectionManager.isGettingLocation)  && connectionManager.connected {
             let coors: [LocationModel] = locationTracker.getLastLocations()
-            print("CoordinateManager: got \(coors.count) coordinates")
-            log.enqueue("CoordinateManager: got \(coors.count) coordinates")
+            print("SendingManager: got \(coors.count) coordinates")
+            log.enqueue("SendingManager: got \(coors.count) coordinates")
             
             if coors.count > 0 {
-                log.enqueue("CoordinateManager: sending \(coors.count) coordinates")
-                self.connectionManager.sendCoordinates(coors)
+                log.enqueue("SendingManager: sending \(coors.count) coordinates")
+                if connectionManager.isGettingLocation {
+                    self.connectionManager.sendCoordinate(coors[0])
+                }
+                if connectionManager.sessionOpened {
+                    self.connectionManager.sendCoordinates(coors)
+                }
                 
                 for c in coors {
                     //notify about all - because it draw on map
                     self.sentObservers.notify(c)
+                }
+                if (connectionManager.isGettingLocation && !connectionManager.sessionOpened) {
+                    pauseSendingCoordinates()
+                    connectionManager.isGettingLocation = false
                 }
            }
         }
     }
     
     fileprivate func startSending(){
-        if connectionManager.sessionOpened {
+        if (connectionManager.sessionOpened || connectionManager.isGettingLocation) {
             
             log.enqueue("CoordinateManager: start Sending")
             self.lcSendTimer?.invalidate()
@@ -135,8 +154,9 @@ open class SendingManager: NSObject{
             
             }
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
-            
-            sessionStarted.notify((true))
+            if connectionManager.sessionOpened {
+                sessionStarted.notify((true))
+            }
             
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
             

@@ -147,6 +147,11 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.auth.rawValue)\(device_key)"
         super.send(request)
     }
+    
+    open func sendCoordinate(_ coordinate: LocationModel){
+        let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.WHERE.rawValue)|\(coordinate.getCoordinateRequest)"
+        super.send(request)
+    }
 
     //probably should be refactored and moved to ReconnectManager
     fileprivate func sendPing(){
@@ -411,6 +416,8 @@ open class TcpConnection: BaseTcpConnection {
             }else if param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }else if param == RemoteCommand.TRACKER_GCM_ID.rawValue {
+                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
+            }else if param == RemoteCommand.WHERE.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
             

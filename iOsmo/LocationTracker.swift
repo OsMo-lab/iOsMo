@@ -18,7 +18,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open var lastLocations = [LocationModel]()
     open var distance = 0.0;
     var isDeferingUpdates = false;
-    
+    var isGettingLocationOnce = false;
     
     class var sharedLocationManager : CLLocationManager {
         struct Static {
@@ -32,12 +32,12 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         super.init()
     }
     
-    open func turnMonitorinOn(){
+    open func turnMonitorinOn(once : Bool){
         self.distance = 0
         self.isDeferingUpdates = false
+        self.isGettingLocationOnce = once
        
         if CLLocationManager.locationServicesEnabled() == false {
-        
             print("Location services enabled false!")
             log.enqueue("Location services enabled FALSE!")
         } else {
@@ -84,7 +84,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     
     open func getLastLocations() -> [LocationModel]{
-        
         let getLastLocations = self.lastLocations
         self.lastLocations = [LocationModel]()
         
@@ -124,8 +123,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             let theCoordinate = loc.coordinate
             let theAccuracy = loc.horizontalAccuracy
             let theAltitude = loc.altitude
-            
-            
+
             if (-loc.timestamp.timeIntervalSinceNow > 60){
                 continue
             }
@@ -133,8 +131,8 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             let prevAge = (prevLM != nil ? loc.timestamp.timeIntervalSince((prevLM?.time)!):0)
             
             //select only valid location and also location with good accuracy
-            if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil))){
-                if ((prevAge >= locInterval) || (lastLocations.last == nil)) {
+            if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil || self.isGettingLocationOnce))){
+                if ((prevAge >= locInterval) || (lastLocations.last == nil) || self.isGettingLocationOnce) {
                     var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
                     //add others values
                     locationModel.accuracy = Int(theAccuracy)
@@ -146,9 +144,11 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     let distanceInMeters = loc.distance(from: prev_loc!)
                     distance = distance + distanceInMeters / 1000
                     prev_loc = loc
-                    
                     self.lastLocations.append(locationModel)
-                    self.allSessionLocations.append(locationModel)
+                    if !(self.isGettingLocationOnce) {
+                        self.allSessionLocations.append(locationModel)
+                    }
+                    
                     prevLM = locationModel;
                 }
             }
@@ -156,14 +156,12 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
         if (isDeferingUpdates == false && (locInterval > 10 || locDistance > 50 )) {
-            
             self.isDeferingUpdates = true
             manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
         }
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-
         print("locationManager error \(error)")
         log.enqueue("locationManager error \(error)")
         
