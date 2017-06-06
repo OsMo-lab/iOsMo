@@ -403,6 +403,15 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.remoteCommand){
+            switch param {
+            case RemoteCommand.TRACKER_SYSTEM_INFO.rawValue:
+                self.sendSystemInfo()
+            case RemoteCommand.TRACKER_BATTERY_INFO.rawValue:
+                self.sendSystemInfo()
+            default:
+                self.answerObservers.notify((AnswTags.remoteCommand, param, true))
+            }
+            /*
             if param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue {
                 self.sendSystemInfo()
             }else if param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue {
@@ -420,7 +429,7 @@ open class TcpConnection: BaseTcpConnection {
             }else if param == RemoteCommand.WHERE.rawValue {
                 self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
-            
+            */
             return
         }
         if outputContains(AnswTags.grCoord) {

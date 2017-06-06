@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/TcpConnection.swift"
-            timestampString = "515778008.74853"
+            timestampString = "518463238.397065"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "591"
-            endingLineNumber = "591"
+            startingLineNumber = "600"
+            endingLineNumber = "600"
             landmarkName = "parseJSONgroup(_:)"
             landmarkType = "7">
          </BreakpointContent>

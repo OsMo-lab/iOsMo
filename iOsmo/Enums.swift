@@ -141,6 +141,9 @@ enum RemoteCommand: String {
     case TRACKER_SESSION_PAUSE = "6"
     case TRACKER_SESSION_START = "1"
     case TRACKER_SESSION_STOP = "2"
+    case REFRESH_DEVICES = "91"
+    case REFRESH_GROUPS = "92"
+    case TTS = "46"
 }
 
 enum MapStyle: String {

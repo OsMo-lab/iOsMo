@@ -130,8 +130,8 @@ open class TcpClient : NSObject, StreamDelegate {
         case Stream.Event.endEncountered:
             print ("EndEncountered")
             log.enqueue("stream endEcountered")
-            inputStream?.close()
-            outputStream?.close()
+            //inputStream?.close()
+            //outputStream?.close()
             if callbackOnError != nil {
                 callbackOnError!(true)
             }

@@ -126,12 +126,10 @@ open class ConnectionManager: NSObject{
                         self.shouldReConnect = isError
                         
                         if ((self.connected || reconnect) && isError) {
-                            self.log.enqueue("CallBackOnError: should be reconnected")
                             self.shouldReConnect = true;
                         }
                         self.connected = false
                         
-                        //self.checkStatus(self.reachability)
                         self.connectionRun.notify((false, ""))
                         
                         if (self.shouldReConnect) {
@@ -376,6 +374,12 @@ open class ConnectionManager: NSObject{
                 connection.sendRemoteCommandResponse(name)
                 return
             }
+            if (name == RemoteCommand.TRACKER_EXIT.rawValue){
+                closeSession()
+                connection.sendRemoteCommandResponse(name)
+                connection.closeConnection()
+                return
+            }
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
                 sendingManger.startSendingCoordinates(name)
                 connection.sendRemoteCommandResponse(name)
@@ -398,6 +402,12 @@ open class ConnectionManager: NSObject{
                 connection.sendRemoteCommandResponse(name)
                 return
             }
+            if (name == RemoteCommand.REFRESH_GROUPS.rawValue){
+                connection.sendGetGroups()
+                connection.sendRemoteCommandResponse(name)
+                return
+            }
+
             if (name == RemoteCommand.WHERE.rawValue) {
                 self.isGettingLocation = true
                 sendingManger.startSendingCoordinates(name)
