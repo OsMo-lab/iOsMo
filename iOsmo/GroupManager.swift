@@ -49,7 +49,21 @@ open class GroupManager{
             
             self.groupActivated.notify($0, $1)
             
-            print("ACTIVATED! \($0) ")
+            print("ACTIVATED! \($0) \(name)")
+            if($0) {
+                do {
+                    if let data: Data = $1.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) {
+                        
+                        let group = Group.init(json: jsonObject as! Dictionary<String, AnyObject>)
+
+                        let idx = self.allGroups.index(of: group)
+                        if idx! > -1 {
+                            self.allGroups[idx!] = group
+                        }
+                        
+                    }
+                } catch {}
+            }
             
             self.connection.groupActivated.remove(self.onActivateGroup!)
         }

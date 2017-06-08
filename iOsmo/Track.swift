@@ -30,6 +30,7 @@ open class Track: Equatable {
         self.type = json["type"] as! String
     }
     
+    
     open func getTrackData() -> XML? {
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(u).gpx"

@@ -17,7 +17,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     let enterGroupCell = "enterGroupCell"
     let section = ["Add group", "Joing group", "Groups"]
     
-    var groups: [Group] = [Group]()
     var successLogin: Bool = false
     
     var groupAction = GroupActions.view
@@ -128,7 +127,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             
             if ((groupAction == GroupActions.enter  || groupAction == GroupActions.new) && row == 0) {
             } else {
-                let group = (groupAction == GroupActions.enter  || groupAction == GroupActions.new) ? self.groups[row - 1]: self.groups[row]
+                let group = (groupAction == GroupActions.enter  || groupAction == GroupActions.new) ? groupManager.allGroups[row - 1]: groupManager.allGroups[row]
                 if group.active {
                     groupManager.deactivateGroup(group.u)
                 } else {
@@ -171,12 +170,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         //setLoginControls()
         
         groupManager.groupListUpdated.add{
-            if  self.groups.count > 0{
-                
-                self.groups = [Group]()
-            }
-            
-            self.groups = $0
+            let _ = $0
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -240,7 +234,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         
         groupManager.groupActivated.add{
             if ($0.0) {
-                self.groupManager.groupList()
+                //self.groupManager.groupList()
             } else {
                 self.alert(NSLocalizedString("Error on activate group", comment:"Alert title for error on activate group"), message: $0.1)
                 DispatchQueue.main.async {
@@ -395,7 +389,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 return 0;
             }
         case 2:
-            return self.groups.count;
+            return groupManager.allGroups.count;
         default:
             return 0;
         }
@@ -483,7 +477,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 cell = UITableViewCell(style:UITableViewCellStyle.subtitle, reuseIdentifier:groupCell)
                 
             }
-            let group = self.groups[row]
+            let group = groupManager.allGroups[row]
 
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel,
                 let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel,
@@ -512,7 +506,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         
         if (section < 2) {
         } else {
-            let group = self.groups[row]
+            let group = groupManager.allGroups[row]
             
         }
     }
@@ -548,7 +542,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                     indicator.startAnimating()
                 }
                 
-                let group = groups[(indexPath as NSIndexPath).row]
+                let group = groupManager.allGroups[(indexPath as NSIndexPath).row]
                 groupManager.leaveGroup(group.u)
                 
             }

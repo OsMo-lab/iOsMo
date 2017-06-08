@@ -365,7 +365,8 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.activateGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.activateGroup, result.1 , !result.0)
+                let value = (result.0 ? result.1 : output.components(separatedBy: "|")[1])
+                answerObservers.notify(AnswTags.activateGroup, value , !result.0)
             }else {
                 print("error: activate group answer cannot be parsed")
                 log.enqueue("error: activate group asnwer cannot be parsed")
@@ -394,7 +395,7 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.messageDay){
             if (command != "" && addict != "") {
-                answerObservers.notify((AnswTags.messageDay,addict, true))
+                answerObservers.notify((AnswTags.messageDay, addict, true))
             }
             else {
                 log.enqueue("error: wrong parsing MD")
@@ -411,25 +412,7 @@ open class TcpConnection: BaseTcpConnection {
             default:
                 self.answerObservers.notify((AnswTags.remoteCommand, param, true))
             }
-            /*
-            if param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue {
-                self.sendSystemInfo()
-            }else if param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue {
-                self.sendBatteryStatus()
-            }else if param == RemoteCommand.TRACKER_SESSION_STOP.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand, param, true))
-            }else if param == RemoteCommand.TRACKER_SESSION_START.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.TRACKER_GCM_ID.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.WHERE.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }
-            */
+
             return
         }
         if outputContains(AnswTags.grCoord) {
@@ -562,57 +545,7 @@ open class TcpConnection: BaseTcpConnection {
         return nil
     }
     
-    func parseJSONgroup(_ jsonG: Any)->Group {
-        let g = jsonG as! Dictionary<String, AnyObject>
-        let gName = g["name"] as! String
-        let gDescr = g["description"] as! String
-        let gPolicy = g["policy"] as! String
-        let gNick = g["nick"] as! String
-        let gColor = g["color"] as! String
-        let gURL = g["url"] as! String
-        let gType = g["type"] as! String
-        let gActive = g["active"] as? String == "1"
-        var gU = g["u"] as? String
-        if (gU == nil ){
-            let gUint = g["u"] as! Int
-            gU = "\(gUint)"
-        }
-        
-        let gId = g["id"] as? String
-        let jsonUsers = g["users"] as? Array<AnyObject>
-        
-        
-        let group = Group(u: gU!, name: gName, active: gActive)
-        group.descr = gDescr
-        group.policy = gPolicy
-        group.nick = gNick
-        group.color = gColor
-        group.url = gURL
-        group.id = gId!;
-        group.type = gType;
-        
-        
-        for jsonU in jsonUsers!{
-            let user = User(json:jsonU as! Dictionary<String, AnyObject>)
-            group.users.append(user)
-        }
-        if let jsonPoints = g["point"] as? Array<AnyObject> {
-            for jsonP in jsonPoints{
-                let point = Point (json:jsonP as! Dictionary<String, AnyObject>)
-                group.points.append(point)
-               
-            }
-        }
-        if let jsonTracks = g["track"] as? Array<AnyObject> {
-            for jsonT in jsonTracks{
-                let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
-                group.tracks.append(track)
-            }
-        }
-        return group;
-        
-    }
-    func parseGroupsJson(_ responce: String) -> [Group]? {
+        func parseGroupsJson(_ responce: String) -> [Group]? {
         
         //let responceFirst = responce.componentsSeparatedByString("\n")[0] <-- has no sense because splitting in other place
         
@@ -635,16 +568,12 @@ open class TcpConnection: BaseTcpConnection {
             
                 if let jsonGroups = jsonObject as? Array<Any> {
                     for jsonG in jsonGroups{
-                        
-                        let group = self.parseJSONgroup(jsonG)
+                        let group = Group.init(json: jsonG as! Dictionary<String, AnyObject>)
+
                         groups.append(group)
                     }
             
-                } /*else {
-                    let group = self.parseJSONgroup(jsonObject as Any)
-                    groups.append(group)
-                    
-            }*/
+                }
             
                 
             return groups

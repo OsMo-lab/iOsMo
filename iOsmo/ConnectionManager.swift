@@ -402,6 +402,7 @@ open class ConnectionManager: NSObject{
                 connection.sendRemoteCommandResponse(name)
                 return
             }
+            
             if (name == RemoteCommand.REFRESH_GROUPS.rawValue){
                 connection.sendGetGroups()
                 connection.sendRemoteCommandResponse(name)
