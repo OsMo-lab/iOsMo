@@ -382,7 +382,6 @@ open class ConnectionManager: NSObject{
             }
             if (name == RemoteCommand.TRACKER_SESSION_START.rawValue){
                 sendingManger.startSendingCoordinates(name)
-                connection.sendRemoteCommandResponse(name)
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
