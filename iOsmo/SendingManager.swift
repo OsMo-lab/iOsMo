@@ -97,17 +97,21 @@ open class SendingManager: NSObject{
         }
     }
     
-    open func pauseSendingCoordinates(){
+    open func pauseSendingCoordinates(_ rc: String){
         locationTracker.turnMonitoringOff()
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
         sessionPaused.notify((true))
         UIApplication.shared.isIdleTimerDisabled = false
+        if rc != "" {
+            self.connectionManager.connection.sendRemoteCommandResponse(rc)
+        }
+
     }
     
-    open func stopSendingCoordinates(){
-        pauseSendingCoordinates()
+    open func stopSendingCoordinates(_ rc: String){
+        pauseSendingCoordinates(rc)
         connectionManager.closeSession()
     }
     
@@ -132,7 +136,7 @@ open class SendingManager: NSObject{
                     self.sentObservers.notify(c)
                 }
                 if (connectionManager.isGettingLocation && !connectionManager.sessionOpened) {
-                    pauseSendingCoordinates()
+                    pauseSendingCoordinates("")
                     connectionManager.isGettingLocation = false
                 }
            }

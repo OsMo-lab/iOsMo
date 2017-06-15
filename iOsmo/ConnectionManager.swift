@@ -370,14 +370,13 @@ open class ConnectionManager: NSObject{
         if tag == AnswTags.remoteCommand {
             let sendingManger = SendingManager.sharedSendingManager
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
-                sendingManger.stopSendingCoordinates()
+                sendingManger.stopSendingCoordinates(name)
                 //closeSession()
-                connection.sendRemoteCommandResponse(name)
+                
                 return
             }
             if (name == RemoteCommand.TRACKER_EXIT.rawValue){
-                sendingManger.stopSendingCoordinates()
-                connection.sendRemoteCommandResponse(name)
+                sendingManger.stopSendingCoordinates(name)
                 connection.closeConnection()
                 return
             }
@@ -386,8 +385,7 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
-                sendingManger.pauseSendingCoordinates()
-                connection.sendRemoteCommandResponse(name)
+                sendingManger.pauseSendingCoordinates(name)
                 return
             }
             if (name == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){

@@ -10,7 +10,7 @@ import Foundation
 
 open class LogQueue {
     var innerQueue: [String]
-    let maxSize = 500
+    let maxSize = 5000
     class var sharedLogQueue : LogQueue {
         
         struct Static {

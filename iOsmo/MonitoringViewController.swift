@@ -71,7 +71,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         if isMonitoringOn {
             FIRAnalytics.logEvent(withName: "trip_pause", parameters: nil)
-            sendingManger.pauseSendingCoordinates()
+            sendingManger.pauseSendingCoordinates("")
         } else {
             sendingManger.startSendingCoordinates("")
         }
@@ -99,7 +99,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if isSessionPaused || isMonitoringOn {
             FIRAnalytics.logEvent(withName: "trip_stop", parameters: nil)
-            sendingManger.stopSendingCoordinates()
+            sendingManger.stopSendingCoordinates("")
             
             //UIApplication.shared.isIdleTimerDisabled = false
         } else {
