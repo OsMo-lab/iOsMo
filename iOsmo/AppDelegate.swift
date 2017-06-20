@@ -246,7 +246,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // [START refresh_token]
     func tokenRefreshNotification(_ notification: Notification) {
         if let refreshedToken = FIRInstanceID.instanceID().token() {
-            print("InstanceID token: \(refreshedToken)")
+            print("Refreshed token: \(refreshedToken)")
+            log.enqueue("Refreshed token: \(refreshedToken)")
             SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
             connectionManager.sendPush(refreshedToken)
         }

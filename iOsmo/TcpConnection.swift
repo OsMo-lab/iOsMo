@@ -177,7 +177,7 @@ open class TcpConnection: BaseTcpConnection {
         }
     }
     
-    fileprivate func sendBatteryStatus(){
+    open func sendBatteryStatus(){
         UIDevice.current.isBatteryMonitoringEnabled = true
         let level = UIDevice.current.batteryLevel * 100
         var state = 0;
@@ -193,9 +193,9 @@ open class TcpConnection: BaseTcpConnection {
             
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
-                send(request)            }
+                send(request)
+            }
         }catch {
-            
             print("error generating battery info")
         }
     }
@@ -407,8 +407,10 @@ open class TcpConnection: BaseTcpConnection {
             switch param {
             case RemoteCommand.TRACKER_SYSTEM_INFO.rawValue:
                 self.sendSystemInfo()
+                /*
             case RemoteCommand.TRACKER_BATTERY_INFO.rawValue:
-                self.sendSystemInfo()
+                self.sendBatteryStatus()*/
+                
             default:
                 self.answerObservers.notify((AnswTags.remoteCommand, param, true))
             }

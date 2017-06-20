@@ -363,12 +363,18 @@ open class ConnectionManager: NSObject{
         
         if tag == AnswTags.messageDay {
             messageOfTheDayReceived.notify(answer, name)
-            
             return
         }
         
         if tag == AnswTags.remoteCommand {
             let sendingManger = SendingManager.sharedSendingManager
+            if (name == RemoteCommand.TRACKER_BATTERY_INFO.rawValue){
+                sendingManger.sendBatteryStatus(name)
+                //closeSession()
+                
+                return
+            }
+            
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 sendingManger.stopSendingCoordinates(name)
                 //closeSession()
@@ -390,7 +396,6 @@ open class ConnectionManager: NSObject{
             }
             if (name == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){
                 sendingManger.startSendingCoordinates(name)
-                connection.sendRemoteCommandResponse(name)
                 return
             }
             if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {

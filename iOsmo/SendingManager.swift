@@ -40,6 +40,25 @@ open class SendingManager: NSObject{
         super.init()
     }
 
+    open func sendBatteryStatus(_ rc: String){
+        if !connectionManager.connected {
+            self.onConnectionRun = connectionManager.connectionRun.add{
+                if $0.0 {
+           
+                        self.connectionManager.connection.sendBatteryStatus()
+
+                    }
+
+                // unsubscribe because it is single event
+                if let onConRun = self.onConnectionRun {
+                    self.connectionManager.connectionRun.remove(onConRun)
+                }
+            }
+            connectionManager.connect()
+        }else{
+            self.connectionManager.connection.sendBatteryStatus()
+        }
+    }
     open func startSendingCoordinates(_ rc: String){
         
         let once = (!connectionManager.sessionOpened && rc == RemoteCommand.WHERE.rawValue) ? true : false;
