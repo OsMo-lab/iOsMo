@@ -183,15 +183,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 let theChange = $0.0
                 
                 if theChange {
-                    /*
-                    self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
-                        //self.inGroup = $0
-                    }
-                    */
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
                         self.MDView.text = $1
                     }
-                    self.groupManager.groupList()
+                    self.groupManager.groupList(true)
                     self.connectionManager.getMessageOfTheDay()
 
                 } else if let glUpdated = self.onGroupListUpdated {
@@ -218,7 +213,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                 }
                 
-                print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
                 //self.osmoStatus.isHidden = !theChange
@@ -232,7 +226,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 let theChange = $0.0
                 
                 self.isMonitoringOn = theChange
-                print("MVC: The session was opened/closed.\(theChange)")
+
                 
                 if theChange {
                     if let sUrl = self.connectionManager.sessionUrl {

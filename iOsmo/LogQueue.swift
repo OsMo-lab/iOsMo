@@ -35,10 +35,10 @@ open class LogQueue {
         let eventDate = dateFormat.string(from: Date())
         let event = "\(eventDate): \(record)"
         if innerQueue.count >= maxSize {
-            
             innerQueue.remove(at: 0)
         }
         innerQueue.append(event)
+        print(record)
     }
     
     func getArray(_ startIndex: Int, count: Int) -> [String] {

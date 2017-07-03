@@ -139,7 +139,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     
     @IBAction func btnGroupsClicked(_ sender: AnyObject) {
-        groupManager.groupList()
+        groupManager.groupList(false)
     }
     
  
@@ -166,9 +166,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
             }
         }
-    
-        //setLoginControls()
-        
+
         groupManager.groupListUpdated.add{
             let _ = $0
             DispatchQueue.main.async {
@@ -179,7 +177,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         groupManager.groupEntered.add{
             if ($0.0) {
                 self.groupAction = GroupActions.view
-                self.groupManager.groupList()
+                self.groupManager.groupList(false)
                 self.btnEnterGroup.isHidden = false
             } else {
                 self.alert(NSLocalizedString("Error on enter group", comment:"Alert title for error on enter group"), message: $0.1)
@@ -226,7 +224,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         groupManager.groupLeft.add{
             if ($0.0) {
-                self.groupManager.groupList()
+                self.groupManager.groupList(false)
             } else {
                 self.alert(NSLocalizedString("Error on leave group", comment:"Alert title for error on leave group"), message: $0.1)
             }
@@ -234,7 +232,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         
         groupManager.groupActivated.add{
             if ($0.0) {
-                //self.groupManager.groupList()
+
             } else {
                 self.alert(NSLocalizedString("Error on activate group", comment:"Alert title for error on activate group"), message: $0.1)
                 DispatchQueue.main.async {
@@ -254,7 +252,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.tableView.reloadData()
             }
         }
-        groupManager.groupList()
     }
 
     override func didReceiveMemoryWarning() {
@@ -276,6 +273,21 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if connectionManager.sessionOpened {
                     alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 } else {
+                    var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+                    let filename = "GROUP.json"
+                    let path =  "\(paths[0])/"
+                    let fileURL = URL(fileURLWithPath: "\(path)\(filename)")
+                    
+                    let fileManager = FileManager.default;
+                    do {
+                        try fileManager.removeItem(at: fileURL)
+                        
+                        print("Error removing \(path)\(filename)")
+                    } catch{
+                        print("Error removing \(path)\(filename)")
+                    }
+                    
+
                     SettingsManager.setKey("", forKey: SettingKeys.user)
                     SettingsManager.setKey("", forKey: SettingKeys.device)
                     connectionManager.closeConnection()

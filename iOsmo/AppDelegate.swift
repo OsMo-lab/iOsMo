@@ -110,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         FIRMessaging.messaging().disconnect()
         log.enqueue("Disconnected from FCM.")
-        print("Disconnected from FCM.")
+
         self.connectionManager.activatePoolGroups(-1)
         if (connectionManager.connected && connectionManager.sessionOpened) {
             self.displayNotification()
@@ -215,7 +215,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("FCM: \(messageID)")
             log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
         }
@@ -230,7 +229,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("FCM: \(messageID)")
             log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
             
@@ -246,7 +244,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // [START refresh_token]
     func tokenRefreshNotification(_ notification: Notification) {
         if let refreshedToken = FIRInstanceID.instanceID().token() {
-            print("Refreshed token: \(refreshedToken)")
             log.enqueue("Refreshed token: \(refreshedToken)")
             SettingsManager.setKey(refreshedToken as NSString, forKey: SettingKeys.pushToken)
             connectionManager.sendPush(refreshedToken)
@@ -267,10 +264,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRMessaging.messaging().connect { (error) in
             if error != nil {
-                print("Unable to connect with FCM. \(error)")
                 self.log.enqueue("Unable to connect with FCM. \(error)")
             } else {
-                print("Connected to FCM:\(token)")
                 self.log.enqueue("Connected to FCM:\(token)")
             }
         }
@@ -283,7 +278,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Unable to register for remote notifications: \(error.localizedDescription)")
         log.enqueue("Unable to register for remote notifications: \(error.localizedDescription)")
     }
     
@@ -295,8 +289,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         for i in 0..<deviceToken.count {
             token += String(format: "%02.2hhx", deviceToken[i] as CVarArg)
         }
-        
-        print("APNs token retrieved: \(token)")
+    
         log.enqueue("APNs token retrieved: \(token)")
         //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
         
@@ -327,7 +320,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("FCM: \(messageID)")
             log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
         }
@@ -345,7 +337,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
-            print("FCM: \(messageID)")
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
         }
@@ -361,7 +352,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 extension AppDelegate : FIRMessagingDelegate {
     // Receive data message on iOS 10 devices while app is in the foreground.
     func applicationReceivedRemoteMessage(_ remoteMessage: FIRMessagingRemoteMessage) {
-        print(remoteMessage.appData)
         log.enqueue("Received remote message: \(remoteMessage.appData)")
 
     }

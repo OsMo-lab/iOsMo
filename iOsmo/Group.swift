@@ -38,7 +38,6 @@ open class Group: Equatable{
         let gURL = json["url"] as! String
         var gType = json["type"] as? String
         if (gType == nil ){
-            //let gUint = json["type"] as! Int
             gType = "\(json["type"] as! Int)"
         }
         let gActive = json["active"] as? String == "1"
@@ -49,7 +48,7 @@ open class Group: Equatable{
         }
         
         let gId = json["id"] as? String
-        let jsonUsers = json["users"] as? Array<AnyObject>
+        
         
         
         self.u =  gU!
@@ -64,10 +63,13 @@ open class Group: Equatable{
         self.type = gType!;
         
         
-        for jsonU in jsonUsers!{
-            let user = User(json:jsonU as! Dictionary<String, AnyObject>)
-            self.users.append(user)
+        if let jsonUsers = json["users"] as? Array<AnyObject> {
+            for jsonU in jsonUsers{
+                let user = User(json:jsonU as! Dictionary<String, AnyObject>)
+                self.users.append(user)
+            }
         }
+        
         if let jsonPoints = json["point"] as? Array<AnyObject> {
             for jsonP in jsonPoints{
                 let point = Point (json:jsonP as! Dictionary<String, AnyObject>)
