@@ -60,6 +60,7 @@ open class GroupManager{
                         }
                         
                     }
+                    self.saveCache()
                 } catch {}
             }
             
@@ -81,6 +82,7 @@ open class GroupManager{
                         break;
                     }
                 }
+                self.saveCache()
             }
             self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
         }
@@ -130,6 +132,14 @@ open class GroupManager{
         self.onLeaveGroup = connection.groupLeft.add{
             
             self.groupLeft.notify($0, $1)
+            if $0 {
+                let foundGroup = self.allGroups.filter{$0.u == "\(u)"}.first
+                let idx = self.allGroups.index(of: foundGroup!)
+                if idx! > -1 {
+                    self.allGroups.remove(at: idx!);
+                    self.saveCache()
+                }
+            }
             
             print("LEFT! \($0) ")
             
@@ -145,13 +155,14 @@ open class GroupManager{
             var jsonInfo : [NSDictionary] = [NSDictionary]()
             for g in self.allGroups {
                 let jsonGroup : NSDictionary =
-                    ["u": g.u, "url": g.url, "name": g.url, "description": g.descr, "id": g.id, "active": g.active, "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
+                    ["u": g.u, "url": g.url, "name": g.url, "description": g.descr, "id": g.id, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
                 jsonInfo.append(jsonGroup)
                 
             }
         
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
             try data.write(to: URL(fileURLWithPath: path))
+            log.enqueue("GROUP cached")
   
         }catch {
             print("error saving GROUP info")
@@ -173,53 +184,55 @@ open class GroupManager{
             }
         }
 
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
-        let filename = "GROUP.json"
-        let path =  "\(paths[0])/"
-        let fileManager = FileManager.default;
         var shouldDownload = true;
-        
-        if fileManager.fileExists(atPath: "\(path)\(filename)") {
-            shouldDownload = false
-            print("Found cached \(path)\(filename)")
-            do {
-                let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
-                if file != nil {
-                    // Read all the data
-                    let data = file?.readDataToEndOfFile()
-                    if let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) {
-                        allGroups.removeAll()
-                        
-                        if let jsonGroups = jsonObject as? Array<Any> {
-                            for jsonG in jsonGroups{
-                                do {
-                                    let group = try Group.init(json: jsonG as! Dictionary<String, AnyObject>)
-                                
-                                    allGroups.append(group)
-                                } catch {
-                                
+        if (cached) {
+            var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+            let filename = "GROUP.json"
+            let path =  "\(paths[0])/"
+            let fileManager = FileManager.default;
+ 
+            if fileManager.fileExists(atPath: "\(path)\(filename)") {
+                shouldDownload = false
+                print("Found cached \(path)\(filename)")
+                do {
+                    let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
+                    if file != nil {
+                        // Read all the data
+                        let data = file?.readDataToEndOfFile()
+                        if let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) {
+                            allGroups.removeAll()
+                            
+                            if let jsonGroups = jsonObject as? Array<Any> {
+                                for jsonG in jsonGroups{
+                                    do {
+                                        let group = try Group.init(json: jsonG as! Dictionary<String, AnyObject>)
+                                        
+                                        allGroups.append(group)
+                                    } catch {
+                                        
+                                    }
                                 }
                             }
+                            
+                            
                         }
-
-                        
+                    }
+                    
+                } catch {
+                    
+                }
+                
+            } else {
+                var isDir : ObjCBool = false
+                if !fileManager.fileExists(atPath: path, isDirectory:&isDir) {
+                    do {
+                        try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+                    } catch {
+                        print ("can't create directory \(path)")
                     }
                 }
-                
-            } catch {
-                
+                shouldDownload = true
             }
-
-        } else {
-            var isDir : ObjCBool = false
-            if !fileManager.fileExists(atPath: path, isDirectory:&isDir) {
-                do {
-                    try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-                } catch {
-                    print ("can't create directory \(path)")
-                }
-            }
-            shouldDownload == true
         }
         
         if (shouldDownload == true || cached == false){

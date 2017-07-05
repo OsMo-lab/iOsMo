@@ -11,6 +11,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "TcpConnection.parseOutput(String) -&gt; ():TcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "output">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
+      </ContextState>
+      <ContextState
          contextName = "GroupManager.getUser(Int, user : Int) -&gt; User?:GroupManager.swift">
          <PersistentStrings>
             <PersistentString
@@ -22,18 +33,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
-      </ContextState>
-      <ContextState
          contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #6):AccountViewController.swift">
-      </ContextState>
-      <ContextState
-         contextName = "TcpConnection.parseOutput(String) -&gt; ():TcpConnection.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "output">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
@@ -141,6 +141,17 @@
                value = "self.coordinates.count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(leaveGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "u">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.groupList(Bool) -&gt; ():GroupManager.swift">
       </ContextState>
       <ContextState
          contextName = "GroupManager.(enterGroup(String, nick : String) -&gt; ()).(closure #1):GroupManager.swift">

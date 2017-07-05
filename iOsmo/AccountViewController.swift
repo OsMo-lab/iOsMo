@@ -224,9 +224,12 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         groupManager.groupLeft.add{
             if ($0.0) {
-                self.groupManager.groupList(false)
+                //self.groupManager.groupList(true)
             } else {
                 self.alert(NSLocalizedString("Error on leave group", comment:"Alert title for error on leave group"), message: $0.1)
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
         
@@ -235,9 +238,10 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
 
             } else {
                 self.alert(NSLocalizedString("Error on activate group", comment:"Alert title for error on activate group"), message: $0.1)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+                
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
             }
         }
         
