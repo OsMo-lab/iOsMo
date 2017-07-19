@@ -366,7 +366,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         super.viewWillAppear(animated)
         
         print("MapBox viewWillAppear")
-        FIRAnalytics.logEvent(withName: "map_open", parameters: nil)
+        Analytics.logEvent("map_open", parameters: nil)
 
         if (groupManager.allGroups.count) > 0 {
             self.connectionManager.activatePoolGroups(1)
