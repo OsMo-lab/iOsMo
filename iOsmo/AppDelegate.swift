@@ -339,7 +339,14 @@ extension AppDelegate : MessagingDelegate {
     // Receive data messages on iOS 10+ directly from FCM (bypassing APNs) when the app is in the foreground.
     // To enable direct data messages, you can set Messaging.messaging().shouldEstablishDirectChannel to true.
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        let data = remoteMessage.appData
         log.enqueue("Received remote message: \(remoteMessage.appData)")
+        
+        // Print message ID.
+        if let messageID = data[gcmMessageIDKey] {
+            log.enqueue("FCM: \(messageID)")
+            connectionManager.connection.parseOutput(messageID as! String)
+        }
     }
     // [END ios_10_data_message]
     

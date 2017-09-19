@@ -155,7 +155,7 @@ open class GroupManager{
             var jsonInfo : [NSDictionary] = [NSDictionary]()
             for g in self.allGroups {
                 let jsonGroup : NSDictionary =
-                    ["u": g.u, "url": g.url, "name": g.url, "description": g.descr, "id": g.id, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
+                    ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "id": g.id, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
                 jsonInfo.append(jsonGroup)
                 
             }
