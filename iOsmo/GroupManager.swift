@@ -128,7 +128,6 @@ open class GroupManager{
     }
     
     open func leaveGroup(_ u: String) {
-        
         self.onLeaveGroup = connection.groupLeft.add{
             
             self.groupLeft.notify($0, $1)
@@ -149,26 +148,42 @@ open class GroupManager{
     }
     
     open func saveCache() {
+        if self.allGroups.count > 0 {
+            var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+            let path =  "\(paths[0])/GROUP.json"
+            do {
+                var jsonInfo : [NSDictionary] = [NSDictionary]()
+                for g in self.allGroups {
+                    let jsonGroup : NSDictionary =
+                        ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "id": g.id, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
+                    jsonInfo.append(jsonGroup)
+                    
+                }
+                
+                let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+                try data.write(to: URL(fileURLWithPath: path))
+                log.enqueue("GROUP cached")
+                
+            }catch {
+                log.enqueue("error saving GROUP info")
+            }
+        }
+    }
+    
+    open func clearCache() {
+        log.enqueue("Clearing GROUP cache")
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let path =  "\(paths[0])/GROUP.json"
+        let fileManager = FileManager.default;
+
         do {
-            var jsonInfo : [NSDictionary] = [NSDictionary]()
-            for g in self.allGroups {
-                let jsonGroup : NSDictionary =
-                    ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "id": g.id, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
-                jsonInfo.append(jsonGroup)
-                
-            }
-        
-            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
-            try data.write(to: URL(fileURLWithPath: path))
-            log.enqueue("GROUP cached")
-  
-        }catch {
-            print("error saving GROUP info")
+            try fileManager.removeItem(atPath: path)
+        } catch {
+            
         }
         
     }
+    
     open func groupList(_ cached: Bool){
         if self.onGroupListUpdated == nil {
             self.onGroupListUpdated = connection.groupList.add{
@@ -192,36 +207,46 @@ open class GroupManager{
             let fileManager = FileManager.default;
  
             if fileManager.fileExists(atPath: "\(path)\(filename)") {
-                shouldDownload = false
-                print("Found cached \(path)\(filename)")
                 do {
-                    let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
-                    if file != nil {
-                        // Read all the data
-                        let data = file?.readDataToEndOfFile()
-                        if let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) {
-                            allGroups.removeAll()
+                    print("Found cached \(path)\(filename)")
+                    let attr = try fileManager.attributesOfItem(atPath: "\(path)\(filename)")
+                    
+                    let fileDate = attr[FileAttributeKey.modificationDate] as! Date;
+                    
+                    if fileDate.timeIntervalSinceNow > 60 * 60 * 24 {
+                        log.enqueue("GROUP cache expired")
+                       
+                    } else {
+                        do {
                             
-                            if let jsonGroups = jsonObject as? Array<Any> {
-                                for jsonG in jsonGroups{
-                                    do {
-                                        let group = try Group.init(json: jsonG as! Dictionary<String, AnyObject>)
-                                        
-                                        allGroups.append(group)
-                                    } catch {
-                                        
+                            let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
+                            if file != nil {
+                                // Read all the data
+                                let data = file?.readDataToEndOfFile()
+                                if let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) {
+                                    allGroups.removeAll()
+                                    
+                                    if let jsonGroups = jsonObject as? Array<Any> {
+                                        for jsonG in jsonGroups{
+                                            do {
+                                                let group = try Group.init(json: jsonG as! Dictionary<String, AnyObject>)
+                                                
+                                                allGroups.append(group)
+                                            } catch {
+                                                
+                                            }
+                                        }
                                     }
                                 }
                             }
-                            
+                            shouldDownload = false;
+                        } catch {
                             
                         }
                     }
-                    
                 } catch {
                     
                 }
-                
             } else {
                 var isDir : ObjCBool = false
                 if !fileManager.fileExists(atPath: path, isDirectory:&isDir) {
@@ -254,7 +279,7 @@ open class GroupManager{
                 let fileSize:Int = attr[FileAttributeKey.size] as! Int
                 if fileSize == track.size {
                     shouldDownload = false
-                    print("Found cached \(path)\(filename)")
+                    print("Found cached track \(path)\(filename)")
                 }
             } catch {
             

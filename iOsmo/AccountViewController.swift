@@ -146,7 +146,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var connectionManager = ConnectionManager.sharedConnectionManager
     var groupManager = GroupManager.sharedGroupManager
     
-    
     override func viewDidAppear(_ animated: Bool) {
         setLoginControls()
     
@@ -277,21 +276,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if connectionManager.sessionOpened {
                     alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 } else {
-                    var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
-                    let filename = "GROUP.json"
-                    let path =  "\(paths[0])/"
-                    let fileURL = URL(fileURLWithPath: "\(path)\(filename)")
-                    
-                    let fileManager = FileManager.default;
-                    do {
-                        try fileManager.removeItem(at: fileURL)
-                        
-                        print("Error removing \(path)\(filename)")
-                    } catch{
-                        print("Error removing \(path)\(filename)")
-                    }
-                    
-
+                    groupManager.clearCache()
                     SettingsManager.setKey("", forKey: SettingKeys.user)
                     SettingsManager.setKey("", forKey: SettingKeys.device)
                     connectionManager.closeConnection()
@@ -308,7 +293,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void {
-       
         SettingsManager.setKey(info.accountName as NSString, forKey: SettingKeys.user)
 
         connectionManager.connect()
