@@ -158,7 +158,7 @@ open class TcpConnection: BaseTcpConnection {
         super.send("\(Tags.ping.rawValue)")
     }
     
-    fileprivate func sendSystemInfo(){
+    open func sendSystemInfo(){
         let model = UIDevice.current.model
         let version = UIDevice.current.systemVersion
         
@@ -390,16 +390,15 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.remoteCommand){
+            self.answerObservers.notify((AnswTags.remoteCommand, param, true))
+            /*
             switch param {
             case RemoteCommand.TRACKER_SYSTEM_INFO.rawValue:
                 self.sendSystemInfo()
-                /*
-            case RemoteCommand.TRACKER_BATTERY_INFO.rawValue:
-                self.sendBatteryStatus()*/
-                
             default:
                 self.answerObservers.notify((AnswTags.remoteCommand, param, true))
             }
+ */
 
             return
         }

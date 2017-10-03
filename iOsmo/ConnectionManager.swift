@@ -300,8 +300,8 @@ open class ConnectionManager: NSObject{
     fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Bool){
         if tag == AnswTags.token {
             //means response to try connecting
-            print("connected")
-            log.enqueue("connected")
+
+            log.enqueue("connected with token")
             
             self.connected = answer
             connectionRun.notify(answer, name)
@@ -310,8 +310,7 @@ open class ConnectionManager: NSObject{
         }
         if tag == AnswTags.auth {
             //means response to try connecting
-            print("connected")
-            log.enqueue("connected")
+            log.enqueue("connected with Auth")
             
             self.connected = answer
             connectionRun.notify(answer, name)
@@ -370,15 +369,17 @@ open class ConnectionManager: NSObject{
             let sendingManger = SendingManager.sharedSendingManager
             if (name == RemoteCommand.TRACKER_BATTERY_INFO.rawValue){
                 sendingManger.sendBatteryStatus(name)
-                //closeSession()
-                
                 return
             }
             
+            if (name == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue){
+                sendingManger.sendSystemInfo()
+                return
+            }
+
             if (name == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 sendingManger.stopSendingCoordinates(name)
-                //closeSession()
-                
+
                 return
             }
             if (name == RemoteCommand.TRACKER_EXIT.rawValue){
