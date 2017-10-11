@@ -66,7 +66,7 @@
 		4DC6C7471F1FD89E004CD2CD /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC6C7401F1FD89E004CD2CD /* nanopb.framework */; };
 		4DC6C74B1F1FD8BA004CD2CD /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC6C7491F1FD8BA004CD2CD /* FirebaseMessaging.framework */; };
 		4DC6C74C1F1FD8BA004CD2CD /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC6C74A1F1FD8BA004CD2CD /* Protobuf.framework */; };
-		F90DB7721A43410F0090146E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = F90DB7711A43410F0090146E /* Reachability.m */; };
+		4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
 /* End PBXBuildFile section */
@@ -164,8 +164,7 @@
 		4DC6C7401F1FD89E004CD2CD /* nanopb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = nanopb.framework; sourceTree = "<group>"; };
 		4DC6C7491F1FD8BA004CD2CD /* FirebaseMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseMessaging.framework; sourceTree = "<group>"; };
 		4DC6C74A1F1FD8BA004CD2CD /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Protobuf.framework; sourceTree = "<group>"; };
-		F90DB7701A43410F0090146E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		F90DB7711A43410F0090146E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
 		F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -294,8 +293,6 @@
 		293C959B1A34BF8E005DD4CE /* ObjC */ = {
 			isa = PBXGroup;
 			children = (
-				F90DB7701A43410F0090146E /* Reachability.h */,
-				F90DB7711A43410F0090146E /* Reachability.m */,
 				293C95AB1A34C4D9005DD4CE /* iOsmo-Bridging-Header.h */,
 			);
 			name = ObjC;
@@ -359,6 +356,7 @@
 				29CCA6231B1676AB00DA0C83 /* Extensions.swift */,
 				4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */,
 				4DB4CE681EA3EB31009E96B5 /* XML.swift */,
+				4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -561,7 +559,6 @@
 				F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */,
 				29520ABA1AD5D7E700CC4136 /* User.swift in Sources */,
 				293C95CA1A3D2AA0005DD4CE /* SettingManager.swift in Sources */,
-				F90DB7721A43410F0090146E /* Reachability.m in Sources */,
 				29F9A6D61AC0C31F001A610D /* ConnectionHelper.swift in Sources */,
 				29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */,
 				293C95781A34B217005DD4CE /* MonitoringViewController.swift in Sources */,
@@ -569,6 +566,7 @@
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
 				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
 				293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */,
+				4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */,
 				4D8D7F781E9414A6007FE4FA /* MapBoxViewController.swift in Sources */,
 				4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */,
 				4D19BE321E69C93600F7599D /* Point.swift in Sources */,

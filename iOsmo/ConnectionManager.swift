@@ -66,7 +66,8 @@ open class ConnectionManager: NSObject{
     //fileprivate var connection = TcpConnection()
     var connection = TcpConnection()
 
-    fileprivate var reachability: Reachability
+    let reachability = Reachability()!
+    
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
     open var isGettingLocation = false
@@ -81,13 +82,14 @@ open class ConnectionManager: NSObject{
     }
 
     override init(){
-        
-        self.reachability = Reachability.forInternetConnection()
-        
         super.init()
         NotificationCenter.default.addObserver(self, selector: aSelector, name: NSNotification.Name.reachabilityChanged, object: self.reachability)
-        
-        self.reachability.startNotifier()
+        do  {
+            try self.reachability.startNotifier()
+        }catch{
+            print("could not start reachability notifier")
+        }
+
         
         //!! subscribtion for almost all types events
         connection.answerObservers.add(notifyAnswer)
@@ -96,8 +98,40 @@ open class ConnectionManager: NSObject{
     
     open func reachabilityChanged(_ note: Notification) {
         log.enqueue("reachability changed")
-        if let reachability = note.object as? Reachability {
-            checkStatus(reachability)
+        let reachability = note.object as! Reachability
+        
+        switch reachability.connection {
+            case .wifi:
+                reachabilityStatus = .reachableViaWiFi
+                print("Reachable via WiFi")
+                if (!self.connected) {
+                    log.enqueue("should be reconnected via WiFi")
+                    shouldReConnect = true;
+                }
+            
+            case .cellular:
+                reachabilityStatus = .reachableViaWWAN
+                print("Reachable via Cellular")
+                if (!self.connected) {
+                    log.enqueue("should be reconnected via Cellular")
+                    shouldReConnect = true;
+                }
+            case .none:
+                reachabilityStatus = .notReachable
+                if (self.connected) {
+                    log.enqueue("should be reconnected")
+                    shouldReConnect = true;
+                    
+                    connectionRun.notify((false, "")) //error but is not need to be popuped
+                }
+            
+
+        }
+        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
+            
+            log.enqueue("Reconnect action")
+            print("Reconnect action from Reachability")
+            connect(true)
         }
     }
     
@@ -113,7 +147,7 @@ open class ConnectionManager: NSObject{
         log.enqueue("ConnectionManager: connect")
         self.connectionStart.notify(())
         
-        if !ConnectionManager.hasConnectivity() {
+        if !isNetworkAvailable {
             shouldReConnect = true
             return
         }
@@ -423,35 +457,22 @@ open class ConnectionManager: NSObject{
     }
 
 
-    fileprivate func checkStatus(_ reachability: Reachability){
-        
-        let status: NetworkStatus = reachability.currentReachabilityStatus()
-        
-        if status.rawValue == NotReachable.rawValue && self.connected {
-            
-            log.enqueue("should be reconnected")
-            shouldReConnect = true;
-            
-            connectionRun.notify((false, "")) //error but is not need to be popuped
-            
-         }
-        
-        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
-            
-            log.enqueue("Reconnect action")
-            print("Reconnect action from Reachability")
-            connect(true)
-        }
-        
+    var isNetworkAvailable : Bool {
+        return reachabilityStatus != .notReachable
     }
+    var reachabilityStatus: Reachability.NetworkStatus = .notReachable
+    /*
     
     class fileprivate func hasConnectivity() -> Bool {
         
-        let reachability: Reachability = Reachability.forInternetConnection()
-        let networkStatus: Int = reachability.currentReachabilityStatus().rawValue
+        
+        
+        let reachability: Reachability = Reachability.NetworkReachable
+        reachability.
+        let networkStatus: Int = Reachability.NetworkReachable
         
         return networkStatus != 0
-    }
+    }*/
 
     
 }
