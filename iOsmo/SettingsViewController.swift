@@ -12,6 +12,8 @@ import UIKit
 class SettingsViewController: UIViewController, UITextFieldDelegate {
 
     var connectionManager = ConnectionManager.sharedConnectionManager
+    var groupManager = GroupManager.sharedGroupManager
+    
     var clickCount = 0;
     let MIN_SEND_TIME = 4;
     let MIN_LOC_TIME = 0;
@@ -46,6 +48,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 self.resetAuthSwitcher.isOn = false
             } else {
+                groupManager.clearCache()
                 SettingsManager.setKey("", forKey: SettingKeys.user)
                 SettingsManager.setKey("", forKey: SettingKeys.device)
                 connectionManager.closeConnection()

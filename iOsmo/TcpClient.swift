@@ -38,7 +38,6 @@ open class TcpClient : NSObject, StreamDelegate {
         if (token.port>0) {
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
             if inputStream != nil && outputStream != nil {
-                
                 inputStream!.delegate = self
                 outputStream!.delegate = self
 
@@ -47,9 +46,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 outputStream!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
                 
                 inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-                
-                
-                
+
                 inputStream!.open()
                 print("opening input stream")
             
@@ -60,15 +57,16 @@ open class TcpClient : NSObject, StreamDelegate {
                 print("opening output stream")
             }
             
-            log.enqueue("create connection, input and output streams")
+            log.enqueue("creating connection, input and output streams")
 
         }
     }
     
     final func openCompleted(stream: Stream){
+        log.enqueue("stream opened")
         if(self.inputStream?.streamStatus == .open && self.outputStream?.streamStatus == .open && openedStreams == 2){
 
-            log.enqueue("streams opened")
+            log.enqueue("input and output streams opened")
             if (self.callbackOnConnect != nil) {
                 DispatchQueue.main.async {
                     self.callbackOnConnect!()
@@ -133,6 +131,7 @@ open class TcpClient : NSObject, StreamDelegate {
    
         case Stream.Event.openCompleted:
             openedStreams = openedStreams + 1
+            log.enqueue("openCompleted for \(openedStreams) streams")
             openCompleted(stream: aStream)
 
         case Stream.Event.errorOccurred:
@@ -174,7 +173,6 @@ open class TcpClient : NSObject, StreamDelegate {
                 
                 return
             }
-           
 
             if !message.isEmpty {
                 
@@ -206,9 +204,7 @@ open class TcpClient : NSObject, StreamDelegate {
             }
             
         default:
-            print(eventCode)
-            log.enqueue("\(eventCode)")
-            log.enqueue("Some unhandled event was occured in stream")
+            log.enqueue("Some unhandled event \(eventCode) was occured in stream")
         }
         
     }
