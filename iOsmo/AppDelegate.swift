@@ -80,6 +80,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
  */
         // [END add_token_refresh_observer]
         
+        //Добавляем обработчик возврата из background-а для восстановления связи с сервером
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.connectOnActivate),
+                                               name: NSNotification.Name.UIApplicationWillEnterForeground,
+                                               object: nil)
+        
         if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
         }
@@ -144,6 +150,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func connectOnActivate () {
+        if !connectionManager.connected {
+            connectionManager.connect()
+        }
+        
+    }
+    
     func disconnectByTimer() {
         connectionManager.closeConnection()
         self.endBackgroundTask()
@@ -171,6 +184,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.localNotification = nil
         }
         UIApplication.shared.cancelAllLocalNotifications()
+        
      }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -220,6 +234,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
@@ -228,12 +246,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         // Print full message.
         //print(userInfo)
+        
+        
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
         // TODO: Handle data of notification
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
@@ -242,7 +266,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             connectionManager.connection.parseOutput(messageID as! String)
         }
-        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
         // Print full message.
         //print(userInfo)
         
@@ -324,7 +348,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 // [START ios_10_data_message_handling]
 extension AppDelegate : MessagingDelegate {
 
-    
     // [START refresh_token]
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         log.enqueue("Firebase registration token: \(fcmToken)")

@@ -11,6 +11,8 @@
 
 import Foundation
 import FirebaseInstanceID
+import FirebaseMessaging
+
 
 open class ConnectionManager: NSObject{
 
@@ -55,6 +57,7 @@ open class ConnectionManager: NSObject{
     let sessionRun = ObserverSet<(Bool, String)>()
     let groupsEnabled = ObserverSet<Bool>()
     let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
+    let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
     let dataSendEnd = ObserverSet<()>()
@@ -181,6 +184,12 @@ open class ConnectionManager: NSObject{
                     self.connection.addCallBackOnSendEnd = {
                         () -> Void in
                         self.dataSendEnd.notify(())
+                    }
+                }
+                if self.connection.addCallBackOnCloseConnection == nil {
+                    self.connection.addCallBackOnCloseConnection = {
+                        () -> Void in
+                        self.connectionClose.notify(())
                     }
                 }
                 if self.connection.addCallBackOnConnect == nil {
@@ -434,9 +443,15 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
-                if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
+                //Отправляем токен ранее полученный от FCM
+                if let token = Messaging.messaging().fcmToken {
                     self.sendPush(token)
                 }
+                
+                /*if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
+                    
+                    self.sendPush(token)
+                }*/
                 connection.sendRemoteCommandResponse(name)
                 return
             }

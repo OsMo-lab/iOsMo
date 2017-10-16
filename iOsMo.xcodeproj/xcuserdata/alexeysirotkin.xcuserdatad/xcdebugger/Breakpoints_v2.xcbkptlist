@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/TcpClient.swift"
-            timestampString = "529515499.576023"
+            timestampString = "529864622.258291"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "send(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -160,6 +160,86 @@
             startingLineNumber = "215"
             endingLineNumber = "215"
             landmarkName = "groupList(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/ConnectionManager.swift"
+            timestampString = "529867241.579172"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "451"
+            endingLineNumber = "451"
+            landmarkName = "notifyAnswer(_:name:answer:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iOsMo.ConnectionManager.(notifyAnswer in _406C925B822D52CDED84FF979DB83F02) (iOsMo.AnswTags, name : Swift.String, answer : Swift.Bool) -&gt; ()"
+                  moduleName = "iOsMo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/ConnectionManager.swift"
+                  timestampString = "529866826.946128"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "444"
+                  endingLineNumber = "444"
+                  offsetFromSymbolStart = "4184">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iOsMo.ConnectionManager.(notifyAnswer in _406C925B822D52CDED84FF979DB83F02) (iOsMo.AnswTags, name : Swift.String, answer : Swift.Bool) -&gt; ()"
+                  moduleName = "iOsMo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/ConnectionManager.swift"
+                  timestampString = "529866826.949069"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "444"
+                  endingLineNumber = "444"
+                  offsetFromSymbolStart = "4384">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/SendingManager.swift"
+            timestampString = "529861763.430535"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "startSendingCoordinates(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/AppDelegate.swift"
+            timestampString = "529866155.018954"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
+            landmarkName = "connectOnActivate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

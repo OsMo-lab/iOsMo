@@ -20,6 +20,7 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnSendStart: (() -> Void)?
     open var callbackOnSendEnd: (() -> Void)?
     open var callbackOnConnect: (() -> Void)?
+    open var callbackOnCloseConnection: (() -> Void)?
     
     
     deinit{
@@ -48,22 +49,23 @@ open class TcpClient : NSObject, StreamDelegate {
                 inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
 
                 inputStream!.open()
-                print("opening input stream")
+                log.enqueue("createConnection: opening input stream")
             
                 outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 
                 
                 outputStream!.open()
-                print("opening output stream")
+                log.enqueue("createConnection: opening output stream")
+            } else {
+                log.enqueue("createConnection ERROR: nil stream")
             }
             
-            log.enqueue("creating connection, input and output streams")
-
+            
         }
     }
     
     final func openCompleted(stream: Stream){
-        log.enqueue("stream opened")
+        log.enqueue("stream openCompleted")
         if(self.inputStream?.streamStatus == .open && self.outputStream?.streamStatus == .open && openedStreams == 2){
 
             log.enqueue("input and output streams opened")
@@ -85,6 +87,12 @@ open class TcpClient : NSObject, StreamDelegate {
             outputStream?.delegate = nil
             outputStream?.close()
             outputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            
+            if (self.callbackOnCloseConnection != nil) {
+                DispatchQueue.main.async {
+                    self.callbackOnCloseConnection!()
+                }
+            }
         }
     }
     
