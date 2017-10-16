@@ -27,6 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let gcmMessageIDKey = "GCM"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        // Use Firebase library to configure APIs
+        FirebaseApp.configure()
+        
         // Override point for customization after application launch.
         connectionManager.pushActivated.add{
             if $0 {
@@ -46,15 +49,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            
+            
+            // For iOS 10 data message (sent via FCM)
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
                 completionHandler: {_, _ in })
-            
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            // For iOS 10 data message (sent via FCM)
-            
         } else {
             let settings: UIUserNotificationSettings =
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
@@ -62,8 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         UIApplication.shared.applicationIconBadgeNumber = 0
         
-        // Use Firebase library to configure APIs
-        FirebaseApp.configure()
+        
         
         // [START set_messaging_delegate]
         Messaging.messaging().shouldEstablishDirectChannel = true;
@@ -192,7 +194,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) ->Void) -> Bool {
-        
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             let webURL = userActivity.webpageURL!;
             if !presentViewController(url:webURL) {
@@ -246,8 +247,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         // Print full message.
         //print(userInfo)
-        
-        
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -314,7 +313,13 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        
         let userInfo = notification.request.content.userInfo
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
@@ -338,8 +343,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             connectionManager.connection.parseOutput(messageID as! String)
         }
         Messaging.messaging().appDidReceiveMessage(userInfo)
-        // Print full message.
-        //print(userInfo)
+
         
         completionHandler()
     }
