@@ -145,9 +145,15 @@ open class ConnectionManager: NSObject{
     
     open var connected: Bool = false
     open var sessionOpened: Bool = false
+    private var connecting: Bool = false
  
     open func connect(_ reconnect: Bool = false){
         log.enqueue("ConnectionManager: connect")
+        if self.connecting {
+            log.enqueue("Conection already in process")
+            return;
+        }
+        self.connecting = true;
         self.connectionStart.notify(())
         
         if !isNetworkAvailable {
@@ -160,6 +166,7 @@ open class ConnectionManager: NSObject{
                 if self.connection.addCallBackOnError == nil {
                     self.connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
+                        self.connecting = false
                         self.shouldReConnect = isError
                         
                         if ((self.connected || reconnect) && isError) {
@@ -189,12 +196,14 @@ open class ConnectionManager: NSObject{
                 if self.connection.addCallBackOnCloseConnection == nil {
                     self.connection.addCallBackOnCloseConnection = {
                         () -> Void in
+                        self.connecting = false
                         self.connectionClose.notify(())
                     }
                 }
                 if self.connection.addCallBackOnConnect == nil {
                     self.connection.addCallBackOnConnect = {
                         () -> Void in
+                        self.connecting = false
                         self.connection.sendAuth(token!.device_key as String)
                     }
                 }
@@ -202,6 +211,7 @@ open class ConnectionManager: NSObject{
                 self.connection.connect(token!)
                 self.shouldReConnect = false //interesting why here? may after connction is successful??
             } else {
+                self.connecting = false
                 if (token?.error.isEmpty)! {
                     self.connectionRun.notify((false, ""))
                     self.shouldReConnect = false

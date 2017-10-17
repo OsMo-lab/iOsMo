@@ -316,7 +316,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         
         let userInfo = notification.request.content.userInfo
-        
+        log.enqueue("userNotificationCenter willPresent: \(userInfo)")
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
@@ -337,6 +337,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
+        log.enqueue("userNotificationCenter didReceive: \(userInfo)")
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
