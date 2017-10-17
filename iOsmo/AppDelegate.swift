@@ -107,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        application.registerForRemoteNotifications()
+        UIApplication.shared.registerForRemoteNotifications()
 
         Analytics.logEvent("app_open", parameters: nil)
         if let url = launchOptions?[.url] as? URL {
@@ -244,6 +244,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
+            connectionManager.connection.parseOutput(messageID as! String)
         }
         // Print full message.
         //print(userInfo)
@@ -324,6 +325,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             log.enqueue(messageID as! String)
+            connectionManager.connection.parseOutput(messageID as! String)
         }
         
         // Print full message.
