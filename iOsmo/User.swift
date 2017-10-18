@@ -26,8 +26,8 @@ open class User: Equatable{
         }
         self.id = uId
         self.name = json["name"] as! String
-        self.connected = json["connected"] as! Double
-        self.color = json["color"] as! String
+        self.connected = (json["connected"] as? Double) ?? 0
+        self.color = (json["color"] as? String) ?? ""
         self.online = (json["online"] as? Int) ?? 0
         self.state = (json["state"] as? Int) ?? 0
 

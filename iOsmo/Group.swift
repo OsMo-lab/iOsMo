@@ -31,10 +31,10 @@ open class Group: Equatable{
     
     init (json: Dictionary<String, AnyObject>) {
         let gName = json["name"] as! String
-        let gDescr = json["description"] as! String
-        let gPolicy = json["policy"] as! String
-        let gNick = json["nick"] as! String
-        let gColor = json["color"] as! String
+        let gDescr = (json["description"] as? String) ?? ""
+        let gPolicy = (json["policy"] as? String) ?? ""
+        let gNick = (json["nick"] as? String) ?? ""
+        let gColor = (json["color"] as? String) ?? ""
         let gURL = json["url"] as! String
         var gType = json["type"] as? String
         if (gType == nil ){

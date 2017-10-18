@@ -133,7 +133,6 @@ open class ConnectionManager: NSObject{
         if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
             
             log.enqueue("Reconnect action")
-            print("Reconnect action from Reachability")
             connect(true)
         }
     }
@@ -154,12 +153,15 @@ open class ConnectionManager: NSObject{
             return;
         }
         self.connecting = true;
-        self.connectionStart.notify(())
-        
         if !isNetworkAvailable {
+            log.enqueue("Network is NOT available")
             shouldReConnect = true
+            self.connecting = false;
             return
         }
+        self.connectionStart.notify(())
+        
+        
         ConnectionHelper.getServerInfo(completed: {result, token -> Void in
             if (result) {
                 /*Информация о сервере получена*/
