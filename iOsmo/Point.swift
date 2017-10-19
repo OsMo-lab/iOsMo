@@ -26,7 +26,6 @@ open class Point: Equatable {
         self.name = json["name"] as! String
         self.descr = json["description"] as! String
         self.color = json["color"] as! String
-
     }
     
     public static func == (left: Point, right: Point) -> Bool {

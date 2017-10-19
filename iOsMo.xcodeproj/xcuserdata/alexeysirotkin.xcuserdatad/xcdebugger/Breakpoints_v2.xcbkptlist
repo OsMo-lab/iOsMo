@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/GroupManager.swift"
-            timestampString = "527584855.281955"
+            timestampString = "530126133.022681"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
             landmarkName = "groupList(_:)"
             landmarkType = "7">
          </BreakpointContent>

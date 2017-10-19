@@ -21,6 +21,7 @@ open class Track: Equatable {
     var finish: Date?
     
     init (json: Dictionary<String, AnyObject>) {
+        print(json)
         self.u = json["u"] as! Int
         self.size = Int(json["size"] as! String)!
         self.name = json["name"] as! String
