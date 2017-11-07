@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1421" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1611" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -1160,6 +1160,7 @@
                         <segue destination="9VQ-qR-6dQ" kind="relationship" relationship="viewControllers" id="xja-lL-5Y3"/>
                         <segue destination="e7e-HH-qS7" kind="relationship" relationship="viewControllers" id="iX8-TE-675"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="WQB-xD-jff"/>
+                        <segue destination="oZz-fs-szh" kind="relationship" relationship="viewControllers" id="fzE-XZ-Vox"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -1469,6 +1470,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ko7-Y8-qpy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1568" y="792"/>
+        </scene>
+        <!--MapView Controller-->
+        <scene sceneID="p61-Na-REU">
+            <objects>
+                <viewController id="oZz-fs-szh" userLabel="MapView Controller" customClass="MapViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="I7P-Ht-Jlp">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </mapView>
+                    <tabBarItem key="tabBarItem" title="Item" id="qgF-Cq-eGZ"/>
+                    <connections>
+                        <outlet property="mapView" destination="I7P-Ht-Jlp" id="vs8-6S-esR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d7O-Al-5im" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>

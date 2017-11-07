@@ -7,7 +7,9 @@
 //
 
 import Foundation
-open class User: Equatable{
+import MapKit
+
+public class User:NSObject, MKAnnotation {
 
     var id: String!
     var name: String
@@ -18,7 +20,10 @@ open class User: Equatable{
     var lat: Double = -3000
     var lon: Double = -3000
     
+    public var subtitle: String? = ""
+    
     init(json:Dictionary<String, AnyObject>) {
+        print(json)
         var uId = json["u"] as? String
         if (uId == nil) {
             let uIdInt = json["u"] as! Int
@@ -36,6 +41,7 @@ open class User: Equatable{
             self.lon = atof(lon);
         }
     }
+    
     init(id: String!, name: String, color: String, connected: Double){
         self.id = id
         self.name = name
@@ -47,4 +53,12 @@ open class User: Equatable{
         return left.id == right.id
     }
     
+    open var title: String? {
+        return name;
+    }
+    
+    open var coordinate : CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon);
+    }
 }
+

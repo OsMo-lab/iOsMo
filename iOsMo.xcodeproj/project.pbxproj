@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		078308EC2405B8C68283C029 /* Pods_iOsmoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DE6F9E7B13A081CAA897912 /* Pods_iOsmoTests.framework */; };
 		293C95761A34B217005DD4CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95751A34B217005DD4CE /* AppDelegate.swift */; };
 		293C95781A34B217005DD4CE /* MonitoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95771A34B217005DD4CE /* MonitoringViewController.swift */; };
 		293C957A1A34B217005DD4CE /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95791A34B217005DD4CE /* LogViewController.swift */; };
@@ -42,6 +43,7 @@
 		29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96331A478335009BFC19 /* AccountViewController.swift */; };
 		29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96371A4784EC009BFC19 /* AuthViewController.swift */; };
 		29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */; };
+		35F3CA984417234083249AF4 /* Pods_iOsMo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53782F40A01375469CF2E63F /* Pods_iOsMo.framework */; };
 		4D19BE281E619F5B00F7599D /* ru.xliff in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE271E619F5B00F7599D /* ru.xliff */; };
 		4D19BE2A1E67353900F7599D /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D19BE291E67353900F7599D /* Mapbox.framework */; };
 		4D19BE2B1E67353900F7599D /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4D19BE291E67353900F7599D /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -51,6 +53,7 @@
 		4D19BE361E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4D19BE351E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx */; };
 		4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */; };
 		4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */; };
+		4D8B78451FA7624A00E1069D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B78441FA7624A00E1069D /* MapViewController.swift */; };
 		4D8D7F781E9414A6007FE4FA /* MapBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8D7F771E9414A6007FE4FA /* MapBoxViewController.swift */; };
 		4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE661EA2B797009E96B5 /* Track.swift */; };
 		4DB4CE691EA3EB31009E96B5 /* XML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE681EA3EB31009E96B5 /* XML.swift */; };
@@ -96,6 +99,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19E7CA3BCFEE9FB424291BC1 /* Pods-iOsmoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOsmoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests.release.xcconfig"; sourceTree = "<group>"; };
 		293C95701A34B217005DD4CE /* iOsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C95741A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C95751A34B217005DD4CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 		29FA96371A4784EC009BFC19 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		35AE16D486512A343DC14437 /* Pods-iOsMo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOsMo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOsMo/Pods-iOsMo.debug.xcconfig"; sourceTree = "<group>"; };
 		4D19BE271E619F5B00F7599D /* ru.xliff */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ru.xliff; path = "iOsMo-En/ru/ru.xliff"; sourceTree = "<group>"; };
 		4D19BE291E67353900F7599D /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		4D19BE2F1E69C58100F7599D /* RK_gpx _2017-03-01_2007.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "RK_gpx _2017-03-01_2007.gpx"; sourceTree = "<group>"; };
@@ -145,6 +150,7 @@
 		4D19BE351E6A8B9200F7599D /* RK_gpx _2017-02-23_2111.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "RK_gpx _2017-02-23_2111.gpx"; path = "../../Downloads/RK_gpx _2017-02-23_2111.gpx"; sourceTree = "<group>"; };
 		4D2BAC7A1E534AF100A8E907 /* SafariActvity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariActvity.swift; sourceTree = "<group>"; };
 		4D4671EE1E4E4CBC007A87CE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4D8B78441FA7624A00E1069D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		4D8D7F771E9414A6007FE4FA /* MapBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapBoxViewController.swift; sourceTree = "<group>"; };
 		4D9359B21E43A697006C9FC9 /* apple-app-site-association */ = {isa = PBXFileReference; lastKnownFileType = text; path = "apple-app-site-association"; sourceTree = "<group>"; };
 		4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOsmo.entitlements; sourceTree = "<group>"; };
@@ -165,6 +171,10 @@
 		4DC6C7491F1FD8BA004CD2CD /* FirebaseMessaging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseMessaging.framework; sourceTree = "<group>"; };
 		4DC6C74A1F1FD8BA004CD2CD /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Protobuf.framework; sourceTree = "<group>"; };
 		4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		53782F40A01375469CF2E63F /* Pods_iOsMo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOsMo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		66FCBEB97CB77EEDDE6301F5 /* Pods-iOsmoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOsmoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7DE6F9E7B13A081CAA897912 /* Pods_iOsmoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOsmoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5AEA3DB788485A59B275F37 /* Pods-iOsMo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOsMo.release.xcconfig"; path = "Pods/Target Support Files/Pods-iOsMo/Pods-iOsMo.release.xcconfig"; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
 		F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,6 +195,7 @@
 				4DC6C7461F1FD89E004CD2CD /* GoogleToolboxForMac.framework in Frameworks */,
 				4DC6C7451F1FD89E004CD2CD /* FirebaseNanoPB.framework in Frameworks */,
 				4DC6C7411F1FD89E004CD2CD /* FirebaseAnalytics.framework in Frameworks */,
+				35F3CA984417234083249AF4 /* Pods_iOsMo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +203,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				078308EC2405B8C68283C029 /* Pods_iOsmoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +223,7 @@
 				293C958A1A34B217005DD4CE /* iOsmoTests */,
 				293C95711A34B217005DD4CE /* Products */,
 				A005A965362B6B855E2213B0 /* Frameworks */,
+				DB7C66BE4039BB10A211830F /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -281,6 +294,7 @@
 			isa = PBXGroup;
 			children = (
 				4D8D7F771E9414A6007FE4FA /* MapBoxViewController.swift */,
+				4D8B78441FA7624A00E1069D /* MapViewController.swift */,
 				293C95771A34B217005DD4CE /* MonitoringViewController.swift */,
 				293C95791A34B217005DD4CE /* LogViewController.swift */,
 				29FA96331A478335009BFC19 /* AccountViewController.swift */,
@@ -317,10 +331,10 @@
 			children = (
 				29520AB51AD4838500CC4136 /* GroupManager.swift */,
 				29520AB71AD5D79100CC4136 /* Group.swift */,
-				29520AB91AD5D7E700CC4136 /* User.swift */,
 				29F293E01AED989600B6AF8A /* Coordinate.swift */,
 				29F293E21AEEFA4500B6AF8A /* UserGroupCoordinate.swift */,
 				4D19BE311E69C93600F7599D /* Point.swift */,
+				29520AB91AD5D7E700CC4136 /* User.swift */,
 				4DB4CE661EA2B797009E96B5 /* Track.swift */,
 			);
 			name = Groups;
@@ -349,8 +363,8 @@
 		29DAF9471A7039D200188D8A /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				293C95C51A3C7FAE005DD4CE /* Enums.swift */,
 				29520AB01AD17E2400CC4136 /* ObserverSet.swift */,
+				293C95C51A3C7FAE005DD4CE /* Enums.swift */,
 				29FA96091A45FAC5009BFC19 /* LogQueue.swift */,
 				293C95C91A3D2AA0005DD4CE /* SettingManager.swift */,
 				29CCA6231B1676AB00DA0C83 /* Extensions.swift */,
@@ -389,8 +403,21 @@
 			children = (
 				4DC6C7481F1FD8BA004CD2CD /* Messaging */,
 				4DC6C7391F1FD89E004CD2CD /* Analytics */,
+				53782F40A01375469CF2E63F /* Pods_iOsMo.framework */,
+				7DE6F9E7B13A081CAA897912 /* Pods_iOsmoTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DB7C66BE4039BB10A211830F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				35AE16D486512A343DC14437 /* Pods-iOsMo.debug.xcconfig */,
+				D5AEA3DB788485A59B275F37 /* Pods-iOsMo.release.xcconfig */,
+				66FCBEB97CB77EEDDE6301F5 /* Pods-iOsmoTests.debug.xcconfig */,
+				19E7CA3BCFEE9FB424291BC1 /* Pods-iOsmoTests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -400,11 +427,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 293C95911A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsMo" */;
 			buildPhases = (
+				FFEBECFBB3C608C29A02402D /* [CP] Check Pods Manifest.lock */,
 				293C956C1A34B217005DD4CE /* Sources */,
 				293C956D1A34B217005DD4CE /* Frameworks */,
 				293C956E1A34B217005DD4CE /* Resources */,
 				4D19BE2C1E67353B00F7599D /* Embed Frameworks */,
 				4D19BE371E6B0FCE00F7599D /* ShellScript */,
+				B6DA4029232D1C0BCB6382FA /* [CP] Embed Pods Frameworks */,
+				167278CC1A24F8B18D37448C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -419,9 +449,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */;
 			buildPhases = (
+				D5AB7C6EF9846020FC8A0686 /* [CP] Check Pods Manifest.lock */,
 				293C95831A34B217005DD4CE /* Sources */,
 				293C95841A34B217005DD4CE /* Frameworks */,
 				293C95851A34B217005DD4CE /* Resources */,
+				F9AC79C689D69D759BB35498 /* [CP] Embed Pods Frameworks */,
+				246EA5FE75D72269FD659DA6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -518,6 +551,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		167278CC1A24F8B18D37448C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsMo/Pods-iOsMo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		246EA5FE75D72269FD659DA6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		4D19BE371E6B0FCE00F7599D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -530,6 +593,81 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework/strip-frameworks.sh\"";
+		};
+		B6DA4029232D1C0BCB6382FA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-iOsMo/Pods-iOsMo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Mapzen-ios-sdk/Mapzen_ios_sdk.framework",
+				"${BUILT_PRODUCTS_DIR}/OnTheRoad/OnTheRoad.framework",
+				"${BUILT_PRODUCTS_DIR}/Pelias/Pelias.framework",
+				"${PODS_ROOT}/Tangram-es/TangramMap.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapzen_ios_sdk.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OnTheRoad.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Pelias.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TangramMap.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsMo/Pods-iOsMo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D5AB7C6EF9846020FC8A0686 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-iOsmoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9AC79C689D69D759BB35498 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iOsmoTests/Pods-iOsmoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FFEBECFBB3C608C29A02402D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-iOsMo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -565,6 +703,7 @@
 				2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */,
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
 				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
+				4D8B78451FA7624A00E1069D /* MapViewController.swift in Sources */,
 				293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */,
 				4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */,
 				4D8D7F781E9414A6007FE4FA /* MapBoxViewController.swift in Sources */,
@@ -733,6 +872,7 @@
 		};
 		293C95921A34B217005DD4CE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35AE16D486512A343DC14437 /* Pods-iOsMo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = iOsmo/iOsmo.entitlements;
@@ -749,7 +889,7 @@
 				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -766,6 +906,7 @@
 		};
 		293C95931A34B217005DD4CE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D5AEA3DB788485A59B275F37 /* Pods-iOsMo.release.xcconfig */;
 			buildSettings = {
 				"ADDITIONAL_SDKS[arch=*]" = "";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -783,7 +924,7 @@
 				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -800,6 +941,7 @@
 		};
 		293C95951A34B217005DD4CE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66FCBEB97CB77EEDDE6301F5 /* Pods-iOsmoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -821,6 +963,7 @@
 		};
 		293C95961A34B217005DD4CE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 19E7CA3BCFEE9FB424291BC1 /* Pods-iOsmoTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (

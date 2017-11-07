@@ -152,3 +152,9 @@ enum MapStyle: String {
     case Streets = "mapbox://styles/alesir/cizr8v0z6003w2st6ytibx85a"
     case Bright = "mapbox://styles/alesir/cizr8s765004h2rkwl1ob0zat"
 }
+
+enum AnnotationType: Int {
+    case user = 1
+    case point = 2
+}
+

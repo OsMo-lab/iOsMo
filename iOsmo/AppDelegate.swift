@@ -13,6 +13,7 @@ import FirebaseAnalytics
 import FirebaseInstanceID
 import FirebaseMessaging
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
