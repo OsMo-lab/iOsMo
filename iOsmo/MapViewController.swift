@@ -19,6 +19,7 @@ class OSMMapKitPolyline: MKPolyline {
     // Custom property that we will use when drawing the polyline.
     var color: UIColor?
     var objId: String = ""
+
 }
 
 class OSMOMKAnnotationView: MKAnnotationView {
@@ -196,38 +197,41 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         var curTracks = [String]()
         
         for group in groups{
-            for user in group.users {
-                if user.lat > -3000 && user.lon > -3000 {
-                    let location = LocationModel(lat: user.lat, lon: user.lon)
-                    let gid = Int(group.u)
-                    let uid = Int(user.id)
-                    let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
-                    ugc.recent = false
-                    self.drawPeoples(location: ugc)
-                    curAnnotations.append("u\(uid!)")
+            if group.active {
+                for user in group.users {
+                    if user.lat > -3000 && user.lon > -3000 {
+                        let location = LocationModel(lat: user.lat, lon: user.lon)
+                        let gid = Int(group.u)
+                        let uid = Int(user.id)
+                        let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
+                        ugc.recent = false
+                        self.drawPeoples(location: ugc)
+                        curAnnotations.append("u\(uid!)")
+                    }
                 }
+                for point in group.points {
+                    drawPoint(point: point, group:group)
+                    curAnnotations.append("p\(point.u)")
+                }
+                for track in group.tracks {
+                    drawTrack(track: track)
+                    curTracks.append("t\(track.u)")
+                }
+                
             }
-            for point in group.points {
-                drawPoint(point: point, group:group)
-                curAnnotations.append("p\(point.u)")
-            }
-            for track in group.tracks {
-                drawTrack(track: track)
-                curTracks.append("t\(track.u)")
-            }
+            
         }
         var idx = 0;
         for ann in pointAnnotations {
             var delete = true;
-            var annObjId:String?
+            var annObjId:String! = ""
             
             if (ann is User)  {
-                annObjId = "u\(ann as! User).id)"
+                annObjId = (ann as! User).mapId
             } else if (ann is Point) {
-                annObjId = "p\((ann as! Point).u)"
+                annObjId = (ann as! Point).mapId
             }
             
-
             if curAnnotations.count > 0 {
                 for objId in curAnnotations {
                     if annObjId == objId {
@@ -238,14 +242,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             
             if (delete == true) {
-                
-                if !(ann is Point && ann.subtitle! == "Waypoint") {
-                    do {
-                        self.mapView.removeAnnotation(ann)
-
-                    } catch {
-                        
-                    }
+                if !(annObjId.contains("wpt")) {
+                    self.mapView.removeAnnotation(ann)
                     pointAnnotations.remove(at: idx)
                     print("removing \(annObjId)")
                 }
@@ -254,27 +252,39 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         idx = 0;
-        /*
-         for ann in trackAnnotations {
-         var delete = true;
-         if curTracks.count > 0 {
-         for objId in curTracks {
-         if annObjId == objId {
-         delete = false;
-         break;
-         }
-         }
-         }
-         
-         if (delete == true) {
-         self.mapView.removeAnnotation(ann)
-         trackAnnotations.remove(at: idx)
-         print("removing \(ann.objId)")
-         } else {
-         idx = idx + 1
-         }
-         }
-         */
+        for ann in trackAnnotations {
+            var delete = true;
+            if curTracks.count > 0 {
+                for objId in curTracks {
+                    if objId == ann.objId {
+                        delete = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (delete == true) {
+                self.mapView.remove(ann)
+                trackAnnotations.remove(at: idx)
+                print("removing \(ann.objId)")
+                
+                //Удаляем Waypoint-ы трека
+                var wpt_idx = 0;
+                for wpt in pointAnnotations {
+                    if (wpt is Point && (wpt as! Point).mapId == "wp\(ann.objId)") {
+                        self.mapView.removeAnnotation(wpt)
+                        
+                        pointAnnotations.remove(at: wpt_idx)
+                        print("removing waypoint for \(ann.objId)")
+                    } else {
+                        wpt_idx = wpt_idx + 1;
+                    }
+                }
+            } else {
+                idx = idx + 1
+            }
+        }
+
     }
     
     func drawTrack(track:Track) {
@@ -300,7 +310,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                             }
                             if coordinates.count > 0 {
                                 let polyline = OSMMapKitPolyline(coordinates: &coordinates, count: coordinates.count)
-                                // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
                                 polyline.color = track.color.hexColor.withAlphaComponent(0.8)
                                 polyline.title = track.name
                                 polyline.objId = "t\(track.u)"
@@ -309,7 +318,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 self.trackAnnotations.append(polyline)
 
                             }
-                            
                         }
                         
                     }
@@ -324,6 +332,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         ["u": track.u, "name": name ?? "", "description": "Waypoint", "color": track.color, "lat": "\(lat)", "lon": "\(lon)"];
                     
                     let point = Point(json: pointDict as! Dictionary<String, AnyObject>)
+                    point.mapId = "wpt\(track.u)"
                     self.mapView.addAnnotation(point);
                     self.pointAnnotations.append(point)
 
@@ -377,56 +386,57 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 let userName = user.name
                 var annVisible = false;
-                for ann in self.pointAnnotations {
-                    if (ann is User) {
-                        
-                        if ((ann as! User).id == "\(location.userId)") {
-                            annVisible = true;
+                var annObjId = ""
+                var exTrack: OSMMapKitPolyline? = nil;
+                user.lat = location.location.lat;
+                user.lon = location.location.lon;
+                
+                //if (clLocation.latitude != user.lat || clLocation.longitude != user.lon) {
+                    user.track.append(clLocation)
+                    for ann in trackAnnotations {
+                        if ann.objId == "utrk\(location.userId)" {
+                            exTrack = ann;
                             break;
-                            
                         }
                     }
-                    
-/*
-
-                    let annObjId = ann.data?["objId"] as? String
-                    if annObjId == "u\(location.userId)" {
-                        /*
-                         if ann.polyline == nil {
-                         var coordinates = [ann.coordinate, clLocation]
-                         
-                         let polyline = OSMPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-                         
-                         // Set the custom `color` property, later used in the `mapView:strokeColorForShapeAnnotation:` delegate method.
-                         polyline.color = user.color.hexColor.withAlphaComponent(0.8)
-                         
-                         // Add the polyline to the map. Note that this method name is singular.
-                         mapView.addAnnotation(polyline)
-                         ann.polyline = polyline;
-                         
-                         } else {
-                         //Не добавляем в конец трека координаты пользователя из GROUP.users
-                         if location.recent == true {
-                         ann.polyline?.appendCoordinates([clLocation], count: 1)
-                         if self.trackedUser == ann.objId {
-                         self.mapView.setCenter(clLocation, animated: true)
-                         }
-                         }
-                         }
-                         ann.coordinate = clLocation;
-                         
-                         ann.labelColor = "#000000";
-                         */
-                        annVisible = true;
-                        break;
+                    if user.track.count > 0 {
+                        let polyline = OSMMapKitPolyline(coordinates: &user.track, count: user.track.count)
+                        polyline.color = user.color.hexColor.withAlphaComponent(0.8)
+                        polyline.title = user.name
+                        polyline.objId = "utrk\(location.userId)"
+                        
+                        self.mapView.add(polyline)
+                        if (exTrack != nil) {
+                            self.trackAnnotations.append(polyline)
+                        }
                     }
- */
+                    if (exTrack != nil) {
+                        print("removing prev usertrack")
+                        self.mapView.remove(exTrack!)
+                    }
+                    
+                    for ann in self.pointAnnotations {
+                        if (ann is User) {
+                            if ((ann as! User).mapId == "u\(location.userId)") {
+                                annObjId = (ann as! User).mapId
+                                annVisible = true;
+                                break;
+                                
+                            }
+                        }
+                    }
+                    if !annVisible {
+                        self.mapView.addAnnotation(user);
+                        self.pointAnnotations.append(user);
+                        print("add user \(location.userId)")
+                        
+                    } else {
+                        self.mapView(self.mapView, viewFor: user)?.setNeedsDisplay()
+                        //self.mapView.setNeedsDisplay()
                 }
-                if !annVisible {
-                    self.mapView.addAnnotation(user);
-                    self.pointAnnotations.append(user);
-                    print("add user \(location.userId)")
-                }
+
+                    
+                //}
             }
         }
     }
@@ -461,53 +471,51 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is Point {
             let reuseIdentifier = "point"
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+            var pointView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
             
-            if annotationView == nil {
-                annotationView = OSMOMKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
-                annotationView?.canShowCallout = true
+            if pointView == nil {
+                pointView = OSMOMKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+                pointView?.canShowCallout = true
             } else {
-                annotationView?.annotation = annotation
+                pointView?.annotation = annotation
             }
-            annotationView?.backgroundColor = (annotation as! Point).color.hexColor;
-            if let subtitle: UILabel = annotationView?.detailCalloutAccessoryView!.viewWithTag(10) as! UILabel {
+            pointView?.backgroundColor = (annotation as! Point).color.hexColor;
+            if let subtitle = pointView?.detailCalloutAccessoryView!.viewWithTag(10) as? UILabel {
                 subtitle.text = annotation.subtitle!
             }
 
             
             if let title = annotation.title {
-                let v = annotationView!.viewWithTag(1)
-                if let letter = v as? UILabel{
+                if let letter = pointView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
                     letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.characters.count>2 ? 2 : title!.characters.count))
                 }
             }
            
-            return annotationView
+            return pointView
         }
         if annotation is User {
-            let reuseIdentifier = "point"
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+            let reuseIdentifier = "user"
+            var userView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
             
-            if annotationView == nil {
-                annotationView = OSMOMKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
-                annotationView?.canShowCallout = true
+            if userView == nil {
+                userView = OSMOMKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
+                userView?.canShowCallout = true
             } else {
-                annotationView?.annotation = annotation
+                userView?.annotation = annotation
             }
-            annotationView?.backgroundColor = (annotation as! User).color.hexColor;
-            if let subtitle: UILabel = annotationView?.detailCalloutAccessoryView!.viewWithTag(10) as! UILabel {
+            userView?.backgroundColor = (annotation as! User).color.hexColor;
+            if let subtitle = userView?.detailCalloutAccessoryView!.viewWithTag(10) as? UILabel {
                 subtitle.text = annotation.subtitle!
             }
             if let title = annotation.title {
-                let v = annotationView!.viewWithTag(1)
-                if let letter = v as? UILabel{
+                 if let letter = userView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
                     letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.characters.count>2 ? 2 : title!.characters.count))
                 }
             }
             
-            return annotationView
+            return userView
         }
         return nil
     }

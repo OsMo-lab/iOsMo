@@ -400,7 +400,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 if !(ann.objId?.contains("wpt"))! {
                     self.mapView.removeAnnotation(ann)
                     pointAnnotations.remove(at: idx)
-                    print("removing \(ann.objId)")
+                    print("removing \(ann.title)")
                 }
             } else {
                 idx = idx + 1

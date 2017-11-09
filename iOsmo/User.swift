@@ -19,10 +19,12 @@ public class User:NSObject, MKAnnotation {
     var connected: Double //time of connected in UNIX time format
     var lat: Double = -3000
     var lon: Double = -3000
+    var track = [CLLocationCoordinate2D]()
     
     public var subtitle: String? = ""
     
     init(json:Dictionary<String, AnyObject>) {
+
         print(json)
         var uId = json["u"] as? String
         if (uId == nil) {
@@ -39,6 +41,7 @@ public class User:NSObject, MKAnnotation {
         if let lat = json["lat"] as? String, let lon = json["lon"] as? String {
             self.lat = atof(lat);
             self.lon = atof(lon);
+            self.track.append(CLLocationCoordinate2D(latitude: self.lat, longitude: self.lon))
         }
     }
     
@@ -56,7 +59,9 @@ public class User:NSObject, MKAnnotation {
     open var title: String? {
         return name;
     }
-    
+    open var mapId: String! {
+        return "u\(id!)";
+    }
     open var coordinate : CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: lat, longitude: lon);
     }

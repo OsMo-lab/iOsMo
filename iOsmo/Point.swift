@@ -20,6 +20,7 @@ public class Point: NSObject, MKAnnotation {
     var url: String = ""
     var start: Date?
     var finish: Date?
+    var mapId: String! = ""
     
     public var subtitle: String?   //MKAnnonation protocol
 
@@ -31,7 +32,7 @@ public class Point: NSObject, MKAnnotation {
         self.name = json["name"] as! String
         self.descr = json["description"] as! String
         self.color = json["color"] as! String
-        
+        self.mapId = "p\(self.u)"
         self.subtitle = self.descr
     }
     
