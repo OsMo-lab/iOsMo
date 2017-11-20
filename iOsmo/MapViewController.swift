@@ -199,8 +199,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         for group in groups{
             if group.active {
                 for user in group.users {
-                    if user.lat > -3000 && user.lon > -3000 {
-                        let location = LocationModel(lat: user.lat, lon: user.lon)
+                    if user.coordinate.latitude > -3000 && user.coordinate.longitude > -3000 {
+                        let location = LocationModel(lat: user.coordinate.latitude, lon: user.coordinate.longitude)
                         let gid = Int(group.u)
                         let uid = Int(user.id)
                         let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
@@ -388,8 +388,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 var annVisible = false;
                 var annObjId = ""
                 var exTrack: OSMMapKitPolyline? = nil;
-                user.lat = location.location.lat;
-                user.lon = location.location.lon;
+                user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
+
                 
                 //if (clLocation.latitude != user.lat || clLocation.longitude != user.lon) {
                     user.track.append(clLocation)

@@ -17,8 +17,9 @@ public class User:NSObject, MKAnnotation {
     var state: Int = 0
     var online: Int = 0
     var connected: Double //time of connected in UNIX time format
-    var lat: Double = -3000
-    var lon: Double = -3000
+    //var lat: Double = -3000
+    //var lon: Double = -3000
+    public dynamic var coordinate : CLLocationCoordinate2D;
     var track = [CLLocationCoordinate2D]()
     
     public var subtitle: String? = ""
@@ -39,9 +40,12 @@ public class User:NSObject, MKAnnotation {
         self.state = (json["state"] as? Int) ?? 0
 
         if let lat = json["lat"] as? String, let lon = json["lon"] as? String {
-            self.lat = atof(lat);
-            self.lon = atof(lon);
-            self.track.append(CLLocationCoordinate2D(latitude: self.lat, longitude: self.lon))
+
+            self.coordinate = CLLocationCoordinate2D(latitude: atof(lat), longitude: atof(lon))
+            self.track.append(self.coordinate)
+            
+        } else {
+            self.coordinate = CLLocationCoordinate2D(latitude: -3000, longitude: -3000)
         }
     }
     
@@ -50,6 +54,7 @@ public class User:NSObject, MKAnnotation {
         self.name = name
         self.color = color
         self.connected = connected
+        self.coordinate = CLLocationCoordinate2D(latitude: -3000, longitude: -3000)
     }
     
     public static func == (left: User, right: User) -> Bool {
@@ -62,8 +67,6 @@ public class User:NSObject, MKAnnotation {
     open var mapId: String! {
         return "u\(id!)";
     }
-    open var coordinate : CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: lat, longitude: lon);
-    }
+
 }
 

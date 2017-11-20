@@ -157,7 +157,7 @@ open class GroupManager{
                     var users : [NSDictionary] = [NSDictionary]()
                     for u in g.users {
                         let user : NSDictionary =
-                            ["u": u.id, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "online": u.online, "lat": "\(u.lat)", "lon": "\(u.lon)"];
+                            ["u": u.id, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "online": u.online, "lat": "\(u.coordinate.latitude)", "lon": "\(u.coordinate.longitude)"];
                         users.append(user)
                         
                     }
