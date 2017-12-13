@@ -13,6 +13,8 @@ import CoreLocation
 import MapKit
 
 
+
+
 class OSMMapKitPolyline: MKPolyline {
     // Because this is a subclass of MGLPolyline, there is no need to redeclare its properties.
     
@@ -27,7 +29,6 @@ class OSMOMKAnnotationView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         print ("OSMOMKAnnotationView Init")
         self.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        //let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
         
         let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
 
@@ -44,19 +45,19 @@ class OSMOMKAnnotationView: MKAnnotationView {
         
         self.canShowCallout = true
         
-        let label1 = UILabel(frame: CGRect(x:0, y:0, width:200, height:21))
-        label1.tag = 10
+        let tView = UITextView(frame: CGRect(x:0, y:0, width:200, height:21))
+        tView.tag = 10;
+        tView.isEditable = false;
+        tView.dataDetectorTypes = UIDataDetectorTypes.all
         
-        label1.numberOfLines = 0
-        self.detailCalloutAccessoryView = label1;
-        
-        let width = NSLayoutConstraint(item: label1, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.lessThanOrEqual, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 200)
-        label1.addConstraint(width)
+        self.detailCalloutAccessoryView = tView;
+        let width = NSLayoutConstraint(item: tView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.lessThanOrEqual, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 200)
+        tView.addConstraint(width)
         
         
-        let height = NSLayoutConstraint(item: label1, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 90)
-        label1.addConstraint(height)
-        
+        let height = NSLayoutConstraint(item: tView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 50)
+        tView.addConstraint(height)
+
         self.addSubview(letter);
         
     }
@@ -86,8 +87,8 @@ class OSMOMKAnnotationView: MKAnnotationView {
             }
         }
     }
-    
 }
+
 class MapViewController: UIViewController, MKMapViewDelegate {
     required init(coder aDecoder: NSCoder) {
         print("MapViewController init")
@@ -110,6 +111,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     var pointAnnotations = [MKAnnotation]()
     var trackAnnotations = [OSMMapKitPolyline]()
+    var tileSource = TileSource.Mapnik
     @IBOutlet weak var mapView:MKMapView!;
     
     var tileRenderer: MKTileOverlayRenderer!
@@ -117,15 +119,27 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("MapViewController viewDidLoad")
+        
+        
+        
         self.setupTileRenderer()
 
         self.mapView.showsCompass = true
         self.mapView.showsUserLocation = true
-        if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let zoom = SettingsManager.getKey(SettingKeys.zoom)?.doubleValue {
-            if ((lat != 0) && (lon != 0) && (zoom != 0)) {
-                self.mapView.setCenter(CLLocationCoordinate2D(latitude: lat, longitude: lon), animated: true)
+        if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let lon_delta = SettingsManager.getKey(SettingKeys.lon_delta)?.doubleValue, let lat_delta = SettingsManager.getKey(SettingKeys.lat_delta)?.doubleValue {
+            if ((lat != 0) && (lon != 0)) {
+                
+                if ((lat_delta != 0) && (lon_delta != 0)) {
+                    let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon), span: MKCoordinateSpan(latitudeDelta: lat_delta, longitudeDelta: lon_delta))
+                    self.mapView.setRegion(region, animated: false)
+
+                    
+                }else {
+                    self.mapView.setCenter(CLLocationCoordinate2D(latitude: lat, longitude: lon), animated: true)
+                }
                 
             }
+            
         }
         self.onMonitoringGroupsUpdated = self.groupManager.monitoringGroupsUpdated.add{
             for coord in $0 {
@@ -165,6 +179,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         print("MapViewController viewWillAppear")
         Analytics.logEvent("map_open", parameters: nil)
+
+        self.setupTileRenderer()
         
         if (groupManager.allGroups.count) > 0 {
             self.connectionManager.activatePoolGroups(1)
@@ -183,6 +199,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         SettingsManager.setKey("\(self.mapView.centerCoordinate.latitude)" as NSString, forKey: SettingKeys.lat)
         SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
+        SettingsManager.setKey("\(self.mapView.region.span.latitudeDelta)" as NSString, forKey: SettingKeys.lat_delta)
+        SettingsManager.setKey("\(self.mapView.region.span.longitudeDelta)" as NSString, forKey: SettingKeys.lon_delta)
+        
 
     }
     
@@ -357,6 +376,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         }
     }
+    
     func drawPoint(point: Point, group: Group){
         print("MapViewController drawPoint")
         let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
@@ -435,28 +455,51 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         //self.mapView.setNeedsDisplay()
                 }
 
-                    
-                //}
             }
         }
     }
     
     func setupTileRenderer() {
+        if let mapStyle = SettingsManager.getKey(SettingKeys.tileSource)?.intValue{
+            tileSource = TileSource(rawValue: mapStyle)!
+        }
         // 1
-        let template = "https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png"//"https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         
+        var template: String;
+        
+        
+        switch self.tileSource {
+            case TileSource.Hotosm:
+                template = "https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png";
+            case TileSource.Sputnik:
+                template = "http://{s}.tiles.maps.sputnik.ru/{z}/{x}/{y}.png"
+            case TileSource.Mtb:
+                template = "http://tile.mtbmap.cz/mtbmap_tiles/{z}/{x}/{y}.png"
+            default:
+                template = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        }
+        
+        if (tileRenderer != nil) {
+            let curOverlay = tileRenderer.overlay
+            if (curOverlay as! OSMTileOverlay).urlTemplate == template {
+                return
+            }
+            self.mapView.removeOverlays([curOverlay])
+            
+        }
         // 2
         let overlay = OSMTileOverlay(urlTemplate: template)
-
+        overlay.canReplaceMapContent = true
+        
         
         // 4
         self.mapView.add(overlay, level: .aboveLabels)
         
         //5
         tileRenderer = MKTileOverlayRenderer(tileOverlay: overlay)
+
     }
-    
-    
+   
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is OSMMapKitPolyline {
@@ -465,7 +508,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             lineView.lineWidth = 2
             return lineView
         }
-        return tileRenderer
+        if (overlay is OSMTileOverlay) {
+            let renderer = MKTileOverlayRenderer(overlay: overlay)
+            return renderer
+        } else {
+            return MKOverlayRenderer(overlay: overlay)
+        }
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -480,7 +528,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 pointView?.annotation = annotation
             }
             pointView?.backgroundColor = (annotation as! Point).color.hexColor;
-            if let subtitle = pointView?.detailCalloutAccessoryView!.viewWithTag(10) as? UILabel {
+            if let subtitle = pointView?.detailCalloutAccessoryView!.viewWithTag(10) as? UITextView {
                 subtitle.text = annotation.subtitle!
             }
 
@@ -505,7 +553,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 userView?.annotation = annotation
             }
             userView?.backgroundColor = (annotation as! User).color.hexColor;
-            if let subtitle = userView?.detailCalloutAccessoryView!.viewWithTag(10) as? UILabel {
+            if let subtitle = userView?.detailCalloutAccessoryView!.viewWithTag(10) as? UITextView {
                 subtitle.text = annotation.subtitle!
             }
             if let title = annotation.title {
@@ -518,6 +566,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             return userView
         }
         return nil
+    }
+    
+    @IBAction func locateClick(sender: AnyObject) {
+        
+        self.trackedUser = "" //Перестаем следить за выбранным пользователем
+        self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+
+        mapView.setNeedsDisplay()
+        /*
+         if let location = mapView.userLocation?.location {
+         mapView.setCenter(location.coordinate, animated: true)
+         }*/
     }
 }
 
@@ -551,7 +611,7 @@ class OSMTileOverlay: MKTileOverlay {
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
         sUrl = sUrl?.replacingOccurrences(of: "{y}", with: "\(path.y)")
-        //print(sUrl)
+        print(sUrl)
 
         return URL(string: sUrl!)!
     }

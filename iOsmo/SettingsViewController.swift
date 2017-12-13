@@ -22,13 +22,15 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
+    @IBOutlet weak var showTracksSwitcher: UISwitch!
     @IBOutlet weak var intervalTextField: UITextField!
     @IBOutlet weak var distanceTextField: UITextField!
     @IBOutlet weak var locTimeTextField: UITextField!
+    @IBOutlet weak var mapStyleButton: UIButton!
+    
 
     
     @IBAction func AwakeModeChanged(_ sender: AnyObject) {
-    
         SettingsManager.setKey(self.awakeModeSwitcher.isOn ? "1" : "0", forKey: SettingKeys.isStayAwake)
         
         UIApplication.shared.isIdleTimerDisabled = awakeModeSwitcher.isOn
@@ -40,6 +42,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
+    
+    
     
     /*Сброс авторизации устройства*/
     @IBAction func ResetModeChanged(_ sender: AnyObject) {
@@ -55,6 +59,10 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 connectionManager.connect()
             }
         }
+    }
+    
+    @IBAction func ShowTracksChanged(_ sender: AnyObject) {
+        SettingsManager.setKey(showTracksSwitcher.isOn ? "1" : "0", forKey: SettingKeys.showTracks)
     }
     
     @IBAction func textFieldEnter(_sender: UITextField){
@@ -93,11 +101,47 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         
         
     }
+    
+    @IBAction func SelectMapStyle(_ sender: UIButton) {
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Map style", comment: "Select map style"), preferredStyle: .alert)
+        var style:Int32 = 0
+        
+        func handler(_ act:UIAlertAction!) {
+            var mapStyle: Int32;
+            
+            switch act.title! {
+            case "Hot OSM":
+                mapStyle = TileSource.Hotosm.rawValue
+            case "MTB":
+                mapStyle = TileSource.Mtb.rawValue
+            case "Sputnik":
+                mapStyle = TileSource.Sputnik.rawValue
+            default:
+                mapStyle = TileSource.Mapnik.rawValue
+
+            }
+            self.mapStyleButton.setTitle(act.title, for: .normal)
+            SettingsManager.setKey("\(mapStyle)" as NSString, forKey: SettingKeys.tileSource)
+
+        }
+        
+        while (style < TileSource.SOURCES_COUNT.rawValue) {
+            var title = tileSourceName(style);
+            if (title != "") {
+                myAlert.addAction(UIAlertAction(title: title, style: .default, handler: handler))
+            }
+            style += 1;
+            
+        }
+
+        self.present(myAlert, animated: true, completion: nil)
+    }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder();
         return true;
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -129,6 +173,12 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             }
             locTimeTextField.text = locInterval as String
         }
+        var mapTitle = "Mapnik"
+        if let mapStyle = SettingsManager.getKey(SettingKeys.tileSource)?.intValue{
+            mapTitle = tileSourceName(mapStyle)
+        }
+        mapStyleButton.setTitle(mapTitle, for: UIControlState.normal)
+        
         //intervalTextField.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
@@ -138,6 +188,21 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func tileSourceName(_ source: Int32) -> String {
+        var mapTitle = ""
+        switch source {
+            case TileSource.Hotosm.rawValue:
+                mapTitle = "Hot OSM"
+            case TileSource.Mtb.rawValue:
+                mapTitle  = "MTB"
+            case TileSource.Sputnik.rawValue:
+                mapTitle  = "Sputnik"
+            default:
+                mapTitle  = "Mapnik"
+        }
+        return mapTitle
+        
+    }
     func alert(_ title: String, message: String) {
         if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
             let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
