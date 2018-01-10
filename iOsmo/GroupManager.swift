@@ -154,8 +154,35 @@ open class GroupManager{
             do {
                 var jsonInfo : [NSDictionary] = [NSDictionary]()
                 for g in self.allGroups {
+                    var users : [NSDictionary] = [NSDictionary]()
+                    for u in g.users {
+                        let user : NSDictionary =
+                            ["u": u.id, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "online": u.online, "lat": "\(u.coordinate.latitude)", "lon": "\(u.coordinate.longitude)"];
+                        users.append(user)
+                        
+                    }
+                    
+                    var points : [NSDictionary] = [NSDictionary]()
+                    for p in g.points {
+                        let point : NSDictionary =
+                            ["u": p.u, "name": p.name, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)"];
+                        points.append(point)
+                    }
+                    
+                    var tracks : [NSDictionary] = [NSDictionary]()
+                    for t in g.tracks {
+                        let track : NSDictionary =
+                            ["u": t.u, "name": t.name, "description": t.descr, "color": t.color, "size": "\(t.size)", "url": t.url, "type": t.type];
+                        tracks.append(track)
+                    }
+
+                    
                     let jsonGroup : NSDictionary =
-                        ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "id": g.id, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy, "nick": g.nick];
+                        ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "id": g.id
+                        ,"active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy
+                        ,"nick": g.nick
+                        ,"users": users, "point": points, "track": tracks
+                    ];
                     jsonInfo.append(jsonGroup)
                     
                 }

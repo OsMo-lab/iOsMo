@@ -10,30 +10,9 @@ import UIKit
 import Mapbox
 import FirebaseAnalytics
 
-enum AnnotationType: Int{
-    case user = 1
-    case point = 2
-}
 
-extension String {
-    var hexColor: UIColor {
-        let hex = trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int = UInt32()
-        Scanner(string: hex).scanHexInt32(&int)
-        let a, r, g, b: UInt32
-        switch hex.characters.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            return .clear
-        }
-        return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
-    }
-}
+
+
 
 class OSMOCalloutView: UIView, MGLCalloutView {
     var representedObject: MGLAnnotation
@@ -362,6 +341,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
 
         // Do any additional setup after loading the view.
     }
+    
     override func viewWillAppear(_ animated:Bool) {
         super.viewWillAppear(animated)
         
@@ -384,8 +364,8 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         
         for group in groups{
             for user in group.users {
-                if user.lat > -3000 && user.lon > -3000 {
-                    let location = LocationModel(lat: user.lat, lon: user.lon)
+                if user.coordinate.latitude > -3000 && user.coordinate.longitude > -3000 {
+                    let location = LocationModel(lat: user.coordinate.latitude, lon: user.coordinate.longitude)
                     let gid = Int(group.u)
                     let uid = Int(user.id)
                     let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
@@ -420,7 +400,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 if !(ann.objId?.contains("wpt"))! {
                     self.mapView.removeAnnotation(ann)
                     pointAnnotations.remove(at: idx)
-                    print("removing \(ann.objId)")
+                    print("removing \(ann.title)")
                 }
             } else {
                 idx = idx + 1
@@ -552,7 +532,6 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
                 var annVisible = false;
                 for ann in self.pointAnnotations {
                     if ann.objId == "u\(location.userId)" {
-                        
                         if ann.polyline == nil {
                             var coordinates = [ann.coordinate, clLocation]
                             
@@ -603,6 +582,7 @@ class MapBoxViewController: UIViewController, UIActionSheetDelegate, MGLMapViewD
         SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
         SettingsManager.setKey("\(self.mapView.zoomLevel)" as NSString, forKey: SettingKeys.zoom)
      }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

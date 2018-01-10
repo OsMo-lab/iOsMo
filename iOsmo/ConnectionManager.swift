@@ -11,6 +11,8 @@
 
 import Foundation
 import FirebaseInstanceID
+import FirebaseMessaging
+
 
 open class ConnectionManager: NSObject{
 
@@ -55,6 +57,7 @@ open class ConnectionManager: NSObject{
     let sessionRun = ObserverSet<(Bool, String)>()
     let groupsEnabled = ObserverSet<Bool>()
     let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
+    let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
     let dataSendEnd = ObserverSet<()>()
@@ -66,7 +69,8 @@ open class ConnectionManager: NSObject{
     //fileprivate var connection = TcpConnection()
     var connection = TcpConnection()
 
-    fileprivate var reachability: Reachability
+    let reachability = Reachability()!
+    
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
     open var isGettingLocation = false
@@ -81,13 +85,14 @@ open class ConnectionManager: NSObject{
     }
 
     override init(){
-        
-        self.reachability = Reachability.forInternetConnection()
-        
         super.init()
         NotificationCenter.default.addObserver(self, selector: aSelector, name: NSNotification.Name.reachabilityChanged, object: self.reachability)
-        
-        self.reachability.startNotifier()
+        do  {
+            try self.reachability.startNotifier()
+        }catch{
+            print("could not start reachability notifier")
+        }
+
         
         //!! subscribtion for almost all types events
         connection.answerObservers.add(notifyAnswer)
@@ -96,8 +101,39 @@ open class ConnectionManager: NSObject{
     
     open func reachabilityChanged(_ note: Notification) {
         log.enqueue("reachability changed")
-        if let reachability = note.object as? Reachability {
-            checkStatus(reachability)
+        let reachability = note.object as! Reachability
+        
+        switch reachability.connection {
+            case .wifi:
+                reachabilityStatus = .reachableViaWiFi
+                print("Reachable via WiFi")
+                if (!self.connected) {
+                    log.enqueue("should be reconnected via WiFi")
+                    shouldReConnect = true;
+                }
+            
+            case .cellular:
+                reachabilityStatus = .reachableViaWWAN
+                print("Reachable via Cellular")
+                if (!self.connected) {
+                    log.enqueue("should be reconnected via Cellular")
+                    shouldReConnect = true;
+                }
+            case .none:
+                reachabilityStatus = .notReachable
+                if (self.connected) {
+                    log.enqueue("should be reconnected")
+                    shouldReConnect = true;
+                    
+                    connectionRun.notify((false, "")) //error but is not need to be popuped
+                }
+            
+
+        }
+        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
+            
+            log.enqueue("Reconnect action")
+            connect(true)
         }
     }
     
@@ -108,21 +144,31 @@ open class ConnectionManager: NSObject{
     
     open var connected: Bool = false
     open var sessionOpened: Bool = false
+    private var connecting: Bool = false
  
     open func connect(_ reconnect: Bool = false){
         log.enqueue("ConnectionManager: connect")
-        self.connectionStart.notify(())
-        
-        if !ConnectionManager.hasConnectivity() {
+        if self.connecting {
+            log.enqueue("Conection already in process")
+            return;
+        }
+        self.connecting = true;
+        if !isNetworkAvailable {
+            log.enqueue("Network is NOT available")
             shouldReConnect = true
+            self.connecting = false;
             return
         }
+        self.connectionStart.notify(())
+        
+        
         ConnectionHelper.getServerInfo(completed: {result, token -> Void in
             if (result) {
                 /*Информация о сервере получена*/
                 if self.connection.addCallBackOnError == nil {
                     self.connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
+                        self.connecting = false
                         self.shouldReConnect = isError
                         
                         if ((self.connected || reconnect) && isError) {
@@ -149,9 +195,17 @@ open class ConnectionManager: NSObject{
                         self.dataSendEnd.notify(())
                     }
                 }
+                if self.connection.addCallBackOnCloseConnection == nil {
+                    self.connection.addCallBackOnCloseConnection = {
+                        () -> Void in
+                        self.connecting = false
+                        self.connectionClose.notify(())
+                    }
+                }
                 if self.connection.addCallBackOnConnect == nil {
                     self.connection.addCallBackOnConnect = {
                         () -> Void in
+                        self.connecting = false
                         self.connection.sendAuth(token!.device_key as String)
                     }
                 }
@@ -159,6 +213,7 @@ open class ConnectionManager: NSObject{
                 self.connection.connect(token!)
                 self.shouldReConnect = false //interesting why here? may after connction is successful??
             } else {
+                self.connecting = false
                 if (token?.error.isEmpty)! {
                     self.connectionRun.notify((false, ""))
                     self.shouldReConnect = false
@@ -400,9 +455,15 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (name == RemoteCommand.TRACKER_GCM_ID.rawValue) {
-                if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
+                //Отправляем токен ранее полученный от FCM
+                if let token = Messaging.messaging().fcmToken {
                     self.sendPush(token)
                 }
+                
+                /*if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
+                    
+                    self.sendPush(token)
+                }*/
                 connection.sendRemoteCommandResponse(name)
                 return
             }
@@ -423,35 +484,22 @@ open class ConnectionManager: NSObject{
     }
 
 
-    fileprivate func checkStatus(_ reachability: Reachability){
-        
-        let status: NetworkStatus = reachability.currentReachabilityStatus()
-        
-        if status.rawValue == NotReachable.rawValue && self.connected {
-            
-            log.enqueue("should be reconnected")
-            shouldReConnect = true;
-            
-            connectionRun.notify((false, "")) //error but is not need to be popuped
-            
-         }
-        
-        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
-            
-            log.enqueue("Reconnect action")
-            print("Reconnect action from Reachability")
-            connect(true)
-        }
-        
+    var isNetworkAvailable : Bool {
+        return reachabilityStatus != .notReachable
     }
+    var reachabilityStatus: Reachability.NetworkStatus = .notReachable
+    /*
     
     class fileprivate func hasConnectivity() -> Bool {
         
-        let reachability: Reachability = Reachability.forInternetConnection()
-        let networkStatus: Int = reachability.currentReachabilityStatus().rawValue
+        
+        
+        let reachability: Reachability = Reachability.NetworkReachable
+        reachability.
+        let networkStatus: Int = Reachability.NetworkReachable
         
         return networkStatus != 0
-    }
+    }*/
 
     
 }

@@ -179,6 +179,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.osmoImage.image = UIImage(named:"small-yellow")
                 }
             }
+            connectionManager.connectionClose.add{
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-red")
+                }
+            }
             connectionManager.connectionRun.add{
                 let theChange = $0.0
                 
@@ -285,7 +290,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 }
             }
  
-            connectionManager.connect()
+            //connectionManager.connect()
             isLoaded = true
         }
     }
