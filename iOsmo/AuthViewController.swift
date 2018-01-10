@@ -32,6 +32,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
     @IBOutlet weak var pass2Field: UITextField!
     @IBOutlet weak var signButton: UIButton!
     @IBOutlet weak var actButton: UIButton!
+    @IBOutlet weak var forgotButton: UIButton!
     
     @IBOutlet weak var sexSwitch: UISwitch!
     @IBOutlet weak var signLabel: UILabel!
@@ -83,6 +84,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
             signToPassConstraint.priority = 999
             
             registerView.isHidden = true
+            forgotButton.isHidden = false
         default:
             signButton.setTitle(NSLocalizedString("Sign-In", comment: "Sign-in label"), for: .normal)
             actButton.setTitle(NSLocalizedString("Register", comment: "Register label"), for: .normal)
@@ -92,8 +94,8 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
             signToPassConstraint.priority = 500
             
             registerView.isHidden = false
+            forgotButton.isHidden = true
         }
-        
     }
 
     //Выбор пола
@@ -167,6 +169,10 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
         }
         task.resume()
         
+    }
+    
+    @IBAction func forgotPassword(_ sender: UIButton) {
+        UIApplication.shared.openURL(URL(string: "https://osmo.mobi/forgot")!)
     }
     
     func alert(_ title: String, message: String) {

@@ -10,7 +10,7 @@ import Foundation
 
 open class LogQueue {
     var innerQueue: [String]
-    let maxSize = 500
+    let maxSize = 5000
     class var sharedLogQueue : LogQueue {
         
         struct Static {
@@ -35,10 +35,10 @@ open class LogQueue {
         let eventDate = dateFormat.string(from: Date())
         let event = "\(eventDate): \(record)"
         if innerQueue.count >= maxSize {
-            
             innerQueue.remove(at: 0)
         }
         innerQueue.append(event)
+        print(record)
     }
     
     func getArray(_ startIndex: Int, count: Int) -> [String] {

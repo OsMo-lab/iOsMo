@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import MapKit
 
-open class Point {
+
+public class Point: NSObject, MKAnnotation {
     var u: Int
     var lat: Double
     var lon: Double
@@ -18,14 +20,35 @@ open class Point {
     var url: String = ""
     var start: Date?
     var finish: Date?
+    var mapId: String! = ""
+    
+    public var subtitle: String?   //MKAnnonation protocol
 
-    init(u: Int, lat: Double, lon: Double, name: String, color: String){
-        self.u = u;
-        self.lat = lat
-        self.lon = lon
-        self.name = name;
-        self.color = color;
-
+    init(json: Dictionary<String, AnyObject>) {
+        print(json)
+        self.u = json["u"] as! Int
+        self.lat = atof(json["lat"] as! String)
+        self.lon = atof(json["lon"] as! String)
+        self.name = json["name"] as! String
+        self.descr = json["description"] as! String
+        self.color = json["color"] as! String
+        self.mapId = "p\(self.u)"
+        self.subtitle = self.descr
     }
-
+    
+    public static func == (left: Point, right: Point) -> Bool {
+        return left.u == right.u
+    }
+    
+    
+    //MKAnnonation protocol
+    open var title: String? {
+        return name;
+    }
+    
+    
+    open var coordinate : CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon);
+    }
 }
+

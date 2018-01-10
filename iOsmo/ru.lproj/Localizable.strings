@@ -4,6 +4,9 @@
 /* Connecting status */
 "Connecting..." = "Соединяемся...";
 
+/* Enter nick! */
+"Enter nick!" = "Введите ник!";
+
 /* Error title for alert */
 "Error" = "Ошибка";
 
@@ -22,29 +25,42 @@
 /* Alert title for error on leave group */
 "Error on leave group" = "Ошибка выхода из группы";
 
+/* Alert title for Error on logout */
+"Error on logout" = "Ошибка выхода";
+
 /* Leave group */
 "Leave" = "Выйти";
 
 /* LogView unlocked */
 "LogView unlocked" = "Журнал разблокирован";
 
+/* Passwords didn't match! */
+"Passwords didn't match!" = "Пароли не совпадают!";
+
+/* Register label */
+"Register" = "Регистрация";
+
 /* Restart iOsMo */
 "Restart iOsMo" = "Перезапустите iOsMo";
 
-/* Unknown user */
-"Unknown" = "Неизвестен";
-
-/* session was closed */
-"session was closed" = "поездка завершена";
-
-/* Tracking location */
-"Tracking location" = "Поездка отслеживается";
-
-/*  Alert title for Error on logout */
-"Error on logout" = "Ошибка выхода";
+/* Sign-in label */
+"Sign-In" = "Вход";
 
 /* Stop current trip, before logout */
 "Stop current trip, before logout" = "Остановите поездку, до выхода";
 
+/* Tracking location */
+"Tracking location" = "Поездка отслеживается";
 
+/* Unknown user */
+"Unknown" = "Неизвестен";
+
+/* female */
+"female" = "жен.";
+
+/* male */
+"male" = "муж.";
+
+/* session was closed */
+"session was closed" = "поездка завершена";
 

@@ -10,7 +10,7 @@ import Foundation
 
 open class TcpClient : NSObject, StreamDelegate {
 
-    let log = LogQueue.sharedLogQueue
+    fileprivate let log = LogQueue.sharedLogQueue
     private var inputStream: InputStream?
     private var outputStream: OutputStream?
     private var openedStreams = 0;
@@ -20,6 +20,7 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnSendStart: (() -> Void)?
     open var callbackOnSendEnd: (() -> Void)?
     open var callbackOnConnect: (() -> Void)?
+    open var callbackOnCloseConnection: (() -> Void)?
     
     
     deinit{
@@ -38,7 +39,6 @@ open class TcpClient : NSObject, StreamDelegate {
         if (token.port>0) {
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
             if inputStream != nil && outputStream != nil {
-                
                 inputStream!.delegate = self
                 outputStream!.delegate = self
 
@@ -47,28 +47,28 @@ open class TcpClient : NSObject, StreamDelegate {
                 outputStream!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
                 
                 inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-                
-                
-                
+
                 inputStream!.open()
-                print("opening input stream")
+                log.enqueue("createConnection: opening input stream")
             
                 outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 
                 
                 outputStream!.open()
-                print("opening output stream")
+                log.enqueue("createConnection: opening output stream")
+            } else {
+                log.enqueue("createConnection ERROR: nil stream")
             }
             
-            log.enqueue("create connection, input and output streams")
-            print("create connection, input and output streams")
+            
         }
     }
     
     final func openCompleted(stream: Stream){
+        log.enqueue("stream openCompleted")
         if(self.inputStream?.streamStatus == .open && self.outputStream?.streamStatus == .open && openedStreams == 2){
-            print("streams opened")
-            log.enqueue("streams opened")
+
+            log.enqueue("input and output streams opened")
             if (self.callbackOnConnect != nil) {
                 DispatchQueue.main.async {
                     self.callbackOnConnect!()
@@ -80,7 +80,6 @@ open class TcpClient : NSObject, StreamDelegate {
     open func closeConnection() {
         if ((inputStream != nil) && (outputStream != nil)) {
             log.enqueue("closing input and output streams")
-            print("closing input and output streams")
             inputStream?.delegate = nil
             inputStream?.close()
             inputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
@@ -88,12 +87,17 @@ open class TcpClient : NSObject, StreamDelegate {
             outputStream?.delegate = nil
             outputStream?.close()
             outputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            
+            if (self.callbackOnCloseConnection != nil) {
+                DispatchQueue.main.async {
+                    self.callbackOnCloseConnection!()
+                }
+            }
         }
     }
     
     open func send(_ request: String){
         log.enqueue("r: \(request)")
-        print("r: \(request)")
         let requestToSend = "\(request)\n"
         if let outputStream = outputStream, let data = requestToSend.data(using: String.Encoding.utf8) {
             if (callbackOnSendStart != nil) {
@@ -102,19 +106,16 @@ open class TcpClient : NSObject, StreamDelegate {
             let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
             if (wb == -1 ) {
                 log.enqueue("error: write to output stream")
-                print("error: write to output stream")
                 if callbackOnError != nil {
                     callbackOnError!(true)
                 }
                 return
             }
-            print("sended")
             if (callbackOnSendEnd != nil) {
                 callbackOnSendEnd!()
             }
         } else {
             log.enqueue("error: send request")
-            print("error: send request")
         }
     }
 
@@ -128,10 +129,9 @@ open class TcpClient : NSObject, StreamDelegate {
             print ("None")
    
         case Stream.Event.endEncountered:
-            print ("EndEncountered")
             log.enqueue("stream endEcountered")
-            inputStream?.close()
-            outputStream?.close()
+            //inputStream?.close()
+            //outputStream?.close()
             if callbackOnError != nil {
                 callbackOnError!(true)
             }
@@ -139,11 +139,11 @@ open class TcpClient : NSObject, StreamDelegate {
    
         case Stream.Event.openCompleted:
             openedStreams = openedStreams + 1
+            log.enqueue("openCompleted for \(openedStreams) streams")
             openCompleted(stream: aStream)
 
         case Stream.Event.errorOccurred:
             //("stream was handle error, connection is out")
-            print("stream was handle error, connection is out")
             log.enqueue("stream was handle error, connection is out")
             if callbackOnError != nil {
                 callbackOnError!(true)
@@ -177,12 +177,10 @@ open class TcpClient : NSObject, StreamDelegate {
                     callbackOnSendEnd!()
                 }
             } else {
-                print("Stream is empty")
                 log.enqueue("Stream is empty")
                 
                 return
             }
-           
 
             if !message.isEmpty {
                 
@@ -196,11 +194,10 @@ open class TcpClient : NSObject, StreamDelegate {
                             return
                         } else {
                             //print what we parse
-                            print("a: \(res)")
                             log.enqueue("a: \(res)")
                             
                             if let call = self.callbackOnParse {
-                                    call(res)
+                                call(res)
                             }
                             
                         }
@@ -215,10 +212,7 @@ open class TcpClient : NSObject, StreamDelegate {
             }
             
         default:
-            print(eventCode)
-            log.enqueue("\(eventCode)")
-            print("Some unhandled event was occured in stream")
-            log.enqueue("Some unhandled event was occured in stream")
+            log.enqueue("Some unhandled event \(eventCode) was occured in stream")
         }
         
     }

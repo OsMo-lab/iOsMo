@@ -4,6 +4,9 @@
 /* Class = "UILabel"; text = "Time"; ObjectID = "1rg-8O-chP"; */
 "1rg-8O-chP.text" = "Время";
 
+/* Class = "UIButton"; normalTitle = "Sign-in"; ObjectID = "2C7-Iq-l0C"; */
+"2C7-Iq-l0C.normalTitle" = "Войти";
+
 /* Class = "UIButton"; normalTitle = "Join"; ObjectID = "2dk-tC-xs0"; */
 "2dk-tC-xs0.normalTitle" = "Вступить";
 
@@ -21,6 +24,9 @@
 
 /* Class = "UILabel"; text = "Power saving"; ObjectID = "8Dm-lJ-hkP"; */
 "8Dm-lJ-hkP.text" = "Энергосбережение";
+
+/* Class = "UITextView"; text = "Message of the Day"; ObjectID = "8rt-C4-f7P"; */
+"8rt-C4-f7P.text" = "Сообщение дня";
 
 /* Class = "UILabel"; text = "Sending interval, seconds"; ObjectID = "8sE-Lc-xYs"; */
 "8sE-Lc-xYs.text" = "Интервал отправки, сек";
@@ -73,8 +79,14 @@
 /* Class = "UILabel"; text = "Reset authorization"; ObjectID = "LWZ-te-6Dr"; */
 "LWZ-te-6Dr.text" = "Сброс авторизации";
 
+/* Class = "UILabel"; text = "Nick"; ObjectID = "Lqr-TY-UXf"; */
+"Lqr-TY-UXf.text" = "Ник";
+
 /* Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb"; */
 "MBA-Xb-vkb.placeholder" = "ID или URL группы";
+
+/* Class = "UIButton"; normalTitle = "Forgot?"; ObjectID = "Nrg-GG-v8J"; */
+"Nrg-GG-v8J.normalTitle" = "Забыли?";
 
 /* Class = "UILabel"; text = "Settings"; ObjectID = "P3p-0b-A4E"; */
 "P3p-0b-A4E.text" = "Настройки";
@@ -85,14 +97,26 @@
 /* Class = "UIButton"; normalTitle = "Add"; ObjectID = "S8H-pZ-cOM"; */
 "S8H-pZ-cOM.normalTitle" = "Создать";
 
+/* Class = "UIButton"; normalTitle = "Register"; ObjectID = "TRf-Ht-0I1"; */
+"TRf-Ht-0I1.normalTitle" = "Регистрация";
+
 /* Class = "UIButton"; normalTitle = "Refresh"; ObjectID = "VMO-OO-6cj"; */
 "VMO-OO-6cj.normalTitle" = "Обновить";
 
 /* Class = "UITextField"; placeholder = "e-mail address"; ObjectID = "Vjh-Tf-qLH"; */
 "Vjh-Tf-qLH.placeholder" = "адрес e-mail";
 
-/* Class = "UILabel"; text = "00.0"; ObjectID = "WVP-LT-JgZ"; */
+/* Class = "UILabel"; text = "0"; ObjectID = "WVP-LT-JgZ"; */
 "WVP-LT-JgZ.text" = "00.0";
+
+/* Class = "UILabel"; text = "Sex"; ObjectID = "Wuc-tR-7kP"; */
+"Wuc-tR-7kP.text" = "Пол";
+
+/* Class = "UILabel"; text = "Password"; ObjectID = "Y2L-T9-ft9"; */
+"Y2L-T9-ft9.text" = "Пароль";
+
+/* Class = "UILabel"; text = "male"; ObjectID = "ZaF-6E-x27"; */
+"ZaF-6E-x27.text" = "муж.";
 
 /* Class = "UIButton"; normalTitle = "Group URL"; ObjectID = "ZmA-1B-N8V"; */
 "ZmA-1B-N8V.normalTitle" = "URL группы";
@@ -108,9 +132,6 @@
 
 /* Class = "UILabel"; text = "Don't turn the screen off"; ObjectID = "dzF-Z7-f5g"; */
 "dzF-Z7-f5g.text" = "Не выключать экран";
-
-/* Class = "UILabel"; text = "Label"; ObjectID = "fu1-UL-KdI"; */
-"fu1-UL-KdI.text" = "Label";
 
 /* Class = "UIViewController"; title = "Authorization"; ObjectID = "hyP-V3-hsV"; */
 "hyP-V3-hsV.title" = "Авторизация";
@@ -133,11 +154,17 @@
 /* Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN"; */
 "mms-Em-UaN.text" = "00.0";
 
+/* Class = "UILabel"; text = "Re-enter password"; ObjectID = "nCc-nC-2GY"; */
+"nCc-nC-2GY.text" = "Повторите пароль";
+
 /* Class = "UILabel"; text = "Distance"; ObjectID = "o31-Sf-Gmk"; */
 "o31-Sf-Gmk.text" = "Расстояние";
 
 /* Class = "UILabel"; text = "Load last:"; ObjectID = "ors-8k-0GG"; */
 "ors-8k-0GG.text" = "Load last:";
+
+/* Class = "UILabel"; text = "Sign-in"; ObjectID = "qyj-mE-UvE"; */
+"qyj-mE-UvE.text" = "Вход";
 
 /* Class = "UILabel"; text = "Account"; ObjectID = "roX-H8-MZy"; */
 "roX-H8-MZy.text" = "Учетная запись";
@@ -147,6 +174,9 @@
 
 /* Class = "UILabel"; text = "Routes"; ObjectID = "sQw-1p-wMi"; */
 "sQw-1p-wMi.text" = "Маршруты";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "vfZ-dH-OQh"; */
+"vfZ-dH-OQh.normalTitle" = "Отмена";
 
 /* Class = "UITextField"; text = "100"; ObjectID = "voL-dJ-cjX"; */
 "voL-dJ-cjX.text" = "100";

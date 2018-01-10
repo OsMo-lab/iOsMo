@@ -70,8 +70,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
-            FIRAnalytics.logEvent(withName: "trip_pause", parameters: nil)
-            sendingManger.pauseSendingCoordinates()
+            Analytics.logEvent("trip_pause", parameters: nil)
+            sendingManger.pauseSendingCoordinates("")
         } else {
             sendingManger.startSendingCoordinates("")
         }
@@ -98,12 +98,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if isSessionPaused || isMonitoringOn {
-            FIRAnalytics.logEvent(withName: "trip_stop", parameters: nil)
-            sendingManger.stopSendingCoordinates()
+            Analytics.logEvent("trip_stop", parameters: nil)
+            sendingManger.stopSendingCoordinates("")
             
             //UIApplication.shared.isIdleTimerDisabled = false
         } else {
-            FIRAnalytics.logEvent(withName: "trip_start", parameters: nil)
+            Analytics.logEvent("trip_start", parameters: nil)
             sendingManger.startSendingCoordinates("")
             
             //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
@@ -179,19 +179,19 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.osmoImage.image = UIImage(named:"small-yellow")
                 }
             }
+            connectionManager.connectionClose.add{
+                DispatchQueue.main.async {
+                    self.osmoImage.image = UIImage(named:"small-red")
+                }
+            }
             connectionManager.connectionRun.add{
                 let theChange = $0.0
                 
                 if theChange {
-                    /*
-                    self.onGroupListUpdated = self.groupManager.groupListUpdated.add{
-                        //self.inGroup = $0
-                    }
-                    */
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
                         self.MDView.text = $1
                     }
-                    self.groupManager.groupList()
+                    self.groupManager.groupList(true)
                     self.connectionManager.getMessageOfTheDay()
 
                 } else if let glUpdated = self.onGroupListUpdated {
@@ -218,7 +218,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     
                 }
                 
-                print("MVC: The connection status was changed: \(theChange)")
                 self.log.enqueue("MVC: The connection status was changed: \(theChange)")
                 
                 //self.osmoStatus.isHidden = !theChange
@@ -232,7 +231,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 let theChange = $0.0
                 
                 self.isMonitoringOn = theChange
-                print("MVC: The session was opened/closed.\(theChange)")
+
                 
                 if theChange {
                     if let sUrl = self.connectionManager.sessionUrl {
@@ -291,7 +290,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 }
             }
  
-            connectionManager.connect()
+            //connectionManager.connect()
             isLoaded = true
         }
     }

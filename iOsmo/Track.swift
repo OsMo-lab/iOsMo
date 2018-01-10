@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import MapKit
 
-open class Track {
+open class Track: Equatable {
     var u: Int
     var type: String = "0"
     var descr: String = ""
@@ -20,16 +21,17 @@ open class Track {
     var start: Date?
     var finish: Date?
     
-    init(u: Int, name: String, type: String, color: String, url: String, size: Int){
-        self.u = u;
-
-        self.name = name;
-        self.url = url
-        self.color = color;
-        self.type = type;
-        self.size = size;
-        
+    init (json: Dictionary<String, AnyObject>) {
+        print(json)
+        self.u = json["u"] as! Int
+        self.size = Int(json["size"] as! String)!
+        self.name = json["name"] as! String
+        self.descr = (json["description"] as? String)!
+        self.color = json["color"] as! String
+        self.url = json["url"] as! String
+        self.type = json["type"] as! String
     }
+    
     
     open func getTrackData() -> XML? {
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
@@ -52,4 +54,7 @@ open class Track {
         
     }
     
+    public static func == (left: Track, right: Track) -> Bool {
+        return left.u == right.u
+    }
 }

@@ -147,13 +147,18 @@ open class TcpConnection: BaseTcpConnection {
         let request = "\(Tags.auth.rawValue)\(device_key)"
         super.send(request)
     }
+    
+    open func sendCoordinate(_ coordinate: LocationModel){
+        let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.WHERE.rawValue)|\(coordinate.getCoordinateRequest)"
+        super.send(request)
+    }
 
     //probably should be refactored and moved to ReconnectManager
     fileprivate func sendPing(){
         super.send("\(Tags.ping.rawValue)")
     }
     
-    fileprivate func sendSystemInfo(){
+    open func sendSystemInfo(){
         let model = UIDevice.current.model
         let version = UIDevice.current.systemVersion
         
@@ -172,7 +177,7 @@ open class TcpConnection: BaseTcpConnection {
         }
     }
     
-    fileprivate func sendBatteryStatus(){
+    open func sendBatteryStatus(){
         UIDevice.current.isBatteryMonitoringEnabled = true
         let level = UIDevice.current.batteryLevel * 100
         var state = 0;
@@ -188,9 +193,9 @@ open class TcpConnection: BaseTcpConnection {
             
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
-                send(request)            }
+                send(request)
+            }
         }catch {
-            
             print("error generating battery info")
         }
     }
@@ -264,14 +269,11 @@ open class TcpConnection: BaseTcpConnection {
                 answerObservers.notify(AnswTags.openedSession, result.1 , !result.0)
                 return
             } else {
-                print("error: open session asnwer cannot be parsed")
                 log.enqueue("error: open session asnwer cannot be parsed")
             }
         }
         
         if outputContains(AnswTags.closeSession){
-            
-            print("session closed")
             log.enqueue("session closed answer")
             
             answerObservers.notify((AnswTags.closeSession, NSLocalizedString("session was closed", comment:"session was closed"), !parseBoolAnswer()))
@@ -280,14 +282,12 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.push){
-            print("PUSH activated")
             log.enqueue("PUSH activated")
             
             //answerObservers.notify((AnswTags.push, "PUSH activated", !parseBoolAnswer()))
             if let result = parseForErrorJson(output){
                 answerObservers.notify((AnswTags.push, "" , !result.0))
             }else {
-                print("error: PUSH answer cannot be parsed")
                 log.enqueue("error: PUSH asnwer cannot be parsed")
             }
             return
@@ -298,14 +298,12 @@ open class TcpConnection: BaseTcpConnection {
                 groupCreated.notify(result)
                 return
             } else {
-                print("error: create group asnwer cannot be parsed")
                 log.enqueue("error: create group asnwer cannot be parsed")
             }
             
             return
         }
         if outputContains(AnswTags.kick){
-            print("connection kicked")
             log.enqueue("connection kicked")
 
             return
@@ -317,7 +315,6 @@ open class TcpConnection: BaseTcpConnection {
             dateFormat.dateFormat = "HH:mm:ss"
             let eventDate = dateFormat.string(from: Date())
             
-            print("\(output) \(eventDate) server wants answer :)")
             log.enqueue("server wants answer ;)")
             sendPing()
             return
@@ -342,7 +339,6 @@ open class TcpConnection: BaseTcpConnection {
             if let result = parseForErrorJson(output){
                 answerObservers.notify(AnswTags.enterGroup, result.1 , !result.0)
             } else {
-                print("error: enter group answer cannot be parsed")
                 log.enqueue("error: enter group asnwer cannot be parsed")
             }
             return
@@ -351,7 +347,6 @@ open class TcpConnection: BaseTcpConnection {
             if let result = parseForErrorJson(output){
                 answerObservers.notify(AnswTags.leaveGroup, result.1 , !result.0)
             }else {
-                print("error: leave group answer cannot be parsed")
                 log.enqueue("error: leave group asnwer cannot be parsed")
             }
             
@@ -360,9 +355,9 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.activateGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.activateGroup, result.1 , !result.0)
+                let value = (result.0 ? result.1 : output.components(separatedBy: "|")[1])
+                answerObservers.notify(AnswTags.activateGroup, value , !result.0)
             }else {
-                print("error: activate group answer cannot be parsed")
                 log.enqueue("error: activate group asnwer cannot be parsed")
             }
             return
@@ -371,7 +366,6 @@ open class TcpConnection: BaseTcpConnection {
             if let result = parseForErrorJson(output){
                 answerObservers.notify(AnswTags.deactivateGroup, result.1 , !result.0)
             }else {
-                print("error: deactivate group answer cannot be parsed")
                 log.enqueue("error: deactivate group asnwer cannot be parsed")
             }
             return
@@ -382,38 +376,30 @@ open class TcpConnection: BaseTcpConnection {
                 self.groupListDownloaded.notify(result)
             }
             else {
-                log.enqueue("error: wrong parsing groups list")
-                print("error: wrong parsing groups list")
+                log.enqueue("error: groups list answer cannot be parsed")
             }
             return
         }
         if outputContains(AnswTags.messageDay){
             if (command != "" && addict != "") {
-                answerObservers.notify((AnswTags.messageDay,addict, true))
+                answerObservers.notify((AnswTags.messageDay, addict, true))
             }
             else {
                 log.enqueue("error: wrong parsing MD")
-                print("error: wrong parsing MD")
             }
             return
         }
         if outputContains(AnswTags.remoteCommand){
-            if param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue {
+            self.answerObservers.notify((AnswTags.remoteCommand, param, true))
+            /*
+            switch param {
+            case RemoteCommand.TRACKER_SYSTEM_INFO.rawValue:
                 self.sendSystemInfo()
-            }else if param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue {
-                self.sendBatteryStatus()
-            }else if param == RemoteCommand.TRACKER_SESSION_STOP.rawValue {
+            default:
                 self.answerObservers.notify((AnswTags.remoteCommand, param, true))
-            }else if param == RemoteCommand.TRACKER_SESSION_START.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
-            }else if param == RemoteCommand.TRACKER_GCM_ID.rawValue {
-                self.answerObservers.notify((AnswTags.remoteCommand,param, true))
             }
-            
+ */
+
             return
         }
         if outputContains(AnswTags.grCoord) {
@@ -426,8 +412,7 @@ open class TcpConnection: BaseTcpConnection {
                                 monitoringGroupsUpdated.notify(groups)
                             }
                             else {
-                                log.enqueue("error: wrong parsing coordinate array")
-                                print("error: wrong parsing coordinate array")
+                                log.enqueue("error: parsing coordinate array")
                             }
                         //}
                     }
@@ -440,11 +425,9 @@ open class TcpConnection: BaseTcpConnection {
         if command == AnswTags.updateGroup.rawValue {
             let parseRes = parseGroupUpdate(output)
             if let grId = parseRes.0, let res = parseRes.1 {
-                
                 groupsUpdated.notify((grId, res))
             }else {
                 log.enqueue("error parsing GP")
-                print("error parsing GP")
             }
             return
         }
@@ -547,103 +530,7 @@ open class TcpConnection: BaseTcpConnection {
         return nil
     }
     
-    func parseJSONgroup(_ jsonG: Any)->Group {
-        let g = jsonG as! Dictionary<String, AnyObject>
-        let gName = g["name"] as! String
-        let gDescr = g["description"] as! String
-        let gPolicy = g["policy"] as! String
-        let gNick = g["nick"] as! String
-        let gColor = g["color"] as! String
-        let gURL = g["url"] as! String
-        let gType = g["type"] as! String
-        let gActive = g["active"] as? String == "1"
-        var gU = g["u"] as? String
-        if (gU == nil ){
-            let gUint = g["u"] as! Int
-            gU = "\(gUint)"
-        }
-        
-        let gId = g["id"] as? String
-        let jsonUsers = g["users"] as? Array<AnyObject>
-        
-        
-        let group = Group(u: gU!, name: gName, active: gActive)
-        group.descr = gDescr
-        group.policy = gPolicy
-        group.nick = gNick
-        group.color = gColor
-        group.url = gURL
-        group.id = gId!;
-        group.type = gType;
-        
-        
-        for jsonU in jsonUsers!{
-            
-            let u = jsonU as! Dictionary<String, AnyObject>
-            var uId = u["u"] as? String
-            if (uId == nil) {
-                let uIdInt = u["u"] as! Int
-                uId = "\(uIdInt)"
-            }
-            let uName = u["name"] as! String
-            let uConnected = u["connected"] as! Double
-            let uColor = u["color"] as! String
-            let uOnline = (u["online"] as? Int) ?? 0
-            let uState = (u["state"] as? Int) ?? 0
-            
-    
-            
-            let user = User(id: uId!, name: uName, color: uColor, connected: uConnected)
-            
-            user.state = uState
-            user.online = uOnline
-            
-            if let lat = u["lat"] as? String, let lon = u["lon"] as? String {
-                user.lat = atof(lat);
-                user.lon = atof(lon);
-            }
-            
-            
-            group.users.append(user)
-            
-        }
-        if let jsonPoints = g["point"] as? Array<AnyObject> {
-            for jsonP in jsonPoints{
-                let u = jsonP as! Dictionary<String, AnyObject>
-                let uId = u["u"] as! Int
-                let lat = atof(u["lat"] as! String)
-                let lon = atof(u["lon"] as! String)
-                let uName = u["name"] as? String
-                let descr = u["description"] as? String
-                let uColor = u["color"] as! String
-                
-                let point = Point (u: uId, lat: lat, lon: lon, name: uName!, color: uColor)
-                point.descr = descr!
-                group.points.append(point)
-               
-            }
-        }
-        if let jsonTracks = g["track"] as? Array<AnyObject> {
-            for jsonT in jsonTracks{
-                let u = jsonT as! Dictionary<String, AnyObject>
-                let uId = u["u"] as! Int
-                let uSize:Int! = Int(u["size"] as! String)
-                let uName = u["name"] as! String
-                let descr = u["description"] as? String
-                let uColor = u["color"] as! String
-                let uUrl = u["url"] as! String
-                let uType = u["type"] as! String
-                
-                let track = Track(u: uId, name: uName, type: uType, color: uColor, url: uUrl, size: uSize)
-                track.descr = descr!
-                group.tracks.append(track)
-                
-            }
-        }
-        return group;
-        
-    }
-    func parseGroupsJson(_ responce: String) -> [Group]? {
+        func parseGroupsJson(_ responce: String) -> [Group]? {
         
         //let responceFirst = responce.componentsSeparatedByString("\n")[0] <-- has no sense because splitting in other place
         
@@ -660,26 +547,34 @@ open class TcpConnection: BaseTcpConnection {
         //tag.componentsSeparatedByString("|")[0]
 
         do {
+            
         if let data: Data = json.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) {
-
-                var groups = [Group]()
+            var groups = [Group]()
             
-                if let jsonGroups = jsonObject as? Array<Any> {
-                    for jsonG in jsonGroups{
-                        
-                        let group = self.parseJSONgroup(jsonG)
-                        groups.append(group)
-                    }
-            
-                } /*else {
-                    let group = self.parseJSONgroup(jsonObject as Any)
-                    groups.append(group)
+            if let jsonGroups = jsonObject as? Array<Any> {
+                for jsonG in jsonGroups{
+                    let group = Group.init(json: jsonG as! Dictionary<String, AnyObject>)
                     
-            }*/
+                    groups.append(group)
+                }
+            }
+            /*
+            var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+            let filename = "GROUP.json"
+            let path =  "\(paths[0])/"
+            let fileManager = FileManager.default;
             
-                
-            return groups
+            var fileURL = URL(fileURLWithPath: "\(path)\(filename)")
+            do {
+                try data.write(to: fileURL)
 
+                print("Saved file \(path)\(filename)")
+            } catch{
+                print("Error saving \(path)\(filename)")
+            }
+            */
+            return groups
+            
         }
     }catch {}
         return nil
