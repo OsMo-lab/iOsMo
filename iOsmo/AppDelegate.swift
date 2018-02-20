@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         connectionManager.pushActivated.add{
             if $0 {
-                SettingsManager.setKey("", forKey: SettingKeys.pushToken)
+                self.log.enqueue("connectionManager.pushActivated")
             }
             //self.activateSwitcher.isOn = $0
         }
@@ -92,9 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
         }
-        if SettingsManager.getKey(SettingKeys.locInterval)?.doubleValue == nil {
-            SettingsManager.setKey("3", forKey: SettingKeys.locInterval)
-        }
+
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
@@ -295,8 +293,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     
         log.enqueue("APNs token retrieved: \(token)")
-        //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
-        
+
         // With swizzling disabled you must set the APNs token here.
         Messaging.messaging().apnsToken = deviceToken
         //Messaging.messaging().setAPNSToken(deviceToken, type: .prod)
@@ -359,7 +356,6 @@ extension AppDelegate : MessagingDelegate {
     // [START refresh_token]
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         log.enqueue("Firebase registration token: \(fcmToken)")
-        SettingsManager.setKey(fcmToken as NSString, forKey: SettingKeys.pushToken)
         connectionManager.sendPush(fcmToken)
         
     }

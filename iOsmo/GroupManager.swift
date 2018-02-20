@@ -99,7 +99,7 @@ open class GroupManager{
     var onLeaveGroup : ObserverSetEntry<(Bool, String)>?
     var onCreateGroup : ObserverSetEntry<(Bool, String)>?
 
-    open func createGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+    open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         
         self.onCreateGroup = connection.groupCreated.add{
             if (!$0) {
@@ -111,7 +111,7 @@ open class GroupManager{
             
             self.connection.groupCreated.remove(self.onCreateGroup!)
         }
-        connection.createGroup(name, email: email, phone: phone, gtype: gtype, priv: priv)
+        connection.createGroup(name, email: email, nick: nick, gtype: gtype, priv: priv)
     }
     
     open func enterGroup(_ name: String, nick: String){

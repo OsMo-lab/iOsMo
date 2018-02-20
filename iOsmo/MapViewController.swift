@@ -490,6 +490,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // 2
         let overlay = OSMTileOverlay(urlTemplate: template)
         overlay.canReplaceMapContent = true
+        //overlay.maximumZ = 19
         
         
         // 4

@@ -16,7 +16,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     var clickCount = 0;
     let MIN_SEND_TIME = 4;
-    let MIN_LOC_TIME = 0;
     let MIN_LOC_DISTANCE = 0;
     
     
@@ -87,13 +86,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                     value = 1000
                 }
                 SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
-            } else if textField == locTimeTextField {
-                if (value < MIN_LOC_TIME) {
-                    value = MIN_LOC_TIME
-                }else if (value > 120) {
-                    value = 120
-                }
-                SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locInterval)
             }
             textField.resignFirstResponder()
             
@@ -166,12 +158,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 locDistance = String(MIN_LOC_DISTANCE) as NSString
             }
             distanceTextField.text = locDistance as String
-        }
-        if var locInterval = SettingsManager.getKey(SettingKeys.locInterval) {
-            if locInterval.length == 0 {
-                locInterval = String(MIN_LOC_TIME) as NSString
-            }
-            locTimeTextField.text = locInterval as String
         }
         var mapTitle = "Mapnik"
         if let mapStyle = SettingsManager.getKey(SettingKeys.tileSource)?.intValue{

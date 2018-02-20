@@ -95,13 +95,11 @@ enum UpdatesEnum: String {
 
 enum SettingKeys: String {
     case device = "deviceKey"
-    case pushToken = "pushToken"
     case isStayAwake = "isStayAwake"
     
     case user = "user"
     case sendTime = "sendTime"
     case locDistance = "locDistance"
-    case locInterval = "locInterval"
 
     case logView = "logView"
     case poolGroups = "poolGroups"
@@ -128,7 +126,6 @@ enum GroupType: String {
     case Simple = "1" //default
     case Family = "2"
     case POI = "5"
-    case Trip = "6"
 }
 
 enum RemoteCommand: String {

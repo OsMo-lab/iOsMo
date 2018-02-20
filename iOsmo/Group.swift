@@ -94,8 +94,6 @@ open class Group: Equatable{
             return "Family"
         case GroupType.POI.rawValue:
             return "POI"
-        case GroupType.Trip.rawValue:
-            return "Trip"
         default:
             return "Invalid"
         }

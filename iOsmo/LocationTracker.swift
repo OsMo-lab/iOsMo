@@ -116,7 +116,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             
         }
         
-        let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue;
+        let locInterval = SettingsManager.getKey(SettingKeys.sendTime)!.doubleValue;
         let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue;
         
         for loc in locations {

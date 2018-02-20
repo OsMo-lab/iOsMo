@@ -123,7 +123,6 @@ open class BaseTcpConnection: NSObject {
                 sep = "\""
             }
             for theCoordinate in self.coordinates {
-                
                 if req != "" {
                     req = "\(req),"
                 }

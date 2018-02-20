@@ -283,7 +283,7 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    open func createGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+    open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         if self.connected{
             if self.onGroupCreated == nil {
                 
@@ -293,7 +293,7 @@ open class ConnectionManager: NSObject{
             }
 
             
-            connection.sendCreateGroup(name, email: email, phone: phone, gtype: gtype, priv: priv)
+            connection.sendCreateGroup(name, email: email, nick: nick, gtype: gtype, priv: priv)
         }
     }
     
@@ -459,11 +459,6 @@ open class ConnectionManager: NSObject{
                 if let token = Messaging.messaging().fcmToken {
                     self.sendPush(token)
                 }
-                
-                /*if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
-                    
-                    self.sendPush(token)
-                }*/
                 connection.sendRemoteCommandResponse(name)
                 return
             }

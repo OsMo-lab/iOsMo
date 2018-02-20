@@ -69,10 +69,10 @@ open class TcpConnection: BaseTcpConnection {
     }
 
     
-    open func sendCreateGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+    open func sendCreateGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         
         let jsonInfo: NSDictionary =
-            ["name": name as NSString, "email": email as NSString, "telephone": phone as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
         
         do{
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))

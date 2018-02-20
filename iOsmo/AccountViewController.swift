@@ -9,8 +9,9 @@
 import UIKit
 
 class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
-
-    //var groupsEnabled = true
+   
+    var connectionManager = ConnectionManager.sharedConnectionManager
+    var groupManager = GroupManager.sharedGroupManager
     
     let groupCell = "groupCell"
     let newGroupCell = "newGroupCell"
@@ -69,13 +70,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             self.tableView.reloadData()
         }
         actionSheetController.addAction(typeAction)
-        
-        typeAction = UIAlertAction(title: Group.getTypeName(GroupType.Trip.rawValue), style: .default) { action -> Void in
-            self.groupType = GroupType.Trip.rawValue
-            self.tableView.reloadData()
-        }
-        actionSheetController.addAction(typeAction)
-        
+                
         //We need to provide a popover sourceView when using it on iPad
         actionSheetController.popoverPresentationController?.sourceView = sender as UIView
         
@@ -93,8 +88,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if let gName = cell.contentView.viewWithTag(1) as? UITextField,
                     let priv = cell.contentView.viewWithTag(2) as? UISwitch,
                     let email = cell.contentView.viewWithTag(5) as? UITextField,
-                    let phone = cell.contentView.viewWithTag(6) as? UITextField {
-                    self.groupManager.createGroup(gName.text!, email: email.text!, phone: phone.text!, gtype: self.groupType, priv: priv.isOn)
+                    let nick = cell.contentView.viewWithTag(6) as? UITextField {
+                    self.groupManager.createGroup(gName.text!, email: email.text!, nick: nick.text!, gtype: self.groupType, priv: priv.isOn)
                 }
             
             }
@@ -143,8 +138,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
  
-    var connectionManager = ConnectionManager.sharedConnectionManager
-    var groupManager = GroupManager.sharedGroupManager
+
     
     override func viewDidAppear(_ animated: Bool) {
         setLoginControls()
@@ -406,11 +400,18 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                     isUser = true;
                 }
             }
-            if isUser {
+            if groupAction == GroupActions.new{
+                return 150;
+            } else {
+                return 85;
+            }
+            
+            /*if isUser {
                 return 85;
             } else {
                 return 150;
             }
+ */
         } else {
             return 85;
         }
@@ -449,27 +450,31 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
             if let typeBtn = cell!.contentView.viewWithTag(7) as? UIButton,
                 let email = cell!.contentView.viewWithTag(5) as? UITextField,
-                let phone = cell!.contentView.viewWithTag(6) as? UITextField,
+                let nick = cell!.contentView.viewWithTag(6) as? UITextField,
                 let emailLabel = cell!.contentView.viewWithTag(8) as? UILabel,
-                let phoneLabel = cell!.contentView.viewWithTag(9) as? UILabel{
+                let nickLabel = cell!.contentView.viewWithTag(9) as? UILabel{
                 typeBtn.setTitle(Group.getTypeName(groupType), for: UIControlState.normal)
+                
                 var isUser = false;
                 if let user = SettingsManager.getKey(SettingKeys.user) {
                     if user.length > 0 {
                         isUser = true;
+                        nick.text = user as String;
                     }
                 }
+                /*
                 if isUser {
                     email.isHidden = true;
                     emailLabel.isHidden = true;
-                    phone.isHidden = true;
-                    phoneLabel.isHidden = true;
+                    nick.isHidden = true;
+                    nickLabel.isHidden = true;
                 } else {
+ */
                     email.isHidden = false;
                     emailLabel.isHidden = false;
-                    phone.isHidden = false;
-                    phoneLabel.isHidden = false;
-               }
+                    nick.isHidden = false;
+                    nickLabel.isHidden = false;
+               //}
             }
         } else {
             cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)
