@@ -123,32 +123,41 @@ struct ConnectionHelper {
                 let requestString = "app=\(iOsmoAppKey)"
                 
                 postRequest(servUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
+                    var tkn : Token?;
                     if result {
                         print("get server info by post request")
                         
                         if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
                             
-                            let tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                            tkn.error = errDesc as String
-                            
+                            tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                            tkn?.error = errDesc as String
                             completed(false,tkn)
+                            return
                         }  else {
+                            
+                            
                             if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
                                 print("server is \(server)")
                                 
                                 let server = server.components(separatedBy: ":")
-                                
-                                if let tknAddress = server[0] as? String, let tknPort = Int(server[1]) {
+                                if server.count > 1 {
+                                    let tknAddress : String = server[0];
                                     
-                                    let tkn =  Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key!)
-                                    completed(true,tkn)
+                                    if let tknPort = Int(server[1]) {
+                                        tkn =  Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key!)
+                                        completed(true,tkn)
+                                        return
+                                    }
                                 }
                             }
                         }
                     } else {
                         print("Unable to connect to server")
-                        let tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                    }
+                    if (tkn == nil) {
+                        tkn = Token(tokenString: "", address: "", port: 0, key: "")
                         completed(false,tkn)
+                        return
                     }
                 })
             } else {

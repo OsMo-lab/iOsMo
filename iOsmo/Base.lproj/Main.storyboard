@@ -634,7 +634,7 @@
                                                     </constraints>
                                                     <color key="textColor" red="0.13725490200000001" green="0.5568627451" blue="0.51764705879999995" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
-                                                    <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="phonePad"/>
+                                                    <textInputTraits key="textInputTraits" spellCheckingType="no"/>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" red="0.074509803920000006" green="0.074509803920000006" blue="0.074509803920000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
