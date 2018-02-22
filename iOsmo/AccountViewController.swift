@@ -26,7 +26,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     @IBOutlet weak var btnEnterGroup: UIButton!
     @IBOutlet weak var btnAddGroup: UIButton!
-    var onConnectionRun: ObserverSetEntry<(Bool, String)>?
+    var onConnectionRun: ObserverSetEntry<(Int, String)>?
     var onGroupCreated: ObserverSetEntry<[Group]>?
     
     @IBOutlet weak var tableView: UITableView!
@@ -152,7 +152,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         // subscribe once
         if self.onConnectionRun == nil {
             self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 {
+                if $0.0 == 0 {
                     self.setLoginControls()
                 } else {
                     print($0.1)
@@ -168,7 +168,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         
         groupManager.groupEntered.add{
-            if ($0.0) {
+            if ($0.0 == 0) {
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList(false)
                 self.btnEnterGroup.isHidden = false
@@ -199,7 +199,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         groupManager.groupCreated.add {
 
             print ($0)
-            if ($0.0) {
+            if ($0.0 == 0 ) {
                 self.groupAction = GroupActions.view
                 
                 DispatchQueue.main.async {
@@ -216,7 +216,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             
         }
         groupManager.groupLeft.add{
-            if ($0.0) {
+            if ($0.0 == 0) {
                 //self.groupManager.groupList(true)
             } else {
                 self.alert(NSLocalizedString("Error on leave group", comment:"Alert title for error on leave group"), message: $0.1)
@@ -227,7 +227,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         
         groupManager.groupActivated.add{
-            if ($0.0) {
+            if ($0.0 == 0) {
 
             } else {
                 self.alert(NSLocalizedString("Error on activate group", comment:"Alert title for error on activate group"), message: $0.1)
@@ -239,7 +239,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
         
         groupManager.groupDeactivated.add{
-            if ($0.0) {
+            if ($0.0 == 0) {
 
             } else {
                 self.alert(NSLocalizedString("Error on deactivate group", comment:"Alert title for error on deactivate group"), message: $0.1)

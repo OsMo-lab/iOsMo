@@ -34,9 +34,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isSessionPaused = false
     var isTracked = true
     
-    var onMessageOfTheDayUpdated: ObserverSetEntry<(Bool, String)>?
-    var onSessionPaused: ObserverSetEntry<(Bool)>?
-    var onSessionStarted: ObserverSetEntry<(Bool)>?
+    var onMessageOfTheDayUpdated: ObserverSetEntry<(Int, String)>?
+    var onSessionPaused: ObserverSetEntry<(Int)>?
+    var onSessionStarted: ObserverSetEntry<(Int)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
 
     var isLoaded = false
@@ -185,7 +185,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 }
             }
             connectionManager.connectionRun.add{
-                let theChange = $0.0
+                let theChange = ($0.0 == 0)
                 
                 if theChange {
                     self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
@@ -228,7 +228,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
             
             connectionManager.sessionRun.add{
-                let theChange = $0.0
+                let theChange = ($0.0 == 0)
                 
                 self.isMonitoringOn = theChange
 
@@ -269,7 +269,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
             
             self.onSessionPaused = sendingManger.sessionPaused.add{
-                if $0 {
+                if $0 == 0 {
                     self.isMonitoringOn = false
                     self.isSessionPaused = true
                     self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
@@ -280,7 +280,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
             
             self.onSessionStarted = sendingManger.sessionStarted.add{
-                if $0 {
+                if $0 == 0 {
                     self.isMonitoringOn = true
                     self.isSessionPaused = false
                     self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())

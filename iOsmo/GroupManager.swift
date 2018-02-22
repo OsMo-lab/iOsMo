@@ -14,16 +14,16 @@ open class GroupManager{
     var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
  
     var groupListUpdated = ObserverSet<[Group]>()
-    var groupEntered = ObserverSet<(Bool, String)>()
-    var groupLeft = ObserverSet<(Bool, String)>()
-    var groupActivated = ObserverSet<(Bool, String)>()
-    var groupDeactivated = ObserverSet<(Bool, String)>()
-    var groupCreated = ObserverSet<(Bool, String)>()
+    var groupEntered = ObserverSet<(Int, String)>()
+    var groupLeft = ObserverSet<(Int, String)>()
+    var groupActivated = ObserverSet<(Int, String)>()
+    var groupDeactivated = ObserverSet<(Int, String)>()
+    var groupCreated = ObserverSet<(Int, String)>()
     var groupsUpdated = ObserverSet<(Int, Any)>()
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     
-    var onActivateGroup : ObserverSetEntry<(Bool, String)>?
-    var onDeactivateGroup : ObserverSetEntry<(Bool, String)>?
+    var onActivateGroup : ObserverSetEntry<(Int, String)>?
+    var onDeactivateGroup : ObserverSetEntry<(Int, String)>?
     var onUpdateGroup : ObserverSetEntry<(Int, Any)>?
     var trackDownloaded : ObserverSet<(Track)>?
     
@@ -48,7 +48,7 @@ open class GroupManager{
             self.groupActivated.notify($0, $1)
             
             print("ACTIVATED! \($0) \(name)")
-            if($0) {
+            if($0 == 0) {
                 do {
                     if let data: Data = $1.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) {
                         
@@ -75,7 +75,7 @@ open class GroupManager{
             self.groupDeactivated.notify($0, $1)
             
             print("DEACTIVATED \(name)! \($0) ")
-            if($0) {
+            if($0 == 0) {
                 for group in self.allGroups {
                     if group.u == name {
                         group.active = false;
@@ -95,19 +95,19 @@ open class GroupManager{
     }
 
     
-    var onEnterGroup : ObserverSetEntry<(Bool, String)>?
-    var onLeaveGroup : ObserverSetEntry<(Bool, String)>?
-    var onCreateGroup : ObserverSetEntry<(Bool, String)>?
+    var onEnterGroup : ObserverSetEntry<(Int, String)>?
+    var onLeaveGroup : ObserverSetEntry<(Int, String)>?
+    var onCreateGroup : ObserverSetEntry<(Int, String)>?
 
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         
         self.onCreateGroup = connection.groupCreated.add{
-            if (!$0) {
+            if ($0 != 0) {
                 self.groupList(false)
             }
-            self.groupCreated.notify(!$0, $1)
+            self.groupCreated.notify($0, $1)
             
-            print("CREATED! \(!$0) ")
+            print("CREATED! \($0) ")
             
             self.connection.groupCreated.remove(self.onCreateGroup!)
         }
@@ -131,7 +131,7 @@ open class GroupManager{
         self.onLeaveGroup = connection.groupLeft.add{
             
             self.groupLeft.notify($0, $1)
-            if $0 {
+            if $0 == 0 {
                 let foundGroup = self.allGroups.filter{$0.u == "\(u)"}.first
                 let idx = self.allGroups.index(of: foundGroup!)
                 if idx! > -1 {

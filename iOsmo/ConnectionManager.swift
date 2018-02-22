@@ -41,22 +41,22 @@ open class ConnectionManager: NSObject{
     }
     
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
-    var onGroupCreated: ObserverSetEntry<(Bool, String)>?
+    var onGroupCreated: ObserverSetEntry<(Int, String)>?
     
     // add name of group in return
-    let groupEntered = ObserverSet<(Bool, String)>()
-    let groupCreated = ObserverSet<(Bool, String)>()
-    let groupLeft = ObserverSet<(Bool, String)>()
-    let groupActivated = ObserverSet<(Bool, String)>()
-    let pushActivated = ObserverSet<Bool>()
-    let groupDeactivated = ObserverSet<(Bool, String)>()
+    let groupEntered = ObserverSet<(Int, String)>()
+    let groupCreated = ObserverSet<(Int, String)>()
+    let groupLeft = ObserverSet<(Int, String)>()
+    let groupActivated = ObserverSet<(Int, String)>()
+    let pushActivated = ObserverSet<Int>()
+    let groupDeactivated = ObserverSet<(Int, String)>()
     let groupList = ObserverSet<[Group]>()
     let trackDownoaded = ObserverSet<(Track)>()
     
-    let connectionRun = ObserverSet<(Bool, String)>()
-    let sessionRun = ObserverSet<(Bool, String)>()
-    let groupsEnabled = ObserverSet<Bool>()
-    let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
+    let connectionRun = ObserverSet<(Int, String)>()
+    let sessionRun = ObserverSet<(Int, String)>()
+    let groupsEnabled = ObserverSet<Int>()
+    let messageOfTheDayReceived = ObserverSet<(Int, String)>()
     let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
@@ -125,7 +125,7 @@ open class ConnectionManager: NSObject{
                     log.enqueue("should be reconnected")
                     shouldReConnect = true;
                     
-                    connectionRun.notify((false, "")) //error but is not need to be popuped
+                    connectionRun.notify((1, "")) //error but is not need to be popuped
                 }
             
 
@@ -176,7 +176,7 @@ open class ConnectionManager: NSObject{
                         }
                         self.connected = false
                         
-                        self.connectionRun.notify((false, ""))
+                        self.connectionRun.notify((1, ""))
                         
                         if (self.shouldReConnect) {
                             self.connect(self.shouldReConnect)
@@ -215,17 +215,17 @@ open class ConnectionManager: NSObject{
             } else {
                 self.connecting = false
                 if (token?.error.isEmpty)! {
-                    self.connectionRun.notify((false, ""))
+                    self.connectionRun.notify((1, ""))
                     self.shouldReConnect = false
                 } else {
                     print("getServerInfo Error:\(token?.error)")
                     self.log.enqueue("getServerInfo Error:\(token?.error)")
                     if (token?.error == "Wrong device key") {
                         SettingsManager.setKey("", forKey: SettingKeys.device)
-                        self.connectionRun.notify((false, ""))
+                        self.connectionRun.notify((1, ""))
                         self.shouldReConnect = true
                     } else {
-                        self.connectionRun.notify((false, "\(token?.error)"))
+                        self.connectionRun.notify((1, "\(token?.error)"))
                         self.shouldReConnect = false
                     }
                     
@@ -352,14 +352,14 @@ open class ConnectionManager: NSObject{
     
     //MARK private methods
     
-    fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Bool){
+    fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Int){
         if tag == AnswTags.token {
             //means response to try connecting
 
             log.enqueue("connected with token")
             
-            self.connected = answer
-            connectionRun.notify(answer, name)
+            self.connected = answer != 0;
+            connectionRun.notify(answer , name)
             
             return
         }
@@ -367,13 +367,13 @@ open class ConnectionManager: NSObject{
             //means response to try connecting
             log.enqueue("connected with Auth")
             
-            self.connected = answer
+            self.connected = answer == 0;
             connectionRun.notify(answer, name)
             
             return
         }
         if tag == AnswTags.enterGroup{
-            groupEntered.notify(answer, name)
+            groupEntered.notify(answer,  name)
             
             return
         }
@@ -402,15 +402,15 @@ open class ConnectionManager: NSObject{
         
 
         if tag == AnswTags.openedSession {
-            self.sessionOpened = answer
+            self.sessionOpened = answer == 0;
             sessionRun.notify(answer, name)
             
             return
         }
         
         if tag == AnswTags.closeSession {
-            self.sessionOpened = answer
-            sessionRun.notify(answer, name)
+            self.sessionOpened = answer != 1;
+            sessionRun.notify((answer != 1 ? 1 : 0, name))
             
             return
         }

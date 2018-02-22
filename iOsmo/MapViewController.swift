@@ -162,7 +162,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         _ = self.connectionManager.connectionRun.add{
-            let theChange = $0.0
+            let theChange = ($0.0 == 0)
             
             if theChange {
                 DispatchQueue.main.async {

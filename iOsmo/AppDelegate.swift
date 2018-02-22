@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         connectionManager.pushActivated.add{
-            if $0 {
+            if $0  == 0{
                 self.log.enqueue("connectionManager.pushActivated")
             }
             //self.activateSwitcher.isOn = $0
@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectionManager.sessionRun.add{
             let theChange = $0.0
             
-            if theChange {
+            if theChange == 0 {
                 self.displayNotification()
                 
             } else {

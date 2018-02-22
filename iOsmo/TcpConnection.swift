@@ -32,9 +32,9 @@ open class TcpConnection: BaseTcpConnection {
 
     open var monitoringGroups: [Int]?
     
-    let answerObservers = ObserverSet<(AnswTags, String, Bool)>()
+    let answerObservers = ObserverSet<(AnswTags, String, Int)>()
     let groupListDownloaded = ObserverSet<[Group]>()
-    let groupCreated = ObserverSet<(Bool, String)>()
+    let groupCreated = ObserverSet<(Int, String)>()
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     let groupsUpdated = ObserverSet<(Int, Any)>()
     
@@ -231,18 +231,18 @@ open class TcpConnection: BaseTcpConnection {
             //ex: INIT|{"id":"CVH2SWG21GW","group":1,"motd":1429351583,"protocol":2,"v":0.88} || INIT|{"id":1,"error":"Token is invalid"}
             
             if let result = parseForErrorJson(output) {
-                if !result.0 {
+                if result.0 == 0 {
                     if let trackerID = parseTag(output, key: ParseKeys.id) {
                         sessionTrackerID = trackerID
                     } else {
                         sessionTrackerID = "error parsing TrackerID"
                     }
-                    answerObservers.notify(AnswTags.auth, result.1 , !result.0)
+                    answerObservers.notify(AnswTags.auth, result.1 , result.0)
                     if let parsed = parseJson(output)  as? [String: Any] {
   
                     }
                 } else {
-                    answerObservers.notify(AnswTags.auth, result.1 , !result.0)
+                    answerObservers.notify(AnswTags.auth, result.1 , result.0)
                 }
                 
             }
@@ -255,18 +255,15 @@ open class TcpConnection: BaseTcpConnection {
             log.enqueue("session opened answer") //ex: TO|{"session":145004,"url":"f1_o9_7s"}
 
             if let result = parseForErrorJson(output){
-                
-                if !result.0 {
+                if result.0 == 0 {
                     super.sessionOpened = true
                     if let sessionUrl = parseTag(output, key: ParseKeys.sessionUrl) {
                         sessionUrlParsed = sessionUrl
                     } else {
                         sessionUrlParsed = "error parsing url"
                     }
-                
                 }
-                
-                answerObservers.notify(AnswTags.openedSession, result.1 , !result.0)
+                answerObservers.notify(AnswTags.openedSession, result.1 , result.0)
                 return
             } else {
                 log.enqueue("error: open session asnwer cannot be parsed")
@@ -275,8 +272,12 @@ open class TcpConnection: BaseTcpConnection {
         
         if outputContains(AnswTags.closeSession){
             log.enqueue("session closed answer")
-            
-            answerObservers.notify((AnswTags.closeSession, NSLocalizedString("session was closed", comment:"session was closed"), !parseBoolAnswer()))
+            if let result = parseForErrorJson(output){
+                answerObservers.notify((AnswTags.closeSession, NSLocalizedString("session was closed", comment:"session was closed") , result.0))
+            }else {
+                log.enqueue("error: session closed asnwer cannot be parsed")
+            }
+  
             return
 
         }
@@ -286,7 +287,7 @@ open class TcpConnection: BaseTcpConnection {
             
             //answerObservers.notify((AnswTags.push, "PUSH activated", !parseBoolAnswer()))
             if let result = parseForErrorJson(output){
-                answerObservers.notify((AnswTags.push, "" , !result.0))
+                answerObservers.notify((AnswTags.push, "" , result.0))
             }else {
                 log.enqueue("error: PUSH asnwer cannot be parsed")
             }
@@ -337,7 +338,7 @@ open class TcpConnection: BaseTcpConnection {
         
         if outputContains(AnswTags.enterGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.enterGroup, result.1 , !result.0)
+                answerObservers.notify(AnswTags.enterGroup, result.1 , result.0)
             } else {
                 log.enqueue("error: enter group asnwer cannot be parsed")
             }
@@ -345,18 +346,18 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.leaveGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.leaveGroup, result.1 , !result.0)
+                answerObservers.notify(AnswTags.leaveGroup, result.1 , result.0)
             }else {
                 log.enqueue("error: leave group asnwer cannot be parsed")
             }
             
-            //answerObservers.notify(AnswTags.leaveGroup, parseCommandName(), parseBoolAnswer())
+
             return
         }
         if outputContains(AnswTags.activateGroup) {
             if let result = parseForErrorJson(output){
-                let value = (result.0 ? result.1 : output.components(separatedBy: "|")[1])
-                answerObservers.notify(AnswTags.activateGroup, value , !result.0)
+                let value = (result.0==1 ? result.1 : output.components(separatedBy: "|")[1])
+                answerObservers.notify(AnswTags.activateGroup, value , result.0)
             }else {
                 log.enqueue("error: activate group asnwer cannot be parsed")
             }
@@ -364,7 +365,7 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.deactivateGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.deactivateGroup, result.1 , !result.0)
+                answerObservers.notify(AnswTags.deactivateGroup, result.1 , result.0)
             }else {
                 log.enqueue("error: deactivate group asnwer cannot be parsed")
             }
@@ -382,7 +383,7 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.messageDay){
             if (command != "" && addict != "") {
-                answerObservers.notify((AnswTags.messageDay, addict, true))
+                answerObservers.notify((AnswTags.messageDay, addict, 1))
             }
             else {
                 log.enqueue("error: wrong parsing MD")
@@ -390,7 +391,7 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.remoteCommand){
-            self.answerObservers.notify((AnswTags.remoteCommand, param, true))
+            self.answerObservers.notify((AnswTags.remoteCommand, param, 1))
             /*
             switch param {
             case RemoteCommand.TRACKER_SYSTEM_INFO.rawValue:
@@ -480,22 +481,21 @@ open class TcpConnection: BaseTcpConnection {
         return (groupId, parseJson(responce))
     }
     
-    func parseForErrorJson(_ responce: String) -> (Bool, String)? {
+    func parseForErrorJson(_ responce: String) -> (Int, String)? {
         if let dic = parseJson(responce) as? Dictionary<String, Any>{
-
             if dic.index(forKey: "error") == nil {
-                return (false, "")
+                return (0, "")
             }  else {
                 if let err =  dic["error_description"] as? String{
-                    return (true, err)
+                    return (1, err)
                 }else if let err =  dic["error"] as? String{
-                    return (true, err)
+                    return (1, err)
                 }
-                return (true, "error message is not parsed")
+                return (1, "error message is not parsed")
             }
         } else {
             if Int(responce.components(separatedBy: "|").last!)! > 0 {
-                return (false, "")
+                return (0, "")
             }
         }
         return nil
