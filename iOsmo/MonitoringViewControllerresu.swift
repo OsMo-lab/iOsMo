@@ -62,9 +62,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBOutlet weak var trackingModeBtn: UIButton!
 
-    
-
-    
     @IBAction func pauseClick(_ sender: AnyObject) {
         
         isSessionPaused = !isSessionPaused
@@ -75,8 +72,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         } else {
             sendingManger.startSendingCoordinates("")
         }
-
-    
     }
     
     @IBAction func GoByLink(_ sender: UIButton) {
@@ -89,8 +84,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.present(activityViewController, animated: true, completion: {})
             }
         } else {
-        
-            print("error: invalid url")
             log.enqueue("error: invalid url")
         }
 
