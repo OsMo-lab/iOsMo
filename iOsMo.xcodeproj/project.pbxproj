@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		293C95761A34B217005DD4CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95751A34B217005DD4CE /* AppDelegate.swift */; };
-		293C95781A34B217005DD4CE /* MonitoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95771A34B217005DD4CE /* MonitoringViewController.swift */; };
+		293C95781A34B217005DD4CE /* MonitoringViewControllerresu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95771A34B217005DD4CE /* MonitoringViewControllerresu.swift */; };
 		293C957A1A34B217005DD4CE /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95791A34B217005DD4CE /* LogViewController.swift */; };
 		293C957D1A34B217005DD4CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 293C957B1A34B217005DD4CE /* Main.storyboard */; };
 		293C957F1A34B217005DD4CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 293C957E1A34B217005DD4CE /* Images.xcassets */; };
@@ -96,7 +96,7 @@
 		293C95701A34B217005DD4CE /* iOsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C95741A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C95751A34B217005DD4CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		293C95771A34B217005DD4CE /* MonitoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitoringViewController.swift; sourceTree = "<group>"; };
+		293C95771A34B217005DD4CE /* MonitoringViewControllerresu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitoringViewControllerresu.swift; sourceTree = "<group>"; };
 		293C95791A34B217005DD4CE /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		293C957C1A34B217005DD4CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		293C957E1A34B217005DD4CE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -275,7 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				4D8B78441FA7624A00E1069D /* MapViewController.swift */,
-				293C95771A34B217005DD4CE /* MonitoringViewController.swift */,
+				293C95771A34B217005DD4CE /* MonitoringViewControllerresu.swift */,
 				293C95791A34B217005DD4CE /* LogViewController.swift */,
 				29FA96331A478335009BFC19 /* AccountViewController.swift */,
 				29FA96371A4784EC009BFC19 /* AuthViewController.swift */,
@@ -606,7 +606,7 @@
 				293C95CA1A3D2AA0005DD4CE /* SettingManager.swift in Sources */,
 				29F9A6D61AC0C31F001A610D /* ConnectionHelper.swift in Sources */,
 				29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */,
-				293C95781A34B217005DD4CE /* MonitoringViewController.swift in Sources */,
+				293C95781A34B217005DD4CE /* MonitoringViewControllerresu.swift in Sources */,
 				2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */,
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
 				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
@@ -794,7 +794,7 @@
 				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -828,7 +828,7 @@
 				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = iOsmo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";

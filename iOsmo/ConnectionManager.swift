@@ -368,7 +368,15 @@ open class ConnectionManager: NSObject{
             log.enqueue("connected with Auth")
             
             self.connected = answer == 0;
-            connectionRun.notify(answer, name)
+            if (answer == 100) {
+                SettingsManager.setKey("", forKey: SettingKeys.user)
+                SettingsManager.setKey("", forKey: SettingKeys.device)
+                closeConnection()
+                connect()
+                
+            } else {
+                connectionRun.notify(answer, name)
+            }
             
             return
         }
@@ -470,9 +478,11 @@ open class ConnectionManager: NSObject{
             }
 
             if (name == RemoteCommand.WHERE.rawValue) {
-                self.isGettingLocation = true
-                sendingManger.startSendingCoordinates(name)
-
+                connection.sendRemoteCommandResponse(name)
+                if self.sessionOpened == false {
+                    self.isGettingLocation = true
+                    sendingManger.startSendingCoordinates(name)
+                }
                 return
             }
         }

@@ -60,7 +60,6 @@ open class BaseTcpConnection: NSObject {
     var coordinates: [LocationModel]
     
     override init(){
-        
         coordinates = [LocationModel]()
         super.init()
         
@@ -83,13 +82,15 @@ open class BaseTcpConnection: NSObject {
     //var connected: Bool = false
     var sessionOpened: Bool = false
 
-    
+  
     func onSentCoordinate(cnt: Int){
+        log.enqueue("Removing \(cnt) coordinates from buffer")
         for _ in 1...cnt {
             if self.coordinates.count > 0 {
                 self.coordinates.remove(at: 0)
             }
         }
+        
         sendNextCoordinates()
     }
     

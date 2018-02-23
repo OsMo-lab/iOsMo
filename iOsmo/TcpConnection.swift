@@ -486,10 +486,13 @@ open class TcpConnection: BaseTcpConnection {
             if dic.index(forKey: "error") == nil {
                 return (0, "")
             }  else {
-                if let err =  dic["error_description"] as? String{
-                    return (1, err)
-                }else if let err =  dic["error"] as? String{
-                    return (1, err)
+                if let err =  dic["error"] as? Int {
+                    if let err_msg =  dic["error_description"] as? String{
+                        return (err, err_msg)
+                    }else {
+                        return (err, "\(err)")
+                    }
+                
                 }
                 return (1, "error message is not parsed")
             }
