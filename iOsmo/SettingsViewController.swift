@@ -51,9 +51,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 self.resetAuthSwitcher.isOn = false
             } else {
-                groupManager.clearCache()
-                SettingsManager.setKey("", forKey: SettingKeys.user)
-                SettingsManager.setKey("", forKey: SettingKeys.device)
+                SettingsManager.clearKeys()
                 connectionManager.closeConnection()
                 connectionManager.connect()
             }
@@ -190,20 +188,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         
     }
     func alert(_ title: String, message: String) {
-        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
-            self.present(myAlert, animated: true, completion: nil)
-        } else { // iOS 7
-            let alert: UIAlertView = UIAlertView()
-            alert.delegate = self
-            
-            alert.title = title
-            alert.message = message
-            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
-            
-            alert.show()
-        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
+        self.present(myAlert, animated: true, completion: nil)
     }
 
     /*

@@ -13,14 +13,20 @@ struct SettingsManager {
     static var key: NSString?
     static var settingPath: NSString?
     
-    
+  
     static func getKey(_ forKey: SettingKeys) -> NSString?{
         
         getKeyFromSettings(forKey)
         
         return key
     }
+    
+    static func clearKeys() {
+        _ =  GroupManager.sharedGroupManager.clearCache()
+        SettingsManager.setKey("", forKey: SettingKeys.user)
+        SettingsManager.setKey("", forKey: SettingKeys.device)
         
+    }
     static func setKey(_ key: NSString, forKey: SettingKeys){
         if let getPath = getSettingPath as? String, let fileData = NSMutableDictionary(contentsOfFile: getPath){
             fileData.setValue(key, forKey: forKey.rawValue)

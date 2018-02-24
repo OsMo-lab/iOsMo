@@ -38,7 +38,7 @@ open class GroupManager{
         return Static.instance
     }
     
-    let connection = ConnectionManager.sharedConnectionManager
+    fileprivate let connection = ConnectionManager.sharedConnectionManager
 
     
     open func activateGroup(_ name: String){

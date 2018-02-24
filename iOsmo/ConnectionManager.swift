@@ -71,8 +71,6 @@ open class ConnectionManager: NSObject{
 
     let reachability = Reachability()!
     
-    var groupManager = GroupManager.sharedGroupManager
-    
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
     open var isGettingLocation = false
@@ -371,9 +369,7 @@ open class ConnectionManager: NSObject{
             
             self.connected = answer == 0;
             if (answer == 100) {
-                groupManager.clearCache()
-                SettingsManager.setKey("", forKey: SettingKeys.user)
-                SettingsManager.setKey("", forKey: SettingKeys.device)
+                SettingsManager.clearKeys()
                 closeConnection()
                 connect()
                 

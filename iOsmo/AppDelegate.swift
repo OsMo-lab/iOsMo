@@ -18,7 +18,7 @@ import FirebaseMessaging
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var connectionManager = ConnectionManager.sharedConnectionManager
+    let connectionManager = ConnectionManager.sharedConnectionManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var localNotification: UILocalNotification? = nil;
@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         // Override point for customization after application launch.
+        
         connectionManager.pushActivated.add{
             if $0  == 0{
                 self.log.enqueue("connectionManager.pushActivated")
@@ -96,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
-        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
                 var vcs = tbc.viewControllers

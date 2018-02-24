@@ -270,9 +270,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if connectionManager.sessionOpened {
                     alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 } else {
-                    groupManager.clearCache()
-                    SettingsManager.setKey("", forKey: SettingKeys.user)
-                    SettingsManager.setKey("", forKey: SettingKeys.device)
+                    SettingsManager.clearKeys()
                     connectionManager.closeConnection()
                     connectionManager.connect()
                 }
