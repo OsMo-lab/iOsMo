@@ -22,13 +22,14 @@ struct SettingsManager {
     }
     
     static func clearKeys() {
-        _ =  GroupManager.sharedGroupManager.clearCache()
-        SettingsManager.setKey("", forKey: SettingKeys.user)
         SettingsManager.setKey("", forKey: SettingKeys.device)
-        
+        SettingsManager.setKey("", forKey: SettingKeys.user)
+        _ =  GroupManager.sharedGroupManager.clearCache()
+
     }
     static func setKey(_ key: NSString, forKey: SettingKeys){
         if let getPath = getSettingPath as? String, let fileData = NSMutableDictionary(contentsOfFile: getPath){
+            
             fileData.setValue(key, forKey: forKey.rawValue)
             fileData.write(toFile: getPath, atomically: true)
         }

@@ -117,7 +117,6 @@ struct ConnectionHelper {
     
     static func getServerInfo( completed : @escaping (_ succeeded: Bool, _ res: Token?) -> ()) -> Void {
         authenticate(completed: {key -> Void in
-            
             if (key != nil) {
                 print("Authenticated with key")
                 let requestString = "app=\(iOsmoAppKey)"

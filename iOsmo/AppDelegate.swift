@@ -243,7 +243,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
-            log.enqueue(messageID as! String)
             connectionManager.connection.parseOutput(messageID as! String)
         }
         // Print full message.
@@ -262,8 +261,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
-            log.enqueue(messageID as! String)
-            
             connectionManager.connection.parseOutput(messageID as! String)
         }
         
@@ -323,7 +320,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
-            log.enqueue(messageID as! String)
             connectionManager.connection.parseOutput(messageID as! String)
         }
         
@@ -346,7 +342,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         }
         Messaging.messaging().appDidReceiveMessage(userInfo)
 
-        
         completionHandler()
     }
 }

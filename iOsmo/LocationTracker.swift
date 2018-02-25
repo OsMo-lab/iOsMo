@@ -67,13 +67,9 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 authorizationStatus == CLAuthorizationStatus.denied){
                     log.enqueue("Location authorization failed")
             } else {
-                log.enqueue("Location authorization status authorized")
+                LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
+                log.enqueue("Location request When in use authorization was sent to user")
 
-                if #available(iOS 8, *){
-                    LocationTracker.sharedLocationManager.requestAlwaysAuthorization()
-                    log.enqueue("Location request always authorization was sent to user")
-                }
-                
                 if (once) {
                     log.enqueue("requestLocation")
                     LocationTracker.sharedLocationManager.requestLocation()

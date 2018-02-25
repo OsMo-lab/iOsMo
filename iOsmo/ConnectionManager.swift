@@ -369,9 +369,11 @@ open class ConnectionManager: NSObject{
             
             self.connected = answer == 0;
             if (answer == 100) {
-                SettingsManager.clearKeys()
-                closeConnection()
-                connect()
+                DispatchQueue.main.async {
+                    SettingsManager.clearKeys()
+                    self.connection.closeConnection()
+                    self.connect()
+                }
                 
             } else {
                 connectionRun.notify(answer, name)

@@ -151,7 +151,7 @@ open class BaseTcpConnection: NSObject {
             self.shouldCloseSession = false;
             log.enqueue("Coordinates buffer is not empty. Canceling close session")
         } else{
-           tcpClient.send(request)
+           tcpClient.send(message: request)
         }
         
         //shouldCloseSession = !shouldCloseSession
@@ -159,7 +159,7 @@ open class BaseTcpConnection: NSObject {
     }
     
     open func send(_ request: String){
-        tcpClient.send(request)
+        tcpClient.send(message: request)
     }
     
     
