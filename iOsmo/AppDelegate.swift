@@ -33,13 +33,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         
-        connectionManager.pushActivated.add{
+        _ = connectionManager.pushActivated.add{
             if $0  == 0{
                 self.log.enqueue("connectionManager.pushActivated")
             }
             //self.activateSwitcher.isOn = $0
         }
-        connectionManager.sessionRun.add{
+        _ = connectionManager.sessionRun.add{
             let theChange = $0.0
             
             if theChange == 0 {

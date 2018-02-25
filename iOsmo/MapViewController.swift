@@ -148,20 +148,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
         }
-        _ = self.groupManager.groupsUpdated.add{
+        self.groupManager.groupsUpdated.add{
             _ = $0
             _ = $1
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: self.groupManager.allGroups )
             }
         }
-        _ = self.groupManager.groupListUpdated.add{
+        self.groupManager.groupListUpdated.add{
             let groups = $0
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: groups)
             }
         }
-        _ = self.connectionManager.connectionRun.add{
+        self.connectionManager.connectionRun.add{
             let theChange = ($0.0 == 0)
             
             if theChange {

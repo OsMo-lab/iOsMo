@@ -116,7 +116,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         }
         
         while (style < TileSource.SOURCES_COUNT.rawValue) {
-            var title = tileSourceName(style);
+            let title = tileSourceName(style);
             if (title != "") {
                 myAlert.addAction(UIAlertAction(title: title, style: .default, handler: handler))
             }

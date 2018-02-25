@@ -49,17 +49,12 @@ struct SettingsManager {
                     }catch {
                     }
                 }
-                
             }
             
             if let savedKey = NSMutableDictionary(contentsOfFile: getPath){
-                
                 key = savedKey.object(forKey: forKey.rawValue) as? NSString
             }
-            
         }
-        
-        
     }
     
     fileprivate static var getSettingPath: NSString? {
@@ -68,18 +63,13 @@ struct SettingsManager {
             
             if let path = settingPath {
                 return path
-            }
-        else {
+            } else {
                 
                 let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-                if let documentDirectory = paths[0] as? NSString {
-                    
-                    settingPath = documentDirectory.appendingPathComponent("settings.plist") as NSString?
-                    return settingPath
-                }
-                
-                return nil
-        }
+                let documentDirectory = paths[0] as NSString
+                settingPath = documentDirectory.appendingPathComponent("settings.plist") as NSString?
+                return settingPath
+            }
         }
     }
     

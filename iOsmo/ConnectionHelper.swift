@@ -138,11 +138,11 @@ struct ConnectionHelper {
                             if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
                                 print("server is \(server)")
                                 
-                                let server = server.components(separatedBy: ":")
-                                if server.count > 1 {
-                                    let tknAddress : String = server[0];
+                                let server_arr = server.components(separatedBy: ":")
+                                if server_arr.count > 1 {
+                                    let tknAddress : String = server_arr[0];
                                     
-                                    if let tknPort = Int(server[1]) {
+                                    if let tknPort = Int(server_arr[1]) {
                                         tkn =  Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key!)
                                         completed(true,tkn)
                                         return

@@ -406,20 +406,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     
     func alert(_ title: String, message: String) {
-        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(myAlert, animated: true, completion: nil)
-        } else { // iOS 7
-            let alert: UIAlertView = UIAlertView()
-            alert.delegate = self
-            
-            alert.title = title
-            alert.message = message
-            alert.addButton(withTitle: "OK")
-            
-            alert.show()
-        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(myAlert, animated: true, completion: nil)
     }
 
 }

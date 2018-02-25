@@ -160,14 +160,14 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
 
-        groupManager.groupListUpdated.add{
+        _ = groupManager.groupListUpdated.add{
             let _ = $0
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
         
-        groupManager.groupEntered.add{
+        _ = groupManager.groupEntered.add{
             if ($0.0 == 0) {
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList(false)
@@ -196,9 +196,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
             }
         }
-        groupManager.groupCreated.add {
-
-            print ($0)
+        _ = groupManager.groupCreated.add {
             if ($0.0 == 0 ) {
                 self.groupAction = GroupActions.view
                 
@@ -212,10 +210,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
                 self.alert(NSLocalizedString("Error on create group", comment:"Alert title for error on create group"), message: $0.1)
             }
-            
-            
         }
-        groupManager.groupLeft.add{
+        _ = groupManager.groupLeft.add{
             if ($0.0 == 0) {
                 //self.groupManager.groupList(true)
             } else {
@@ -226,7 +222,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
         
-        groupManager.groupActivated.add{
+        _ = groupManager.groupActivated.add{
             if ($0.0 == 0) {
 
             } else {
@@ -238,7 +234,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
         
-        groupManager.groupDeactivated.add{
+        _ = groupManager.groupDeactivated.add{
             if ($0.0 == 0) {
 
             } else {
@@ -485,7 +481,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel,
                 let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel,
                 let activeSwitch = cell!.contentView.viewWithTag(5) as? UISwitch,
-                let indicator = cell!.contentView.viewWithTag(3) as? UIActivityIndicatorView,
+                //let indicator = cell!.contentView.viewWithTag(3) as? UIActivityIndicatorView,
                 let btnURL = cell!.contentView.viewWithTag(4) as? UIButton{
                 groupName.text = "\(group.name)(\(group.nick))"
                 usersLabel.text = "\(group.users.count)";
@@ -564,20 +560,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func alert(_ title: String, message: String) {
-        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
-            self.present(myAlert, animated: true, completion: nil)
-        } else { // iOS 7
-            let alert: UIAlertView = UIAlertView()
-            alert.delegate = self
-            
-            alert.title = title
-            alert.message = message
-            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
-            
-            alert.show()
-        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
+        self.present(myAlert, animated: true, completion: nil)
     }
 
     

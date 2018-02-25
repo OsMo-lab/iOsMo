@@ -14,8 +14,6 @@ open class TcpClient : NSObject, StreamDelegate {
     private var inputStream: InputStream?
     private var outputStream: OutputStream?
     private var _messagesQueue:Array<String> = [String]()
-    private var openedStreams = 0;
-    // MARK: - NSStreamDelegate
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
     open var callbackOnSendStart: (() -> Void)?
@@ -37,9 +35,7 @@ open class TcpClient : NSObject, StreamDelegate {
     }
     
     open func createConnection(_ token: Token){
-        openedStreams = 0
         if (token.port>0) {
-            
             Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
             if inputStream != nil && outputStream != nil {
                 isOpen = false
@@ -60,8 +56,6 @@ open class TcpClient : NSObject, StreamDelegate {
             } else {
                 log.enqueue("createConnection ERROR: nil stream")
             }
-            
-            
         }
     }
     
@@ -76,9 +70,7 @@ open class TcpClient : NSObject, StreamDelegate {
                         self.callbackOnConnect!()
                     }
                 }
-                
             }
-            
         }
     }
     
@@ -106,38 +98,66 @@ open class TcpClient : NSObject, StreamDelegate {
     }
 
     final func writeToStream(){
-        if _messagesQueue.count > 0 && self.outputStream!.hasSpaceAvailable  {
-            
-            DispatchQueue.global().async {
-                let req = self._messagesQueue.removeLast()
-                self.log.enqueue("r: \(req)")
-                let message = "\(req)\n"
-                if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
-                    if (self.callbackOnSendStart != nil) {
-                        self.callbackOnSendStart!()
-                    }
-                    let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
-                    if (wb == -1 ) {
-                        self._messagesQueue.append(message)
-                        self.log.enqueue("error: write to output stream")
+        if self.outputStream != nil {
+            if _messagesQueue.count > 0 && self.outputStream!.hasSpaceAvailable  {
+                
+                DispatchQueue.global().async {
+                    do  {
+                        let req = self._messagesQueue.removeLast()
+                        self.log.enqueue("r: \(req)")
+                        let message = "\(req)\n"
+                        if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
+                            if (self.callbackOnSendStart != nil) {
+                                self.callbackOnSendStart!()
+                            }
+                            let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+                            if (wb == -1 ) {
+                                self._messagesQueue.append(message)
+                                self.log.enqueue("error: write to output stream")
+                                if self.callbackOnError != nil {
+                                    self.callbackOnError!(true)
+                                }
+                                return
+                            }
+                            if (self.callbackOnSendEnd != nil) {
+                                self.callbackOnSendEnd!()
+                            }
+                        } else {
+                            self.log.enqueue("error: send request")
+                            if self.callbackOnError != nil {
+                                self.callbackOnError!(true)
+                            }
+                        }
+                    }catch{
+                        self.log.enqueue("error: writeToStream")
                         if self.callbackOnError != nil {
                             self.callbackOnError!(true)
                         }
-                        return
                     }
-                    if (self.callbackOnSendEnd != nil) {
-                        self.callbackOnSendEnd!()
-                    }
-                } else {
-                    self.log.enqueue("error: send request")
                 }
             }
         }
     }
     
     final func send(message:String){
+        let command = message.components(separatedBy: "|").first!
+        if command == AnswTags.buffer.rawValue {
+            var idx = 0;
+            for msg in _messagesQueue {
+                let cmd = msg.components(separatedBy: "|").first!
+                
+                if cmd == AnswTags.buffer.rawValue || cmd == AnswTags.coordinate.rawValue {
+                    _messagesQueue.remove(at: idx);
+                    break;
+                } else {
+                    idx = idx + 1
+                }
+            }
+        }
         _messagesQueue.insert(message, at: 0)
-        writeToStream()
+        if self.outputStream != nil {
+            writeToStream()
+        }
     }
     
     
@@ -155,8 +175,6 @@ open class TcpClient : NSObject, StreamDelegate {
             return
    
         case Stream.Event.openCompleted:
-            //openedStreams = openedStreams + 1
-            //log.enqueue("openCompleted for \(openedStreams) streams")
             openCompleted(stream: aStream)
 
         case Stream.Event.errorOccurred:
@@ -180,11 +198,9 @@ open class TcpClient : NSObject, StreamDelegate {
                     callbackOnSendStart!()
                 }
                
-                while(iStream.hasBytesAvailable)
-                {
+                while(iStream.hasBytesAvailable) {
                     len = iStream.read(&buffer, maxLength: bufferSize)
                     if len > 0 {
-                        
                         if let output = NSString(bytes: &buffer, length: len, encoding: String.Encoding.utf8.rawValue) {
                             message = "\(message)\(output)"
                         }
@@ -210,27 +226,22 @@ open class TcpClient : NSObject, StreamDelegate {
                         if responceSplit.count < 2 && subst != "\n"{
                             return
                         } else {
-                            //print what we parse
                             log.enqueue("a: \(res)")
                             
                             if let call = self.callbackOnParse {
                                 call(res)
                             }
-                            
                         }
                         let resAdvance = res + "\n"
                         message = (responceSplit.count != count) ? message.substring(with: Range<String.Index>(resAdvance.endIndex..<message.endIndex)) : res
                         
                         count += 1
                     }
-                    
                 }
-                
             }
             
         default:
             log.enqueue("Some unhandled event \(eventCode) was occured in stream")
         }
-        
     }
 }

@@ -168,6 +168,7 @@ open class ConnectionManager: NSObject{
                 if self.connection.addCallBackOnError == nil {
                     self.connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
+                        
                         self.connecting = false
                         self.shouldReConnect = isError
                         

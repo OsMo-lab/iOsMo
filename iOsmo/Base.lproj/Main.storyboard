@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -457,10 +456,10 @@
                                 <color key="sectionIndexBackgroundColor" red="0.074509803920000006" green="0.074509803920000006" blue="0.074509803920000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="groupCell" rowHeight="85" id="mqg-8w-YUF" userLabel="groupCell">
-                                        <rect key="frame" x="0.0" y="55" width="600" height="85"/>
+                                        <rect key="frame" x="0.0" y="56" width="600" height="85"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mqg-8w-YUF" id="GLc-vv-XEs" userLabel="groupContentView">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="85"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="group" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DX7-T5-2pK" userLabel="groupName">
@@ -523,10 +522,10 @@
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="newGroupCell" rowHeight="150" id="fKy-6u-m9b">
-                                        <rect key="frame" x="0.0" y="140" width="600" height="150"/>
+                                        <rect key="frame" x="0.0" y="141" width="600" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fKy-6u-m9b" id="my6-8t-IKI" userLabel="newGroupContentView">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="150"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="149"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="group" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ppm-WI-6i7" userLabel="newGroupName">
@@ -673,10 +672,10 @@
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="enterGroupCell" rowHeight="85" id="Yms-kF-AU5">
-                                        <rect key="frame" x="0.0" y="290" width="600" height="85"/>
+                                        <rect key="frame" x="0.0" y="291" width="600" height="85"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Yms-kF-AU5" id="eyR-il-5NP" userLabel="enterGroupContentView">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="85"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="group" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kpg-lx-GAk">
@@ -1187,57 +1186,6 @@
             </objects>
             <point key="canvasLocation" x="-459" y="-510"/>
         </scene>
-        <!--MapBoxView Controller-->
-        <scene sceneID="AeK-dH-zNv">
-            <objects>
-                <viewController id="9VQ-qR-6dQ" userLabel="MapBoxView Controller" customClass="MapBoxViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="a9V-JZ-1yi"/>
-                        <viewControllerLayoutGuide type="bottom" id="bX4-Td-wAe"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="wBv-Bj-z3u" customClass="MGLMapView">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nWW-Ja-AUZ" userLabel="Center">
-                                <rect key="frame" x="8" y="8" width="32" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="D0n-51-uJr"/>
-                                    <constraint firstAttribute="width" constant="32" id="jWF-ah-YWA"/>
-                                </constraints>
-                                <state key="normal" image="ic-action-me"/>
-                                <connections>
-                                    <action selector="locateClickWithSender:" destination="9VQ-qR-6dQ" eventType="touchUpInside" id="yDG-z9-zbA"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="nWW-Ja-AUZ" firstAttribute="top" secondItem="a9V-JZ-1yi" secondAttribute="bottom" constant="-12" id="ICU-pt-Bmj"/>
-                            <constraint firstItem="nWW-Ja-AUZ" firstAttribute="leading" secondItem="wBv-Bj-z3u" secondAttribute="leadingMargin" constant="-12" id="jwH-FI-1TD"/>
-                        </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
-                            <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/alesir/cizr8vw9g00mb2sqji5539sj4"/>
-                            <userDefinedRuntimeAttribute type="number" keyPath="zoomLevel">
-                                <real key="value" value="11"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
-                        <connections>
-                            <outlet property="delegate" destination="9VQ-qR-6dQ" id="Dkt-Pf-xEK"/>
-                        </connections>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="waypoint_map-32" id="MNn-4Q-B12">
-                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                    </tabBarItem>
-                    <connections>
-                        <outlet property="mapView" destination="wBv-Bj-z3u" id="dGp-Sg-5jX"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AsR-wN-gFO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-459" y="174"/>
-        </scene>
         <!--AuthViewController-->
         <scene sceneID="hjy-dJ-2QC">
             <objects>
@@ -1555,7 +1503,6 @@
         <image name="small-red" width="85" height="85"/>
         <image name="small-white" width="85" height="85"/>
         <image name="user_male_4-64" width="64" height="64"/>
-        <image name="waypoint_map-32" width="32" height="32"/>
     </resources>
     <color key="tintColor" red="0.1960784314" green="0.45882352939999999" blue="0.75686274509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
