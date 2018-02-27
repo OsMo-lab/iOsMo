@@ -101,7 +101,7 @@ open class TcpClient : NSObject, StreamDelegate {
         if self.outputStream != nil {
             if _messagesQueue.count > 0 && self.outputStream!.hasSpaceAvailable  {
                 
-                DispatchQueue.global().async {
+                DispatchQueue.global().sync {
                     do  {
                         let req = self._messagesQueue.removeLast()
                         self.log.enqueue("r: \(req)")
@@ -140,21 +140,26 @@ open class TcpClient : NSObject, StreamDelegate {
     }
     
     final func send(message:String){
-        let command = message.components(separatedBy: "|").first!
+        var command = message.components(separatedBy: "|").first!
         if command == AnswTags.buffer.rawValue {
             var idx = 0;
-            for msg in _messagesQueue {
-                let cmd = msg.components(separatedBy: "|").first!
-                
-                if cmd == AnswTags.buffer.rawValue || cmd == AnswTags.coordinate.rawValue {
-                    _messagesQueue.remove(at: idx);
-                    break;
-                } else {
-                    idx = idx + 1
+            DispatchQueue.global().sync {
+                for msg in _messagesQueue {
+                    let cmd = msg.components(separatedBy: "|").first!
+                    
+                    if cmd == AnswTags.buffer.rawValue || cmd == AnswTags.coordinate.rawValue {
+                        _messagesQueue.remove(at: idx);
+                        break;
+                    } else {
+                        idx = idx + 1
+                    }
                 }
             }
+            
         }
-        _messagesQueue.insert(message, at: 0)
+        DispatchQueue.global().sync {
+            _messagesQueue.insert(message, at: 0)
+        }
         if self.outputStream != nil {
             writeToStream()
         }
