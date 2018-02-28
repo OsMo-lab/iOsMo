@@ -363,7 +363,7 @@ open class GroupManager{
                         }
 
                         if let user = self.getUser($0,user: uId) {
-                            if let uDeleted = u["deleted"] as? String {
+                            if (u["deleted"] as? String) != nil {
                                 let uIdx = foundGroup?.users.index(of: user)
                                 if uIdx! > -1 {
                                     foundGroup?.users.remove(at: uIdx!)
@@ -425,7 +425,7 @@ open class GroupManager{
                             uE = Int(u["e"] as! String)!
                         }
                         if let point = self.getPoint($0,point: uId) {
-                            if let uDeleted = u["deleted"] as? String {
+                            if (u["deleted"] as? String) != nil {
                                 let uIdx = foundGroup?.points.index(of: point)
                                 if uIdx! > -1 {
                                     foundGroup?.points.remove(at: uIdx!)
@@ -466,7 +466,7 @@ open class GroupManager{
                             uE = Int(u["e"] as! String)!
                         }
                         if let track = self.getTrack($0,track: uId) {
-                            if let uDeleted = u["deleted"] as? String {
+                            if (u["deleted"] as? String) != nil {
                                 let uIdx = foundGroup?.tracks.index(of: track)
                                 if uIdx! > -1 {
                                     foundGroup?.tracks.remove(at: uIdx!)

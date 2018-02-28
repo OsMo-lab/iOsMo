@@ -499,7 +499,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        /*
         let row = (indexPath as NSIndexPath).row
         let section = (indexPath as NSIndexPath).section
         
@@ -507,7 +507,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         } else {
             let group = groupManager.allGroups[row]
             
-        }
+        }*/
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

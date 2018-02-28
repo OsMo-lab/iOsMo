@@ -210,8 +210,8 @@ open class TcpConnection: BaseTcpConnection {
             return false
         }
         
-        //let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|")[1] == "1" }
-        let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|").last == "1" }
+
+        //let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|").last == "1" }
         
         var command = output.components(separatedBy: "|").first!
         let addict = output.components(separatedBy: "|").last!
@@ -222,9 +222,9 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         
-        let parseCommandName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").first!}
+        //let parseCommandName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").first!}
         
-        let parseParamName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").last!}
+        //let parseParamName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").last!}
         
         //if outputContains(AnswTags.token){
         if outputContains(AnswTags.auth){
@@ -238,9 +238,6 @@ open class TcpConnection: BaseTcpConnection {
                         sessionTrackerID = "error parsing TrackerID"
                     }
                     answerObservers.notify(AnswTags.auth, result.1 , result.0)
-                    if let parsed = parseJson(output)  as? [String: Any] {
-  
-                    }
                 } else {
                     answerObservers.notify(AnswTags.auth, result.1 , result.0)
                 }
@@ -312,10 +309,6 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.pong){
-            let dateFormat = DateFormatter()
-            dateFormat.dateFormat = "HH:mm:ss"
-            let eventDate = dateFormat.string(from: Date())
-            
             log.enqueue("server wants answer ;)")
             sendPing()
             return

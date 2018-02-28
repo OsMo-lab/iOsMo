@@ -49,10 +49,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 
                 inputStream!.open()
-                log.enqueue("createConnection: opening input stream")
-            
                 outputStream!.open()
-                log.enqueue("createConnection: opening output stream")
             } else {
                 log.enqueue("createConnection ERROR: nil stream")
             }
@@ -140,7 +137,7 @@ open class TcpClient : NSObject, StreamDelegate {
     }
     
     final func send(message:String){
-        var command = message.components(separatedBy: "|").first!
+        let command = message.components(separatedBy: "|").first!
         if command == AnswTags.buffer.rawValue {
             var idx = 0;
             DispatchQueue.global().sync {

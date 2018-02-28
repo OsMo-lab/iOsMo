@@ -88,9 +88,9 @@ struct ConnectionHelper {
         task.resume()
     }
     
-    static func authenticate(completed : @escaping (_ key: NSString?) -> ()) -> Void{
+    static func authenticate(completed : @escaping (_ key: String?) -> ()) -> Void{
         let device = SettingsManager.getKey(SettingKeys.device)
-        if device == nil || device!.length == 0{
+        if device == nil || device?.length == 0{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
             let model = UIDevice.current.model
             let version = UIDevice.current.systemVersion
@@ -98,9 +98,9 @@ struct ConnectionHelper {
             let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
             self.postRequest(authUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
                 if result {
-                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? NSString {
+                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? String {
                         print ("got key by post request \(newKey)")
-                        SettingsManager.setKey(newKey, forKey: SettingKeys.device)
+                        SettingsManager.setKey(newKey as NSString, forKey: SettingKeys.device)
                         completed(newKey)
                     } else {
                         completed(nil)
@@ -111,7 +111,7 @@ struct ConnectionHelper {
             })
         } else {
             print("Authenticate:using local key \(device)")
-            completed(device)
+            completed((device as! String))
         }
     }
     
@@ -133,17 +133,15 @@ struct ConnectionHelper {
                             completed(false,tkn)
                             return
                         }  else {
-                            
-                            
                             if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
                                 print("server is \(server)")
                                 
                                 let server_arr = server.components(separatedBy: ":")
                                 if server_arr.count > 1 {
-                                    let tknAddress : String = server_arr[0];
+     
                                     
                                     if let tknPort = Int(server_arr[1]) {
-                                        tkn =  Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key!)
+                                        tkn =  Token(tokenString:"", address: server_arr[0], port: tknPort, key: key! as String)
                                         completed(true,tkn)
                                         return
                                     }

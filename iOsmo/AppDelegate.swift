@@ -111,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Analytics.logEvent("app_open", parameters: nil)
         if let url = launchOptions?[.url] as? URL {
-            presentViewController(url:url);
+            _ = presentViewController(url:url);
         }
         return true
     }
@@ -199,33 +199,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if !presentViewController(url:webURL) {
                 UIApplication.shared.openURL(webURL);
             }
-            
         }
-        
+
         return true;
     
     }
     
     func presentViewController(url:URL)->Bool {
-        
-        if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true){
+        if NSURLComponents(url: url, resolvingAgainstBaseURL: true) != nil{
             if (url.host == "osmo.mobi" && url.pathComponents[1] == "g" && url.pathComponents[2] != "") {
-                /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let accountVC = storyboard.instantiateViewController(withIdentifier: "AccountViewController")
-                    as! AccountViewController
-                */
+                let tbc:UITabBarController = (window?.rootViewController as! UITabBarController)
+                let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
+                tbc.selectedViewController = accountVC;
+                accountVC.btnEnterGroupPress(_sender: self, url.pathComponents[2])
                 
-                if let tbc:UITabBarController = (window?.rootViewController as! UITabBarController){
-
-                    let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
-                    
-                    tbc.selectedViewController = accountVC;
-                    
-                    accountVC.btnEnterGroupPress(_sender: self, url.pathComponents[2])
-                }
                 return true;
               }
-            
         }
         
         return false;

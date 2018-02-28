@@ -379,7 +379,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawPoint(point: Point, group: Group){
         print("MapViewController drawPoint")
-        let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
+        //let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
         if (self.mapView) != nil {
             var annVisible = false;
             for ann in self.pointAnnotations {
@@ -406,7 +406,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 let userName = user.name
                 var annVisible = false;
-                var annObjId = ""
                 var exTrack: OSMMapKitPolyline? = nil;
                 user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
 
@@ -438,7 +437,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     for ann in self.pointAnnotations {
                         if (ann is User) {
                             if ((ann as! User).mapId == "u\(location.userId)") {
-                                annObjId = (ann as! User).mapId
+                                //annObjId = (ann as! User).mapId
                                 annVisible = true;
                                 break;
                                 
@@ -612,7 +611,7 @@ class OSMTileOverlay: MKTileOverlay {
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
         sUrl = sUrl?.replacingOccurrences(of: "{y}", with: "\(path.y)")
-        print(sUrl)
+        //print(sUrl)
 
         return URL(string: sUrl!)!
     }
