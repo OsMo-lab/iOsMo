@@ -88,17 +88,20 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-        if isSessionPaused || isMonitoringOn {
-            Analytics.logEvent("trip_stop", parameters: nil)
-            sendingManger.stopSendingCoordinates("")
-            
-            //UIApplication.shared.isIdleTimerDisabled = false
-        } else {
-            Analytics.logEvent("trip_start", parameters: nil)
-            sendingManger.startSendingCoordinates("")
-            
-            //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+        if self.connectionManager.TrackerID != ""{
+            if isSessionPaused || isMonitoringOn {
+                Analytics.logEvent("trip_stop", parameters: nil)
+                sendingManger.stopSendingCoordinates("")
+                
+                //UIApplication.shared.isIdleTimerDisabled = false
+            } else {
+                Analytics.logEvent("trip_start", parameters: nil)
+                sendingManger.startSendingCoordinates("")
+                
+                //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            }
         }
+        
     }
 
     func uiSettings(){

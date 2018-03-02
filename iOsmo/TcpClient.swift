@@ -171,8 +171,10 @@ open class TcpClient : NSObject, StreamDelegate {
    
         case Stream.Event.endEncountered:
             log.enqueue("stream endEcountered")
+            
             if callbackOnError != nil {
-                callbackOnError!(true)
+                let reconnect =  aStream == self.inputStream ? false : true
+                callbackOnError!(reconnect)
             }
             return
    

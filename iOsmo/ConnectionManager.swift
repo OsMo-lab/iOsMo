@@ -207,7 +207,8 @@ open class ConnectionManager: NSObject{
                     self.connection.addCallBackOnConnect = {
                         () -> Void in
                         self.connecting = false
-                        self.connection.sendAuth(token!.device_key as String)
+                        let device = SettingsManager.getKey(SettingKeys.device) as! String
+                        self.connection.sendAuth(device)
                     }
                 }
 
@@ -219,7 +220,6 @@ open class ConnectionManager: NSObject{
                     self.connectionRun.notify((1, ""))
                     self.shouldReConnect = false
                 } else {
-                    print("getServerInfo Error:\(token?.error)")
                     self.log.enqueue("getServerInfo Error:\(token?.error)")
                     if (token?.error == "Wrong device key") {
                         SettingsManager.setKey("", forKey: SettingKeys.device)
@@ -375,8 +375,10 @@ open class ConnectionManager: NSObject{
                     self.connection.closeConnection()
                     self.connect()
                 }
-                
             } else {
+                if (!self.connected) {
+                    self.shouldReConnect = false
+                }
                 connectionRun.notify(answer, name)
             }
             
