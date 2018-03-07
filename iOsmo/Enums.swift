@@ -31,13 +31,6 @@ enum Tags: String {
     case buffer = "B"
 }
 
-enum KeysOld: String{
-    case trackerId = "tracker_id"
-    case sessionUrl = "url"
-    case key = "key"
-    case token = "token"
-    case address = "address"
-}
 
 enum Keys: String{
     case token = "token"
@@ -45,6 +38,7 @@ enum Keys: String{
     case uid = "uid"
     case name = "name"
     case device = "device"
+    
     case error = "error"
     case errorDesc = "error_description"
     case push_token = "push_token"
@@ -95,6 +89,7 @@ enum UpdatesEnum: String {
 
 enum SettingKeys: String {
     case device = "deviceKey"
+    case trackerId = "trackerID"
     case isStayAwake = "isStayAwake"
     
     case user = "user"

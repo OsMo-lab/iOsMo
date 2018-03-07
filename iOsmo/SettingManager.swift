@@ -24,6 +24,7 @@ struct SettingsManager {
     static func clearKeys() {
         SettingsManager.setKey("", forKey: SettingKeys.device)
         SettingsManager.setKey("", forKey: SettingKeys.user)
+        SettingsManager.setKey("", forKey: SettingKeys.trackerId)
         _ =  GroupManager.sharedGroupManager.clearCache()
 
     }

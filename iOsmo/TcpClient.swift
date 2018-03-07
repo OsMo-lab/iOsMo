@@ -101,7 +101,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 DispatchQueue.global().sync {
                     do  {
                         let req = self._messagesQueue.removeLast()
-                        self.log.enqueue("r: \(req)")
+                        self.log.enqueue("c: \(req)")
                         let message = "\(req)\n"
                         if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
                             if (self.callbackOnSendStart != nil) {
@@ -230,7 +230,7 @@ open class TcpClient : NSObject, StreamDelegate {
                         if responceSplit.count < 2 && subst != "\n"{
                             return
                         } else {
-                            log.enqueue("a: \(res)")
+                            log.enqueue("s: \(res)")
                             
                             if let call = self.callbackOnParse {
                                 call(res)

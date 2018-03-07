@@ -303,7 +303,11 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.kick){
             log.enqueue("connection kicked")
-
+            if let result = parseForErrorJson(output){
+                answerObservers.notify(AnswTags.kick, result.1 , result.0)
+            } else {
+                log.enqueue("kick asnwer cannot be parsed")
+            }
             return
             //should update status of session and connection
         }

@@ -152,6 +152,10 @@ open class ConnectionManager: NSObject{
             log.enqueue("Conection already in process")
             return;
         }
+        if self.connected {
+            log.enqueue("Already connected !")
+            return;
+        }
         self.connecting = true;
         if !isNetworkAvailable {
             log.enqueue("Network is NOT available")
@@ -200,13 +204,14 @@ open class ConnectionManager: NSObject{
                     self.connection.addCallBackOnCloseConnection = {
                         () -> Void in
                         self.connecting = false
+                        self.connected = false
                         self.connectionClose.notify(())
                     }
                 }
                 if self.connection.addCallBackOnConnect == nil {
                     self.connection.addCallBackOnConnect = {
                         () -> Void in
-                        self.connecting = false
+                        //self.connecting = false
                         let device = SettingsManager.getKey(SettingKeys.device) as! String
                         self.connection.sendAuth(device)
                     }
@@ -367,6 +372,7 @@ open class ConnectionManager: NSObject{
         if tag == AnswTags.auth {
             //means response to try connecting
             log.enqueue("connected with Auth")
+            self.connecting = false
             
             self.connected = answer == 0;
             if (answer == 100) {
@@ -378,6 +384,9 @@ open class ConnectionManager: NSObject{
             } else {
                 if (!self.connected) {
                     self.shouldReConnect = false
+                }
+                if let trackerId = self.TrackerID {
+                    SettingsManager.setKey(trackerId as NSString, forKey: SettingKeys.trackerId)
                 }
                 connectionRun.notify(answer, name)
             }
@@ -424,6 +433,12 @@ open class ConnectionManager: NSObject{
             self.sessionOpened = answer != 0;
             sessionRun.notify((answer == 0 ? 1 : 0, name))
             
+            return
+        }
+        if tag == AnswTags.kick {
+            self.connected = false
+            self.connection.closeConnection()
+            self.connect()
             return
         }
         

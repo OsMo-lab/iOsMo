@@ -88,7 +88,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-        if self.connectionManager.TrackerID != ""{
+        if SettingsManager.getKey(SettingKeys.trackerId) as? String != ""{
             if isSessionPaused || isMonitoringOn {
                 Analytics.logEvent("trip_stop", parameters: nil)
                 sendingManger.stopSendingCoordinates("")
@@ -109,6 +109,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
         MDView.text = ""
+        
+        if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as? String {
+            self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+        }
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
@@ -217,8 +221,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
                 if let trackerId = self.connectionManager.TrackerID{
                     self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
-                } else {
-                    self.trackerID.setTitle("", for: UIControlState())
                 }
                 self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 
