@@ -10,6 +10,8 @@ import Foundation
 
 open class TcpClient : NSObject, StreamDelegate {
 
+    fileprivate var sendQueue = DispatchQueue(label: "com.iOsmo.SendQueue")
+    
     fileprivate let log = LogQueue.sharedLogQueue
     private var inputStream: InputStream?
     private var outputStream: OutputStream?
@@ -97,39 +99,41 @@ open class TcpClient : NSObject, StreamDelegate {
     final func writeToStream(){
         if self.outputStream != nil {
             if _messagesQueue.count > 0 && self.outputStream!.hasSpaceAvailable  {
-                
-                DispatchQueue.global().sync {
-                    do  {
-                        let req = self._messagesQueue.removeLast()
-                        self.log.enqueue("c: \(req)")
-                        let message = "\(req)\n"
-                        if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
-                            if (self.callbackOnSendStart != nil) {
-                                self.callbackOnSendStart!()
-                            }
-                            let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
-                            if (wb == -1 ) {
+                do  {
+                    var req: String = ""
+                    sendQueue.sync {
+                        req = self._messagesQueue.removeLast()
+                    }
+                    self.log.enqueue("c: \(req)")
+                    let message = "\(req)\n"
+                    if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
+                        if (self.callbackOnSendStart != nil) {
+                            self.callbackOnSendStart!()
+                        }
+                        let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+                        if (wb == -1 ) {
+                            sendQueue.async {
                                 self._messagesQueue.append(message)
-                                self.log.enqueue("error: write to output stream")
-                                if self.callbackOnError != nil {
-                                    self.callbackOnError!(true)
-                                }
-                                return
                             }
-                            if (self.callbackOnSendEnd != nil) {
-                                self.callbackOnSendEnd!()
-                            }
-                        } else {
-                            self.log.enqueue("error: send request")
+                            self.log.enqueue("error: write to output stream")
                             if self.callbackOnError != nil {
                                 self.callbackOnError!(true)
                             }
+                            return
                         }
-                    }catch{
-                        self.log.enqueue("error: writeToStream")
+                        if (self.callbackOnSendEnd != nil) {
+                            self.callbackOnSendEnd!()
+                        }
+                    } else {
+                        self.log.enqueue("error: send request")
                         if self.callbackOnError != nil {
                             self.callbackOnError!(true)
                         }
+                    }
+                }catch{
+                    self.log.enqueue("error: writeToStream")
+                    if self.callbackOnError != nil {
+                        self.callbackOnError!(true)
                     }
                 }
             }
@@ -140,7 +144,7 @@ open class TcpClient : NSObject, StreamDelegate {
         let command = message.components(separatedBy: "|").first!
         if command == AnswTags.buffer.rawValue {
             var idx = 0;
-            DispatchQueue.global().sync {
+            sendQueue.sync {
                 for msg in _messagesQueue {
                     let cmd = msg.components(separatedBy: "|").first!
                     
@@ -154,8 +158,8 @@ open class TcpClient : NSObject, StreamDelegate {
             }
             
         }
-        DispatchQueue.global().sync {
-            _messagesQueue.insert(message, at: 0)
+        sendQueue.sync {
+            _messagesQueue.append(message)
         }
         if self.outputStream != nil {
             writeToStream()
