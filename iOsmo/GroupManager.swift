@@ -157,7 +157,7 @@ open class GroupManager{
                     var users : [NSDictionary] = [NSDictionary]()
                     for u in g.users {
                         let user : NSDictionary =
-                            ["u": u.id, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "online": u.online, "lat": "\(u.coordinate.latitude)", "lon": "\(u.coordinate.longitude)"];
+                            ["u": u.u, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "online": u.online, "lat": "\(u.coordinate.latitude)", "lon": "\(u.coordinate.longitude)"];
                         users.append(user)
                         
                     }
@@ -178,8 +178,7 @@ open class GroupManager{
 
                     
                     let jsonGroup : NSDictionary =
-                        ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "id": g.id
-                        ,"active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy
+                        ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy
                         ,"nick": g.nick
                         ,"users": users, "point": points, "track": tracks
                     ];
@@ -501,7 +500,7 @@ open class GroupManager{
 
     open func getUser(_ group:  Int, user: Int) -> User? {
         let foundGroup = allGroups.filter{$0.u == "\(group)"}.first
-        return foundGroup?.users.filter{$0.id == "\(user)"}.first
+        return foundGroup?.users.filter{$0.u == "\(user)"}.first
     }
     
     open func getPoint(_ group:  Int, point: Int) -> Point? {

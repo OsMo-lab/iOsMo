@@ -49,6 +49,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 
                 inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+                //inputStream!.setProperty(kCFStreamPropertySocketSecurityLevel, forKey: <#T##Stream.PropertyKey#>)
                 
                 inputStream!.open()
                 outputStream!.open()
@@ -186,7 +187,7 @@ open class TcpClient : NSObject, StreamDelegate {
             openCompleted(stream: aStream)
 
         case Stream.Event.errorOccurred:
-            log.enqueue("stream was handle error, connection is out")
+            log.enqueue("stream errorOccurred, connection is out")
             if callbackOnError != nil {
                 callbackOnError!(true)
             }

@@ -396,9 +396,9 @@
 			buildPhases = (
 				293C956C1A34B217005DD4CE /* Sources */,
 				293C956D1A34B217005DD4CE /* Frameworks */,
+				4D19BE371E6B0FCE00F7599D /* ShellScript */,
 				293C956E1A34B217005DD4CE /* Resources */,
 				4D19BE2C1E67353B00F7599D /* Embed Frameworks */,
-				4D19BE371E6B0FCE00F7599D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -541,7 +541,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "#   ON/OFF Script Toggle (script ON with #, script OFF without #)\n#exit 0\n\n#   Increment Build Number Bool (Increment ON with true, increment OFF with false)\nshouldIncrement=false\n\n#   App vesion / Build version constants\nversionNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$INFOPLIST_FILE\")\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\n\n#   Increment build number\nif [ \"$shouldIncrement\" = true ]; then\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\nfi\n\n#   Output version & build numbers into a label on LaunchScreen.storyboard\nsed -i bak -e \"/userLabel=\\\"APP_VERSION\\\"/s/text=\\\"[^\\\"]*\\\"/text=\\\"v.$versionNumber.$buildNumber\\\"/\" \"$PROJECT_DIR/$PROJECT_NAME/Base.lproj/LaunchScreen.xib\"";
 		};
 		D5AB7C6EF9846020FC8A0686 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

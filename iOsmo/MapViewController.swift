@@ -221,7 +221,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if user.coordinate.latitude > -3000 && user.coordinate.longitude > -3000 {
                         let location = LocationModel(lat: user.coordinate.latitude, lon: user.coordinate.longitude)
                         let gid = Int(group.u)
-                        let uid = Int(user.id)
+                        let uid = Int(user.u)
                         let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
                         ugc.recent = false
                         self.drawPeoples(location: ugc)

@@ -11,7 +11,7 @@ import MapKit
 
 public class User:NSObject, MKAnnotation {
 
-    var id: String!
+    var u: String!
     var name: String
     var color: String
     var state: Int = 0
@@ -32,7 +32,7 @@ public class User:NSObject, MKAnnotation {
             let uIdInt = json["u"] as! Int
             uId = "\(uIdInt)"
         }
-        self.id = uId
+        self.u = uId
         self.name = json["name"] as! String
         self.connected = (json["connected"] as? Double) ?? 0
         self.color = (json["color"] as? String) ?? ""
@@ -49,8 +49,8 @@ public class User:NSObject, MKAnnotation {
         }
     }
     
-    init(id: String!, name: String, color: String, connected: Double){
-        self.id = id
+    init(u: String!, name: String, color: String, connected: Double){
+        self.u = u
         self.name = name
         self.color = color
         self.connected = connected
@@ -58,14 +58,14 @@ public class User:NSObject, MKAnnotation {
     }
     
     public static func == (left: User, right: User) -> Bool {
-        return left.id == right.id
+        return left.u == right.u
     }
     
     open var title: String? {
         return name;
     }
     open var mapId: String! {
-        return "u\(id!)";
+        return "u\(u!)";
     }
 
 }
