@@ -88,9 +88,9 @@ struct ConnectionHelper {
         task.resume()
     }
     
-    static func authenticate(completed : @escaping (_ key: NSString?) -> ()) -> Void{
+    static func authenticate(completed : @escaping (_ key: String?) -> ()) -> Void{
         let device = SettingsManager.getKey(SettingKeys.device)
-        if device == nil || device!.length == 0{
+        if device == nil || device?.length == 0{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
             let model = UIDevice.current.model
             let version = UIDevice.current.systemVersion
@@ -98,9 +98,9 @@ struct ConnectionHelper {
             let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
             self.postRequest(authUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
                 if result {
-                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? NSString {
+                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? String {
                         print ("got key by post request \(newKey)")
-                        SettingsManager.setKey(newKey, forKey: SettingKeys.device)
+                        SettingsManager.setKey(newKey as NSString, forKey: SettingKeys.device)
                         completed(newKey)
                     } else {
                         completed(nil)
@@ -111,44 +111,50 @@ struct ConnectionHelper {
             })
         } else {
             print("Authenticate:using local key \(device)")
-            completed(device)
+            completed((device as! String))
         }
     }
     
     static func getServerInfo( completed : @escaping (_ succeeded: Bool, _ res: Token?) -> ()) -> Void {
         authenticate(completed: {key -> Void in
-            
             if (key != nil) {
                 print("Authenticated with key")
                 let requestString = "app=\(iOsmoAppKey)"
                 
                 postRequest(servUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
+                    var tkn : Token?;
                     if result {
                         print("get server info by post request")
                         
                         if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
                             
-                            let tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                            tkn.error = errDesc as String
-                            
+                            tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                            tkn?.error = errDesc as String
                             completed(false,tkn)
+                            return
                         }  else {
                             if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
                                 print("server is \(server)")
                                 
-                                let server = server.components(separatedBy: ":")
-                                
-                                if let tknAddress = server[0] as? String, let tknPort = Int(server[1]) {
+                                let server_arr = server.components(separatedBy: ":")
+                                if server_arr.count > 1 {
+     
                                     
-                                    let tkn =  Token(tokenString:"", address: tknAddress as NSString, port: tknPort, key: key!)
-                                    completed(true,tkn)
+                                    if let tknPort = Int(server_arr[1]) {
+                                        tkn =  Token(tokenString:"", address: server_arr[0], port: tknPort, key: key! as String)
+                                        completed(true,tkn)
+                                        return
+                                    }
                                 }
                             }
                         }
                     } else {
                         print("Unable to connect to server")
-                        let tkn = Token(tokenString: "", address: "", port: 0, key: "")
+                    }
+                    if (tkn == nil) {
+                        tkn = Token(tokenString: "", address: "", port: 0, key: "")
                         completed(false,tkn)
+                        return
                     }
                 })
             } else {

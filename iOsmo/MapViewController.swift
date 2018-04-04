@@ -148,21 +148,21 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
         }
-        _ = self.groupManager.groupsUpdated.add{
+        self.groupManager.groupsUpdated.add{
             _ = $0
             _ = $1
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: self.groupManager.allGroups )
             }
         }
-        _ = self.groupManager.groupListUpdated.add{
+        self.groupManager.groupListUpdated.add{
             let groups = $0
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: groups)
             }
         }
-        _ = self.connectionManager.connectionRun.add{
-            let theChange = $0.0
+        self.connectionManager.connectionRun.add{
+            let theChange = ($0.0 == 0)
             
             if theChange {
                 DispatchQueue.main.async {
@@ -221,7 +221,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if user.coordinate.latitude > -3000 && user.coordinate.longitude > -3000 {
                         let location = LocationModel(lat: user.coordinate.latitude, lon: user.coordinate.longitude)
                         let gid = Int(group.u)
-                        let uid = Int(user.id)
+                        let uid = Int(user.u)
                         let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
                         ugc.recent = false
                         self.drawPeoples(location: ugc)
@@ -379,7 +379,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawPoint(point: Point, group: Group){
         print("MapViewController drawPoint")
-        let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
+        //let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
         if (self.mapView) != nil {
             var annVisible = false;
             for ann in self.pointAnnotations {
@@ -406,7 +406,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 let userName = user.name
                 var annVisible = false;
-                var annObjId = ""
                 var exTrack: OSMMapKitPolyline? = nil;
                 user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
 
@@ -438,7 +437,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     for ann in self.pointAnnotations {
                         if (ann is User) {
                             if ((ann as! User).mapId == "u\(location.userId)") {
-                                annObjId = (ann as! User).mapId
+                                //annObjId = (ann as! User).mapId
                                 annVisible = true;
                                 break;
                                 
@@ -490,6 +489,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // 2
         let overlay = OSMTileOverlay(urlTemplate: template)
         overlay.canReplaceMapContent = true
+        //overlay.maximumZ = 19
         
         
         // 4
@@ -611,7 +611,7 @@ class OSMTileOverlay: MKTileOverlay {
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
         sUrl = sUrl?.replacingOccurrences(of: "{y}", with: "\(path.y)")
-        print(sUrl)
+        //print(sUrl)
 
         return URL(string: sUrl!)!
     }

@@ -9,8 +9,9 @@
 import UIKit
 
 class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
-
-    //var groupsEnabled = true
+   
+    var connectionManager = ConnectionManager.sharedConnectionManager
+    var groupManager = GroupManager.sharedGroupManager
     
     let groupCell = "groupCell"
     let newGroupCell = "newGroupCell"
@@ -25,7 +26,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     @IBOutlet weak var btnEnterGroup: UIButton!
     @IBOutlet weak var btnAddGroup: UIButton!
-    var onConnectionRun: ObserverSetEntry<(Bool, String)>?
+    var onConnectionRun: ObserverSetEntry<(Int, String)>?
     var onGroupCreated: ObserverSetEntry<[Group]>?
     
     @IBOutlet weak var tableView: UITableView!
@@ -69,13 +70,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             self.tableView.reloadData()
         }
         actionSheetController.addAction(typeAction)
-        
-        typeAction = UIAlertAction(title: Group.getTypeName(GroupType.Trip.rawValue), style: .default) { action -> Void in
-            self.groupType = GroupType.Trip.rawValue
-            self.tableView.reloadData()
-        }
-        actionSheetController.addAction(typeAction)
-        
+                
         //We need to provide a popover sourceView when using it on iPad
         actionSheetController.popoverPresentationController?.sourceView = sender as UIView
         
@@ -93,8 +88,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if let gName = cell.contentView.viewWithTag(1) as? UITextField,
                     let priv = cell.contentView.viewWithTag(2) as? UISwitch,
                     let email = cell.contentView.viewWithTag(5) as? UITextField,
-                    let phone = cell.contentView.viewWithTag(6) as? UITextField {
-                    self.groupManager.createGroup(gName.text!, email: email.text!, phone: phone.text!, gtype: self.groupType, priv: priv.isOn)
+                    let nick = cell.contentView.viewWithTag(6) as? UITextField {
+                    self.groupManager.createGroup(gName.text!, email: email.text!, nick: nick.text!, gtype: self.groupType, priv: priv.isOn)
                 }
             
             }
@@ -143,8 +138,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
  
-    var connectionManager = ConnectionManager.sharedConnectionManager
-    var groupManager = GroupManager.sharedGroupManager
+
     
     override func viewDidAppear(_ animated: Bool) {
         setLoginControls()
@@ -158,7 +152,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         // subscribe once
         if self.onConnectionRun == nil {
             self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 {
+                if $0.0 == 0 {
                     self.setLoginControls()
                 } else {
                     print($0.1)
@@ -166,15 +160,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
 
-        groupManager.groupListUpdated.add{
+        _ = groupManager.groupListUpdated.add{
             let _ = $0
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
         
-        groupManager.groupEntered.add{
-            if ($0.0) {
+        _ = groupManager.groupEntered.add{
+            if ($0.0 == 0) {
                 self.groupAction = GroupActions.view
                 self.groupManager.groupList(false)
                 self.btnEnterGroup.isHidden = false
@@ -202,10 +196,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
             }
         }
-        groupManager.groupCreated.add {
-
-            print ($0)
-            if ($0.0) {
+        _ = groupManager.groupCreated.add {
+            if ($0.0 == 0 ) {
                 self.groupAction = GroupActions.view
                 
                 DispatchQueue.main.async {
@@ -218,11 +210,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
                 self.alert(NSLocalizedString("Error on create group", comment:"Alert title for error on create group"), message: $0.1)
             }
-            
-            
         }
-        groupManager.groupLeft.add{
-            if ($0.0) {
+        _ = groupManager.groupLeft.add{
+            if ($0.0 == 0) {
                 //self.groupManager.groupList(true)
             } else {
                 self.alert(NSLocalizedString("Error on leave group", comment:"Alert title for error on leave group"), message: $0.1)
@@ -232,8 +222,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
         
-        groupManager.groupActivated.add{
-            if ($0.0) {
+        _ = groupManager.groupActivated.add{
+            if ($0.0 == 0) {
 
             } else {
                 self.alert(NSLocalizedString("Error on activate group", comment:"Alert title for error on activate group"), message: $0.1)
@@ -244,8 +234,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
         
-        groupManager.groupDeactivated.add{
-            if ($0.0) {
+        _ = groupManager.groupDeactivated.add{
+            if ($0.0 == 0) {
 
             } else {
                 self.alert(NSLocalizedString("Error on deactivate group", comment:"Alert title for error on deactivate group"), message: $0.1)
@@ -276,9 +266,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if connectionManager.sessionOpened {
                     alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 } else {
-                    groupManager.clearCache()
-                    SettingsManager.setKey("", forKey: SettingKeys.user)
-                    SettingsManager.setKey("", forKey: SettingKeys.device)
+                    SettingsManager.clearKeys()
                     connectionManager.closeConnection()
                     connectionManager.connect()
                 }
@@ -406,11 +394,18 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                     isUser = true;
                 }
             }
-            if isUser {
+            if groupAction == GroupActions.new{
+                return 150;
+            } else {
+                return 85;
+            }
+            
+            /*if isUser {
                 return 85;
             } else {
                 return 150;
             }
+ */
         } else {
             return 85;
         }
@@ -449,27 +444,31 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
             if let typeBtn = cell!.contentView.viewWithTag(7) as? UIButton,
                 let email = cell!.contentView.viewWithTag(5) as? UITextField,
-                let phone = cell!.contentView.viewWithTag(6) as? UITextField,
+                let nick = cell!.contentView.viewWithTag(6) as? UITextField,
                 let emailLabel = cell!.contentView.viewWithTag(8) as? UILabel,
-                let phoneLabel = cell!.contentView.viewWithTag(9) as? UILabel{
+                let nickLabel = cell!.contentView.viewWithTag(9) as? UILabel{
                 typeBtn.setTitle(Group.getTypeName(groupType), for: UIControlState.normal)
+                
                 var isUser = false;
                 if let user = SettingsManager.getKey(SettingKeys.user) {
                     if user.length > 0 {
                         isUser = true;
+                        nick.text = user as String;
                     }
                 }
+                /*
                 if isUser {
                     email.isHidden = true;
                     emailLabel.isHidden = true;
-                    phone.isHidden = true;
-                    phoneLabel.isHidden = true;
+                    nick.isHidden = true;
+                    nickLabel.isHidden = true;
                 } else {
+ */
                     email.isHidden = false;
                     emailLabel.isHidden = false;
-                    phone.isHidden = false;
-                    phoneLabel.isHidden = false;
-               }
+                    nick.isHidden = false;
+                    nickLabel.isHidden = false;
+               //}
             }
         } else {
             cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)
@@ -482,7 +481,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel,
                 let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel,
                 let activeSwitch = cell!.contentView.viewWithTag(5) as? UISwitch,
-                let indicator = cell!.contentView.viewWithTag(3) as? UIActivityIndicatorView,
+                //let indicator = cell!.contentView.viewWithTag(3) as? UIActivityIndicatorView,
                 let btnURL = cell!.contentView.viewWithTag(4) as? UIButton{
                 groupName.text = "\(group.name)(\(group.nick))"
                 usersLabel.text = "\(group.users.count)";
@@ -500,7 +499,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        /*
         let row = (indexPath as NSIndexPath).row
         let section = (indexPath as NSIndexPath).section
         
@@ -508,7 +507,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         } else {
             let group = groupManager.allGroups[row]
             
-        }
+        }*/
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -561,20 +560,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func alert(_ title: String, message: String) {
-        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
-            self.present(myAlert, animated: true, completion: nil)
-        } else { // iOS 7
-            let alert: UIAlertView = UIAlertView()
-            alert.delegate = self
-            
-            alert.title = title
-            alert.message = message
-            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
-            
-            alert.show()
-        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
+        self.present(myAlert, animated: true, completion: nil)
     }
 
     

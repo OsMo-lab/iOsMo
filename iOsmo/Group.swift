@@ -11,7 +11,6 @@ open class Group: Equatable{
     
     var u: String
     var name: String
-    var id: String = ""
     var descr: String = ""
     var url: String = ""
     var active: Bool
@@ -47,10 +46,6 @@ open class Group: Equatable{
             gU = "\(gUint)"
         }
         
-        let gId = json["id"] as? String
-        
-        
-        
         self.u =  gU!
         self.name = gName
         self.active = gActive
@@ -59,7 +54,7 @@ open class Group: Equatable{
         self.nick = gNick
         self.color = gColor
         self.url = gURL
-        self.id = gId!;
+
         self.type = gType!;
         
         
@@ -94,8 +89,6 @@ open class Group: Equatable{
             return "Family"
         case GroupType.POI.rawValue:
             return "POI"
-        case GroupType.Trip.rawValue:
-            return "Trip"
         default:
             return "Invalid"
         }
