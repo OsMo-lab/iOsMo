@@ -149,21 +149,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         self.groupManager.groupsUpdated.add{
-            _ = $0
-            _ = $1
+            //_ = $0
+            //_ = $1
+            let g = $1 as! Dictionary<String, AnyObject>
+            let group = $0
+            let foundGroup = self.groupManager.allGroups.filter{$0.u == "\(group)"}.first
             DispatchQueue.main.async {
-                self.updateGroupsOnMap(groups: self.groupManager.allGroups )
+                self.updateGroupsOnMap(groups: self.groupManager.allGroups, GP:g )
             }
         }
         self.groupManager.groupListUpdated.add{
             let groups = $0
             DispatchQueue.main.async {
-                self.updateGroupsOnMap(groups: groups)
+                self.updateGroupsOnMap(groups: groups, GP:nil)
             }
         }
         self.connectionManager.connectionRun.add{
             let theChange = ($0.0 == 0)
-            
             if theChange {
                 DispatchQueue.main.async {
                     self.connectionManager.activatePoolGroups(1)
@@ -187,7 +189,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             groupManager.updateGroupsOnMap([1])
             
-            self.updateGroupsOnMap(groups: groupManager.allGroups )
+            self.updateGroupsOnMap(groups: groupManager.allGroups, GP:nil )
         }
     }
     
@@ -210,7 +212,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func updateGroupsOnMap(groups: [Group]) {
+    func updateGroupsOnMap(groups: [Group], GP: Dictionary<String, AnyObject>?) {
         print("updateGroupsOnMap")
         var curAnnotations = [String]()
         var curTracks = [String]()
@@ -228,17 +230,25 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         curAnnotations.append("u\(uid!)")
                     }
                 }
+                let points = GP?["point"] as? Array<AnyObject>
                 for point in group.points {
-                    drawPoint(point: point, group:group)
+                    if (points != nil || GP == nil) {
+                        drawPoint(point: point, group:group)
+                    }
                     curAnnotations.append("p\(point.u)")
                 }
+                let tracks = GP?["track"] as? Array<AnyObject>
+                
                 for track in group.tracks {
-                    drawTrack(track: track)
+                    if (tracks != nil || GP == nil) {
+                        drawTrack(track: track)
+
+                    }
                     curTracks.append("t\(track.u)")
                 }
+
                 
             }
-            
         }
         var idx = 0;
         for ann in pointAnnotations {
@@ -335,6 +345,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 
                                 self.mapView.add(polyline)
                                 self.trackAnnotations.append(polyline)
+                                print("adding track \(track.u)")
 
                             }
                         }
@@ -354,6 +365,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     point.mapId = "wpt\(track.u)"
                     self.mapView.addAnnotation(point);
                     self.pointAnnotations.append(point)
+                    print ("adding waipont \(track.u)")
 
                 }
                 
@@ -448,10 +460,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         self.mapView.addAnnotation(user);
                         self.pointAnnotations.append(user);
                         print("add user \(location.userId)")
-                        
                     } else {
                         self.mapView(self.mapView, viewFor: user)?.setNeedsDisplay()
-                        //self.mapView.setNeedsDisplay()
                 }
 
             }

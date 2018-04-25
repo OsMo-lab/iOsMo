@@ -36,6 +36,9 @@
          contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #6):AccountViewController.swift">
       </ContextState>
       <ContextState
+         contextName = "MapViewController.updateGroupsOnMap(groups : [Group]) -&gt; ():MapViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -66,6 +69,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "MapViewController.drawTrack(track : Track) -&gt; ():MapViewController.swift">
+      </ContextState>
+      <ContextState
          contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -87,6 +93,17 @@
             </PersistentString>
             <PersistentString
                value = "url.pathComponents[1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MapViewController.(viewDidLoad() -&gt; ()).(closure #2).(closure #1):MapViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$1">
+            </PersistentString>
+            <PersistentString
+               value = "$0">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -114,6 +131,9 @@
                value = "$1">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(updateGroupsOnMap([Int]) -&gt; ()).(closure #2):GroupManager.swift">
       </ContextState>
       <ContextState
          contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">

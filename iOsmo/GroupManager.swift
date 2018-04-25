@@ -199,15 +199,23 @@ open class GroupManager{
     open func clearCache() {
         log.enqueue("Clearing GROUP cache")
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
-        let path =  "\(paths[0])/GROUP.json"
+        var path =  "\(paths[0])/GROUP.json"
         let fileManager = FileManager.default;
 
         do {
+            //Удаляем кэш группы
             try fileManager.removeItem(atPath: path)
+            //Удаляем кешированые треки
+            path = "\(paths[0])/channelsgpx/"
+            let files = try fileManager.contentsOfDirectory(atPath: path)
+           
+            for file in files {
+                try fileManager.removeItem(atPath: "\(path)\(file)")
+            }
+            
         } catch {
             
         }
-        
     }
     
     open func groupList(_ cached: Bool){
@@ -287,6 +295,7 @@ open class GroupManager{
         }
         
         if (shouldDownload == true || cached == false){
+            self.clearCache()
             connection.getGroups()
         }
         
@@ -379,10 +388,8 @@ open class GroupManager{
                                 }
                             }
                         } else {
-         
                             let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
                             foundGroup?.users.append(nUser)
-                            
                         }
                         if uE > 0 {
                             self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
