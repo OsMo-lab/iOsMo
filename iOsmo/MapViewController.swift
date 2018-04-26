@@ -197,14 +197,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         print("MapViewController viewWillDisappear")
+
         groupManager.updateGroupsOnMap([])
         
         SettingsManager.setKey("\(self.mapView.centerCoordinate.latitude)" as NSString, forKey: SettingKeys.lat)
         SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
         SettingsManager.setKey("\(self.mapView.region.span.latitudeDelta)" as NSString, forKey: SettingKeys.lat_delta)
         SettingsManager.setKey("\(self.mapView.region.span.longitudeDelta)" as NSString, forKey: SettingKeys.lon_delta)
-        
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -416,7 +415,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
         if (self.mapView) != nil {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
-                let userName = user.name
                 var annVisible = false;
                 var exTrack: OSMMapKitPolyline? = nil;
                 user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);

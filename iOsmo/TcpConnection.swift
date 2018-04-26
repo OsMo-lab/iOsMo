@@ -108,7 +108,7 @@ open class TcpConnection: BaseTcpConnection {
     
     
     open func sendActivatePoolGroups(_ s: Int){
-        let request = "\(Tags.activatePoolGroups.rawValue)|\(s)"
+        let request = "\(Tags.activatePoolGroups.rawValue):\(s)"
         super.send(request)
     }
     

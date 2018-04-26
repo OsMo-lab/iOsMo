@@ -128,6 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
         self.connectionManager.activatePoolGroups(-1)
+
         if (connectionManager.connected && connectionManager.sessionOpened) {
             self.displayNotification()
         }
