@@ -202,7 +202,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.MDView.text = $1
                 }
                 self.groupManager.groupList(true)
-                self.connectionManager.getMessageOfTheDay()
+                self.connectionManager.getMessageOfTheDay() //Запрашиваем сообщение дня
+                self.connectionManager.activatePoolGroups(1) //Активируем получение обновления групп
                 
             } else if let glUpdated = self.onGroupListUpdated {
                 

@@ -148,6 +148,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
         }
+        //Информация об изменениях в группе
         self.groupManager.groupsUpdated.add{
             //_ = $0
             //_ = $1
@@ -158,21 +159,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 self.updateGroupsOnMap(groups: self.groupManager.allGroups, GP:g )
             }
         }
+        //Обновление списка групп
         self.groupManager.groupListUpdated.add{
             let groups = $0
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: groups, GP:nil)
             }
         }
-        self.connectionManager.connectionRun.add{
-            let theChange = ($0.0 == 0)
-            if theChange {
-                DispatchQueue.main.async {
-                    self.connectionManager.activatePoolGroups(1)
-                }
-            }
-        }
-
         self.mapView.delegate = self
     }
     
@@ -185,10 +178,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.setupTileRenderer()
         
         if (groupManager.allGroups.count) > 0 {
-            self.connectionManager.activatePoolGroups(1)
-            
-            groupManager.updateGroupsOnMap([1])
-            
             self.updateGroupsOnMap(groups: groupManager.allGroups, GP:nil )
         }
     }
@@ -197,8 +186,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         print("MapViewController viewWillDisappear")
-
-        groupManager.updateGroupsOnMap([])
         
         SettingsManager.setKey("\(self.mapView.centerCoordinate.latitude)" as NSString, forKey: SettingKeys.lat)
         SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
@@ -237,16 +224,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     curAnnotations.append("p\(point.u)")
                 }
                 let tracks = GP?["track"] as? Array<AnyObject>
-                
                 for track in group.tracks {
                     if (tracks != nil || GP == nil) {
                         drawTrack(track: track)
-
                     }
                     curTracks.append("t\(track.u)")
                 }
-
-                
             }
         }
         var idx = 0;
@@ -312,11 +295,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 idx = idx + 1
             }
         }
-
     }
     
     func drawTrack(track:Track) {
         print ("MapViewController drawTrack")
+        var annVisible = false;
+        for ann in self.trackAnnotations {
+            if (ann is OSMMapKitPolyline) {
+                if ((ann as! OSMMapKitPolyline).objId == "t\(track.u)") {
+                    annVisible = true;
+                    return;
+                    
+                }
+            }
+        }
         
         if let xml = track.getTrackData() {
             let gpx = xml.children[0]
@@ -334,7 +326,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                     let lon = atof(trkpt.attributes["lon"])
                                     coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
                                 }
-                                
                             }
                             if coordinates.count > 0 {
                                 let polyline = OSMMapKitPolyline(coordinates: &coordinates, count: coordinates.count)
@@ -417,13 +408,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 var annVisible = false;
                 var exTrack: OSMMapKitPolyline? = nil;
-                user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
-
-                
-                //if (clLocation.latitude != user.lat || clLocation.longitude != user.lon) {
-                    user.track.append(clLocation)
-                    for ann in trackAnnotations {
-                        if ann.objId == "utrk\(location.userId)" {
+               
+                for ann in trackAnnotations {
+                    if ann.objId == "utrk\(location.userId)" {
                             exTrack = ann;
                             break;
                         }
@@ -462,7 +449,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         self.mapView(self.mapView, viewFor: user)?.setNeedsDisplay()
                 }
 
-            }
+            } 
         }
     }
     

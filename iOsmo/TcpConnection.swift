@@ -29,9 +29,6 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 open class TcpConnection: BaseTcpConnection {
-
-    open var monitoringGroups: [Int]?
-    
     let answerObservers = ObserverSet<(AnswTags, String, Int)>()
     let groupListDownloaded = ObserverSet<[Group]>()
     let groupCreated = ObserverSet<(Int, String)>()
@@ -247,8 +244,6 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.openedSession){
-            
-            print("open session")
             log.enqueue("session opened answer") //ex: TO|{"session":145004,"url":"f1_o9_7s"}
 
             if let result = parseForErrorJson(output){
@@ -401,21 +396,19 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.grCoord) {
-            if let monitor = monitoringGroups {
-                let parseRes = parseGroupCoordinates(output)
-                    if let grId = parseRes.0, let res = parseRes.1 {
-                        
-                        //if monitor.contains(grId){
-                            if let groups = parseCoordinate(grId, coordinates: res) {
-                                monitoringGroupsUpdated.notify(groups)
-                            }
-                            else {
-                                log.enqueue("error: parsing coordinate array")
-                            }
-                        //}
-                    }
+            let parseRes = parseGroupCoordinates(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                
+                //if monitor.contains(grId){
+                if let groups = parseCoordinate(grId, coordinates: res) {
+                    monitoringGroupsUpdated.notify(groups)
+                }
+                else {
+                    log.enqueue("error: parsing coordinate array")
+                }
+                //}
             }
-            
+
         //D:47580|L37.33018:-122.032582S1.3A9H5C
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
             return

@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import CoreLocation
+
 open class GroupManager{
-    var groupsOnMap: [Int] = [Int]()
     var allGroups: [Group] = [Group]()
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
     var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
@@ -40,6 +41,171 @@ open class GroupManager{
     
     fileprivate let connection = ConnectionManager.sharedConnectionManager
 
+    public init(){
+        self.monitoringGroupsHandler = connection.monitoringGroupsUpdated.add({
+            let locations = $0
+            for location in locations {
+                let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
+                
+                if let user = self.getUser(location.groupId, user: location.userId){
+                    user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
+                    user.track.append(clLocation)
+                } else {
+                    //Получены координаты пользователя, которого нет в кэше. Запрашиваем группы с сервера
+                    self.groupList(false)
+                }
+            }
+            self.monitoringGroupsUpdated.notify($0)
+            })
+        self.onUpdateGroup = connection.connection.groupsUpdated.add({
+            let g = $1 as! Dictionary<String, AnyObject>
+            let group = $0
+            let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
+            
+            if let jsonUsers = g["users"] as? Array<AnyObject> {
+                for jsonU in jsonUsers{
+                    let u = jsonU as! Dictionary<String, AnyObject>
+                    var uId = (u["u"] as? Int) ?? 0
+                    if (uId == 0) {
+                        uId = Int(u["u"] as! String)!
+                    }
+                    var uE = (u["e"] as? Int) ?? 0
+                    if (uE == 0) {
+                        uE = Int(u["e"] as! String)!
+                    }
+                    let deleteUser = u["deleted"] as? String
+                    
+                    if let user = self.getUser($0,user: uId) {
+                        if (deleteUser != nil ) {
+                            let uIdx = foundGroup?.users.index(of: user)
+                            if uIdx! > -1 {
+                                foundGroup?.users.remove(at: uIdx!)
+                            }
+                        } else {
+                            if let uName = u["name"] as? String {
+                                let uConnected = (u["connected"] as? Double) ?? 0
+                                let uColor = u["color"] as! String
+                                let uState = (u["state"] as? Int) ?? 0
+                                user.state = uState
+                                user.color = uColor
+                                user.connected = uConnected
+                                user.name = uName
+                            }
+                        }
+                    } else {
+                        if (deleteUser == nil) {
+                            let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
+                            foundGroup?.users.append(nUser)
+                        }
+                    }
+                    if uE > 0 {
+                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                    }
+                }
+            } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
+                for jsonL in jsonLeave{
+                    let u = jsonL as! Dictionary<String, AnyObject>
+                    var uId = (u["u"] as? Int) ?? 0
+                    if (uId == 0) {
+                        uId = Int(u["u"] as! String)!
+                    }
+                    
+                    var uE = (u["e"] as? Int) ?? 0
+                    if (uE == 0) {
+                        uE = Int(u["e"] as! String)!
+                    }
+                    if let user = self.getUser($0,user: uId) {
+                        let uIdx = foundGroup?.users.index(of: user)
+                        if uIdx! > -1 {
+                            foundGroup?.users.remove(at: uIdx!)
+                        }
+                    }
+                    if uE > 0 {
+                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                    }
+                    
+                }
+            } else if let jsonPoints = g["point"] as? Array<AnyObject> {
+                for jsonP in jsonPoints {
+                    let u = jsonP as! Dictionary<String, AnyObject>
+                    var uId = (u["u"] as? Int) ?? 0
+                    if (uId == 0) {
+                        uId = Int(u["u"] as! String)!
+                    }
+                    
+                    var uE = (u["e"] as? Int) ?? 0
+                    if (uE == 0) {
+                        uE = Int(u["e"] as! String)!
+                    }
+                    if let point = self.getPoint($0,point: uId) {
+                        if (u["deleted"] as? String) != nil {
+                            let uIdx = foundGroup?.points.index(of: point)
+                            if uIdx! > -1 {
+                                foundGroup?.points.remove(at: uIdx!)
+                            }
+                        } else {
+                            
+                            let lat = atof(u["lat"] as! String)
+                            let lon = atof(u["lon"] as! String)
+                            let uName = u["name"] as? String
+                            let descr = u["description"] as? String
+                            let uColor = u["color"] as! String
+                            
+                            point.color = uColor
+                            point.name = uName!
+                            point.lat = lat
+                            point.lon = lon
+                            point.descr = descr!
+                            
+                        }
+                    } else {
+                        let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
+                        foundGroup?.points.append(pointNew)
+                    }
+                    if uE > 0 {
+                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                    }
+                }
+            } else if let jsonTracks = g["track"] as? Array<AnyObject> {
+                for jsonT in jsonTracks {
+                    let u = jsonT as! Dictionary<String, AnyObject>
+                    var uId = (u["u"] as? Int) ?? 0
+                    if (uId == 0) {
+                        uId = Int(u["u"] as! String)!
+                    }
+                    
+                    var uE = (u["e"] as? Int) ?? 0
+                    if (uE == 0) {
+                        uE = Int(u["e"] as! String)!
+                    }
+                    if let track = self.getTrack($0,track: uId) {
+                        if (u["deleted"] as? String) != nil {
+                            let uIdx = foundGroup?.tracks.index(of: track)
+                            if uIdx! > -1 {
+                                foundGroup?.tracks.remove(at: uIdx!)
+                            }
+                        } else {
+                            let uName = u["name"] as! String
+                            let uColor = u["color"] as! String
+                            track.name = uName
+                            track.color = uColor
+                        }
+                    } else {
+                        let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
+                        foundGroup?.tracks.append(track)
+                    }
+                    if uE > 0 {
+                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                    }
+                }
+            }
+            self.saveCache()
+            self.groupsUpdated.notify(($0,$1))
+        })
+
+        
+        
+    }
     
     open func activateGroup(_ name: String){
         
@@ -347,163 +513,6 @@ open class GroupManager{
         }
     }
  
-    open func updateGroupsOnMap(_ groups: [Int]){
-        groupsOnMap = groups
-        connection.monitoringGroups = groups
-        
-        if groups.count > 0 && self.monitoringGroupsHandler == nil {
-            self.monitoringGroupsHandler = connection.monitoringGroupsUpdated.add({self.monitoringGroupsUpdated.notify($0)})
-            self.onUpdateGroup = connection.connection.groupsUpdated.add({
-                let g = $1 as! Dictionary<String, AnyObject>
-                let group = $0
-                let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
-
-                if let jsonUsers = g["users"] as? Array<AnyObject> {
-                    for jsonU in jsonUsers{
-                        let u = jsonU as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
-
-                        if let user = self.getUser($0,user: uId) {
-                            if (u["deleted"] as? String) != nil {
-                                let uIdx = foundGroup?.users.index(of: user)
-                                if uIdx! > -1 {
-                                    foundGroup?.users.remove(at: uIdx!)
-                                }
-                            } else {
-                                if let uName = u["name"] as? String {
-                                    let uConnected = (u["connected"] as? Double) ?? 0
-                                    let uColor = u["color"] as! String
-                                    let uState = (u["state"] as? Int) ?? 0
-                                    user.state = uState
-                                    user.color = uColor
-                                    user.connected = uConnected
-                                    user.name = uName
-                                }
-                            }
-                        } else {
-                            let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
-                            foundGroup?.users.append(nUser)
-                        }
-                        if uE > 0 {
-                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
-                        }
-                    }
-                } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
-                    for jsonL in jsonLeave{
-                        let u = jsonL as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
-                        
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
-                        if let user = self.getUser($0,user: uId) {
-                            let uIdx = foundGroup?.users.index(of: user)
-                            if uIdx! > -1 {
-                                foundGroup?.users.remove(at: uIdx!)
-                            }
-                        }
-                        if uE > 0 {
-                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
-                        }
-
-                    }
-                } else if let jsonPoints = g["point"] as? Array<AnyObject> {
-                    for jsonP in jsonPoints {
-                        let u = jsonP as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
-                        
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
-                        if let point = self.getPoint($0,point: uId) {
-                            if (u["deleted"] as? String) != nil {
-                                let uIdx = foundGroup?.points.index(of: point)
-                                if uIdx! > -1 {
-                                    foundGroup?.points.remove(at: uIdx!)
-                                }
-                            } else {
-   
-                                let lat = atof(u["lat"] as! String)
-                                let lon = atof(u["lon"] as! String)
-                                let uName = u["name"] as? String
-                                let descr = u["description"] as? String
-                                let uColor = u["color"] as! String
-                                
-                                point.color = uColor
-                                point.name = uName!
-                                point.lat = lat
-                                point.lon = lon
-                                point.descr = descr!
-
-                            }
-                        } else {
-                            let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
-                            foundGroup?.points.append(pointNew)
-                        }
-                        if uE > 0 {
-                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
-                        }
-                    }
-                } else if let jsonTracks = g["track"] as? Array<AnyObject> {
-                    for jsonT in jsonTracks {
-                        let u = jsonT as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
-                        
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
-                        if let track = self.getTrack($0,track: uId) {
-                            if (u["deleted"] as? String) != nil {
-                                let uIdx = foundGroup?.tracks.index(of: track)
-                                if uIdx! > -1 {
-                                    foundGroup?.tracks.remove(at: uIdx!)
-                                }
-                            } else {
-                                let uName = u["name"] as! String
-                                let uColor = u["color"] as! String
-                                track.name = uName
-                                track.color = uColor
-                            }
-                        } else {
-                            let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
-                            foundGroup?.tracks.append(track)
-                        }
-                        if uE > 0 {
-                            self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
-                        }
-                    }
-                }
-                self.groupsUpdated.notify(($0,$1))
-            })
-        }
-        if groups.count == 0 && self.monitoringGroupsHandler != nil {
-            connection.monitoringGroupsUpdated.remove(self.monitoringGroupsHandler!)
-            self.monitoringGroupsHandler = nil
-            connection.connection.groupsUpdated.remove(self.onUpdateGroup!)
-            self.onUpdateGroup = nil
-            self.connection.activatePoolGroups(-1)
-        }
-    }
-    
 
     open func getUser(_ group:  Int, user: Int) -> User? {
         let foundGroup = allGroups.filter{$0.u == "\(group)"}.first

@@ -40,10 +40,7 @@ public class User:NSObject, MKAnnotation {
         self.state = (json["state"] as? Int) ?? 0
 
         if let lat = json["lat"] as? String, let lon = json["lon"] as? String {
-
             self.coordinate = CLLocationCoordinate2D(latitude: atof(lat), longitude: atof(lon))
-            self.track.append(self.coordinate)
-            
         } else {
             self.coordinate = CLLocationCoordinate2D(latitude: -3000, longitude: -3000)
         }

@@ -17,29 +17,7 @@ import FirebaseMessaging
 open class ConnectionManager: NSObject{
 
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
-    var monitoringGroups: [Int] {
-        
-        get {
-            return self.connection.monitoringGroups!
-        }
-        set (newValue){
-            
-            self.connection.monitoringGroups = newValue
-            if newValue.count > 0 && self.monitoringGroupsHandler == nil {
-                
-                self.monitoringGroupsHandler = connection.monitoringGroupsUpdated.add({
-                    self.monitoringGroupsUpdated.notify($0)
-                    })
-            }
-            if newValue.count == 0 && self.monitoringGroupsHandler != nil {
-                
-                connection.monitoringGroupsUpdated.remove(self.monitoringGroupsHandler!)
-                self.monitoringGroupsHandler = nil
-            }
-            
-        }
-    }
-    
+
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
     var onGroupCreated: ObserverSetEntry<(Int, String)>?
     
@@ -216,6 +194,11 @@ open class ConnectionManager: NSObject{
                         self.connection.sendAuth(device)
                     }
                 }
+                if self.monitoringGroupsHandler == nil {
+                    self.monitoringGroupsHandler = self.connection.monitoringGroupsUpdated.add({
+                        self.monitoringGroupsUpdated.notify($0)
+                    })
+                }
 
                 self.connection.connect(token!)
                 self.shouldReConnect = false //interesting why here? may after connction is successful??
@@ -315,7 +298,7 @@ open class ConnectionManager: NSObject{
         }
     }
 
-    
+    //Активация-деактиация получени обновления координат из группы
     open func activatePoolGroups(_ s: Int){
         if self.connected {
             connection.sendActivatePoolGroups(s)

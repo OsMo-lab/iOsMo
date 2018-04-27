@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let connectionManager = ConnectionManager.sharedConnectionManager
+    let groupManager = GroupManager.sharedGroupManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var localNotification: UILocalNotification? = nil;
@@ -128,7 +129,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
         self.connectionManager.activatePoolGroups(-1)
-
+        self.groupManager.saveCache()
+        
         if (connectionManager.connected && connectionManager.sessionOpened) {
             self.displayNotification()
         }
