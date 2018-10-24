@@ -13,11 +13,12 @@ open class Group: Equatable{
     var name: String
     var descr: String = ""
     var url: String = ""
-    var active: Bool
+    var active: Bool = true
     var type: String = "1"
     var policy: String = ""
     var color: String = "#ffffff"
     var nick: String = ""
+    var permanent: String = "0"
     var users: [User] = [User]()
     var points: [Point] = [Point]()
     var tracks: [Track] = [Track]()
@@ -34,10 +35,17 @@ open class Group: Equatable{
         let gPolicy = (json["policy"] as? String) ?? ""
         let gNick = (json["nick"] as? String) ?? ""
         let gColor = (json["color"] as? String) ?? ""
+        var gPermanent = (json["permanent"] as? String)
+        if (gPermanent == nil ){
+            let gPermentntInt = json["permanent"] as? Int
+
+            gPermanent = "\(gPermentntInt)"
+        }
+        
         let gURL = json["url"] as! String
         var gType = json["type"] as? String
         if (gType == nil ){
-            gType = "\(json["type"] as! Int)"
+            gType = "\(json["type"] as? Int)"
         }
         let gActive = json["active"] as? String == "1"
         var gU = json["u"] as? String
@@ -48,12 +56,16 @@ open class Group: Equatable{
         
         self.u =  gU!
         self.name = gName
+
         self.active = gActive
         self.descr = gDescr
         self.policy = gPolicy
         self.nick = gNick
         self.color = gColor
         self.url = gURL
+        if (gPermanent != nil) {
+            self.permanent = gPermanent!
+        }
 
         self.type = gType!;
         

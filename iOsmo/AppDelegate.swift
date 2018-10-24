@@ -136,12 +136,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {
-            backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-                self?.endBackgroundTask()
+            if self.connectionManager.connection.permanent == false {
+                backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+                    self?.endBackgroundTask()
+                }
+                DispatchQueue.main.async {
+                    self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
+                }
+                
             }
-            DispatchQueue.main.async {
-                self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
-            }
+            
         }
     }
 

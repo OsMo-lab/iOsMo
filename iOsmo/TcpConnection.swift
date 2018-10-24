@@ -37,6 +37,7 @@ open class TcpConnection: BaseTcpConnection {
     
     open var sessionUrlParsed: String = ""
     open var device_key: String = ""
+    open var permanent: Bool = false
     open var sessionTrackerID: String = ""
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
     open func getTrackerID()-> String?{return sessionTrackerID}
@@ -222,8 +223,7 @@ open class TcpConnection: BaseTcpConnection {
         //let parseCommandName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").first!}
         
         //let parseParamName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").last!}
-        
-        //if outputContains(AnswTags.token){
+
         if outputContains(AnswTags.auth){
             //ex: INIT|{"id":"CVH2SWG21GW","group":1,"motd":1429351583,"protocol":2,"v":0.88} || INIT|{"id":1,"error":"Token is invalid"}
             
@@ -233,6 +233,12 @@ open class TcpConnection: BaseTcpConnection {
                         sessionTrackerID = trackerID
                     } else {
                         sessionTrackerID = "error parsing TrackerID"
+                    }
+                    if let spermanent = parseTag(output, key: ParseKeys.permanent) {
+                        if spermanent == "1" {
+                            self.permanent = true;
+                        }
+                        
                     }
                     answerObservers.notify(AnswTags.auth, result.1 , result.0)
                 } else {
@@ -348,7 +354,7 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.activateGroup) {
             if let result = parseForErrorJson(output){
-                let value = (result.0==1 ? result.1 : output.components(separatedBy: "|")[1])
+                let value = (result.0==1 ? result.1 : (result.1=="" ? output.components(separatedBy: "|")[1] : result.1 ))
                 answerObservers.notify(AnswTags.activateGroup, value , result.0)
             }else {
                 log.enqueue("error: activate group asnwer cannot be parsed")

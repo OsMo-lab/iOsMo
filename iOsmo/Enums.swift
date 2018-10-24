@@ -51,6 +51,7 @@ enum ParseKeys: String{
     case gda = "GDA"
     case gaa = "GAA"
     case id = "id"
+    case permanent = "permanent"
 }
 
 

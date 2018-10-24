@@ -241,7 +241,7 @@ open class ConnectionManager: NSObject{
     open func closeSession(){
         log.enqueue("ConnectionManager: close session")
         
-        if self.connected {
+        if self.sessionOpened {
             connection.closeSession()
         }
     }

@@ -346,6 +346,7 @@ open class GroupManager{
                     let jsonGroup : NSDictionary =
                         ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy
                         ,"nick": g.nick
+                        ,"permament": g.permanent
                         ,"users": users, "point": points, "track": tracks
                     ];
                     jsonInfo.append(jsonGroup)
