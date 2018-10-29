@@ -519,14 +519,10 @@ open class TcpConnection: BaseTcpConnection {
         // should parse only first | sign, because of responce structure
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
 
-        /*
-        Swift 4.
-        let index = responce.components(separatedBy: "|")[0].characters.count + 1
-        let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
-        let json = responce.substring(with: range)
-        */
-        let index = responce.firstIndex(of: "|")
-        let json = responce.substring(from: index!)
+
+        let index = responce.components(separatedBy: "|")[0].count + 1
+        let json = responce.substring(with: responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
+            
 
         do {
             
