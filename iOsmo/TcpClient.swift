@@ -220,18 +220,20 @@ open class TcpClient : NSObject, StreamDelegate {
                 }
             } else {
                 log.enqueue("Stream is empty")
-                
                 return
             }
 
             if !message.isEmpty {
-                
                 //check for spliting:
                 let responceSplit = message.components(separatedBy: "\n")
                 var count = 0
                 for res in responceSplit {
                     if !res.isEmpty{
-                        let subst = message[Range(message.characters.index(message.endIndex, offsetBy: -1)..<message.endIndex)]
+                        //let subst = message.suffix(1)
+                        
+                        //let subst = message[Range(message.characters.index(message.endIndex, offsetBy: -1)..<message.endIndex)]
+                        let subst = message.substring(with: message.index(message.endIndex, offsetBy: -1)..<message.endIndex)
+                        
                         if responceSplit.count < 2 && subst != "\n"{
                             return
                         } else {
@@ -242,7 +244,8 @@ open class TcpClient : NSObject, StreamDelegate {
                             }
                         }
                         let resAdvance = res + "\n"
-                        message = (responceSplit.count != count) ? message.substring(with: Range<String.Index>(resAdvance.endIndex..<message.endIndex)) : res
+                        //message = (responceSplit.count != count) ? message.substring(with: Range<String.Index>(resAdvance.endIndex..<message.endIndex)) : res
+                        message = (responceSplit.count != count) ? message.substring(with: resAdvance.endIndex..<message.endIndex) : res
                         
                         count += 1
                     }

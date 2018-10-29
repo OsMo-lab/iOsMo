@@ -531,7 +531,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let title = annotation.title {
                 if let letter = pointView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
-                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.characters.count>2 ? 2 : title!.characters.count))
+                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
                 }
             }
            
@@ -554,7 +554,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let title = annotation.title {
                  if let letter = userView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
-                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.characters.count>2 ? 2 : title!.characters.count))
+                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
                 }
             }
             

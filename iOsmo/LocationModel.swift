@@ -35,7 +35,7 @@ public struct LocationModel{
         let parts = coordString.components(separatedBy: "S")
         self.speed = atof(parts[1])
         
-        let coordinatesMerged = parts[0].substring(from: parts[0].characters.index(parts[0].startIndex, offsetBy: 1))
+        let coordinatesMerged = parts[0].substring(from: parts[0].index(parts[0].startIndex, offsetBy: 1))
         let coordinates = coordinatesMerged.components(separatedBy: ":")
         self.lat = atof(coordinates[0])
         self.lon = atof(coordinates[1])

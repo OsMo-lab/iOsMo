@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
-        UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
+        
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
                 var vcs = tbc.viewControllers

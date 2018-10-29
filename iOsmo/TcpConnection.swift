@@ -203,7 +203,7 @@ open class TcpConnection: BaseTcpConnection {
         let outputContains = {(tag: AnswTags) -> Bool in
             if let container = output.range(of: tag.rawValue) {
                  //return  distance(output.startIndex, container.startIndex) == 0 //should be found at begin of string
-                return output.characters.distance(from: output.startIndex, to: container.lowerBound) == 0
+                return output.distance(from: output.startIndex, to: container.lowerBound) == 0
             }
             return false
         }
@@ -402,7 +402,7 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.grCoord) {
-            let parseRes = parseGroupCoordinates(output)
+            let parseRes = parseGroupUpdate(output)
             if let grId = parseRes.0, let res = parseRes.1 {
                 
                 //if monitor.contains(grId){
@@ -450,30 +450,16 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     func parseRemoteCommand(_ responce: String) -> (Int?, AnyObject?){
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
-        let commandId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
-        
+        let cmd = responce.components(separatedBy: "|")[0]
+        let commandId = Int(cmd.components(separatedBy: ":")[1])
+
         return (commandId, responce as AnyObject?)
     }
 
-    
-    func parseGroupCoordinates(_ responce: String) -> (Int?, Any?){
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
-        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
-        
-        return (groupId, parseJson(responce))
-    }
-    
     func parseGroupUpdate(_ responce: String) -> (Int?, Any?){
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
-        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
-        
+        let cmd = responce.components(separatedBy: "|")[0]
+        let groupId = Int(cmd.components(separatedBy: ":")[1])
+
         return (groupId, parseJson(responce))
     }
     
@@ -506,14 +492,11 @@ open class TcpConnection: BaseTcpConnection {
         
         // should parse only first | sign, because of responce structure
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
-        let index = responce.components(separatedBy: "|")[0].characters.count + 1
-        let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
         
-        
-        let json = responce.substring(with: range)
-        
-        //tag.componentsSeparatedByString("|")[0]
-        
+        let index = responce.components(separatedBy: "|")[0].count + 1
+        let json = responce.substring(with: responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
+ 
+
         if let data: Data = json.data(using: String.Encoding.utf8) {
         
             do  {
@@ -535,15 +518,15 @@ open class TcpConnection: BaseTcpConnection {
         
         // should parse only first | sign, because of responce structure
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
-        
-        
+
+        /*
+        Swift 4.
         let index = responce.components(separatedBy: "|")[0].characters.count + 1
         let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
-        
-        
         let json = responce.substring(with: range)
-        
-        //tag.componentsSeparatedByString("|")[0]
+        */
+        let index = responce.firstIndex(of: "|")
+        let json = responce.substring(from: index!)
 
         do {
             

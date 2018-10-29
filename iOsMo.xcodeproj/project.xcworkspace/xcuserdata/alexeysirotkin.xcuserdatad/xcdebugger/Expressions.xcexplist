@@ -34,6 +34,11 @@
       </ContextState>
       <ContextState
          contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #6):AccountViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$0.1.error_description">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "MapViewController.updateGroupsOnMap(groups : [Group]) -&gt; ():MapViewController.swift">
@@ -53,12 +58,7 @@
          contextName = "ObserverSet.notify(A) -&gt; ():ObserverSet.swift">
       </ContextState>
       <ContextState
-         contextName = "BaseTcpConnection.closeSession(String) -&gt; ():BaseTcpConnection.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.shouldCloseSession">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "MapViewController.drawTrack(track : Track) -&gt; ():MapViewController.swift">
       </ContextState>
       <ContextState
          contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
@@ -69,7 +69,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "MapViewController.drawTrack(track : Track) -&gt; ():MapViewController.swift">
+         contextName = "BaseTcpConnection.closeSession(String) -&gt; ():BaseTcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.shouldCloseSession">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">

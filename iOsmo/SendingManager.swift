@@ -16,7 +16,7 @@ open class SendingManager: NSObject{
     let sentObservers = ObserverSet<LocationModel>()
     
     fileprivate let connectionManager = ConnectionManager.sharedConnectionManager
-    open let locationTracker = LocationTracker()
+    public let locationTracker = LocationTracker()
     fileprivate let log = LogQueue.sharedLogQueue
     
     fileprivate var lcSendTimer: Timer?

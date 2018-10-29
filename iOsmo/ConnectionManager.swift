@@ -80,10 +80,10 @@ open class ConnectionManager: NSObject{
     open func reachabilityChanged(_ note: Notification) {
         log.enqueue("reachability changed")
         let reachability = note.object as! Reachability
-        
+        reachabilityStatus = reachability.connection
         switch reachability.connection {
             case .wifi:
-                reachabilityStatus = .reachableViaWiFi
+                //reachabilityStatus = .reachableViaWiFi
                 print("Reachable via WiFi")
                 if (!self.connected) {
                     log.enqueue("should be reconnected via WiFi")
@@ -91,14 +91,14 @@ open class ConnectionManager: NSObject{
                 }
             
             case .cellular:
-                reachabilityStatus = .reachableViaWWAN
+                //reachabilityStatus = .reachableViaWWAN
                 print("Reachable via Cellular")
                 if (!self.connected) {
                     log.enqueue("should be reconnected via Cellular")
                     shouldReConnect = true;
                 }
             case .none:
-                reachabilityStatus = .notReachable
+                //reachabilityStatus = .notReachable
                 if (self.connected) {
                     log.enqueue("should be reconnected")
                     shouldReConnect = true;
@@ -492,9 +492,9 @@ open class ConnectionManager: NSObject{
 
 
     var isNetworkAvailable : Bool {
-        return reachabilityStatus != .notReachable
+        return reachabilityStatus != .none
     }
-    var reachabilityStatus: Reachability.NetworkStatus = .notReachable
+    var reachabilityStatus: Reachability.Connection = .none
     /*
     
     class fileprivate func hasConnectivity() -> Bool {
