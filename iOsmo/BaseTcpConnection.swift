@@ -60,7 +60,6 @@ open class BaseTcpConnection: NSObject {
     var coordinates: [LocationModel]
     
     override init(){
-        
         coordinates = [LocationModel]()
         super.init()
         
@@ -83,13 +82,15 @@ open class BaseTcpConnection: NSObject {
     //var connected: Bool = false
     var sessionOpened: Bool = false
 
-    
+  
     func onSentCoordinate(cnt: Int){
+        log.enqueue("Removing \(cnt) coordinates from buffer")
         for _ in 1...cnt {
             if self.coordinates.count > 0 {
                 self.coordinates.remove(at: 0)
             }
         }
+        
         sendNextCoordinates()
     }
     
@@ -123,7 +124,6 @@ open class BaseTcpConnection: NSObject {
                 sep = "\""
             }
             for theCoordinate in self.coordinates {
-                
                 if req != "" {
                     req = "\(req),"
                 }
@@ -146,19 +146,11 @@ open class BaseTcpConnection: NSObject {
     
     
     func closeSession(_ request: String){
-        if (self.coordinates.count != 0) {
-            self.shouldCloseSession = false;
-            log.enqueue("Coordinates buffer is not empty. Canceling close session")
-        } else{
-           tcpClient.send(request)
-        }
-        
-        //shouldCloseSession = !shouldCloseSession
-        
+        tcpClient.send(message: request)
     }
     
     open func send(_ request: String){
-        tcpClient.send(request)
+        tcpClient.send(message: request)
     }
     
     

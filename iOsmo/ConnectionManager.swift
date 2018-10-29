@@ -17,46 +17,24 @@ import FirebaseMessaging
 open class ConnectionManager: NSObject{
 
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
-    var monitoringGroups: [Int] {
-        
-        get {
-            return self.connection.monitoringGroups!
-        }
-        set (newValue){
-            
-            self.connection.monitoringGroups = newValue
-            if newValue.count > 0 && self.monitoringGroupsHandler == nil {
-                
-                self.monitoringGroupsHandler = connection.monitoringGroupsUpdated.add({
-                    self.monitoringGroupsUpdated.notify($0)
-                    })
-            }
-            if newValue.count == 0 && self.monitoringGroupsHandler != nil {
-                
-                connection.monitoringGroupsUpdated.remove(self.monitoringGroupsHandler!)
-                self.monitoringGroupsHandler = nil
-            }
-            
-        }
-    }
-    
+
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
-    var onGroupCreated: ObserverSetEntry<(Bool, String)>?
+    var onGroupCreated: ObserverSetEntry<(Int, String)>?
     
     // add name of group in return
-    let groupEntered = ObserverSet<(Bool, String)>()
-    let groupCreated = ObserverSet<(Bool, String)>()
-    let groupLeft = ObserverSet<(Bool, String)>()
-    let groupActivated = ObserverSet<(Bool, String)>()
-    let pushActivated = ObserverSet<Bool>()
-    let groupDeactivated = ObserverSet<(Bool, String)>()
+    let groupEntered = ObserverSet<(Int, String)>()
+    let groupCreated = ObserverSet<(Int, String)>()
+    let groupLeft = ObserverSet<(Int, String)>()
+    let groupActivated = ObserverSet<(Int, String)>()
+    let pushActivated = ObserverSet<Int>()
+    let groupDeactivated = ObserverSet<(Int, String)>()
     let groupList = ObserverSet<[Group]>()
     let trackDownoaded = ObserverSet<(Track)>()
     
-    let connectionRun = ObserverSet<(Bool, String)>()
-    let sessionRun = ObserverSet<(Bool, String)>()
-    let groupsEnabled = ObserverSet<Bool>()
-    let messageOfTheDayReceived = ObserverSet<(Bool, String)>()
+    let connectionRun = ObserverSet<(Int, String)>()
+    let sessionRun = ObserverSet<(Int, String)>()
+    let groupsEnabled = ObserverSet<Int>()
+    let messageOfTheDayReceived = ObserverSet<(Int, String)>()
     let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
@@ -102,10 +80,10 @@ open class ConnectionManager: NSObject{
     open func reachabilityChanged(_ note: Notification) {
         log.enqueue("reachability changed")
         let reachability = note.object as! Reachability
-        
+        reachabilityStatus = reachability.connection
         switch reachability.connection {
             case .wifi:
-                reachabilityStatus = .reachableViaWiFi
+                //reachabilityStatus = .reachableViaWiFi
                 print("Reachable via WiFi")
                 if (!self.connected) {
                     log.enqueue("should be reconnected via WiFi")
@@ -113,19 +91,19 @@ open class ConnectionManager: NSObject{
                 }
             
             case .cellular:
-                reachabilityStatus = .reachableViaWWAN
+                //reachabilityStatus = .reachableViaWWAN
                 print("Reachable via Cellular")
                 if (!self.connected) {
                     log.enqueue("should be reconnected via Cellular")
                     shouldReConnect = true;
                 }
             case .none:
-                reachabilityStatus = .notReachable
+                //reachabilityStatus = .notReachable
                 if (self.connected) {
                     log.enqueue("should be reconnected")
                     shouldReConnect = true;
                     
-                    connectionRun.notify((false, "")) //error but is not need to be popuped
+                    connectionRun.notify((1, "")) //error but is not need to be popuped
                 }
             
 
@@ -152,6 +130,10 @@ open class ConnectionManager: NSObject{
             log.enqueue("Conection already in process")
             return;
         }
+        if self.connected {
+            log.enqueue("Already connected !")
+            return;
+        }
         self.connecting = true;
         if !isNetworkAvailable {
             log.enqueue("Network is NOT available")
@@ -168,6 +150,7 @@ open class ConnectionManager: NSObject{
                 if self.connection.addCallBackOnError == nil {
                     self.connection.addCallBackOnError = {
                         (isError : Bool) -> Void in
+                        
                         self.connecting = false
                         self.shouldReConnect = isError
                         
@@ -176,7 +159,7 @@ open class ConnectionManager: NSObject{
                         }
                         self.connected = false
                         
-                        self.connectionRun.notify((false, ""))
+                        self.connectionRun.notify((1, ""))
                         
                         if (self.shouldReConnect) {
                             self.connect(self.shouldReConnect)
@@ -199,15 +182,22 @@ open class ConnectionManager: NSObject{
                     self.connection.addCallBackOnCloseConnection = {
                         () -> Void in
                         self.connecting = false
+                        self.connected = false
                         self.connectionClose.notify(())
                     }
                 }
                 if self.connection.addCallBackOnConnect == nil {
                     self.connection.addCallBackOnConnect = {
                         () -> Void in
-                        self.connecting = false
-                        self.connection.sendAuth(token!.device_key as String)
+                        //self.connecting = false
+                        let device = SettingsManager.getKey(SettingKeys.device) as! String
+                        self.connection.sendAuth(device)
                     }
+                }
+                if self.monitoringGroupsHandler == nil {
+                    self.monitoringGroupsHandler = self.connection.monitoringGroupsUpdated.add({
+                        self.monitoringGroupsUpdated.notify($0)
+                    })
                 }
 
                 self.connection.connect(token!)
@@ -215,17 +205,16 @@ open class ConnectionManager: NSObject{
             } else {
                 self.connecting = false
                 if (token?.error.isEmpty)! {
-                    self.connectionRun.notify((false, ""))
+                    self.connectionRun.notify((1, ""))
                     self.shouldReConnect = false
                 } else {
-                    print("getServerInfo Error:\(token?.error)")
                     self.log.enqueue("getServerInfo Error:\(token?.error)")
                     if (token?.error == "Wrong device key") {
                         SettingsManager.setKey("", forKey: SettingKeys.device)
-                        self.connectionRun.notify((false, ""))
+                        self.connectionRun.notify((1, ""))
                         self.shouldReConnect = true
                     } else {
-                        self.connectionRun.notify((false, "\(token?.error)"))
+                        self.connectionRun.notify((1, "\(token?.error)"))
                         self.shouldReConnect = false
                     }
                     
@@ -252,7 +241,7 @@ open class ConnectionManager: NSObject{
     open func closeSession(){
         log.enqueue("ConnectionManager: close session")
         
-        if self.connected {
+        if self.sessionOpened {
             connection.closeSession()
         }
     }
@@ -283,7 +272,7 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    open func createGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+    open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         if self.connected{
             if self.onGroupCreated == nil {
                 
@@ -293,7 +282,7 @@ open class ConnectionManager: NSObject{
             }
 
             
-            connection.sendCreateGroup(name, email: email, phone: phone, gtype: gtype, priv: priv)
+            connection.sendCreateGroup(name, email: email, nick: nick, gtype: gtype, priv: priv)
         }
     }
     
@@ -309,7 +298,7 @@ open class ConnectionManager: NSObject{
         }
     }
 
-    
+    //Активация-деактиация получени обновления координат из группы
     open func activatePoolGroups(_ s: Int){
         if self.connected {
             connection.sendActivatePoolGroups(s)
@@ -352,28 +341,43 @@ open class ConnectionManager: NSObject{
     
     //MARK private methods
     
-    fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Bool){
+    fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Int){
         if tag == AnswTags.token {
             //means response to try connecting
 
             log.enqueue("connected with token")
             
-            self.connected = answer
-            connectionRun.notify(answer, name)
+            self.connected = answer != 0;
+            connectionRun.notify(answer , name)
             
             return
         }
         if tag == AnswTags.auth {
             //means response to try connecting
             log.enqueue("connected with Auth")
+            self.connecting = false
             
-            self.connected = answer
-            connectionRun.notify(answer, name)
+            self.connected = answer == 0;
+            if (answer == 100) {
+                DispatchQueue.main.async {
+                    SettingsManager.clearKeys()
+                    self.connection.closeConnection()
+                    self.connect()
+                }
+            } else {
+                if (!self.connected) {
+                    self.shouldReConnect = false
+                }
+                if let trackerId = self.TrackerID {
+                    SettingsManager.setKey(trackerId as NSString, forKey: SettingKeys.trackerId)
+                }
+                connectionRun.notify(answer, name)
+            }
             
             return
         }
         if tag == AnswTags.enterGroup{
-            groupEntered.notify(answer, name)
+            groupEntered.notify(answer,  name)
             
             return
         }
@@ -402,16 +406,22 @@ open class ConnectionManager: NSObject{
         
 
         if tag == AnswTags.openedSession {
-            self.sessionOpened = answer
+            self.sessionOpened = answer == 0;
             sessionRun.notify(answer, name)
             
             return
         }
         
         if tag == AnswTags.closeSession {
-            self.sessionOpened = answer
-            sessionRun.notify(answer, name)
+            self.sessionOpened = answer != 0;
+            sessionRun.notify((answer == 0 ? 1 : 0, name))
             
+            return
+        }
+        if tag == AnswTags.kick {
+            self.connected = false
+            self.connection.closeConnection()
+            self.connect()
             return
         }
         
@@ -459,11 +469,6 @@ open class ConnectionManager: NSObject{
                 if let token = Messaging.messaging().fcmToken {
                     self.sendPush(token)
                 }
-                
-                /*if let token = SettingsManager.getKey(SettingKeys.pushToken) as String! {
-                    
-                    self.sendPush(token)
-                }*/
                 connection.sendRemoteCommandResponse(name)
                 return
             }
@@ -475,9 +480,11 @@ open class ConnectionManager: NSObject{
             }
 
             if (name == RemoteCommand.WHERE.rawValue) {
-                self.isGettingLocation = true
-                sendingManger.startSendingCoordinates(name)
-
+                connection.sendRemoteCommandResponse(name)
+                if self.sessionOpened == false {
+                    self.isGettingLocation = true
+                    sendingManger.startSendingCoordinates(name)
+                }
                 return
             }
         }
@@ -485,9 +492,9 @@ open class ConnectionManager: NSObject{
 
 
     var isNetworkAvailable : Bool {
-        return reachabilityStatus != .notReachable
+        return reachabilityStatus != .none
     }
-    var reachabilityStatus: Reachability.NetworkStatus = .notReachable
+    var reachabilityStatus: Reachability.Connection = .none
     /*
     
     class fileprivate func hasConnectivity() -> Bool {

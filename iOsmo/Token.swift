@@ -10,13 +10,13 @@ import Foundation
 
 open class Token{
     
-    var token: NSString
-    var device_key: NSString
-    var address: NSString
+    var token: String
+    var device_key: String
+    var address: String
     var port: Int
     open var error: String = ""
     
-    init(tokenString: NSString, address: NSString, port: Int, key: NSString){
+    init(tokenString: String, address: String, port: Int, key: String){
         self.token = tokenString
         self.address = address
         self.port = port

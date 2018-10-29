@@ -18,7 +18,8 @@ import FirebaseMessaging
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var connectionManager = ConnectionManager.sharedConnectionManager
+    let connectionManager = ConnectionManager.sharedConnectionManager
+    let groupManager = GroupManager.sharedGroupManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var localNotification: UILocalNotification? = nil;
@@ -32,16 +33,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         // Override point for customization after application launch.
-        connectionManager.pushActivated.add{
-            if $0 {
-                SettingsManager.setKey("", forKey: SettingKeys.pushToken)
+        
+        _ = connectionManager.pushActivated.add{
+            if $0  == 0{
+                self.log.enqueue("connectionManager.pushActivated")
             }
             //self.activateSwitcher.isOn = $0
         }
-        connectionManager.sessionRun.add{
+        _ = connectionManager.sessionRun.add{
             let theChange = $0.0
             
-            if theChange {
+            if theChange == 0 {
                 self.displayNotification()
                 
             } else {
@@ -92,13 +94,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
         }
-        if SettingsManager.getKey(SettingKeys.locInterval)?.doubleValue == nil {
-            SettingsManager.setKey("3", forKey: SettingKeys.locInterval)
-        }
+
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
         }
-        UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
+        
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
                 var vcs = tbc.viewControllers
@@ -112,7 +112,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Analytics.logEvent("app_open", parameters: nil)
         if let url = launchOptions?[.url] as? URL {
-            presentViewController(url:url);
+            _ = presentViewController(url:url);
         }
         return true
     }
@@ -129,17 +129,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
         self.connectionManager.activatePoolGroups(-1)
+        self.groupManager.saveCache()
+        
         if (connectionManager.connected && connectionManager.sessionOpened) {
             self.displayNotification()
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {
-            backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-                self?.endBackgroundTask()
+            if self.connectionManager.connection.permanent == false {
+                backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+                    self?.endBackgroundTask()
+                }
+                DispatchQueue.main.async {
+                    self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
+                }
+                
             }
-            DispatchQueue.main.async {
-                self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
-            }
+            
         }
     }
 
@@ -200,33 +206,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if !presentViewController(url:webURL) {
                 UIApplication.shared.openURL(webURL);
             }
-            
         }
-        
+
         return true;
     
     }
     
     func presentViewController(url:URL)->Bool {
-        
-        if let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true){
+        if NSURLComponents(url: url, resolvingAgainstBaseURL: true) != nil{
             if (url.host == "osmo.mobi" && url.pathComponents[1] == "g" && url.pathComponents[2] != "") {
-                /*let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let accountVC = storyboard.instantiateViewController(withIdentifier: "AccountViewController")
-                    as! AccountViewController
-                */
+                let tbc:UITabBarController = (window?.rootViewController as! UITabBarController)
+                let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
+                tbc.selectedViewController = accountVC;
+                accountVC.btnEnterGroupPress(_sender: self, url.pathComponents[2])
                 
-                if let tbc:UITabBarController = (window?.rootViewController as! UITabBarController){
-
-                    let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
-                    
-                    tbc.selectedViewController = accountVC;
-                    
-                    accountVC.btnEnterGroupPress(_sender: self, url.pathComponents[2])
-                }
                 return true;
               }
-            
         }
         
         return false;
@@ -244,7 +239,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
-            log.enqueue(messageID as! String)
             connectionManager.connection.parseOutput(messageID as! String)
         }
         // Print full message.
@@ -263,8 +257,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
-            log.enqueue(messageID as! String)
-            
             connectionManager.connection.parseOutput(messageID as! String)
         }
         
@@ -295,8 +287,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     
         log.enqueue("APNs token retrieved: \(token)")
-        //SettingsManager.setKey("\(deviceToken)" as NSString, forKey: SettingKeys.pushToken)
-        
+
         // With swizzling disabled you must set the APNs token here.
         Messaging.messaging().apnsToken = deviceToken
         //Messaging.messaging().setAPNSToken(deviceToken, type: .prod)
@@ -325,7 +316,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
-            log.enqueue(messageID as! String)
             connectionManager.connection.parseOutput(messageID as! String)
         }
         
@@ -348,7 +338,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         }
         Messaging.messaging().appDidReceiveMessage(userInfo)
 
-        
         completionHandler()
     }
 }
@@ -359,7 +348,6 @@ extension AppDelegate : MessagingDelegate {
     // [START refresh_token]
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         log.enqueue("Firebase registration token: \(fcmToken)")
-        SettingsManager.setKey(fcmToken as NSString, forKey: SettingKeys.pushToken)
         connectionManager.sendPush(fcmToken)
         
     }

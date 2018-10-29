@@ -148,29 +148,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
         }
-        _ = self.groupManager.groupsUpdated.add{
-            _ = $0
-            _ = $1
+        //Информация об изменениях в группе
+        self.groupManager.groupsUpdated.add{
+            //_ = $0
+            //_ = $1
+            let g = $1 as! Dictionary<String, AnyObject>
+            let group = $0
+            let foundGroup = self.groupManager.allGroups.filter{$0.u == "\(group)"}.first
             DispatchQueue.main.async {
-                self.updateGroupsOnMap(groups: self.groupManager.allGroups )
+                self.updateGroupsOnMap(groups: self.groupManager.allGroups, GP:g )
             }
         }
-        _ = self.groupManager.groupListUpdated.add{
+        //Обновление списка групп
+        self.groupManager.groupListUpdated.add{
             let groups = $0
             DispatchQueue.main.async {
-                self.updateGroupsOnMap(groups: groups)
+                self.updateGroupsOnMap(groups: groups, GP:nil)
             }
         }
-        _ = self.connectionManager.connectionRun.add{
-            let theChange = $0.0
-            
-            if theChange {
-                DispatchQueue.main.async {
-                    self.connectionManager.activatePoolGroups(1)
-                }
-            }
-        }
-
         self.mapView.delegate = self
     }
     
@@ -183,11 +178,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.setupTileRenderer()
         
         if (groupManager.allGroups.count) > 0 {
-            self.connectionManager.activatePoolGroups(1)
-            
-            groupManager.updateGroupsOnMap([1])
-            
-            self.updateGroupsOnMap(groups: groupManager.allGroups )
+            self.updateGroupsOnMap(groups: groupManager.allGroups, GP:nil )
         }
     }
     
@@ -195,14 +186,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         print("MapViewController viewWillDisappear")
-        groupManager.updateGroupsOnMap([])
         
         SettingsManager.setKey("\(self.mapView.centerCoordinate.latitude)" as NSString, forKey: SettingKeys.lat)
         SettingsManager.setKey("\(self.mapView.centerCoordinate.longitude)" as NSString, forKey: SettingKeys.lon)
         SettingsManager.setKey("\(self.mapView.region.span.latitudeDelta)" as NSString, forKey: SettingKeys.lat_delta)
         SettingsManager.setKey("\(self.mapView.region.span.longitudeDelta)" as NSString, forKey: SettingKeys.lon_delta)
-        
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -210,7 +198,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func updateGroupsOnMap(groups: [Group]) {
+    func updateGroupsOnMap(groups: [Group], GP: Dictionary<String, AnyObject>?) {
         print("updateGroupsOnMap")
         var curAnnotations = [String]()
         var curTracks = [String]()
@@ -221,24 +209,28 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if user.coordinate.latitude > -3000 && user.coordinate.longitude > -3000 {
                         let location = LocationModel(lat: user.coordinate.latitude, lon: user.coordinate.longitude)
                         let gid = Int(group.u)
-                        let uid = Int(user.id)
+                        let uid = Int(user.u)
                         let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
                         ugc.recent = false
                         self.drawPeoples(location: ugc)
                         curAnnotations.append("u\(uid!)")
                     }
                 }
+                let points = GP?["point"] as? Array<AnyObject>
                 for point in group.points {
-                    drawPoint(point: point, group:group)
+                    if (points != nil || GP == nil) {
+                        drawPoint(point: point, group:group)
+                    }
                     curAnnotations.append("p\(point.u)")
                 }
+                let tracks = GP?["track"] as? Array<AnyObject>
                 for track in group.tracks {
-                    drawTrack(track: track)
+                    if (tracks != nil || GP == nil) {
+                        drawTrack(track: track)
+                    }
                     curTracks.append("t\(track.u)")
                 }
-                
             }
-            
         }
         var idx = 0;
         for ann in pointAnnotations {
@@ -303,11 +295,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 idx = idx + 1
             }
         }
-
     }
     
     func drawTrack(track:Track) {
         print ("MapViewController drawTrack")
+        var annVisible = false;
+        for ann in self.trackAnnotations {
+            if (ann is OSMMapKitPolyline) {
+                if ((ann as! OSMMapKitPolyline).objId == "t\(track.u)") {
+                    annVisible = true;
+                    return;
+                    
+                }
+            }
+        }
         
         if let xml = track.getTrackData() {
             let gpx = xml.children[0]
@@ -325,7 +326,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                     let lon = atof(trkpt.attributes["lon"])
                                     coordinates.append(CLLocationCoordinate2D(latitude: lat, longitude: lon) )
                                 }
-                                
                             }
                             if coordinates.count > 0 {
                                 let polyline = OSMMapKitPolyline(coordinates: &coordinates, count: coordinates.count)
@@ -335,6 +335,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 
                                 self.mapView.add(polyline)
                                 self.trackAnnotations.append(polyline)
+                                print("adding track \(track.u)")
 
                             }
                         }
@@ -354,6 +355,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     point.mapId = "wpt\(track.u)"
                     self.mapView.addAnnotation(point);
                     self.pointAnnotations.append(point)
+                    print ("adding waipont \(track.u)")
 
                 }
                 
@@ -379,7 +381,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawPoint(point: Point, group: Group){
         print("MapViewController drawPoint")
-        let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
+        //let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
         if (self.mapView) != nil {
             var annVisible = false;
             for ann in self.pointAnnotations {
@@ -404,17 +406,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
         if (self.mapView) != nil {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
-                let userName = user.name
                 var annVisible = false;
-                var annObjId = ""
                 var exTrack: OSMMapKitPolyline? = nil;
-                user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
-
-                
-                //if (clLocation.latitude != user.lat || clLocation.longitude != user.lon) {
-                    user.track.append(clLocation)
-                    for ann in trackAnnotations {
-                        if ann.objId == "utrk\(location.userId)" {
+               
+                for ann in trackAnnotations {
+                    if ann.objId == "utrk\(location.userId)" {
                             exTrack = ann;
                             break;
                         }
@@ -438,7 +434,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     for ann in self.pointAnnotations {
                         if (ann is User) {
                             if ((ann as! User).mapId == "u\(location.userId)") {
-                                annObjId = (ann as! User).mapId
+                                //annObjId = (ann as! User).mapId
                                 annVisible = true;
                                 break;
                                 
@@ -449,13 +445,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         self.mapView.addAnnotation(user);
                         self.pointAnnotations.append(user);
                         print("add user \(location.userId)")
-                        
                     } else {
                         self.mapView(self.mapView, viewFor: user)?.setNeedsDisplay()
-                        //self.mapView.setNeedsDisplay()
                 }
 
-            }
+            } 
         }
     }
     
@@ -490,6 +484,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // 2
         let overlay = OSMTileOverlay(urlTemplate: template)
         overlay.canReplaceMapContent = true
+        //overlay.maximumZ = 19
         
         
         // 4
@@ -536,7 +531,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let title = annotation.title {
                 if let letter = pointView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
-                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.characters.count>2 ? 2 : title!.characters.count))
+                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
                 }
             }
            
@@ -559,7 +554,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let title = annotation.title {
                  if let letter = userView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
-                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.characters.count>2 ? 2 : title!.characters.count))
+                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
                 }
             }
             
@@ -611,7 +606,7 @@ class OSMTileOverlay: MKTileOverlay {
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
         sUrl = sUrl?.replacingOccurrences(of: "{y}", with: "\(path.y)")
-        print(sUrl)
+        //print(sUrl)
 
         return URL(string: sUrl!)!
     }

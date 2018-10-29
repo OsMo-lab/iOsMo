@@ -53,7 +53,7 @@
 "DZb-1E-5vV.text" = "00:00:00";
 
 /* Class = "UITextField"; placeholder = "phone number"; ObjectID = "FMD-q5-sW0"; */
-"FMD-q5-sW0.placeholder" = "телефон";
+"FMD-q5-sW0.placeholder" = "ник";
 
 /* Class = "UILabel"; text = "private"; ObjectID = "FUD-bK-jc9"; */
 "FUD-bK-jc9.text" = "закрытая";
@@ -128,7 +128,7 @@
 "cYK-aE-whk.text" = "...";
 
 /* Class = "UILabel"; text = "phone"; ObjectID = "cwm-3c-oHU"; */
-"cwm-3c-oHU.text" = "телефон";
+"cwm-3c-oHU.text" = "ник";
 
 /* Class = "UILabel"; text = "Don't turn the screen off"; ObjectID = "dzF-Z7-f5g"; */
 "dzF-Z7-f5g.text" = "Не выключать экран";

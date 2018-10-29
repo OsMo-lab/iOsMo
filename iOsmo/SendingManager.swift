@@ -16,15 +16,15 @@ open class SendingManager: NSObject{
     let sentObservers = ObserverSet<LocationModel>()
     
     fileprivate let connectionManager = ConnectionManager.sharedConnectionManager
-    open let locationTracker = LocationTracker()
+    public let locationTracker = LocationTracker()
     fileprivate let log = LogQueue.sharedLogQueue
     
     fileprivate var lcSendTimer: Timer?
     let aSelector : Selector = #selector(SendingManager.sending)
-    fileprivate var onConnectionRun: ObserverSetEntry<(Bool, String)>?
-    fileprivate var onSessionRun: ObserverSetEntry<(Bool, String)>?
-    let sessionStarted = ObserverSet<(Bool)>()
-    let sessionPaused = ObserverSet<(Bool)>()
+    fileprivate var onConnectionRun: ObserverSetEntry<(Int, String)>?
+    fileprivate var onSessionRun: ObserverSetEntry<(Int, String)>?
+    let sessionStarted = ObserverSet<(Int)>()
+    let sessionPaused = ObserverSet<(Int)>()
 
     
     class var sharedSendingManager: SendingManager {
@@ -43,7 +43,7 @@ open class SendingManager: NSObject{
     open func sendSystemInfo(){
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 {
+                if $0.0 == 0 {
                     self.connectionManager.connection.sendSystemInfo()
                 }
                 
@@ -61,7 +61,7 @@ open class SendingManager: NSObject{
     open func sendBatteryStatus(_ rc: String){
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 {
+                if $0.0 == 0 {
                     self.connectionManager.connection.sendBatteryStatus()
                 }
 
@@ -82,11 +82,11 @@ open class SendingManager: NSObject{
 
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 {
+                if $0.0 == 0{
                     self.onSessionRun = self.connectionManager.sessionRun.add{
-                        if $0.0 {
+                        if $0.0 == 0{
                             self.startSending()
-                            if rc != "" {
+                            if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
                                 self.connectionManager.connection.sendRemoteCommandResponse(rc)
                             }
                         }
@@ -107,9 +107,9 @@ open class SendingManager: NSObject{
             connectionManager.connect()
         } else if !connectionManager.sessionOpened {
             self.onSessionRun = self.connectionManager.sessionRun.add{
-                if $0.0 {
+                if ($0.0 == 0){
                     self.startSending()
-                    if rc != "" {
+                    if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
                         self.connectionManager.connection.sendRemoteCommandResponse(rc)
                     }
                 } else {
@@ -126,7 +126,7 @@ open class SendingManager: NSObject{
             }
         } else {
             startSending()
-            if rc != "" {
+            if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
                 self.connectionManager.connection.sendRemoteCommandResponse(rc)
             }
         }
@@ -137,9 +137,9 @@ open class SendingManager: NSObject{
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
-        sessionPaused.notify((true))
+        sessionPaused.notify((0))
         UIApplication.shared.isIdleTimerDisabled = false
-        if rc != "" {
+        if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
             self.connectionManager.connection.sendRemoteCommandResponse(rc)
         }
 
@@ -154,7 +154,6 @@ open class SendingManager: NSObject{
         //MUST REFACTOR
         if (connectionManager.sessionOpened || connectionManager.isGettingLocation)  && connectionManager.connected {
             let coors: [LocationModel] = locationTracker.getLastLocations()
-            print("SendingManager: got \(coors.count) coordinates")
             log.enqueue("SendingManager: got \(coors.count) coordinates")
             
             if coors.count > 0 {
@@ -194,7 +193,7 @@ open class SendingManager: NSObject{
             }
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
             if connectionManager.sessionOpened {
-                sessionStarted.notify((true))
+                sessionStarted.notify((0))
             }
             
             UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue

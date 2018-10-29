@@ -4,15 +4,18 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 16/12/14.
-//  Copyright (c) 2014 Olga Grineva. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2017 Alexey Sirotkin All rights reserved.
 //
 
-import Foundation
+
 import CoreLocation
+import CoreMotion
 
 open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     fileprivate let log = LogQueue.sharedLogQueue
+    private let motionManager = CMMotionActivityManager()
+    
     
     fileprivate var allSessionLocations = [LocationModel]()
     open var lastLocations = [LocationModel]()
@@ -30,6 +33,25 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     override init(){
         super.init()
+        
+        let locationManager = LocationTracker.sharedLocationManager
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.allowsBackgroundLocationUpdates = true
+
+    }
+    
+    private func setActiveMode(_ moving: Bool) {
+        log.enqueue("CMMotionActivityManager moving \(moving)")
+        if moving {
+            LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            LocationTracker.sharedLocationManager.distanceFilter = kCLDistanceFilterNone
+        } else {
+            LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+            LocationTracker.sharedLocationManager.distanceFilter = 100
+        }
     }
     
     open func turnMonitorinOn(once : Bool){
@@ -38,36 +60,31 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         self.isGettingLocationOnce = once
        
         if CLLocationManager.locationServicesEnabled() == false {
-            print("Location services enabled false!")
             log.enqueue("Location services enabled FALSE!")
         } else {
             let authorizationStatus = CLLocationManager.authorizationStatus()
             if (authorizationStatus ==  CLAuthorizationStatus.restricted ||
                 authorizationStatus == CLAuthorizationStatus.denied){
-                    print("Location authorization failed")
                     log.enqueue("Location authorization failed")
             } else {
-                print("Location authorization status authorized")
-                log.enqueue("Location authorization status authorized")
+                LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
+                log.enqueue("Location request When in use authorization was sent to user")
+
+                if (once) {
+                    log.enqueue("requestLocation")
+                    LocationTracker.sharedLocationManager.requestLocation()
+                } else {
+                    log.enqueue("startUpdatingLocation")
+                    LocationTracker.sharedLocationManager.startUpdatingLocation()
+                    //LocationTracker.sharedLocationManager.startMonitoringSignificantLocationChanges()
+                    
+                    motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
+                        self?.setActiveMode((activity?.stationary)! ? false : true)
+                    })
                 
-                let locationManager = LocationTracker.sharedLocationManager
-                locationManager.delegate = self
-                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-                locationManager.distanceFilter = kCLDistanceFilterNone
-                locationManager.pausesLocationUpdatesAutomatically = false
-               
-                if #available(iOS 8, *){
-                    locationManager.requestAlwaysAuthorization()
-                    if #available(iOS 9, *){
-                        locationManager.allowsBackgroundLocationUpdates = true
-                    }
-                    log.enqueue("Location request always authorization was sent to user")
                 }
                 
-                locationManager.startUpdatingLocation()
                 
-                print("startUpdatingLocation")
-                log.enqueue("startUpdatingLocation")
             }
         }
         
@@ -77,7 +94,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
-        print("stopUpdatingLocation")
         log.enqueue("stopUpdatingLocation")
         self.isDeferingUpdates = false
     }
@@ -92,13 +108,10 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func locationManager(_ manager: CLLocationManager,
         didChangeAuthorization status: CLAuthorizationStatus){
-        
-        print("Location didChangeAuthorizationStatus to \(status.rawValue)")
         log.enqueue("Location didChangeAuthorizationStatus to \(status.rawValue)")
     }
     
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        //print("didUpdateLocation")
         log.enqueue("didUpdateLocation")
         var prevLM = allSessionLocations.last
         var prev_loc = locations.first
@@ -116,7 +129,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             
         }
         
-        let locInterval = SettingsManager.getKey(SettingKeys.locInterval)!.doubleValue;
+        let locInterval = SettingsManager.getKey(SettingKeys.sendTime)!.doubleValue;
         let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue;
         
         for loc in locations {
@@ -162,7 +175,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-        print("locationManager error \(error)")
         log.enqueue("locationManager error \(error)")
         
         switch (error){
@@ -177,10 +189,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         if (error != nil) {
-
-            print("locationManager didFinishDeferredUpdatesWithError  \(error)")
             log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error)")
-            
         }
         self.isDeferingUpdates = false
     }

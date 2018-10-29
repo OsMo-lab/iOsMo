@@ -34,12 +34,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isSessionPaused = false
     var isTracked = true
     
-    var onMessageOfTheDayUpdated: ObserverSetEntry<(Bool, String)>?
-    var onSessionPaused: ObserverSetEntry<(Bool)>?
-    var onSessionStarted: ObserverSetEntry<(Bool)>?
+    var onMessageOfTheDayUpdated: ObserverSetEntry<(Int, String)>?
+    var onSessionPaused: ObserverSetEntry<(Int)>?
+    var onSessionStarted: ObserverSetEntry<(Int)>?
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
-
-    var isLoaded = false
     
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var trackerID: UIButton!
@@ -62,9 +60,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     @IBOutlet weak var trackingModeBtn: UIButton!
 
-    
-
-    
     @IBAction func pauseClick(_ sender: AnyObject) {
         
         isSessionPaused = !isSessionPaused
@@ -75,8 +70,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         } else {
             sendingManger.startSendingCoordinates("")
         }
-
-    
     }
     
     @IBAction func GoByLink(_ sender: UIButton) {
@@ -89,25 +82,26 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.present(activityViewController, animated: true, completion: {})
             }
         } else {
-        
-            print("error: invalid url")
             log.enqueue("error: invalid url")
         }
 
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-        if isSessionPaused || isMonitoringOn {
-            Analytics.logEvent("trip_stop", parameters: nil)
-            sendingManger.stopSendingCoordinates("")
-            
-            //UIApplication.shared.isIdleTimerDisabled = false
-        } else {
-            Analytics.logEvent("trip_start", parameters: nil)
-            sendingManger.startSendingCoordinates("")
-            
-            //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+        if SettingsManager.getKey(SettingKeys.trackerId) as? String != ""{
+            if isSessionPaused || isMonitoringOn {
+                Analytics.logEvent("trip_stop", parameters: nil)
+                sendingManger.stopSendingCoordinates("")
+                
+                //UIApplication.shared.isIdleTimerDisabled = false
+            } else {
+                Analytics.logEvent("trip_start", parameters: nil)
+                sendingManger.startSendingCoordinates("")
+                
+                //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            }
         }
+        
     }
 
     func uiSettings(){
@@ -115,6 +109,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
         MDView.text = ""
+        
+        if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as? String {
+            self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+        }
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
 
@@ -162,137 +160,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(false)
-        if !isLoaded {
-            //setup handler for open connection
-            connectionManager.dataSendStart.add {
-                DispatchQueue.main.async {
-                    self.osmoImage.image = UIImage(named:"small-blue")
-                }
-            }
-            connectionManager.dataSendEnd.add {
-                DispatchQueue.main.async {
-                    self.osmoImage.image = UIImage(named:"small-green")
-                }
-            }
-            connectionManager.connectionStart.add{
-                DispatchQueue.main.async {
-                    self.osmoImage.image = UIImage(named:"small-yellow")
-                }
-            }
-            connectionManager.connectionClose.add{
-                DispatchQueue.main.async {
-                    self.osmoImage.image = UIImage(named:"small-red")
-                }
-            }
-            connectionManager.connectionRun.add{
-                let theChange = $0.0
-                
-                if theChange {
-                    self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
-                        self.MDView.text = $1
-                    }
-                    self.groupManager.groupList(true)
-                    self.connectionManager.getMessageOfTheDay()
-
-                } else if let glUpdated = self.onGroupListUpdated {
-                    
-                    self.groupManager.groupListUpdated.remove(glUpdated)
-                }
-                DispatchQueue.main.async {
-                    if let user = SettingsManager.getKey(SettingKeys.user) {
-                        if user.length > 0 {
-                            self.userLabel.text = user as String
-                        } else {
-                            self.userLabel.text = ""
-                        }
-                    } else {
-                        self.userLabel.text = ""
-                    }
-                    
-                    if let trackerId = self.connectionManager.TrackerID{
-                        self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
-                    } else {
-                        self.trackerID.setTitle("", for: UIControlState())
-                    }
-                    self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
-                    
-                }
-                
-                self.log.enqueue("MVC: The connection status was changed: \(theChange)")
-                
-                //self.osmoStatus.isHidden = !theChange
-                
-                if !theChange && !$0.1.isEmpty {
-                    self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
-                }
-            }
-            
-            connectionManager.sessionRun.add{
-                let theChange = $0.0
-                
-                self.isMonitoringOn = theChange
-
-                
-                if theChange {
-                    if let sUrl = self.connectionManager.sessionUrl {
-                        self.link.setTitle(sUrl, for: UIControlState())
-                        self.link.isEnabled = true
-                    }
-                    
-                    self.log.enqueue("MVC: The session was opened")
-                    
-                    self.playStopBtn.setImage(UIImage(named: "stop-100"), for: UIControlState())
-                    self.pauseBtn.isHidden = false
-                    
-                    if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
-                        self.sessionTimer!.reset()
-                    }
-                    
-                } else {
-                    
-                    self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControlState())
-                    self.link.isEnabled = false
-                    
-                    self.log.enqueue("MVC: The session was closed")
-                    
-                    self.pauseBtn.isHidden = true
-                    self.playStopBtn.setImage(UIImage(named: "play-100"), for: UIControlState())
-                    self.isSessionPaused = false
-                    self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
-                    //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
-                    //self.mainAnnotation = nil
-                    
-                    if let sessionTimer = self.sessionTimer {
-                        sessionTimer.stop()
-                    }
-                }
-            }
-            
-            self.onSessionPaused = sendingManger.sessionPaused.add{
-                if $0 {
-                    self.isMonitoringOn = false
-                    self.isSessionPaused = true
-                    self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
-                    if let sessionTimer = self.sessionTimer {
-                        sessionTimer.stop()
-                    }
-                }
-            }
-            
-            self.onSessionStarted = sendingManger.sessionStarted.add{
-                if $0 {
-                    self.isMonitoringOn = true
-                    self.isSessionPaused = false
-                    self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
-                    if let sessionTimer = self.sessionTimer {
-                        sessionTimer.start()
-                    }
-                }
-            }
- 
-            //connectionManager.connect()
-            isLoaded = true
-        }
+        
     }
     
     
@@ -305,11 +173,131 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         sessionTimer = SessionTimer(handler: updateSessionValues)
         
         uiSettings()
-        //setupMapView()
+        //setup handler for open connection
+        connectionManager.dataSendStart.add {
+            DispatchQueue.main.async {
+                self.osmoImage.image = UIImage(named:"small-blue")
+            }
+        }
+        connectionManager.dataSendEnd.add {
+            DispatchQueue.main.async {
+                self.osmoImage.image = UIImage(named:"small-green")
+            }
+        }
+        connectionManager.connectionStart.add{
+            DispatchQueue.main.async {
+                self.osmoImage.image = UIImage(named:"small-yellow")
+            }
+        }
+        connectionManager.connectionClose.add{
+            DispatchQueue.main.async {
+                self.osmoImage.image = UIImage(named:"small-red")
+            }
+        }
+        connectionManager.connectionRun.add{
+            let theChange = ($0.0 == 0)
+            
+            if theChange {
+                self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
+                    self.MDView.text = $1
+                }
+                self.groupManager.groupList(true)
+                self.connectionManager.getMessageOfTheDay() //Запрашиваем сообщение дня
+                self.connectionManager.activatePoolGroups(1) //Активируем получение обновления групп
+                
+            } else if let glUpdated = self.onGroupListUpdated {
+                
+                self.groupManager.groupListUpdated.remove(glUpdated)
+            }
+            DispatchQueue.main.async {
+                if let user = SettingsManager.getKey(SettingKeys.user) {
+                    if user.length > 0 {
+                        self.userLabel.text = user as String
+                    } else {
+                        self.userLabel.text = ""
+                    }
+                } else {
+                    self.userLabel.text = ""
+                }
+                
+                if let trackerId = self.connectionManager.TrackerID{
+                    self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+                }
+                self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
+                
+            }
+            
+            self.log.enqueue("MVC: The connection status was changed: \(theChange)")
+            
+            //self.osmoStatus.isHidden = !theChange
+            
+            if !theChange && !$0.1.isEmpty {
+                self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
+            }
+        }
         
-        //setupLocationTrackingSettings()
+        connectionManager.sessionRun.add{
+            let theChange = ($0.0 == 0)
+            
+            self.isMonitoringOn = theChange
+            
+            
+            if theChange {
+                if let sUrl = self.connectionManager.sessionUrl {
+                    self.link.setTitle(sUrl, for: UIControlState())
+                    self.link.isEnabled = true
+                }
+                
+                self.log.enqueue("MVC: The session was opened")
+                
+                self.playStopBtn.setImage(UIImage(named: "stop-100"), for: UIControlState())
+                self.pauseBtn.isHidden = false
+                
+                if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
+                    self.sessionTimer!.reset()
+                }
+                
+            } else {
+                
+                self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControlState())
+                self.link.isEnabled = false
+                
+                self.log.enqueue("MVC: The session was closed")
+                
+                self.pauseBtn.isHidden = true
+                self.playStopBtn.setImage(UIImage(named: "play-100"), for: UIControlState())
+                self.isSessionPaused = false
+                self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
+                //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
+                //self.mainAnnotation = nil
+                
+                if let sessionTimer = self.sessionTimer {
+                    sessionTimer.stop()
+                }
+            }
+        }
         
+        self.onSessionPaused = sendingManger.sessionPaused.add{
+            if $0 == 0 {
+                self.isMonitoringOn = false
+                self.isSessionPaused = true
+                self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
+                if let sessionTimer = self.sessionTimer {
+                    sessionTimer.stop()
+                }
+            }
+        }
         
+        self.onSessionStarted = sendingManger.sessionStarted.add{
+            if $0 == 0 {
+                self.isMonitoringOn = true
+                self.isSessionPaused = false
+                self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
+                if let sessionTimer = self.sessionTimer {
+                    sessionTimer.start()
+                }
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -424,20 +412,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     
     
     func alert(_ title: String, message: String) {
-        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(myAlert, animated: true, completion: nil)
-        } else { // iOS 7
-            let alert: UIAlertView = UIAlertView()
-            alert.delegate = self
-            
-            alert.title = title
-            alert.message = message
-            alert.addButton(withTitle: "OK")
-            
-            alert.show()
-        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        myAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(myAlert, animated: true, completion: nil)
     }
 
 }

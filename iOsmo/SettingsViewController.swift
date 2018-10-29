@@ -16,7 +16,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     var clickCount = 0;
     let MIN_SEND_TIME = 4;
-    let MIN_LOC_TIME = 0;
     let MIN_LOC_DISTANCE = 0;
     
     
@@ -52,9 +51,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
                 self.resetAuthSwitcher.isOn = false
             } else {
-                groupManager.clearCache()
-                SettingsManager.setKey("", forKey: SettingKeys.user)
-                SettingsManager.setKey("", forKey: SettingKeys.device)
+                SettingsManager.clearKeys()
                 connectionManager.closeConnection()
                 connectionManager.connect()
             }
@@ -87,13 +84,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                     value = 1000
                 }
                 SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
-            } else if textField == locTimeTextField {
-                if (value < MIN_LOC_TIME) {
-                    value = MIN_LOC_TIME
-                }else if (value > 120) {
-                    value = 120
-                }
-                SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locInterval)
             }
             textField.resignFirstResponder()
             
@@ -126,7 +116,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         }
         
         while (style < TileSource.SOURCES_COUNT.rawValue) {
-            var title = tileSourceName(style);
+            let title = tileSourceName(style);
             if (title != "") {
                 myAlert.addAction(UIAlertAction(title: title, style: .default, handler: handler))
             }
@@ -167,12 +157,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             }
             distanceTextField.text = locDistance as String
         }
-        if var locInterval = SettingsManager.getKey(SettingKeys.locInterval) {
-            if locInterval.length == 0 {
-                locInterval = String(MIN_LOC_TIME) as NSString
-            }
-            locTimeTextField.text = locInterval as String
-        }
         var mapTitle = "Mapnik"
         if let mapStyle = SettingsManager.getKey(SettingKeys.tileSource)?.intValue{
             mapTitle = tileSourceName(mapStyle)
@@ -204,20 +188,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         
     }
     func alert(_ title: String, message: String) {
-        if let getModernAlert: AnyClass = NSClassFromString("UIAlertController") { // iOS 8
-            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
-            self.present(myAlert, animated: true, completion: nil)
-        } else { // iOS 7
-            let alert: UIAlertView = UIAlertView()
-            alert.delegate = self
-            
-            alert.title = title
-            alert.message = message
-            alert.addButton(withTitle: NSLocalizedString("OK", comment:"OK"))
-            
-            alert.show()
-        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        myAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment:"OK"), style: .default, handler: nil))
+        self.present(myAlert, animated: true, completion: nil)
     }
 
     /*

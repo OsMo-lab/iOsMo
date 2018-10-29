@@ -31,13 +31,6 @@ enum Tags: String {
     case buffer = "B"
 }
 
-enum KeysOld: String{
-    case trackerId = "tracker_id"
-    case sessionUrl = "url"
-    case key = "key"
-    case token = "token"
-    case address = "address"
-}
 
 enum Keys: String{
     case token = "token"
@@ -45,6 +38,7 @@ enum Keys: String{
     case uid = "uid"
     case name = "name"
     case device = "device"
+    
     case error = "error"
     case errorDesc = "error_description"
     case push_token = "push_token"
@@ -57,6 +51,7 @@ enum ParseKeys: String{
     case gda = "GDA"
     case gaa = "GAA"
     case id = "id"
+    case permanent = "permanent"
 }
 
 
@@ -95,13 +90,12 @@ enum UpdatesEnum: String {
 
 enum SettingKeys: String {
     case device = "deviceKey"
-    case pushToken = "pushToken"
+    case trackerId = "trackerID"
     case isStayAwake = "isStayAwake"
     
     case user = "user"
     case sendTime = "sendTime"
     case locDistance = "locDistance"
-    case locInterval = "locInterval"
 
     case logView = "logView"
     case poolGroups = "poolGroups"
@@ -128,7 +122,6 @@ enum GroupType: String {
     case Simple = "1" //default
     case Family = "2"
     case POI = "5"
-    case Trip = "6"
 }
 
 enum RemoteCommand: String {

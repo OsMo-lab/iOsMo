@@ -29,17 +29,15 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 open class TcpConnection: BaseTcpConnection {
-
-    open var monitoringGroups: [Int]?
-    
-    let answerObservers = ObserverSet<(AnswTags, String, Bool)>()
+    let answerObservers = ObserverSet<(AnswTags, String, Int)>()
     let groupListDownloaded = ObserverSet<[Group]>()
-    let groupCreated = ObserverSet<(Bool, String)>()
+    let groupCreated = ObserverSet<(Int, String)>()
     let monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
     let groupsUpdated = ObserverSet<(Int, Any)>()
     
     open var sessionUrlParsed: String = ""
     open var device_key: String = ""
+    open var permanent: Bool = false
     open var sessionTrackerID: String = ""
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
     open func getTrackerID()-> String?{return sessionTrackerID}
@@ -69,10 +67,10 @@ open class TcpConnection: BaseTcpConnection {
     }
 
     
-    open func sendCreateGroup(_ name: String, email: String, phone: String, gtype: String, priv: Bool){
+    open func sendCreateGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         
         let jsonInfo: NSDictionary =
-            ["name": name as NSString, "email": email as NSString, "telephone": phone as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
         
         do{
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
@@ -108,7 +106,7 @@ open class TcpConnection: BaseTcpConnection {
     
     
     open func sendActivatePoolGroups(_ s: Int){
-        let request = "\(Tags.activatePoolGroups.rawValue)|\(s)"
+        let request = "\(Tags.activatePoolGroups.rawValue):\(s)"
         super.send(request)
     }
     
@@ -179,7 +177,7 @@ open class TcpConnection: BaseTcpConnection {
     
     open func sendBatteryStatus(){
         UIDevice.current.isBatteryMonitoringEnabled = true
-        let level = UIDevice.current.batteryLevel * 100
+        let level = Int(UIDevice.current.batteryLevel * 100)
         var state = 0;
         if (UIDevice.current.batteryState == .charging) {
             state = 1;
@@ -205,13 +203,13 @@ open class TcpConnection: BaseTcpConnection {
         let outputContains = {(tag: AnswTags) -> Bool in
             if let container = output.range(of: tag.rawValue) {
                  //return  distance(output.startIndex, container.startIndex) == 0 //should be found at begin of string
-                return output.characters.distance(from: output.startIndex, to: container.lowerBound) == 0
+                return output.distance(from: output.startIndex, to: container.lowerBound) == 0
             }
             return false
         }
         
-        //let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|")[1] == "1" }
-        let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|").last == "1" }
+
+        //let parseBoolAnswer = {()-> Bool in return output.components(separatedBy: "|").last == "1" }
         
         var command = output.components(separatedBy: "|").first!
         let addict = output.components(separatedBy: "|").last!
@@ -222,27 +220,29 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         
-        let parseCommandName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").first!}
+        //let parseCommandName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").first!}
         
-        let parseParamName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").last!}
-        
-        //if outputContains(AnswTags.token){
+        //let parseParamName = {() -> String in return output.components(separatedBy: "|").first!.components(separatedBy: ":").last!}
+
         if outputContains(AnswTags.auth){
             //ex: INIT|{"id":"CVH2SWG21GW","group":1,"motd":1429351583,"protocol":2,"v":0.88} || INIT|{"id":1,"error":"Token is invalid"}
             
             if let result = parseForErrorJson(output) {
-                if !result.0 {
+                if result.0 == 0 {
                     if let trackerID = parseTag(output, key: ParseKeys.id) {
                         sessionTrackerID = trackerID
                     } else {
                         sessionTrackerID = "error parsing TrackerID"
                     }
-                    answerObservers.notify(AnswTags.auth, result.1 , !result.0)
-                    if let parsed = parseJson(output)  as? [String: Any] {
-  
+                    if let spermanent = parseTag(output, key: ParseKeys.permanent) {
+                        if spermanent == "1" {
+                            self.permanent = true;
+                        }
+                        
                     }
+                    answerObservers.notify(AnswTags.auth, result.1 , result.0)
                 } else {
-                    answerObservers.notify(AnswTags.auth, result.1 , !result.0)
+                    answerObservers.notify(AnswTags.auth, result.1 , result.0)
                 }
                 
             }
@@ -250,23 +250,18 @@ open class TcpConnection: BaseTcpConnection {
         }
         
         if outputContains(AnswTags.openedSession){
-            
-            print("open session")
             log.enqueue("session opened answer") //ex: TO|{"session":145004,"url":"f1_o9_7s"}
 
             if let result = parseForErrorJson(output){
-                
-                if !result.0 {
+                if result.0 == 0 {
                     super.sessionOpened = true
                     if let sessionUrl = parseTag(output, key: ParseKeys.sessionUrl) {
                         sessionUrlParsed = sessionUrl
                     } else {
                         sessionUrlParsed = "error parsing url"
                     }
-                
                 }
-                
-                answerObservers.notify(AnswTags.openedSession, result.1 , !result.0)
+                answerObservers.notify(AnswTags.openedSession, result.1 , result.0)
                 return
             } else {
                 log.enqueue("error: open session asnwer cannot be parsed")
@@ -275,8 +270,12 @@ open class TcpConnection: BaseTcpConnection {
         
         if outputContains(AnswTags.closeSession){
             log.enqueue("session closed answer")
-            
-            answerObservers.notify((AnswTags.closeSession, NSLocalizedString("session was closed", comment:"session was closed"), !parseBoolAnswer()))
+            if let result = parseForErrorJson(output){
+                answerObservers.notify((AnswTags.closeSession, NSLocalizedString("session was closed", comment:"session was closed") , result.0))
+            }else {
+                log.enqueue("error: session closed asnwer cannot be parsed")
+            }
+  
             return
 
         }
@@ -286,7 +285,7 @@ open class TcpConnection: BaseTcpConnection {
             
             //answerObservers.notify((AnswTags.push, "PUSH activated", !parseBoolAnswer()))
             if let result = parseForErrorJson(output){
-                answerObservers.notify((AnswTags.push, "" , !result.0))
+                answerObservers.notify((AnswTags.push, "" , result.0))
             }else {
                 log.enqueue("error: PUSH asnwer cannot be parsed")
             }
@@ -305,16 +304,16 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.kick){
             log.enqueue("connection kicked")
-
+            if let result = parseForErrorJson(output){
+                answerObservers.notify(AnswTags.kick, result.1 , result.0)
+            } else {
+                log.enqueue("kick asnwer cannot be parsed")
+            }
             return
             //should update status of session and connection
         }
         
         if outputContains(AnswTags.pong){
-            let dateFormat = DateFormatter()
-            dateFormat.dateFormat = "HH:mm:ss"
-            let eventDate = dateFormat.string(from: Date())
-            
             log.enqueue("server wants answer ;)")
             sendPing()
             return
@@ -337,7 +336,7 @@ open class TcpConnection: BaseTcpConnection {
         
         if outputContains(AnswTags.enterGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.enterGroup, result.1 , !result.0)
+                answerObservers.notify(AnswTags.enterGroup, result.1 , result.0)
             } else {
                 log.enqueue("error: enter group asnwer cannot be parsed")
             }
@@ -345,18 +344,18 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.leaveGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.leaveGroup, result.1 , !result.0)
+                answerObservers.notify(AnswTags.leaveGroup, result.1 , result.0)
             }else {
                 log.enqueue("error: leave group asnwer cannot be parsed")
             }
             
-            //answerObservers.notify(AnswTags.leaveGroup, parseCommandName(), parseBoolAnswer())
+
             return
         }
         if outputContains(AnswTags.activateGroup) {
             if let result = parseForErrorJson(output){
-                let value = (result.0 ? result.1 : output.components(separatedBy: "|")[1])
-                answerObservers.notify(AnswTags.activateGroup, value , !result.0)
+                let value = (result.0==1 ? result.1 : (result.1=="" ? output.components(separatedBy: "|")[1] : result.1 ))
+                answerObservers.notify(AnswTags.activateGroup, value , result.0)
             }else {
                 log.enqueue("error: activate group asnwer cannot be parsed")
             }
@@ -364,7 +363,7 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.deactivateGroup) {
             if let result = parseForErrorJson(output){
-                answerObservers.notify(AnswTags.deactivateGroup, result.1 , !result.0)
+                answerObservers.notify(AnswTags.deactivateGroup, result.1 , result.0)
             }else {
                 log.enqueue("error: deactivate group asnwer cannot be parsed")
             }
@@ -382,7 +381,7 @@ open class TcpConnection: BaseTcpConnection {
         }
         if outputContains(AnswTags.messageDay){
             if (command != "" && addict != "") {
-                answerObservers.notify((AnswTags.messageDay, addict, true))
+                answerObservers.notify((AnswTags.messageDay, addict, 1))
             }
             else {
                 log.enqueue("error: wrong parsing MD")
@@ -390,7 +389,7 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.remoteCommand){
-            self.answerObservers.notify((AnswTags.remoteCommand, param, true))
+            self.answerObservers.notify((AnswTags.remoteCommand, param, 1))
             /*
             switch param {
             case RemoteCommand.TRACKER_SYSTEM_INFO.rawValue:
@@ -403,21 +402,19 @@ open class TcpConnection: BaseTcpConnection {
             return
         }
         if outputContains(AnswTags.grCoord) {
-            if let monitor = monitoringGroups {
-                let parseRes = parseGroupCoordinates(output)
-                    if let grId = parseRes.0, let res = parseRes.1 {
-                        
-                        //if monitor.contains(grId){
-                            if let groups = parseCoordinate(grId, coordinates: res) {
-                                monitoringGroupsUpdated.notify(groups)
-                            }
-                            else {
-                                log.enqueue("error: parsing coordinate array")
-                            }
-                        //}
-                    }
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                
+                //if monitor.contains(grId){
+                if let groups = parseCoordinate(grId, coordinates: res) {
+                    monitoringGroupsUpdated.notify(groups)
+                }
+                else {
+                    log.enqueue("error: parsing coordinate array")
+                }
+                //}
             }
-            
+
         //D:47580|L37.33018:-122.032582S1.3A9H5C
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
             return
@@ -453,49 +450,37 @@ open class TcpConnection: BaseTcpConnection {
     }
     
     func parseRemoteCommand(_ responce: String) -> (Int?, AnyObject?){
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
-        let commandId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
-        
+        let cmd = responce.components(separatedBy: "|")[0]
+        let commandId = Int(cmd.components(separatedBy: ":")[1])
+
         return (commandId, responce as AnyObject?)
     }
 
-    
-    func parseGroupCoordinates(_ responce: String) -> (Int?, Any?){
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
-        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
-        
-        return (groupId, parseJson(responce))
-    }
-    
     func parseGroupUpdate(_ responce: String) -> (Int?, Any?){
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count
-        let range = Range<String.Index>(responce.startIndex..<responce.characters.index(responce.startIndex, offsetBy: index))
-        let groupId = Int(responce.substring(with: range).components(separatedBy: ":")[1])
-        
+        let cmd = responce.components(separatedBy: "|")[0]
+        let groupId = Int(cmd.components(separatedBy: ":")[1])
+
         return (groupId, parseJson(responce))
     }
     
-    func parseForErrorJson(_ responce: String) -> (Bool, String)? {
+    func parseForErrorJson(_ responce: String) -> (Int, String)? {
         if let dic = parseJson(responce) as? Dictionary<String, Any>{
-
             if dic.index(forKey: "error") == nil {
-                return (false, "")
+                return (0, "")
             }  else {
-                if let err =  dic["error_description"] as? String{
-                    return (true, err)
-                }else if let err =  dic["error"] as? String{
-                    return (true, err)
+                if let err =  dic["error"] as? Int {
+                    if let err_msg =  dic["error_description"] as? String{
+                        return (err, err_msg)
+                    }else {
+                        return (err, "\(err)")
+                    }
+                
                 }
-                return (true, "error message is not parsed")
+                return (1, "error message is not parsed")
             }
         } else {
             if Int(responce.components(separatedBy: "|").last!)! > 0 {
-                return (false, "")
+                return (0, "")
             }
         }
         return nil
@@ -507,14 +492,11 @@ open class TcpConnection: BaseTcpConnection {
         
         // should parse only first | sign, because of responce structure
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
-        let index = responce.components(separatedBy: "|")[0].characters.count + 1
-        let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
         
-        
-        let json = responce.substring(with: range)
-        
-        //tag.componentsSeparatedByString("|")[0]
-        
+        let index = responce.components(separatedBy: "|")[0].count + 1
+        let json = responce.substring(with: responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
+ 
+
         if let data: Data = json.data(using: String.Encoding.utf8) {
         
             do  {
@@ -536,15 +518,11 @@ open class TcpConnection: BaseTcpConnection {
         
         // should parse only first | sign, because of responce structure
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
-        
-        
-        let index = responce.components(separatedBy: "|")[0].characters.count + 1
-        let range = Range<String.Index>(responce.characters.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
-        
-        
-        let json = responce.substring(with: range)
-        
-        //tag.componentsSeparatedByString("|")[0]
+
+
+        let index = responce.components(separatedBy: "|")[0].count + 1
+        let json = responce.substring(with: responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
+            
 
         do {
             
