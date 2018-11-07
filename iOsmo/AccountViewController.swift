@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 22/12/14.
-//  Copyright (c) 2014 Olga Grineva, © 2017 Alexey Sirotkin. All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, © 2018 Alexey Sirotkin. All rights reserved.
 //
 
 import UIKit
@@ -479,16 +479,12 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             let group = groupManager.allGroups[row]
 
             if let groupName = cell!.contentView.viewWithTag(1) as? UILabel,
-                let usersLabel = cell!.contentView.viewWithTag(2) as? UILabel,
                 let activeSwitch = cell!.contentView.viewWithTag(5) as? UISwitch,
                 //let indicator = cell!.contentView.viewWithTag(3) as? UIActivityIndicatorView,
                 let btnURL = cell!.contentView.viewWithTag(4) as? UIButton{
                 groupName.text = "\(group.name)(\(group.nick))"
-                usersLabel.text = "\(group.users.count)";
                 btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControlState.normal)
-                
                 activeSwitch.isOn = group.active
-                
             }
             
         }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+                                                                                                                                                                                                                                                               
 enum Tags: String {
     case token = "INIT|"
     case auth = "AUTH|"
@@ -108,6 +108,7 @@ enum SettingKeys: String {
     
     case showTracks = "showTracks"
     case tileSource = "tileSource"
+    case longNames = "longNames"
     
 }
 

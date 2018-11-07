@@ -3,7 +3,7 @@
 //  iOsMo
 //
 //  Created by Alexey Sirotkin on 30.10.17.
-//  Copyright © 2017 Alexey Sirotkin. All rights reserved.
+//  Copyright © 2018 Alexey Sirotkin. All rights reserved.
 //
 
 import Foundation
@@ -30,11 +30,8 @@ class OSMOMKAnnotationView: MKAnnotationView {
         print ("OSMOMKAnnotationView Init")
         self.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         
-        let letter = UILabel(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
-
-        letter.textAlignment = NSTextAlignment.center
-        letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
-        letter.tag = 1
+        let aView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+        
         if self.reuseIdentifier == "point" {
             layer.cornerRadius = 0
             layer.borderWidth = 1
@@ -43,23 +40,38 @@ class OSMOMKAnnotationView: MKAnnotationView {
             layer.borderWidth = 2
         }
         
+        let letter = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: self.frame.height))
+        letter.textAlignment = NSTextAlignment.center
+        
+        if let longNames = SettingsManager.getKey(SettingKeys.longNames) {
+            if (longNames.boolValue) {
+                letter.textAlignment = NSTextAlignment.left
+            }
+        }
+        letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
+        letter.tag = 1
+        
+        
+        aView.addSubview(letter);
+        self.addSubview(aView);
+        
         self.canShowCallout = true
         
-        let tView = UITextView(frame: CGRect(x:0, y:0, width:200, height:21))
-        tView.tag = 10;
-        tView.isEditable = false;
-        tView.dataDetectorTypes = UIDataDetectorTypes.all
+        let width = 300
+        let height = 200
         
-        self.detailCalloutAccessoryView = tView;
-        let width = NSLayoutConstraint(item: tView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.lessThanOrEqual, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 200)
-        tView.addConstraint(width)
+        let snapshotView = UIView()
+        let views = ["snapshotView": snapshotView]
+        snapshotView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[snapshotView(300)]", options: [], metrics: nil, views: views))
+        snapshotView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[snapshotView(200)]", options: [], metrics: nil, views: views))
         
+        let textView = UITextView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+        textView.tag = 10;
+        textView.isEditable = false;
+        textView.dataDetectorTypes = UIDataDetectorTypes.all
+        snapshotView.addSubview(textView)
         
-        let height = NSLayoutConstraint(item: tView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 50)
-        tView.addConstraint(height)
-
-        self.addSubview(letter);
-        
+        self.detailCalloutAccessoryView = snapshotView;
     }
 
     
@@ -393,7 +405,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
             if !annVisible {
-                point.subtitle = "\(group.name)\n\(point.descr)"
+                point.subtitle = "\(group.name)\n\(point.descr)\n\(point.url)"
                 self.mapView.addAnnotation(point);
                 self.pointAnnotations.append(point)
                 print("adding point \(point.u)")
@@ -512,6 +524,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        var longNames: Bool = false;
+        
+        if let sLongNames = SettingsManager.getKey(SettingKeys.longNames) {
+            longNames = sLongNames.boolValue
+        }
         if annotation is Point {
             let reuseIdentifier = "point"
             var pointView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
@@ -531,7 +548,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let title = annotation.title {
                 if let letter = pointView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
-                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
+                    if (longNames) {
+                        letter.text = title;
+                    } else {
+                        letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
+                    }
                 }
             }
            
@@ -554,7 +575,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let title = annotation.title {
                  if let letter = userView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
-                    letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
+                    if (longNames) {
+                        letter.text = title;
+                    } else {
+                        letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
+                    }
                 }
             }
             

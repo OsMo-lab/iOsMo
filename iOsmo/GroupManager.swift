@@ -150,12 +150,14 @@ open class GroupManager{
                             let uName = u["name"] as? String
                             let descr = u["description"] as? String
                             let uColor = u["color"] as! String
+                            let uURL = u["url"] as? String ?? ""
                             
                             point.color = uColor
                             point.name = uName!
                             point.lat = lat
                             point.lon = lon
                             point.descr = descr!
+                            point.url = uURL
                             
                         }
                     } else {
@@ -331,7 +333,7 @@ open class GroupManager{
                     var points : [NSDictionary] = [NSDictionary]()
                     for p in g.points {
                         let point : NSDictionary =
-                            ["u": p.u, "name": p.name, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)"];
+                            ["u": p.u, "name": p.name,"url": p.url, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)"];
                         points.append(point)
                     }
                     
