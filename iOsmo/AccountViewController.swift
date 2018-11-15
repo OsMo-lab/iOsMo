@@ -286,6 +286,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         connectionManager.connect()
         userName.text = NSLocalizedString("Connecting...", comment:"Connecting status")
         controller.dismiss(animated: true, completion: nil)
+        groupManager.groupList(false)
         
     }
     

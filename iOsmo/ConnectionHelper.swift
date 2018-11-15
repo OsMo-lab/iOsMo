@@ -34,7 +34,7 @@ struct ConnectionHelper {
     
     static let authUrl = URL(string: "https://api.osmo.mobi/new?")
     static let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
-    static let iOsmoAppKey = "hD74_vDa3Lc_3rRs"
+    static let iOsmoAppKey = "hD74_vDa3Lc_3rDs"
     /// [Register device to the server]
     
     static func postRequest (_ url: URL, requestBody: NSString, postCompleted : @escaping (_ succeeded: Bool, _ res: NSDictionary) -> ()) {
