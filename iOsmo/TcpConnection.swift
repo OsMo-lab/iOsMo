@@ -129,7 +129,6 @@ open class TcpConnection: BaseTcpConnection {
     fileprivate func sendToken(_ token: Token){
         
         let request = "\(Tags.token.rawValue)\(token.token)"
-        
         super.send(request)
         
         print("send token \(request)")

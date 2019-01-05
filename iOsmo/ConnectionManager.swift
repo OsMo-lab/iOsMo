@@ -333,9 +333,9 @@ open class ConnectionManager: NSObject{
     }
     
     open func sendPush(_ token: String){
-        if self.connected{
+        //if self.connected{
             connection.sendPush(token)
-        }
+        //}
     }
 
     

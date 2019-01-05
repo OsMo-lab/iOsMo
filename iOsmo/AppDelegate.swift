@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 07/12/14.
-//  Copyright (c) 2014 Olga Grineva, (c) 2017 Alexey Sirotkin All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2019 Alexey Sirotkin All rights reserved.
 //
 
 import UIKit
@@ -149,6 +149,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    /*
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        log.enqueue("Firebase registration token: \(fcmToken)")
+        
+        let dataDict:[String: String] = ["token": fcmToken]
+        //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        // TODO: If necessary send token to application server.
+        // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+ */
+    
     func displayNotification() {
         if self.localNotification == nil {
             self.localNotification = UILocalNotification()
@@ -228,6 +239,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // [START receive_message]
+    /* DEPRECATED
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
@@ -244,6 +256,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print full message.
         //print(userInfo)
     }
+ */
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -287,7 +300,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     
         log.enqueue("APNs token retrieved: \(token)")
-
+       
         // With swizzling disabled you must set the APNs token here.
         Messaging.messaging().apnsToken = deviceToken
         //Messaging.messaging().setAPNSToken(deviceToken, type: .prod)
@@ -346,7 +359,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 extension AppDelegate : MessagingDelegate {
 
     // [START refresh_token]
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         log.enqueue("Firebase registration token: \(fcmToken)")
         connectionManager.sendPush(fcmToken)
         
