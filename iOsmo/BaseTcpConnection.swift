@@ -10,9 +10,15 @@ import Foundation
 import UIKit
 
 open class BaseTcpConnection: NSObject {
+    let answerObservers = ObserverSet<(String)>()
     
     let tcpClient = TcpClient()
 
+
+    
+    open func parseOutput(_ output: String){
+        answerObservers.notify(output)
+    }
     open var addCallBackOnError: ((Bool) -> Void)? {
         get {
             return tcpClient.callbackOnError
@@ -66,7 +72,7 @@ open class BaseTcpConnection: NSObject {
     }
     
     func connect(_ token: Token){
-        
+        tcpClient.callbackOnParse = parseOutput
         tcpClient.createConnection(token)
     }
     

@@ -26,7 +26,6 @@
 		29520AB81AD5D79100CC4136 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520AB71AD5D79100CC4136 /* Group.swift */; };
 		29520ABA1AD5D7E700CC4136 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520AB91AD5D7E700CC4136 /* User.swift */; };
 		2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB31AC21CC60070A090 /* TcpClient.swift */; };
-		2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB51AC230320070A090 /* TcpConnection.swift */; };
 		2982CFB91AC89E740070A090 /* SessionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB81AC89E740070A090 /* SessionStatus.swift */; };
 		29CCA6241B1676AB00DA0C83 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CCA6231B1676AB00DA0C83 /* Extensions.swift */; };
 		29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CD67091ACB6EA000656860 /* SessionTimer.swift */; };
@@ -118,7 +117,6 @@
 		29520AB71AD5D79100CC4136 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		29520AB91AD5D7E700CC4136 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		2982CFB31AC21CC60070A090 /* TcpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpClient.swift; sourceTree = "<group>"; };
-		2982CFB51AC230320070A090 /* TcpConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpConnection.swift; sourceTree = "<group>"; };
 		2982CFB81AC89E740070A090 /* SessionStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionStatus.swift; sourceTree = "<group>"; };
 		29CCA6231B1676AB00DA0C83 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		29CD67091ACB6EA000656860 /* SessionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTimer.swift; sourceTree = "<group>"; };
@@ -309,7 +307,6 @@
 				293C95CC1A3E3660005DD4CE /* Token.swift */,
 				29F9A6D71AC0C50C001A610D /* BaseTcpConnection.swift */,
 				2982CFB31AC21CC60070A090 /* TcpClient.swift */,
-				2982CFB51AC230320070A090 /* TcpConnection.swift */,
 			);
 			name = Connection;
 			sourceTree = "<group>";
@@ -617,7 +614,6 @@
 				29F9A6D61AC0C31F001A610D /* ConnectionHelper.swift in Sources */,
 				29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */,
 				293C95781A34B217005DD4CE /* MonitoringViewControllerresu.swift in Sources */,
-				2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */,
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
 				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
 				4D8B78451FA7624A00E1069D /* MapViewController.swift in Sources */,

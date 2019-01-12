@@ -64,7 +64,7 @@ open class ConnectionManager: NSObject{
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
 
     
-    var connection = TcpConnection()
+    var connection = BaseTcpConnection()
 
     let reachability = Reachability()!
     
@@ -269,7 +269,7 @@ open class ConnectionManager: NSObject{
                     let device = SettingsManager.getKey(SettingKeys.device) as! String
 
                     let request = "\(Tags.auth.rawValue)\(device)"
-                    self.connection.send(request)
+                    self.send(request: request)
                 }
             }
             if self.monitoringGroupsHandler == nil {
@@ -336,7 +336,7 @@ open class ConnectionManager: NSObject{
         log.enqueue("ConnectionManager: open session")
         if (self.connected && !self.sessionOpened) {
             let request = "\(Tags.openSession.rawValue)"
-            connection.send(request)
+            send(request: request)
        }
     }
 
@@ -350,12 +350,12 @@ open class ConnectionManager: NSObject{
     }
     //probably should be refactored and moved to ReconnectManager
     fileprivate func sendPing(){
-        connection.send("\(Tags.ping.rawValue)")
+        self.send(request:"\(Tags.ping.rawValue)")
     }
     
     open func sendCoordinate(_ coordinate: LocationModel) {
         let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.WHERE.rawValue)|\(coordinate.getCoordinateRequest)"
-        connection.send(request)
+        send(request: request)
     }
     
     open func sendCoordinates(_ coordinates: [LocationModel])
@@ -366,7 +366,7 @@ open class ConnectionManager: NSObject{
     }
     open func sendRemoteCommandResponse(_ rc: String) {
         let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)"
-        connection.send(request)
+        send(request: request)
     }
     
     // Groups funcs
@@ -401,7 +401,7 @@ open class ConnectionManager: NSObject{
                 
                 if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                     let request = "\(Tags.createGroup.rawValue):|\(jsonString)"
-                    connection.send(request)
+                    send(request: request)
                 }
             }catch {
                 print("error generating system info")
@@ -412,14 +412,14 @@ open class ConnectionManager: NSObject{
     open func enterGroup(_ name: String, nick: String){
         if self.connected{
             let request = "\(Tags.enterGroup.rawValue)\(name)|\(nick)"
-            connection.send(request)
+            send(request: request)
         }
     }
     
     open func leaveGroup(_ u: String){
         if self.connected {
             let request = "\(Tags.leaveGroup.rawValue)\(u)"
-            connection.send(request)
+            send(request: request)
         }
     }
 
@@ -427,14 +427,14 @@ open class ConnectionManager: NSObject{
     open func activatePoolGroups(_ s: Int){
         if self.connected {
             let request = "\(Tags.activatePoolGroups.rawValue):\(s)"
-            connection.send(request)
+            send(request: request)
         }
     }
     
     open func groupsSwitch(_ s: Int){
         if self.connected {
             let request = "\(Tags.groupSwitch.rawValue)"
-            connection.send(request)
+            send(request: request)
         }
     }
     
@@ -442,38 +442,42 @@ open class ConnectionManager: NSObject{
     open func activateGroup(_ u: String){
         if self.connected {
             let request = "\(Tags.activateGroup.rawValue)\(u)"
-            connection.send(request)
+            send(request: request)
         }
         
     }
+    
     
     open func deactivateGroup(_ u: String){
         if self.connected {
             let request = "\(Tags.deactivateGroup.rawValue)\(u)"
-            connection.send(request)
+            send(request: request)
         }
         
     }
     
+    open func send(request: String) {
+        connection.send(request)
+    }
     open func sendGetGroups(){
         let request = "\(Tags.getGroups.rawValue)"
-        connection.send(request)
+        send(request: request)
     }
     
     open func sendUpdateGroupResponse(group: Int, event:Int){
         let request = "\(Tags.updateGroupResponse.rawValue):\(group)|\(event)"
-        connection.send(request)
+        send(request: request)
     }
     open func getMessageOfTheDay(){
         if self.connected{
             let request = "\(Tags.messageDay.rawValue)"
-            connection.send(request)
+            send(request: request)
         }
     }
     
     open func sendPush(_ token: String){
         let request = "\(Tags.push.rawValue)|\(token)"
-        connection.send(request)
+        send(request: request)
     }
 
     open func sendSystemInfo(){
@@ -487,7 +491,7 @@ open class ConnectionManager: NSObject{
             
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_SYSTEM_INFO.rawValue)|\(jsonString)"
-                connection.send(request)
+                send(request: request)
             }
         }catch {
             print("error generating system info")
@@ -509,7 +513,7 @@ open class ConnectionManager: NSObject{
             
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.remoteCommandResponse.rawValue)\(RemoteCommand.TRACKER_BATTERY_INFO.rawValue)|\(jsonString)"
-                connection.send(request)
+                send(request: request)
             }
         }catch {
             print("error generating battery info")
