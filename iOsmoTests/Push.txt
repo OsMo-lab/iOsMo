@@ -1,0 +1,4 @@
+iOsMoGam
+alexey.sirotkin.iosmo
+3ab519fded9581d2ebf4cf7e4b23f16912a9946e091a8da88213e3cd963b1e6a
+{"aps":{"content-available":"1"},"GCM":"RC:11"}

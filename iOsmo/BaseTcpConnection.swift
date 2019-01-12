@@ -95,6 +95,7 @@ open class BaseTcpConnection: NSObject {
     }
     
     
+    
     open func closeConnection(){
         tcpClient.closeConnection()
     }

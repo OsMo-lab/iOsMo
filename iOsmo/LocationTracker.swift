@@ -175,15 +175,19 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-        log.enqueue("locationManager error \(error)")
+        
         
         switch (error){
         	case CLError.Code.network:
-                print("network")
+                log.enqueue("locationManager error \(error)")
             case CLError.Code.denied:
-                print("denied")
+                log.enqueue("locationManager error \(error)")
+            case CLError.Code.locationUnknown:
+                if (self.isGettingLocationOnce){
+                    
+                }
             default:
-                print("some error")
+                log.enqueue("locationManager error \(error)")
         }
     }
     

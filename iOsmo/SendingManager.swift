@@ -44,7 +44,7 @@ open class SendingManager: NSObject{
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
                 if $0.0 == 0 {
-                    self.connectionManager.connection.sendSystemInfo()
+                    self.connectionManager.sendSystemInfo()
                 }
                 
                 // unsubscribe because it is single event
@@ -54,7 +54,7 @@ open class SendingManager: NSObject{
             }
             connectionManager.connect()
         }else{
-            self.connectionManager.connection.sendSystemInfo()
+            self.connectionManager.sendSystemInfo()
         }
     }
     
@@ -62,7 +62,7 @@ open class SendingManager: NSObject{
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
                 if $0.0 == 0 {
-                    self.connectionManager.connection.sendBatteryStatus()
+                    self.connectionManager.sendBatteryStatus()
                 }
 
                 // unsubscribe because it is single event
@@ -72,7 +72,7 @@ open class SendingManager: NSObject{
             }
             connectionManager.connect()
         }else{
-            self.connectionManager.connection.sendBatteryStatus()
+            self.connectionManager.sendBatteryStatus()
         }
     }
     
@@ -86,8 +86,8 @@ open class SendingManager: NSObject{
                     self.onSessionRun = self.connectionManager.sessionRun.add{
                         if $0.0 == 0{
                             self.startSending()
-                            if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
-                                self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                            if (rc != "" /*&& rc != RemoteCommand.WHERE.rawValue*/) {
+                                self.connectionManager.sendRemoteCommandResponse(rc)
                             }
                         }
                     }
@@ -110,7 +110,7 @@ open class SendingManager: NSObject{
                 if ($0.0 == 0){
                     self.startSending()
                     if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
-                        self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                        self.connectionManager.sendRemoteCommandResponse(rc)
                     }
                 } else {
                     //unsibscribe when stop monitoring
@@ -127,7 +127,7 @@ open class SendingManager: NSObject{
         } else {
             startSending()
             if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
-                self.connectionManager.connection.sendRemoteCommandResponse(rc)
+                self.connectionManager.sendRemoteCommandResponse(rc)
             }
         }
     }
@@ -140,7 +140,7 @@ open class SendingManager: NSObject{
         sessionPaused.notify((0))
         UIApplication.shared.isIdleTimerDisabled = false
         if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
-            self.connectionManager.connection.sendRemoteCommandResponse(rc)
+            self.connectionManager.sendRemoteCommandResponse(rc)
         }
 
     }
@@ -180,7 +180,7 @@ open class SendingManager: NSObject{
     fileprivate func startSending(){
         if (connectionManager.sessionOpened || connectionManager.isGettingLocation) {
             
-            log.enqueue("CoordinateManager: start Sending")
+            log.enqueue("Sending Manager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
             var sendTime:TimeInterval = 4;

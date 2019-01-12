@@ -57,7 +57,7 @@ open class GroupManager{
             }
             self.monitoringGroupsUpdated.notify($0)
             })
-        self.onUpdateGroup = connection.connection.groupsUpdated.add({
+        self.onUpdateGroup = connection.groupsUpdated.add({
             let g = $1 as! Dictionary<String, AnyObject>
             let group = $0
             let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
@@ -99,7 +99,7 @@ open class GroupManager{
                         }
                     }
                     if uE > 0 {
-                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                 }
             } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
@@ -121,7 +121,7 @@ open class GroupManager{
                         }
                     }
                     if uE > 0 {
-                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                     
                 }
@@ -165,7 +165,7 @@ open class GroupManager{
                         foundGroup?.points.append(pointNew)
                     }
                     if uE > 0 {
-                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                 }
             } else if let jsonTracks = g["track"] as? Array<AnyObject> {
@@ -197,7 +197,7 @@ open class GroupManager{
                         foundGroup?.tracks.append(track)
                     }
                     if uE > 0 {
-                        self.connection.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                 }
             }

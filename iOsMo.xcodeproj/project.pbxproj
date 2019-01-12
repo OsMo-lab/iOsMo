@@ -28,7 +28,6 @@
 		2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB31AC21CC60070A090 /* TcpClient.swift */; };
 		2982CFB61AC230320070A090 /* TcpConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB51AC230320070A090 /* TcpConnection.swift */; };
 		2982CFB91AC89E740070A090 /* SessionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB81AC89E740070A090 /* SessionStatus.swift */; };
-		2982CFBB1AC89E8E0070A090 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFBA1AC89E8E0070A090 /* SessionManager.swift */; };
 		29CCA6241B1676AB00DA0C83 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CCA6231B1676AB00DA0C83 /* Extensions.swift */; };
 		29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CD67091ACB6EA000656860 /* SessionTimer.swift */; };
 		29CDE0851A61911900CC5628 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CDE0841A61911900CC5628 /* SettingsViewController.swift */; };
@@ -66,6 +65,7 @@
 		4DEACF1421E09F7200D1A32D /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEACF0821E09F7100D1A32D /* nanopb.framework */; };
 		4DEACF1521E09F7200D1A32D /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEACF0A21E09F7100D1A32D /* FirebaseMessaging.framework */; };
 		4DEACF1621E09F7200D1A32D /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEACF0B21E09F7100D1A32D /* Protobuf.framework */; };
+		4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4DEACF1921E13CAE00D1A32D /* Push.txt */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
 /* End PBXBuildFile section */
@@ -120,7 +120,6 @@
 		2982CFB31AC21CC60070A090 /* TcpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpClient.swift; sourceTree = "<group>"; };
 		2982CFB51AC230320070A090 /* TcpConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpConnection.swift; sourceTree = "<group>"; };
 		2982CFB81AC89E740070A090 /* SessionStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionStatus.swift; sourceTree = "<group>"; };
-		2982CFBA1AC89E8E0070A090 /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		29CCA6231B1676AB00DA0C83 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		29CD67091ACB6EA000656860 /* SessionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTimer.swift; sourceTree = "<group>"; };
 		29CDE0841A61911900CC5628 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -165,6 +164,7 @@
 		4DEACF0B21E09F7100D1A32D /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Protobuf.framework; sourceTree = "<group>"; };
 		4DEACF1721E0A3C800D1A32D /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Firebase/module.modulemap; sourceTree = SOURCE_ROOT; };
 		4DEACF1821E0A3C800D1A32D /* Firebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Firebase.h; path = Firebase/Firebase.h; sourceTree = SOURCE_ROOT; };
+		4DEACF1921E13CAE00D1A32D /* Push.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Push.txt; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
 		F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -265,6 +265,7 @@
 			children = (
 				293C958D1A34B217005DD4CE /* iOsmoTests.swift */,
 				293C958B1A34B217005DD4CE /* Supporting Files */,
+				4DEACF1921E13CAE00D1A32D /* Push.txt */,
 			);
 			path = iOsmoTests;
 			sourceTree = "<group>";
@@ -331,7 +332,6 @@
 			isa = PBXGroup;
 			children = (
 				2982CFB81AC89E740070A090 /* SessionStatus.swift */,
-				2982CFBA1AC89E8E0070A090 /* SessionManager.swift */,
 				29CD67091ACB6EA000656860 /* SessionTimer.swift */,
 				F946C9B81A3F08A30073A273 /* SendingManager.swift */,
 			);
@@ -518,6 +518,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */,
 				4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -609,7 +610,6 @@
 				293C95C41A3C6FB1005DD4CE /* LocationModel.swift in Sources */,
 				293C95CD1A3E3660005DD4CE /* Token.swift in Sources */,
 				293C95761A34B217005DD4CE /* AppDelegate.swift in Sources */,
-				2982CFBB1AC89E8E0070A090 /* SessionManager.swift in Sources */,
 				2982CFB91AC89E740070A090 /* SessionStatus.swift in Sources */,
 				F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */,
 				29520ABA1AD5D7E700CC4136 /* User.swift in Sources */,

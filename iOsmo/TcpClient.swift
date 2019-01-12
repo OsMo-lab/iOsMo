@@ -192,11 +192,9 @@ open class TcpClient : NSObject, StreamDelegate {
                 callbackOnError!(true)
             }
         case Stream.Event.hasSpaceAvailable:
-            print("HasSpaceAvailable")
             writeToStream()
             break
         case Stream.Event.hasBytesAvailable:
-            print("HasBytesAvailable")
             
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)

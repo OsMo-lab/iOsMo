@@ -23,14 +23,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var localNotification: UILocalNotification? = nil;
-    
+    var appIsStarting: Bool = false;
     fileprivate var timer = Timer()
     
-    let gcmMessageIDKey = "GCM"
+    let gcmMessageIDKey = "GCM" //"GCM"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+        UIApplication.shared.registerForRemoteNotifications()
+
+        
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
+        
+        if let data = launchOptions?[.remoteNotification] {
+            self.appIsStarting = true;
+        }
         
         // Override point for customization after application launch.
         
@@ -61,18 +69,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
                 completionHandler: {_, _ in })
+            
         } else {
             let settings: UIUserNotificationSettings =
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
+            Messaging.messaging().shouldEstablishDirectChannel = true;
         }
         UIApplication.shared.applicationIconBadgeNumber = 0
         
         
         
         // [START set_messaging_delegate]
-        Messaging.messaging().shouldEstablishDirectChannel = true;
         Messaging.messaging().delegate = self
+        
+        
         // [END set_messaging_delegate]
         
         // Add observer for InstanceID token refresh callback.
@@ -108,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        UIApplication.shared.registerForRemoteNotifications()
+        
 
         Analytics.logEvent("app_open", parameters: nil)
         if let url = launchOptions?[.url] as? URL {
@@ -121,11 +132,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+        self.appIsStarting = false;
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        self.appIsStarting = false;
 
 
         self.connectionManager.activatePoolGroups(-1)
@@ -136,7 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {
-            if self.connectionManager.connection.permanent == false {
+            if self.connectionManager.permanent == false {
                 backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                     self?.endBackgroundTask()
                 }
@@ -190,19 +203,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        self.appIsStarting = true;
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        self.appIsStarting = false;
         if (backgroundTask != UIBackgroundTaskInvalid) {
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = UIBackgroundTaskInvalid
         }
-        //self.connectToFcm()
+
         if (self.localNotification != nil) {
             UIApplication.shared.cancelLocalNotification(self.localNotification!)
             self.localNotification = nil
         }
+        
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
+                self.log.enqueue ("unprocessed notification count: \(notifications.count)")
+                if notifications.count > 0 {
+                    var identifiers: [String] = [];
+                    
+                    notifications.forEach({ (notification) in
+                        
+                        
+                        DispatchQueue.main.async {
+                            let userInfo = notification.request.content.userInfo
+                            self.log.enqueue("userInfo : \(userInfo)")
+                            if let messageID = userInfo[self.gcmMessageIDKey] {
+                                self.log.enqueue("getDeliveredNotifications FCM : \(messageID)")
+                                self.connectionManager.connection.parseOutput(messageID as! String)
+                            }
+                        }
+                        identifiers.append( notification.request.identifier)
+                        
+                    })
+                    if (identifiers.count > 0) {
+                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: identifiers)
+                    }
+                }
+            }
+        }
+        
+        
+        
         UIApplication.shared.cancelAllLocalNotifications()
         
      }
@@ -265,16 +310,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
+        log.enqueue("app didReceiveRemoteNotification \(userInfo)")
         
-        // TODO: Handle data of notification
-        // Print message ID.
+        // TODO: У нас есть 30 секунд !!!!!! на обработку события
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
         }
-        
-        // Print full message.
-        //print(userInfo)
+
         
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -305,10 +348,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Messaging.messaging().apnsToken = deviceToken
         //Messaging.messaging().setAPNSToken(deviceToken, type: .prod)
     }
-    
-
     // [END connect_on_active]
-	}
+
+    // MARK: - Background
+    
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        ConnectionHelper.shared.backgroundCompletionHandler = completionHandler
+    }
+}
 
 
 // [START ios_10_message_handling]
@@ -332,11 +379,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             connectionManager.connection.parseOutput(messageID as! String)
         }
         
-        // Print full message.
-        //print(userInfo)
-        
         // Change this to your preferred presentation option
-        completionHandler([])
+        if UIApplication.shared.applicationState == .active {
+            completionHandler(.badge)
+        }else {
+            completionHandler(.alert)
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
