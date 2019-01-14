@@ -53,7 +53,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             LocationTracker.sharedLocationManager.distanceFilter = 100
         }
     }
-    
+
     open func turnMonitorinOn(once : Bool){
         self.distance = 0
         self.isDeferingUpdates = false
@@ -94,7 +94,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
-        log.enqueue("stopUpdatingLocation")
+        log.enqueue("LT.turnMonitoringOff")
         self.isDeferingUpdates = false
     }
     
@@ -108,11 +108,11 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func locationManager(_ manager: CLLocationManager,
         didChangeAuthorization status: CLAuthorizationStatus){
-        log.enqueue("Location didChangeAuthorizationStatus to \(status.rawValue)")
+        log.enqueue("LT.didChangeAuthorizationStatus to \(status.rawValue)")
     }
     
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        log.enqueue("didUpdateLocation")
+        log.enqueue("LT.didUpdateLocations")
         var prevLM = allSessionLocations.last
         var prev_loc = locations.first
         /*
@@ -183,11 +183,13 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             case CLError.Code.denied:
                 log.enqueue("locationManager error \(error)")
             case CLError.Code.locationUnknown:
+                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
                 if (self.isGettingLocationOnce){
+                    
                     
                 }
             default:
-                log.enqueue("locationManager error \(error)")
+                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
         }
     }
     

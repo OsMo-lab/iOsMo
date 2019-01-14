@@ -389,12 +389,14 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0{
+            /*
             var isUser = false;
             if let user = SettingsManager.getKey(SettingKeys.user) {
                 if user.length > 0 {
                     isUser = true;
                 }
             }
+            */
             if groupAction == GroupActions.new{
                 return 150;
             } else {
@@ -413,7 +415,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let row = (indexPath as NSIndexPath).row
         let section = (indexPath as NSIndexPath).section
         

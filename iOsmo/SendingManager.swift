@@ -40,71 +40,41 @@ open class SendingManager: NSObject{
         super.init()
     }
 
-    open func sendSystemInfo(){
-        if !connectionManager.connected {
-            self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 == 0 {
-                    self.connectionManager.sendSystemInfo()
-                }
-                
-                // unsubscribe because it is single event
-                if let onConRun = self.onConnectionRun {
-                    self.connectionManager.connectionRun.remove(onConRun)
-                }
-            }
-            connectionManager.connect()
-        }else{
-            self.connectionManager.sendSystemInfo()
-        }
-    }
-    
-    open func sendBatteryStatus(_ rc: String){
-        if !connectionManager.connected {
-            self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 == 0 {
-                    self.connectionManager.sendBatteryStatus()
-                }
 
-                // unsubscribe because it is single event
-                if let onConRun = self.onConnectionRun {
-                    self.connectionManager.connectionRun.remove(onConRun)
-                }
-            }
-            connectionManager.connect()
-        }else{
-            self.connectionManager.sendBatteryStatus()
-        }
-    }
-    
     open func startSendingCoordinates(_ rc: String){
         let once = (!connectionManager.sessionOpened && rc == RemoteCommand.WHERE.rawValue) ? true : false;
         locationTracker.turnMonitorinOn(once: once) //start getting coordinates
 
         if !connectionManager.connected {
-            self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 == 0{
-                    self.onSessionRun = self.connectionManager.sessionRun.add{
-                        if $0.0 == 0{
-                            self.startSending()
-                            if (rc != "" /*&& rc != RemoteCommand.WHERE.rawValue*/) {
-                                self.connectionManager.sendRemoteCommandResponse(rc)
+            if once && rc != RemoteCommand.WHERE.rawValue {
+                self.startSending()
+            } else {
+                self.onConnectionRun = connectionManager.connectionRun.add{
+                    if $0.0 == 0{
+                        self.onSessionRun = self.connectionManager.sessionRun.add{
+                            if $0.0 == 0{
+                                self.startSending()
+                                if (rc != "" /*&& rc != RemoteCommand.WHERE.rawValue*/) {
+                                    self.connectionManager.sendRemoteCommandResponse(rc)
+                                }
                             }
                         }
-                    }
-                    if rc != RemoteCommand.WHERE.rawValue {
-                        self.connectionManager.openSession()
-                    }else{
-                        self.startSending()
+                        if rc != RemoteCommand.WHERE.rawValue {
+                            self.connectionManager.openSession()
+                        }else{
+                            self.startSending()
+                        }
+                        
                     }
                     
+                    // unsubscribe because it is single event
+                    if let onConRun = self.onConnectionRun {
+                        self.connectionManager.connectionRun.remove(onConRun)
+                    }
                 }
-                
-                // unsubscribe because it is single event
-                if let onConRun = self.onConnectionRun {
-                    self.connectionManager.connectionRun.remove(onConRun)
-                }
+            
+                connectionManager.connect()
             }
-            connectionManager.connect()
         } else if !connectionManager.sessionOpened {
             self.onSessionRun = self.connectionManager.sessionRun.add{
                 if ($0.0 == 0){

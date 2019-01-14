@@ -65,6 +65,8 @@ enum AnswTags: String{
     case enterGroup = "GE"
     case leaveGroup = "GL"
     case remoteCommand = "RC"
+    case remoteCommandResponse = "RCR"
+    
     //case activatePG = "PG"
     case bye = "BYE"
     case kick = "KICK"

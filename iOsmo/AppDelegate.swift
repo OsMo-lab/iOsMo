@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
         
-        if let data = launchOptions?[.remoteNotification] {
+        if let _ = launchOptions?[.remoteNotification] {
             self.appIsStarting = true;
         }
         
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         _ = connectionManager.pushActivated.add{
             if $0  == 0{
-                self.log.enqueue("connectionManager.pushActivated")
+                self.log.enqueue("CM.pushActivated")
             }
             //self.activateSwitcher.isOn = $0
         }
@@ -405,7 +405,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 // [END ios_10_message_handling]
 // [START ios_10_data_message_handling]
 extension AppDelegate : MessagingDelegate {
-
     // [START refresh_token]
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         log.enqueue("Firebase registration token: \(fcmToken)")

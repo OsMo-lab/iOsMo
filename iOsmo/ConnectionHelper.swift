@@ -80,7 +80,7 @@ class ConnectionHelper: NSObject {
             if url != nil {
                 
                 do {
-                    let data:Data! = try? Data(contentsOf: url!)
+                    let data:Data! = try Data(contentsOf: url!)
                     completed(true, data)
                 } catch {
                     completed(false, nil)

@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 13/12/14.
-//  Copyright (c) 2014 Olga Grineva, (c) 2016 Alexey Sirotkin All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2019 Alexey Sirotkin All rights reserved.
 //
 // implementations of Singleton: https://github.com/hpique/SwiftSingleton
 // implement http://stackoverflow.com/questions/9810585/how-to-get-reachability-notifications-in-ios-in-background-when-dropping-wi-fi-n
@@ -16,7 +16,7 @@ import FirebaseMessaging
 let authUrl = URL(string: "https://api.osmo.mobi/new?")
 let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
 let iOsmoAppKey = "hD74_vDa3Lc_3rDs"
-let apiUrl = URL(string: "https://api.osmo.mobi/inProx?")
+let apiUrl = "https://api.osmo.mobi/inProx?"
 
 open class ConnectionManager: NSObject{
 
@@ -63,6 +63,7 @@ open class ConnectionManager: NSObject{
     
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
 
+    var delayedRequests : [String]  = [];
     
     var connection = BaseTcpConnection()
 
@@ -169,7 +170,7 @@ open class ConnectionManager: NSObject{
         } else {
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device)")
             self.Authenticated = true
-            self.getServerInfo(key: device as! String)
+            self.getServerInfo(key: device! as String)
         }
     }
     
@@ -266,10 +267,12 @@ open class ConnectionManager: NSObject{
                 self.connection.addCallBackOnConnect = {
                     () -> Void in
                     //self.connecting = false
-                    let device = SettingsManager.getKey(SettingKeys.device) as! String
+                    let device = SettingsManager.getKey(SettingKeys.device)! as String
 
                     let request = "\(Tags.auth.rawValue)\(device)"
-                    self.send(request: request)
+                    self.connection.send(request)
+                    
+                    
                 }
             }
             if self.monitoringGroupsHandler == nil {
@@ -286,7 +289,7 @@ open class ConnectionManager: NSObject{
                 self.connectionRun.notify((1, ""))
                 self.shouldReConnect = false
             } else {
-                self.log.enqueue("connectionManager completed Error:\(token?.error)")
+                self.log.enqueue("CM.completed Error:\(token?.error)")
                 if (token?.error == "Wrong device key") {
                     SettingsManager.setKey("", forKey: SettingKeys.device)
                     self.connectionRun.notify((1, ""))
@@ -298,10 +301,10 @@ open class ConnectionManager: NSObject{
                 
             }
         }
-        
     }
+    
     open func connect(_ reconnect: Bool = false){
-        log.enqueue("ConnectionManager: connect")
+        log.enqueue("CM: connect")
         if self.connecting {
             log.enqueue("Conection already in process")
             return;
@@ -333,7 +336,7 @@ open class ConnectionManager: NSObject{
     }
     
     open func openSession(){
-        log.enqueue("ConnectionManager: open session")
+        log.enqueue("CM.openSession")
         if (self.connected && !self.sessionOpened) {
             let request = "\(Tags.openSession.rawValue)"
             send(request: request)
@@ -342,12 +345,42 @@ open class ConnectionManager: NSObject{
 
 
     open func closeSession(){
-        log.enqueue("ConnectionManager: close session")
+        log.enqueue("CM.closeSession")
         
         if self.sessionOpened {
             connection.closeSession()
         }
     }
+    
+    open func send(request: String) {
+        if self.connected {
+            connection.send(request)
+        } else {
+            if UIApplication.shared.applicationState == .active {
+                log.enqueue("CM.send appActive")
+                
+                delayedRequests.append(request)
+            } else {
+                log.enqueue("CM.send appInActive")
+                self.connecting = false;
+                let device = SettingsManager.getKey(SettingKeys.device)! as String
+                let escapedRequest = request.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+
+                if let url = URL(string: (apiUrl + "k=" + device + "&m=" + escapedRequest! ) ) {
+                    conHelper.onCompleted = {(dataURL, data) in
+                        LogQueue.sharedLogQueue.enqueue("CM.Send.onCompleted")
+                        if let output = String(data:data, encoding:.utf8) {
+                            LogQueue.sharedLogQueue.enqueue("output")
+                            self.notifyAnswer(output: output)
+                        }
+                    
+                    }
+                    conHelper.backgroundRequest(url, requestBody: "")
+                }
+            }
+        }
+    }
+    
     //probably should be refactored and moved to ReconnectManager
     fileprivate func sendPing(){
         self.send(request:"\(Tags.ping.rawValue)")
@@ -361,7 +394,7 @@ open class ConnectionManager: NSObject{
     open func sendCoordinates(_ coordinates: [LocationModel])
     {
         if self.sessionOpened {
-            self.sendCoordinates(coordinates)
+            connection.sendCoordinates(coordinates)
         }
     }
     open func sendRemoteCommandResponse(_ rc: String) {
@@ -371,94 +404,69 @@ open class ConnectionManager: NSObject{
     
     // Groups funcs
     open func getGroups(){
-        if self.connected {
-            if self.onGroupListUpdated == nil {
+        if self.onGroupListUpdated == nil {
+            
+            self.onGroupListUpdated = self.groupListDownloaded.add {
+                self.groupList.notify($0)
                 
-                self.onGroupListUpdated = self.groupListDownloaded.add {
-                    self.groupList.notify($0)
-                    
-                }
             }
-            self.sendGetGroups()
         }
+        self.sendGetGroups()
     }
     
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
-        if self.connected{
-            if self.onGroupCreated == nil {
-                
-                self.onGroupCreated = self.groupCreated.add {
-                    self.groupCreated.notify($0)
-                }
+        if self.onGroupCreated == nil {
+            self.onGroupCreated = self.groupCreated.add {
+                self.groupCreated.notify($0)
             }
-
-
-            let jsonInfo: NSDictionary =
-                ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+        }
+        
+        let jsonInfo: NSDictionary =
+            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+        
+        do{
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
             
-            do{
-                let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
-                
-                if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                    let request = "\(Tags.createGroup.rawValue):|\(jsonString)"
-                    send(request: request)
-                }
-            }catch {
-                print("error generating system info")
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let request = "\(Tags.createGroup.rawValue):|\(jsonString)"
+                send(request: request)
             }
+        }catch {
+            print("error generating new group info")
         }
     }
     
     open func enterGroup(_ name: String, nick: String){
-        if self.connected{
-            let request = "\(Tags.enterGroup.rawValue)\(name)|\(nick)"
-            send(request: request)
-        }
+        let request = "\(Tags.enterGroup.rawValue)\(name)|\(nick)"
+        send(request: request)
     }
     
     open func leaveGroup(_ u: String){
-        if self.connected {
-            let request = "\(Tags.leaveGroup.rawValue)\(u)"
-            send(request: request)
-        }
+        let request = "\(Tags.leaveGroup.rawValue)\(u)"
+        send(request: request)
     }
 
     //Активация-деактиация получени обновления координат из группы
     open func activatePoolGroups(_ s: Int){
-        if self.connected {
-            let request = "\(Tags.activatePoolGroups.rawValue):\(s)"
-            send(request: request)
-        }
+        let request = "\(Tags.activatePoolGroups.rawValue):\(s)"
+        send(request: request)
     }
     
     open func groupsSwitch(_ s: Int){
-        if self.connected {
-            let request = "\(Tags.groupSwitch.rawValue)"
-            send(request: request)
-        }
+        let request = "\(Tags.groupSwitch.rawValue)"
+        send(request: request)
     }
-    
     
     open func activateGroup(_ u: String){
-        if self.connected {
-            let request = "\(Tags.activateGroup.rawValue)\(u)"
-            send(request: request)
-        }
-        
+        let request = "\(Tags.activateGroup.rawValue)\(u)"
+        send(request: request)
     }
-    
     
     open func deactivateGroup(_ u: String){
-        if self.connected {
-            let request = "\(Tags.deactivateGroup.rawValue)\(u)"
-            send(request: request)
-        }
-        
+        let request = "\(Tags.deactivateGroup.rawValue)\(u)"
+        send(request: request)
     }
-    
-    open func send(request: String) {
-        connection.send(request)
-    }
+
     open func sendGetGroups(){
         let request = "\(Tags.getGroups.rawValue)"
         send(request: request)
@@ -469,15 +477,15 @@ open class ConnectionManager: NSObject{
         send(request: request)
     }
     open func getMessageOfTheDay(){
-        if self.connected{
-            let request = "\(Tags.messageDay.rawValue)"
-            send(request: request)
-        }
+        let request = "\(Tags.messageDay.rawValue)"
+        send(request: request)
     }
     
     open func sendPush(_ token: String){
         let request = "\(Tags.push.rawValue)|\(token)"
-        send(request: request)
+        if connected {
+            send(request: request)
+        }
     }
 
     open func sendSystemInfo(){
@@ -498,7 +506,9 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    open func sendBatteryStatus(){
+
+    
+    open func sendBatteryStatus(_ rc: String){
         UIDevice.current.isBatteryMonitoringEnabled = true
         let level = Int(UIDevice.current.batteryLevel * 100)
         var state = 0;
@@ -573,6 +583,11 @@ open class ConnectionManager: NSObject{
                     } else {
                         if (!self.connected) {
                             self.shouldReConnect = false
+                        } else {
+                            for request in self.delayedRequests {
+                                self.send(request: request)
+                            }
+                            self.delayedRequests = []
                         }
                         if let trackerId = self.TrackerID {
                             SettingsManager.setKey(trackerId as NSString, forKey: SettingKeys.trackerId)
@@ -771,12 +786,12 @@ open class ConnectionManager: NSObject{
         if command == AnswTags.remoteCommand.rawValue {
             let sendingManger = SendingManager.sharedSendingManager
             if (param == RemoteCommand.TRACKER_BATTERY_INFO.rawValue){
-                sendingManger.sendBatteryStatus(param)
+                sendBatteryStatus(param)
                 return
             }
             
             if (param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue){
-                sendingManger.sendSystemInfo()
+                sendSystemInfo()
                 return
             }
 
@@ -805,21 +820,21 @@ open class ConnectionManager: NSObject{
             if (param == RemoteCommand.TRACKER_GCM_ID.rawValue) {
                 //Отправляем токен ранее полученный от FCM
                 if let token = Messaging.messaging().fcmToken {
-                    self.sendPush(token)
+                    sendPush(token)
                 }
-                self.sendRemoteCommandResponse(param)
+                sendRemoteCommandResponse(param)
                 return
             }
             
             if (param == RemoteCommand.REFRESH_GROUPS.rawValue){
-                self.sendGetGroups()
-                self.sendRemoteCommandResponse(param)
+                sendGetGroups()
+                sendRemoteCommandResponse(param)
                 return
             }
 
             if (param == RemoteCommand.WHERE.rawValue) {
                 if self.connected{
-                    self.sendRemoteCommandResponse(param)
+                    sendRemoteCommandResponse(param)
                 }
                 if self.sessionOpened == false {
                     self.isGettingLocation = true

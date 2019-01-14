@@ -165,18 +165,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         //Информация об изменениях в группе
-        self.groupManager.groupsUpdated.add{
+        _ = self.groupManager.groupsUpdated.add{
             //_ = $0
             //_ = $1
             let g = $1 as! Dictionary<String, AnyObject>
-            let group = $0
-            let foundGroup = self.groupManager.allGroups.filter{$0.u == "\(group)"}.first
+            //let group = $0
+            //let foundGroup = self.groupManager.allGroups.filter{$0.u == "\(group)"}.first
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: self.groupManager.allGroups, GP:g )
             }
         }
         //Обновление списка групп
-        self.groupManager.groupListUpdated.add{
+        _ = self.groupManager.groupListUpdated.add{
             let groups = $0
             DispatchQueue.main.async {
                 self.updateGroupsOnMap(groups: groups, GP:nil)
@@ -315,6 +315,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawTrack(track:Track) {
         print ("MapViewController drawTrack")
+        /*
         var annVisible = false;
         for ann in self.trackAnnotations {
             if (ann is OSMMapKitPolyline) {
@@ -325,6 +326,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
         }
+        */
         
         if let xml = track.getTrackData() {
             let gpx = xml.children[0]
@@ -419,7 +421,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawPeoples(location: UserGroupCoordinate){
         print("MapViewController drawPeoples")
-        let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
+        //let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
         if (self.mapView) != nil {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 var annVisible = false;
