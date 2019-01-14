@@ -14,6 +14,7 @@ import CoreMotion
 open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     fileprivate let log = LogQueue.sharedLogQueue
+
     private let motionManager = CMMotionActivityManager()
     
     
@@ -22,6 +23,8 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open var distance = 0.0;
     var isDeferingUpdates = false;
     var isGettingLocationOnce = false;
+    
+    let locationUpdated = ObserverSet<(LocationModel)>()
     
     class var sharedLocationManager : CLLocationManager {
         struct Static {
@@ -157,14 +160,20 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     let distanceInMeters = loc.distance(from: prev_loc!)
                     distance = distance + distanceInMeters / 1000
                     prev_loc = loc
-                    self.lastLocations.append(locationModel)
-                    if !(self.isGettingLocationOnce) {
-                        self.allSessionLocations.append(locationModel)
-                    }
                     
+                    if !(self.isGettingLocationOnce) {
+                        self.lastLocations.append(locationModel)
+                        self.allSessionLocations.append(locationModel)
+                    } else {
+                        locationUpdated.notify(locationModel)
+                    }
+
                     prevLM = locationModel;
+                    
                 }
             }
+            
+            
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
@@ -175,8 +184,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-        
-        
         switch (error){
         	case CLError.Code.network:
                 log.enqueue("locationManager error \(error)")

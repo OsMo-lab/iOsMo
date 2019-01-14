@@ -49,7 +49,7 @@ class ConnectionHelper: NSObject {
     override init() {
         super.init()
         
-        let configuration = URLSessionConfiguration.background(withIdentifier: "iosmo.background.download.session")
+        let configuration = URLSessionConfiguration.background(withIdentifier: "\(Bundle.main.bundleIdentifier!).background.download.session")
         configuration.sessionSendsLaunchEvents = true
         session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }

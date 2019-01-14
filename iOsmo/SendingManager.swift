@@ -19,12 +19,15 @@ open class SendingManager: NSObject{
     public let locationTracker = LocationTracker()
     fileprivate let log = LogQueue.sharedLogQueue
     
+    var onLocationUpdated : ObserverSetEntry<(LocationModel)>?
+    
     fileprivate var lcSendTimer: Timer?
     let aSelector : Selector = #selector(SendingManager.sending)
     fileprivate var onConnectionRun: ObserverSetEntry<(Int, String)>?
     fileprivate var onSessionRun: ObserverSetEntry<(Int, String)>?
     let sessionStarted = ObserverSet<(Int)>()
     let sessionPaused = ObserverSet<(Int)>()
+    var lastLocations = [LocationModel]()
 
     
     class var sharedSendingManager: SendingManager {
@@ -38,12 +41,24 @@ open class SendingManager: NSObject{
     override init(){
         
         super.init()
+        
+        
+        
     }
 
 
     open func startSendingCoordinates(_ rc: String){
         let once = (!connectionManager.sessionOpened && rc == RemoteCommand.WHERE.rawValue) ? true : false;
         locationTracker.turnMonitorinOn(once: once) //start getting coordinates
+        if (once) {
+            self.onLocationUpdated = locationTracker.locationUpdated.add {
+                self.locationTracker.turnMonitoringOff()
+                self.connectionManager.sendCoordinate($0)
+                self.connectionManager.isGettingLocation = false
+                self.locationTracker.locationUpdated.remove(self.onLocationUpdated!)
+            }
+            return
+        }
 
         if !connectionManager.connected {
             if once && rc != RemoteCommand.WHERE.rawValue {
@@ -139,10 +154,7 @@ open class SendingManager: NSObject{
                     //notify about all - because it draw on map
                     self.sentObservers.notify(c)
                 }
-                if (connectionManager.isGettingLocation && !connectionManager.sessionOpened) {
-                    pauseSendingCoordinates("")
-                    connectionManager.isGettingLocation = false
-                }
+                
            }
         }
     }
@@ -161,6 +173,7 @@ open class SendingManager: NSObject{
                 }
             
             }
+            
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
             if connectionManager.sessionOpened {
                 sessionStarted.notify((0))

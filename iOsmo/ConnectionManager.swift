@@ -16,7 +16,7 @@ import FirebaseMessaging
 let authUrl = URL(string: "https://api.osmo.mobi/new?")
 let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
 let iOsmoAppKey = "hD74_vDa3Lc_3rDs"
-let apiUrl = "https://api.osmo.mobi/inProx?"
+let apiUrl = "https://api.osmo.mobi/iProx?"
 
 open class ConnectionManager: NSObject{
 
@@ -116,8 +116,12 @@ open class ConnectionManager: NSObject{
                             return
                         }
                     }
+                    tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                    tkn?.error = "Server adderess not parsed"
                     self.completed(result: true, token: tkn)
                 } else {
+                    tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                    tkn?.error = "Server adderess not received"
                     self.completed(result: false, token: tkn)
                 }
             } catch {
@@ -285,6 +289,7 @@ open class ConnectionManager: NSObject{
             self.shouldReConnect = false //interesting why here? may after connction is successful??
         } else {
             self.connecting = false
+            
             if (token?.error.isEmpty)! {
                 self.connectionRun.notify((1, ""))
                 self.shouldReConnect = false
@@ -370,7 +375,7 @@ open class ConnectionManager: NSObject{
                     conHelper.onCompleted = {(dataURL, data) in
                         LogQueue.sharedLogQueue.enqueue("CM.Send.onCompleted")
                         if let output = String(data:data, encoding:.utf8) {
-                            LogQueue.sharedLogQueue.enqueue("output")
+                            LogQueue.sharedLogQueue.enqueue(output)
                             self.notifyAnswer(output: output)
                         }
                     
@@ -833,9 +838,7 @@ open class ConnectionManager: NSObject{
             }
 
             if (param == RemoteCommand.WHERE.rawValue) {
-                if self.connected{
-                    sendRemoteCommandResponse(param)
-                }
+                sendRemoteCommandResponse(param)
                 if self.sessionOpened == false {
                     self.isGettingLocation = true
                     sendingManger.startSendingCoordinates(param)
