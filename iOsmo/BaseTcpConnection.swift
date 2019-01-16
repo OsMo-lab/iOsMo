@@ -63,10 +63,9 @@ open class BaseTcpConnection: NSObject {
     
     let log = LogQueue.sharedLogQueue
    
-    var coordinates: [LocationModel]
+    
     
     override init(){
-        coordinates = [LocationModel]()
         super.init()
         
     }
@@ -77,11 +76,7 @@ open class BaseTcpConnection: NSObject {
     }
     
    
-    open func sendCoordinates(_ coordinates: [LocationModel]){
-        
-        self.coordinates += coordinates
-        sendNextCoordinates()
-    }
+   
     
     //properties
     
@@ -89,16 +84,7 @@ open class BaseTcpConnection: NSObject {
     var sessionOpened: Bool = false
 
   
-    func onSentCoordinate(cnt: Int){
-        log.enqueue("Removing \(cnt) coordinates from buffer")
-        for _ in 1...cnt {
-            if self.coordinates.count > 0 {
-                self.coordinates.remove(at: 0)
-            }
-        }
-        
-        sendNextCoordinates()
-    }
+    
     
     
     
@@ -113,42 +99,7 @@ open class BaseTcpConnection: NSObject {
 
     
     //TODO: should be in sending manager!!!
-    fileprivate func sendNextCoordinates(){
-        /*
-         if self.shouldCloseSession {
-            
-            self.coordinates.removeAll(keepingCapacity: false)
-            closeSession()
-        }*/
-        
-        //TODO: refactoring send best coordinates
-        let cnt = self.coordinates.count;
-        if self.sessionOpened && cnt > 0 {
-            var req = ""
-            var sep = ""
-            var idx = 0;
-            if cnt > 1 {
-                sep = "\""
-            }
-            for theCoordinate in self.coordinates {
-                if req != "" {
-                    req = "\(req),"
-                }
-                req = "\(req)\(sep)\(theCoordinate.getCoordinateRequest)\(sep)"
-                idx = idx + 1
-                //Ограничиваем количество отправляемых точек в одном пакете
-                if idx > 500 {
-                    break;
-                }
-            }
-            if cnt > 1 {
-                req = "\(Tags.buffer.rawValue)|[\(req)]"
-            } else {
-                req = "\(Tags.coordinate.rawValue)|\(req)"
-            }
-            send(req)
-        }
-    }
+    
     
     
     

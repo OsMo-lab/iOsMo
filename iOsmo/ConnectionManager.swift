@@ -66,7 +66,8 @@ open class ConnectionManager: NSObject{
     var delayedRequests : [String]  = [];
     
     var connection = BaseTcpConnection()
-
+    var coordinates: [LocationModel]
+    
     let reachability = Reachability()!
     
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
@@ -83,7 +84,11 @@ open class ConnectionManager: NSObject{
     }
 
     override init(){
+        coordinates = [LocationModel]()
+        
         super.init()
+        
+        
         NotificationCenter.default.addObserver(self, selector: aSelector, name: NSNotification.Name.reachabilityChanged, object: self.reachability)
         do  {
             try self.reachability.startNotifier()
@@ -103,7 +108,7 @@ open class ConnectionManager: NSObject{
         conHelper.onCompleted = {(dataURL, data) in
             LogQueue.sharedLogQueue.enqueue("CM.getServerInfo.onCompleted")
             var res : NSDictionary = [:]
-            var tkn : Token?;
+            var tkn : Token;
             do {
                 let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
                 res = (jsonDict as? NSDictionary)!
@@ -117,15 +122,17 @@ open class ConnectionManager: NSObject{
                         }
                     }
                     tkn = Token(tokenString:"", address: "", port: 0, key: "")
-                    tkn?.error = "Server adderess not parsed"
+                    tkn.error = "Server adderess not parsed"
                     self.completed(result: true, token: tkn)
                 } else {
                     tkn = Token(tokenString:"", address: "", port: 0, key: "")
-                    tkn?.error = "Server adderess not received"
+                    tkn.error = "Server adderess not received"
                     self.completed(result: false, token: tkn)
                 }
             } catch {
                 LogQueue.sharedLogQueue.enqueue("error serializing JSON from POST")
+                tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                tkn.error = "error serializing JSON"
                 self.completed(result: false, token: tkn)
             }
             
@@ -140,7 +147,7 @@ open class ConnectionManager: NSObject{
         let device = SettingsManager.getKey(SettingKeys.device)
         if device == nil || device?.length == 0{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
-            let model = UIDevice.current.model
+            let model = UIDevice.current.modelName
             let version = UIDevice.current.systemVersion
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:getting key from server")
             let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
@@ -172,7 +179,7 @@ open class ConnectionManager: NSObject{
             
             conHelper.backgroundRequest(authUrl!, requestBody: requestString as NSString)
         } else {
-            LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device)")
+            LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device!)")
             self.Authenticated = true
             self.getServerInfo(key: device! as String)
         }
@@ -279,32 +286,39 @@ open class ConnectionManager: NSObject{
                     
                 }
             }
+            /*
             if self.monitoringGroupsHandler == nil {
                 self.monitoringGroupsHandler = self.monitoringGroupsUpdated.add({
                     self.monitoringGroupsUpdated.notify($0)
                 })
             }
-            
+            */
             self.connection.connect(token!)
             self.shouldReConnect = false //interesting why here? may after connction is successful??
         } else {
             self.connecting = false
-            
-            if (token?.error.isEmpty)! {
-                self.connectionRun.notify((1, ""))
-                self.shouldReConnect = false
-            } else {
-                self.log.enqueue("CM.completed Error:\(token?.error)")
-                if (token?.error == "Wrong device key") {
-                    SettingsManager.setKey("", forKey: SettingKeys.device)
+            if (token != nil) {
+                if (token?.error.isEmpty)! {
                     self.connectionRun.notify((1, ""))
-                    self.shouldReConnect = true
-                } else {
-                    self.connectionRun.notify((1, "\(token?.error)"))
                     self.shouldReConnect = false
+                } else {
+                    self.log.enqueue("CM.completed Error:\(token?.error)")
+                    if (token?.error == "Wrong device key") {
+                        SettingsManager.setKey("", forKey: SettingKeys.device)
+                        self.connectionRun.notify((1, ""))
+                        self.shouldReConnect = true
+                    } else {
+                        self.connectionRun.notify((1, "\(token?.error)"))
+                        self.shouldReConnect = false
+                    }
                 }
+            } else {
+                self.log.enqueue("CM.completed Error: Invalid data")
+                self.connectionRun.notify((1, "Invalid data"))
+                self.shouldReConnect = false
                 
             }
+            
         }
     }
     
@@ -399,7 +413,9 @@ open class ConnectionManager: NSObject{
     open func sendCoordinates(_ coordinates: [LocationModel])
     {
         if self.sessionOpened {
-            connection.sendCoordinates(coordinates)
+            self.coordinates += coordinates
+            self.sendNextCoordinates()
+            
         }
     }
     open func sendRemoteCommandResponse(_ rc: String) {
@@ -494,12 +510,13 @@ open class ConnectionManager: NSObject{
     }
 
     open func sendSystemInfo(){
-        let model = UIDevice.current.model
+        let model = UIDevice.current.modelName
         let version = UIDevice.current.systemVersion
-        
-        let jsonInfo: NSDictionary = ["devicename": model, "version": "iOS \(version)"]
+        let appVersion : String! = try (Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String ?? "unknown")
+        let jsonInfo: NSDictionary = try ["devicename": model, "version": "iOS \(version)", "app":"\(appVersion!)"]
         
         do{
+            
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
             
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
@@ -748,14 +765,14 @@ open class ConnectionManager: NSObject{
         if command == AnswTags.coordinate.rawValue {
             let cnt = Int(addict)
             if cnt ?? 0  > 0 {
-                connection.onSentCoordinate(cnt:cnt!)
+                self.onSentCoordinate(cnt:cnt!)
             }
             return
         }
         if command == AnswTags.buffer.rawValue {
             let cnt = Int(addict)
             if cnt ?? 0 > 0 {
-                connection.onSentCoordinate(cnt:cnt!)
+                self.onSentCoordinate(cnt:cnt!)
             }
             return
         }
@@ -764,8 +781,8 @@ open class ConnectionManager: NSObject{
             if let grId = parseRes.0, let res = parseRes.1 {
                 
                 //if monitor.contains(grId){
-                if let groups = parseCoordinate(grId, coordinates: res) {
-                    monitoringGroupsUpdated.notify(groups)
+                if let userCoordinates = parseCoordinate(grId, coordinates: res) {
+                    monitoringGroupsUpdated.notify(userCoordinates)
                 }
                 else {
                     log.enqueue("error: parsing coordinate array")
@@ -811,6 +828,7 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_START.rawValue){
+                self.isGettingLocation = false
                 sendingManger.startSendingCoordinates(param)
                 return
             }
@@ -838,7 +856,7 @@ open class ConnectionManager: NSObject{
             }
 
             if (param == RemoteCommand.WHERE.rawValue) {
-                sendRemoteCommandResponse(param)
+                //sendRemoteCommandResponse(param)
                 if self.sessionOpened == false {
                     self.isGettingLocation = true
                     sendingManger.startSendingCoordinates(param)
@@ -851,21 +869,69 @@ open class ConnectionManager: NSObject{
 
     
     //MARK - parsing server response functions
+    func onSentCoordinate(cnt: Int){
+        log.enqueue("Removing \(cnt) coordinates from buffer")
+        for _ in 1...cnt {
+            if self.coordinates.count > 0 {
+                self.coordinates.remove(at: 0)
+            }
+        }
+        
+        self.sendNextCoordinates()
+    }
+    
+    fileprivate func sendNextCoordinates(){
+        /*
+         if self.shouldCloseSession {
+         
+         self.coordinates.removeAll(keepingCapacity: false)
+         closeSession()
+         }*/
+        
+        //TODO: refactoring send best coordinates
+        let cnt = self.coordinates.count;
+        if self.sessionOpened && cnt > 0 {
+            var req = ""
+            var sep = ""
+            var idx = 0;
+            if cnt > 1 {
+                sep = "\""
+            }
+            for theCoordinate in self.coordinates {
+                if req != "" {
+                    req = "\(req),"
+                }
+                req = "\(req)\(sep)\(theCoordinate.getCoordinateRequest)\(sep)"
+                idx = idx + 1
+                //Ограничиваем количество отправляемых точек в одном пакете
+                if idx > 500 {
+                    break;
+                }
+            }
+            if cnt > 1 {
+                req = "\(Tags.buffer.rawValue)|[\(req)]"
+            } else {
+                req = "\(Tags.coordinate.rawValue)|\(req)"
+            }
+            send(request:req)
+        }
+    }
     
     fileprivate func parseCoordinate(_ group: Int, coordinates: Any) -> [UserGroupCoordinate]? {
         if let users = coordinates as? Array<String> {
-            var res = [UserGroupCoordinate]()
+            var res : [UserGroupCoordinate] = [UserGroupCoordinate]()
             
             for u in users {
                 let uc = u.components(separatedBy: "|")
                 let user = Int(uc[0])
-                if user ?? 0 > 0 { //id
+                if ((user ?? 0) > 0) { //id
                     
                     let location = LocationModel(coordString: uc[1])
                     let ugc: UserGroupCoordinate = UserGroupCoordinate(group: group, user: user!, location: location)
                     res.append(ugc)
                 }
             }
+        
             return res
         }
         return nil
@@ -957,8 +1023,12 @@ open class ConnectionManager: NSObject{
     
     fileprivate func parseTag(_ responce: String, key: ParseKeys) -> String? {
         
-        if let responceValues: NSDictionary = parseJson(responce) as? Dictionary<String, AnyObject> as NSDictionary?, let tag = responceValues.object(forKey: key.rawValue) as? String {
-            return tag
+        if let responceValues: NSDictionary = parseJson(responce) as? Dictionary<String, AnyObject> as NSDictionary? {
+            if let tag = responceValues.object(forKey: key.rawValue) as? String {
+                return tag
+            } else if let itag = responceValues.object(forKey: key.rawValue) as? Int {
+                return "\(itag)"
+            }
         }
         return nil
     }
