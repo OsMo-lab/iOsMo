@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/AppDelegate.swift"
-            timestampString = "569211325.853317"
+            timestampString = "569354116.14232"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "422"
@@ -42,13 +42,45 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/ConnectionManager.swift"
-            timestampString = "569349162.831717"
+            timestampString = "569355983.174166"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "Authenticate()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iOsMo.ConnectionManager.Authenticate() -&gt; ()"
+                  moduleName = "iOsMo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/ConnectionManager.swift"
+                  timestampString = "569358033.781672"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "157"
+                  endingLineNumber = "157"
+                  offsetFromSymbolStart = "2296">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Foundation.URL, Foundation.Data) -&gt; () in iOsMo.ConnectionManager.Authenticate() -&gt; ()"
+                  moduleName = "iOsMo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/ConnectionManager.swift"
+                  timestampString = "569358033.786749"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "158"
+                  endingLineNumber = "158"
+                  offsetFromSymbolStart = "60">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -58,7 +90,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/AppDelegate.swift"
-            timestampString = "569211325.85414"
+            timestampString = "569354116.142612"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "153"
@@ -74,12 +106,12 @@
                   moduleName = "iOsMo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/AppDelegate.swift"
-                  timestampString = "569349163.825672"
+                  timestampString = "569358033.797508"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "153"
                   endingLineNumber = "153"
-                  offsetFromSymbolStart = "674">
+                  offsetFromSymbolStart = "836">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -89,12 +121,12 @@
                   moduleName = "iOsMo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/AppDelegate.swift"
-                  timestampString = "569349163.830204"
+                  timestampString = "569358033.8013721"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "153"
                   endingLineNumber = "153"
-                  offsetFromSymbolStart = "18">
+                  offsetFromSymbolStart = "36">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -105,56 +137,8 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "iOsmo/ConnectionManager.swift"
-            timestampString = "569349162.832804"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "667"
-            endingLineNumber = "667"
-            landmarkName = "notifyAnswer(output:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "iOsmo/GroupManager.swift"
-            timestampString = "569346860.146698"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
-            landmarkName = "init()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "iOsmo/GroupManager.swift"
-            timestampString = "569346860.146849"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "init()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "iOsmo/GroupManager.swift"
-            timestampString = "569346860.146952"
+            timestampString = "569353124.92721"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
@@ -170,13 +154,61 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/GroupManager.swift"
-            timestampString = "569346860.147052"
+            timestampString = "569353124.927328"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "394"
             endingLineNumber = "394"
             landmarkName = "groupList(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/ConnectionManager.swift"
+            timestampString = "569355983.174457"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "392"
+            endingLineNumber = "392"
+            landmarkName = "send(request:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "iOsMo.ConnectionManager.send(request: Swift.String) -&gt; ()"
+                  moduleName = "iOsMo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/ConnectionManager.swift"
+                  timestampString = "569358033.823235"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "392"
+                  endingLineNumber = "392"
+                  offsetFromSymbolStart = "1528">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Foundation.URL, Foundation.Data) -&gt; () in iOsMo.ConnectionManager.send(request: Swift.String) -&gt; ()"
+                  moduleName = "iOsMo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/ConnectionManager.swift"
+                  timestampString = "569358033.826587"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "393"
+                  endingLineNumber = "393"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

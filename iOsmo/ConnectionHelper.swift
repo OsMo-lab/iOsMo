@@ -116,8 +116,9 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
         var data: Data = Data();
         do {
             data = try Data(contentsOf: location)
+            LogQueue.sharedLogQueue.enqueue("DATA OK")
         } catch {
-            
+            LogQueue.sharedLogQueue.enqueue("DATA INVALID")
         }
         DispatchQueue.main.async {
             

@@ -30,8 +30,10 @@ class OSMOMKAnnotationView: MKAnnotationView {
         print ("OSMOMKAnnotationView Init")
         self.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         var lWidth : CGFloat = 20;
-        let aView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
         
+        let aView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+        var lX : CGFloat = 0;
+        var lY : CGFloat = 0;
         if self.reuseIdentifier == "point" {
             layer.cornerRadius = 0
             layer.borderWidth = 1
@@ -43,15 +45,12 @@ class OSMOMKAnnotationView: MKAnnotationView {
         if let longNames = SettingsManager.getKey(SettingKeys.longNames) {
             if (longNames.boolValue) {
                 lWidth = 150;
-                
+                lY = -16;
+                lX = (self.frame.width - lWidth)/2;
             }
         }
-        let letter = UILabel(frame: CGRect(x: 0, y: 0, width: lWidth, height: self.frame.height))
-        if (lWidth > 20 ) {
-            letter.textAlignment = NSTextAlignment.left
-        } else {
-            letter.textAlignment = NSTextAlignment.center
-        }
+        let letter = UILabel(frame: CGRect(x: lX, y: lY, width: lWidth, height: self.frame.height))
+        letter.textAlignment = NSTextAlignment.center
         
         letter.baselineAdjustment = UIBaselineAdjustment.alignCenters
         letter.tag = 1

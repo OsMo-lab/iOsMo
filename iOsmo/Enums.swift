@@ -131,6 +131,8 @@ enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"
     case WHERE = "12"
+    case WHERE_GPS_ONLY = "15"
+    case WHERE_NETWORK_ONLY = "16"
     case TRACKER_SATELLITES_INFO = "13"
     case TRACKER_SYSTEM_INFO = "14"
     case TRACKER_WIFI_INFO = "20"
@@ -140,12 +142,25 @@ enum RemoteCommand: String {
     case TRACKER_EXIT = "42"
     case TRACKER_GET_PREFS = "43"
     case TRACKER_SET_PREFS = "44"
-    case TRACKER_SESSION_CONTINUE = "5"
-    case TRACKER_SESSION_PAUSE = "6"
+    
     case TRACKER_SESSION_START = "1"
     case TRACKER_SESSION_STOP = "2"
+    case TRACKER_SESSION_CONTINUE = "5"
+    case TRACKER_SESSION_PAUSE = "6"
+    
     case REFRESH_DEVICES = "91"
     case REFRESH_GROUPS = "92"
+    case SIGNAL_STATUS = "30"
+    case SIGNAL_OFF = "32"
+    case SIGNAL_ON = "31"
+    case ALARM_OFF = "34"
+    case ALARM_ON = "33"
+    case FLASH_ON = "47"
+    case FLASH_BLINK = "48"
+    case FLASH_OFF = "49"
+    case SOS_DEPRESS = "95"
+    case CHANGE_MOTD_TEXT = "85"
+    
     case TTS = "46"
 }
 

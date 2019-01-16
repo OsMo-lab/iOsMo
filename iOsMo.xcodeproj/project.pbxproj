@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		293C95761A34B217005DD4CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95751A34B217005DD4CE /* AppDelegate.swift */; };
-		293C95781A34B217005DD4CE /* MonitoringViewControllerresu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95771A34B217005DD4CE /* MonitoringViewControllerresu.swift */; };
 		293C957A1A34B217005DD4CE /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95791A34B217005DD4CE /* LogViewController.swift */; };
 		293C957D1A34B217005DD4CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 293C957B1A34B217005DD4CE /* Main.storyboard */; };
 		293C957F1A34B217005DD4CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 293C957E1A34B217005DD4CE /* Images.xcassets */; };
@@ -65,6 +64,7 @@
 		4DEACF1521E09F7200D1A32D /* FirebaseMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEACF0A21E09F7100D1A32D /* FirebaseMessaging.framework */; };
 		4DEACF1621E09F7200D1A32D /* Protobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DEACF0B21E09F7100D1A32D /* Protobuf.framework */; };
 		4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4DEACF1921E13CAE00D1A32D /* Push.txt */; };
+		4DEACF2221EFA99C00D1A32D /* MonitoringViewControllerresu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEACF2121EFA99B00D1A32D /* MonitoringViewControllerresu.swift */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
 /* End PBXBuildFile section */
@@ -96,7 +96,6 @@
 		293C95701A34B217005DD4CE /* iOsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C95741A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C95751A34B217005DD4CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		293C95771A34B217005DD4CE /* MonitoringViewControllerresu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitoringViewControllerresu.swift; sourceTree = "<group>"; };
 		293C95791A34B217005DD4CE /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		293C957C1A34B217005DD4CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		293C957E1A34B217005DD4CE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -163,6 +162,7 @@
 		4DEACF1721E0A3C800D1A32D /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Firebase/module.modulemap; sourceTree = SOURCE_ROOT; };
 		4DEACF1821E0A3C800D1A32D /* Firebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Firebase.h; path = Firebase/Firebase.h; sourceTree = SOURCE_ROOT; };
 		4DEACF1921E13CAE00D1A32D /* Push.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Push.txt; sourceTree = "<group>"; };
+		4DEACF2121EFA99B00D1A32D /* MonitoringViewControllerresu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonitoringViewControllerresu.swift; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
 		F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -280,12 +280,12 @@
 		293C959A1A34BD4A005DD4CE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				4D8B78441FA7624A00E1069D /* MapViewController.swift */,
-				293C95771A34B217005DD4CE /* MonitoringViewControllerresu.swift */,
-				293C95791A34B217005DD4CE /* LogViewController.swift */,
+				4DEACF2121EFA99B00D1A32D /* MonitoringViewControllerresu.swift */,
 				29FA96331A478335009BFC19 /* AccountViewController.swift */,
 				29FA96371A4784EC009BFC19 /* AuthViewController.swift */,
+				4D8B78441FA7624A00E1069D /* MapViewController.swift */,
 				29CDE0841A61911900CC5628 /* SettingsViewController.swift */,
+				293C95791A34B217005DD4CE /* LogViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -610,10 +610,10 @@
 				2982CFB91AC89E740070A090 /* SessionStatus.swift in Sources */,
 				F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */,
 				29520ABA1AD5D7E700CC4136 /* User.swift in Sources */,
+				4DEACF2221EFA99C00D1A32D /* MonitoringViewControllerresu.swift in Sources */,
 				293C95CA1A3D2AA0005DD4CE /* SettingManager.swift in Sources */,
 				29F9A6D61AC0C31F001A610D /* ConnectionHelper.swift in Sources */,
 				29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */,
-				293C95781A34B217005DD4CE /* MonitoringViewControllerresu.swift in Sources */,
 				29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */,
 				4D2BAC7B1E534AF100A8E907 /* SafariActvity.swift in Sources */,
 				4D8B78451FA7624A00E1069D /* MapViewController.swift in Sources */,

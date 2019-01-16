@@ -12,6 +12,7 @@
 import Foundation
 import FirebaseInstanceID
 import FirebaseMessaging
+import CoreLocation
 
 let authUrl = URL(string: "https://api.osmo.mobi/new?")
 let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
@@ -107,6 +108,7 @@ open class ConnectionManager: NSObject{
         
         conHelper.onCompleted = {(dataURL, data) in
             LogQueue.sharedLogQueue.enqueue("CM.getServerInfo.onCompleted")
+
             var res : NSDictionary = [:]
             var tkn : Token;
             do {
@@ -154,6 +156,7 @@ open class ConnectionManager: NSObject{
             
             conHelper.onCompleted = {(dataURL, data) in
                 LogQueue.sharedLogQueue.enqueue("CM.Authenticate.onCompleted")
+
                 var res : NSDictionary = [:]
 
                 do {
@@ -829,7 +832,7 @@ open class ConnectionManager: NSObject{
             }
             if (param == RemoteCommand.TRACKER_SESSION_START.rawValue){
                 self.isGettingLocation = false
-                sendingManger.startSendingCoordinates(param)
+                sendingManger.startSendingCoordinates(param, false)
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
@@ -837,7 +840,7 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){
-                sendingManger.startSendingCoordinates(param)
+                sendingManger.startSendingCoordinates(param, false)
                 return
             }
             if (param == RemoteCommand.TRACKER_GCM_ID.rawValue) {
@@ -855,11 +858,18 @@ open class ConnectionManager: NSObject{
                 return
             }
 
-            if (param == RemoteCommand.WHERE.rawValue) {
+            if (param == RemoteCommand.WHERE.rawValue || param == RemoteCommand.WHERE_GPS_ONLY.rawValue || param == RemoteCommand.WHERE_NETWORK_ONLY.rawValue) {
                 //sendRemoteCommandResponse(param)
                 if self.sessionOpened == false {
+                    if (param == RemoteCommand.WHERE.rawValue) {
+                        LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+                    } else if (param == RemoteCommand.WHERE_GPS_ONLY.rawValue){
+                        LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                    } else if (param == RemoteCommand.WHERE_NETWORK_ONLY.rawValue){
+                        LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+                    }
                     self.isGettingLocation = true
-                    sendingManger.startSendingCoordinates(param)
+                    sendingManger.startSendingCoordinates(param, true)
                 }
                 return
             }

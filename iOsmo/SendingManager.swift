@@ -47,8 +47,8 @@ open class SendingManager: NSObject{
     }
 
 
-    open func startSendingCoordinates(_ rc: String){
-        let once = (!connectionManager.sessionOpened && rc == RemoteCommand.WHERE.rawValue) ? true : false;
+    open func startSendingCoordinates(_ rc: String,  _ once: Bool){
+
         locationTracker.turnMonitorinOn(once: once) //start getting coordinates
         if (once) {
             self.onLocationUpdated = locationTracker.locationUpdated.add {
@@ -61,7 +61,7 @@ open class SendingManager: NSObject{
         }
 
         if !connectionManager.connected {
-            if once && rc != RemoteCommand.WHERE.rawValue {
+            if once {
                 self.startSending()
             } else {
                 self.onConnectionRun = connectionManager.connectionRun.add{
@@ -69,7 +69,7 @@ open class SendingManager: NSObject{
                         self.onSessionRun = self.connectionManager.sessionRun.add{
                             if $0.0 == 0{
                                 self.startSending()
-                                if (rc != "" /*&& rc != RemoteCommand.WHERE.rawValue*/) {
+                                if (rc != "") {
                                     self.connectionManager.sendRemoteCommandResponse(rc)
                                 }
                             }
@@ -94,7 +94,7 @@ open class SendingManager: NSObject{
             self.onSessionRun = self.connectionManager.sessionRun.add{
                 if ($0.0 == 0){
                     self.startSending()
-                    if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
+                    if (rc != ""){
                         self.connectionManager.sendRemoteCommandResponse(rc)
                     }
                 } else {
@@ -104,14 +104,14 @@ open class SendingManager: NSObject{
                     }
                 }
             }
-            if rc != RemoteCommand.WHERE.rawValue {
+            if (rc != RemoteCommand.WHERE.rawValue && rc != RemoteCommand.WHERE_NETWORK_ONLY.rawValue && rc != RemoteCommand.WHERE_GPS_ONLY.rawValue) {
                 self.connectionManager.openSession()
             }else{
                 self.startSending()
             }
         } else {
             startSending()
-            if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
+            if (rc != "" && rc != RemoteCommand.WHERE.rawValue && rc != RemoteCommand.WHERE_NETWORK_ONLY.rawValue && rc != RemoteCommand.WHERE_GPS_ONLY.rawValue) {
                 self.connectionManager.sendRemoteCommandResponse(rc)
             }
         }

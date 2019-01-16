@@ -70,8 +70,13 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 authorizationStatus == CLAuthorizationStatus.denied){
                     log.enqueue("Location authorization failed")
             } else {
-                LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
-                log.enqueue("Location request When in use authorization was sent to user")
+                if (authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse ) {
+                    LocationTracker.sharedLocationManager.requestAlwaysAuthorization()
+                    log.enqueue("Location request Always authorization was sent to user")
+                } else {
+                    LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
+                    log.enqueue("Location request When in use authorization was sent to user")
+                }
 
                 if (once) {
                     log.enqueue("requestLocation")
@@ -166,6 +171,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                         self.allSessionLocations.append(locationModel)
                     } else {
                         locationUpdated.notify(locationModel)
+                        manager.stopUpdatingLocation()
                     }
 
                     prevLM = locationModel;
