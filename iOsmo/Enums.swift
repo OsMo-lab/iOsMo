@@ -25,6 +25,7 @@ enum Tags: String {
     case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
     case activatePoolGroups = "PG"
+    case setTrackedkUser = "SP"
     case updateGroupResponse = "GPR"
     case groupSwitch = "GS"
     case coordinate = "T"

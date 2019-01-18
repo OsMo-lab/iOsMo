@@ -496,6 +496,11 @@ open class ConnectionManager: NSObject{
         send(request: request)
     }
     
+    open func sendTrackUser(_ user_id:String){
+        let request = "\(Tags.setTrackedkUser.rawValue):\(user_id)|1"
+        send(request: request)
+    }
+    
     open func sendUpdateGroupResponse(group: Int, event:Int){
         let request = "\(Tags.updateGroupResponse.rawValue):\(group)|\(event)"
         send(request: request)

@@ -27,7 +27,7 @@ class OSMMapKitPolyline: MKPolyline {
 class OSMOMKAnnotationView: MKAnnotationView {
     override init(annotation: MKAnnotation!, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        print ("OSMOMKAnnotationView Init")
+
         self.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         var lWidth : CGFloat = 20;
         
@@ -57,24 +57,27 @@ class OSMOMKAnnotationView: MKAnnotationView {
 
         aView.addSubview(letter);
         self.addSubview(aView);
-        
         self.canShowCallout = true
         
-        let width = 300
-        let height = 200
+
+        if self.reuseIdentifier == "point" {
+            let width = 300
+            let height = 200
+            
+            let snapshotView = UIView()
+            let views = ["snapshotView": snapshotView]
+            snapshotView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[snapshotView(\(width))]", options: [], metrics: nil, views: views))
+            snapshotView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[snapshotView(\(height))]", options: [], metrics: nil, views: views))
+            
+            let textView = UITextView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+            textView.tag = 10;
+            textView.isEditable = false;
+            textView.dataDetectorTypes = UIDataDetectorTypes.all
+            snapshotView.addSubview(textView)
+            
+            self.detailCalloutAccessoryView = snapshotView;
+        }
         
-        let snapshotView = UIView()
-        let views = ["snapshotView": snapshotView]
-        snapshotView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[snapshotView(300)]", options: [], metrics: nil, views: views))
-        snapshotView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[snapshotView(200)]", options: [], metrics: nil, views: views))
-        
-        let textView = UITextView(frame: CGRect(x: 0, y: 0, width: width, height: height))
-        textView.tag = 10;
-        textView.isEditable = false;
-        textView.dataDetectorTypes = UIDataDetectorTypes.all
-        snapshotView.addSubview(textView)
-        
-        self.detailCalloutAccessoryView = snapshotView;
     }
 
     
@@ -122,7 +125,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var onMonitoringGroupsUpdated: ObserverSetEntry<[UserGroupCoordinate]>?
     var onUserLeave: ObserverSetEntry<User>?
     var selectedGroupIndex: Int?
-    var trackedUser: String = ""
+    var trackedUser: User?
     
     var pointAnnotations = [MKAnnotation]()
     var trackAnnotations = [OSMMapKitPolyline]()
@@ -229,6 +232,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         ugc.recent = false
                         self.drawPeoples(location: ugc)
                         curAnnotations.append("u\(uid!)")
+                        
                     }
                 }
                 let points = GP?["point"] as? Array<AnyObject>
@@ -465,6 +469,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     } else {
                         self.mapView(self.mapView, viewFor: user)?.setNeedsDisplay()
                 }
+                if user == self.trackedUser {
+                    self.mapView.setCenter(CLLocationCoordinate2D(latitude: user.coordinate.latitude, longitude: user.coordinate.longitude), animated: true )
+                }
 
             } 
         }
@@ -569,14 +576,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             if userView == nil {
                 userView = OSMOMKAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
-                userView?.canShowCallout = true
+                userView?.canShowCallout = false
             } else {
                 userView?.annotation = annotation
             }
             userView?.backgroundColor = (annotation as! User).color.hexColor;
+            if (annotation as! User) == self.trackedUser {
+                userView?.layer.borderColor =  UIColor.red.cgColor
+            } else {
+                userView?.layer.borderColor = UIColor.white.cgColor
+            }
+            /*
             if let subtitle = userView?.detailCalloutAccessoryView!.viewWithTag(10) as? UITextView {
                 subtitle.text = annotation.subtitle!
-            }
+            }*/
             if let title = annotation.title {
                  if let letter = userView!.viewWithTag(1) as? UILabel{
                     letter.textColor = "#000000".hexColor
@@ -593,10 +606,43 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         return nil
     }
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
+    {
+        if view.annotation is User {
+            let user : User = (view.annotation as! User)
+            if (self.trackedUser == user) {
+                self.trackedUser = nil
+                self.connectionManager.sendTrackUser("-1")
+
+                
+            } else {
+                if (self.trackedUser != nil) {
+                    self.mapView.removeAnnotation(self.trackedUser! )
+                    self.mapView.addAnnotation(self.trackedUser! )
+                }
+                self.trackedUser = user
+                
+                self.connectionManager.sendTrackUser("\(self.trackedUser!.u ?? "-1")]")
+            }
+            
+            self.mapView.removeAnnotation(user)
+            self.mapView.addAnnotation(user)
+            
+            mapView.setNeedsDisplay()
+            if let annotationTitle = view.annotation?.title
+            {
+                print("User tapped on annotation with title: \(annotationTitle!)")
+            }
+        
+            
+        }
+        
+    }
+    
     @IBAction func locateClick(sender: AnyObject) {
         
-        self.trackedUser = "" //Перестаем следить за выбранным пользователем
-        self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true)
+        self.trackedUser = nil //Перестаем следить за выбранным пользователем
+        self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true) //Следим за собой
 
         mapView.setNeedsDisplay()
         /*
