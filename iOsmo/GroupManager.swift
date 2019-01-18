@@ -98,7 +98,7 @@ open class GroupManager{
                             foundGroup?.users.append(nUser)
                         }
                     }
-                    if uE > 0 {
+                    if uE != 0 {
                         self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                 }
@@ -120,7 +120,7 @@ open class GroupManager{
                             foundGroup?.users.remove(at: uIdx!)
                         }
                     }
-                    if uE > 0 {
+                    if uE != 0 {
                         self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                     
@@ -164,7 +164,7 @@ open class GroupManager{
                         let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
                         foundGroup?.points.append(pointNew)
                     }
-                    if uE > 0 {
+                    if uE != 0 {
                         self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                 }
@@ -196,7 +196,7 @@ open class GroupManager{
                         let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
                         foundGroup?.tracks.append(track)
                     }
-                    if uE > 0 {
+                    if uE != 0 {
                         self.connection.sendUpdateGroupResponse(group: group, event: uE)
                     }
                 }

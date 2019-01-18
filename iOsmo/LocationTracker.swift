@@ -70,13 +70,20 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 authorizationStatus == CLAuthorizationStatus.denied){
                     log.enqueue("Location authorization failed")
             } else {
-                if (authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse ) {
-                    LocationTracker.sharedLocationManager.requestAlwaysAuthorization()
-                    log.enqueue("Location request Always authorization was sent to user")
-                } else {
-                    LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
-                    log.enqueue("Location request When in use authorization was sent to user")
+                
+                switch authorizationStatus {
+                    case .notDetermined:
+                        LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
+                        log.enqueue("Location request When in use authorization was sent to user")
+                        break
+                    case .authorizedWhenInUse:
+                        LocationTracker.sharedLocationManager.requestAlwaysAuthorization()
+                        log.enqueue("Location request Always authorization was sent to user")
+                        break
+                    default:
+                        break
                 }
+                
 
                 if (once) {
                     log.enqueue("requestLocation")
@@ -84,7 +91,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 } else {
                     log.enqueue("startUpdatingLocation")
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
-                    //LocationTracker.sharedLocationManager.startMonitoringSignificantLocationChanges()
                     
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)

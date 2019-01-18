@@ -934,7 +934,7 @@ open class ConnectionManager: NSObject{
             for u in users {
                 let uc = u.components(separatedBy: "|")
                 let user = Int(uc[0])
-                if ((user ?? 0) > 0) { //id
+                if ((user ?? 0) != 0) { //id
                     
                     let location = LocationModel(coordString: uc[1])
                     let ugc: UserGroupCoordinate = UserGroupCoordinate(group: group, user: user!, location: location)
