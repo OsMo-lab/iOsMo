@@ -12,7 +12,7 @@ open class UserGroupCoordinate{
     let groupId: Int
     let userId: Int
     let location: LocationModel
-    var recent = true; //Признак того, что координата получена от сообщения G
+
     
     init(group: Int, user: Int, location: LocationModel){
         self.groupId = group

@@ -938,11 +938,11 @@ open class ConnectionManager: NSObject{
             
             for u in users {
                 let uc = u.components(separatedBy: "|")
-                let user = Int(uc[0])
-                if ((user ?? 0) != 0) { //id
+                let user_id = Int(uc[0])
+                if ((user_id ?? 0) != 0) { //id
                     
                     let location = LocationModel(coordString: uc[1])
-                    let ugc: UserGroupCoordinate = UserGroupCoordinate(group: group, user: user!, location: location)
+                    let ugc: UserGroupCoordinate = UserGroupCoordinate(group: group, user: user_id!, location: location)
                     res.append(ugc)
                 }
             }

@@ -76,6 +76,16 @@ class OSMOMKAnnotationView: MKAnnotationView {
             snapshotView.addSubview(textView)
             
             self.detailCalloutAccessoryView = snapshotView;
+        } else {
+            //Speed
+            let lblSpeed = UILabel(frame: CGRect(x: (self.frame.width - 200)/2, y: 16, width: 200, height: self.frame.height))
+            lblSpeed.textAlignment = NSTextAlignment.center
+            lblSpeed.font = lblSpeed.font.withSize(12)
+            
+            lblSpeed.baselineAdjustment = UIBaselineAdjustment.alignCenters
+            lblSpeed.tag = 2
+            
+            aView.addSubview(lblSpeed);
         }
         
     }
@@ -229,7 +239,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         let gid = Int(group.u)
                         let uid = Int(user.u)
                         let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
-                        ugc.recent = false
                         self.drawPeoples(location: ugc)
                         curAnnotations.append("u\(uid!)")
                         
@@ -402,7 +411,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawPoint(point: Point, group: Group){
         print("MapViewController drawPoint")
-        //let clLocation = CLLocationCoordinate2D(latitude: point.lat, longitude: point.lon)
         if (self.mapView) != nil {
             var annVisible = false;
             for ann in self.pointAnnotations {
@@ -429,7 +437,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 var annVisible = false;
                 var exTrack: OSMMapKitPolyline? = nil;
-               
+            
                 for ann in trackAnnotations {
                     if ann.objId == "utrk\(location.userId)" {
                             exTrack = ann;
@@ -508,6 +516,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // 2
         let overlay = OSMTileOverlay(urlTemplate: template)
         overlay.canReplaceMapContent = true
+        //overlay.tileSize = CGSize(width: 128, height: 128)
         //overlay.maximumZ = 19
         
         
@@ -571,6 +580,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             return pointView
         }
         if annotation is User {
+            let user = (annotation as! User)
             let reuseIdentifier = "user"
             var userView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
             
@@ -580,8 +590,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             } else {
                 userView?.annotation = annotation
             }
-            userView?.backgroundColor = (annotation as! User).color.hexColor;
-            if (annotation as! User) == self.trackedUser {
+            userView?.backgroundColor = user.color.hexColor;
+            if user == self.trackedUser {
                 userView?.layer.borderColor =  UIColor.red.cgColor
             } else {
                 userView?.layer.borderColor = UIColor.white.cgColor
@@ -592,7 +602,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }*/
             if let title = annotation.title {
                  if let letter = userView!.viewWithTag(1) as? UILabel{
-                    letter.textColor = "#000000".hexColor
+                    if user.recent {
+                        letter.textColor = UIColor.black
+                    } else {
+                        letter.textColor = UIColor.gray
+                    }
                     if (longNames) {
                         letter.text = title;
                     } else {
@@ -600,7 +614,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     }
                 }
             }
-            
+            if let lblSpeed = userView!.viewWithTag(2) as? UILabel{
+                if user.recent {
+                    let formatedSpeed =  (NSString(format:"%.0f", (user.speed * 3.6)))
+                    lblSpeed.text = "\(formatedSpeed)";
+                    lblSpeed.textColor = UIColor.black
+                } else {
+                    
+                    let dateFormat = DateFormatter()
+                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let formatedTime = dateFormat.string(from: user.time)
+                    lblSpeed.textColor = UIColor.gray
+
+                    lblSpeed.text = "\(formatedTime)";
+                }
+
+                
+            }
             return userView
         }
         return nil
@@ -622,7 +652,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
                 self.trackedUser = user
                 
-                self.connectionManager.sendTrackUser("\(self.trackedUser!.u ?? "-1")]")
+                self.connectionManager.sendTrackUser("[\(self.trackedUser!.u ?? "-1")]")
             }
             
             self.mapView.removeAnnotation(user)
@@ -633,22 +663,21 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             {
                 print("User tapped on annotation with title: \(annotationTitle!)")
             }
-        
-            
         }
-        
     }
     
     @IBAction func locateClick(sender: AnyObject) {
         
         self.trackedUser = nil //Перестаем следить за выбранным пользователем
-        self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true) //Следим за собой
+        switch self.mapView.userTrackingMode {
+            case .follow:
+                self.mapView.setUserTrackingMode(MKUserTrackingMode.followWithHeading, animated: true) //Следим за собой
+                break
+        default:
+            self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: true) //Следим за собой
 
+        }
         mapView.setNeedsDisplay()
-        /*
-         if let location = mapView.userLocation?.location {
-         mapView.setCenter(location.coordinate, animated: true)
-         }*/
     }
 }
 

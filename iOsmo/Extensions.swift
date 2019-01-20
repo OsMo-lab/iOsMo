@@ -57,6 +57,19 @@ extension String {
         }
         return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
+    
+    func matchingStrings(regex: String) -> [[String]] {
+        guard let regex = try? NSRegularExpression(pattern: regex, options: []) else { return [] }
+        let nsString = self as NSString
+        let results  = regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
+        return results.map { result in
+            (0..<result.numberOfRanges).map {
+                result.rangeAt($0).location != NSNotFound
+                    ? nsString.substring(with: result.rangeAt($0))
+                    : ""
+            }
+        }
+    }
 }
 
 public extension UIDevice {

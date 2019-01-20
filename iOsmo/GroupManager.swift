@@ -49,6 +49,10 @@ open class GroupManager{
                 
                 if let user = self.getUser(location.groupId, user: location.userId){
                     user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
+                    user.recent = location.location.recent
+                    if location.location.speed>=0 {
+                        user.speed = location.location.speed
+                    }
                     user.track.append(clLocation)
                 } else {
                     //Получены координаты пользователя, которого нет в кэше. Запрашиваем группы с сервера
@@ -73,6 +77,7 @@ open class GroupManager{
                     if (uE == 0) {
                         uE = Int(u["e"] as! String)!
                     }
+                    let uTime = (u["time"] as? Double) ?? 0
                     let deleteUser = u["deleted"] as? String
                     
                     if let user = self.getUser($0,user: uId) {
@@ -90,6 +95,7 @@ open class GroupManager{
                                 user.color = uColor
                                 user.connected = uConnected
                                 user.name = uName
+                                user.time = Date(timeIntervalSince1970: uTime)
                             }
                         }
                     } else {

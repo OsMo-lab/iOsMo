@@ -11,11 +11,12 @@ public struct LocationModel{
     
     var lat: Double
     var lon: Double
-    var speed: Double = 0.0
+    var speed: Double = -1.0
     var alt: Int = 0
     var course: Float = 0.0
     var accuracy: Int = 0
     var time: Date
+    var recent: Bool = false
     
     
     let coordFormat = "%.6f"
@@ -32,6 +33,7 @@ public struct LocationModel{
     init(coordString: String){
         
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
+        //G:9938|["21542|L46.654809:31.020692S3A48","21646|L46.484945:30.689059S7A78"]
         let parts = coordString.components(separatedBy: "S")
         self.speed = atof(parts[1])
         
@@ -39,7 +41,17 @@ public struct LocationModel{
         let coordinates = coordinatesMerged.components(separatedBy: ":")
         self.lat = atof(coordinates[0])
         self.lon = atof(coordinates[1])
-        self.time = Date()
+        
+        let tparts = coordString.components(separatedBy: "T")
+        if tparts.count>1 {
+            self.time = Date(timeIntervalSince1970: atof(tparts[1]))
+        } else {
+            self.time = Date()
+            self.recent = true
+        }
+        
+        let p = coordString.matchingStrings(regex: "L([0-9.]{3,}):([0-9.]{3,})S([0-9]{1,})A([0-9]{1,})T([0-9]{1,})")
+        print(p)
         
     }
     

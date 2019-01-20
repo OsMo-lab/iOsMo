@@ -58,7 +58,7 @@
                   moduleName = "iOsMo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/AppDelegate.swift"
-                  timestampString = "569534944.730261"
+                  timestampString = "569656982.8667541"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "153"
@@ -73,7 +73,7 @@
                   moduleName = "iOsMo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/alexeysirotkin/Documents/iOsMo/iOsmo/AppDelegate.swift"
-                  timestampString = "569534944.734129"
+                  timestampString = "569656982.870607"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "153"
@@ -90,12 +90,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/GroupManager.swift"
-            timestampString = "569534944.516066"
+            timestampString = "569656982.578949"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
             landmarkName = "init()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/MapViewController.swift"
+            timestampString = "569656982.5790761"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "614"
+            endingLineNumber = "614"
+            landmarkName = "mapView(_:viewFor:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/LocationModel.swift"
+            timestampString = "569656982.5797369"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "init(coordString:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
