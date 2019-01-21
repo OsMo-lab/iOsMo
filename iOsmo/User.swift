@@ -41,6 +41,10 @@ public class User:NSObject, MKAnnotation {
         self.color = (json["color"] as? String) ?? ""
         self.online = (json["online"] as? Int) ?? 0
         self.state = (json["state"] as? Int) ?? 0
+        let uTime = (json["time"] as? Double) ?? 0
+        if uTime > 0 {
+            self.time = Date(timeIntervalSince1970: uTime)
+        }
 
         if let lat = json["lat"] as? String, let lon = json["lon"] as? String {
             self.coordinate = CLLocationCoordinate2D(latitude: atof(lat), longitude: atof(lon))

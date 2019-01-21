@@ -49,10 +49,6 @@ public struct LocationModel{
             self.time = Date()
             self.recent = true
         }
-        
-        let p = coordString.matchingStrings(regex: "L([0-9.]{3,}):([0-9.]{3,})S([0-9]{1,})A([0-9]{1,})T([0-9]{1,})")
-        print(p)
-        
     }
     
     var getCoordinateRequest: String{
@@ -62,11 +58,10 @@ public struct LocationModel{
             isSimulated = true
         }
         var formatedTime = ""
-        //let locationAge = -time.timeIntervalSinceNow
-        //if locationAge > 1 {
-            let t:TimeInterval = time.timeIntervalSince1970
-            formatedTime = NSString(format:timeFormat as NSString, t) as String
-        //}
+
+        let t:TimeInterval = time.timeIntervalSince1970
+        formatedTime = NSString(format:timeFormat as NSString, t) as String
+
         
         let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
         let formatedCourse = (speed > 5 && course > 0)  ? (NSString(format:courseFormat as NSString, course)): ""

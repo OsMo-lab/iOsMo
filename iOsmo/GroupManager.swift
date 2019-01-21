@@ -64,6 +64,7 @@ open class GroupManager{
         self.onUpdateGroup = connection.groupsUpdated.add({
             let g = $1 as! Dictionary<String, AnyObject>
             let group = $0
+            var max_id = 0
             let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
             
             if let jsonUsers = g["users"] as? Array<AnyObject> {
@@ -105,7 +106,7 @@ open class GroupManager{
                         }
                     }
                     if uE != 0 {
-                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        max_id = uE
                     }
                 }
             } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
@@ -127,7 +128,7 @@ open class GroupManager{
                         }
                     }
                     if uE != 0 {
-                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        max_id = uE
                     }
                     
                 }
@@ -171,7 +172,7 @@ open class GroupManager{
                         foundGroup?.points.append(pointNew)
                     }
                     if uE != 0 {
-                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        max_id = uE
                     }
                 }
             } else if let jsonTracks = g["track"] as? Array<AnyObject> {
@@ -203,9 +204,12 @@ open class GroupManager{
                         foundGroup?.tracks.append(track)
                     }
                     if uE != 0 {
-                        self.connection.sendUpdateGroupResponse(group: group, event: uE)
+                        max_id = uE
                     }
                 }
+            }
+            if max_id != 0 {
+                self.connection.sendUpdateGroupResponse(group: group, event: max_id)
             }
             self.saveCache()
             self.groupsUpdated.notify(($0,$1))
@@ -330,10 +334,11 @@ open class GroupManager{
                 for g in self.allGroups {
                     var users : [NSDictionary] = [NSDictionary]()
                     for u in g.users {
-                        let user : NSDictionary =
-                            ["u": u.u, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "online": u.online, "lat": "\(u.coordinate.latitude)", "lon": "\(u.coordinate.longitude)"];
-                        users.append(user)
+                        let t:TimeInterval = u.time.timeIntervalSince1970
                         
+                        let user : NSDictionary =
+                            ["u": u.u, "name": u.name, "connected": u.connected, "color": u.color, "state": u.state, "time": t, "online": u.online, "lat": "\(u.coordinate.latitude)", "lon": "\(u.coordinate.longitude)"];
+                        users.append(user)
                     }
                     
                     var points : [NSDictionary] = [NSDictionary]()

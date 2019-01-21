@@ -490,9 +490,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             tileSource = TileSource(rawValue: mapStyle)!
         }
         // 1
-        
         var template: String;
-        
         
         switch self.tileSource {
             case TileSource.Hotosm:
@@ -525,10 +523,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         //5
         tileRenderer = MKTileOverlayRenderer(tileOverlay: overlay)
-
     }
    
-    
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is OSMMapKitPolyline {
             let lineView = MKPolylineRenderer(overlay: overlay)
