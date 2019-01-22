@@ -28,6 +28,8 @@ enum Tags: String {
     case setTrackedkUser = "SP"
     case updateGroupResponse = "GPR"
     case groupSwitch = "GS"
+    case groupChat = "GC"
+    case groupChatSend = "GCS"
     case coordinate = "T"
     case buffer = "B"
 }

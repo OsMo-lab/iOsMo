@@ -28,8 +28,6 @@ public class User:NSObject, MKAnnotation {
     public var subtitle: String? = ""
     
     init(json:Dictionary<String, AnyObject>) {
-
-        print(json)
         var uId = json["u"] as? String
         if (uId == nil) {
             let uIdInt = json["u"] as! Int

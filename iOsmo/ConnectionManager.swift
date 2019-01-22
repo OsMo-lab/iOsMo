@@ -787,15 +787,12 @@ open class ConnectionManager: NSObject{
         if command == AnswTags.grCoord.rawValue {
             let parseRes = parseGroupUpdate(output)
             if let grId = parseRes.0, let res = parseRes.1 {
-                
-                //if monitor.contains(grId){
                 if let userCoordinates = parseCoordinate(grId, coordinates: res) {
                     monitoringGroupsUpdated.notify(userCoordinates)
                 }
                 else {
                     log.enqueue("error: parsing coordinate array")
                 }
-                //}
             }
             
             //D:47580|L37.33018:-122.032582S1.3A9H5C

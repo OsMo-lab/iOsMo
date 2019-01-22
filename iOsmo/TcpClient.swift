@@ -222,14 +222,11 @@ open class TcpClient : NSObject, StreamDelegate {
             }
 
             if !message.isEmpty {
-                //check for spliting:
+                //Копим сообщение, пока не получим от сервера \n
                 let responceSplit = message.components(separatedBy: "\n")
                 var count = 0
                 for res in responceSplit {
                     if !res.isEmpty{
-                        //let subst = message.suffix(1)
-                        
-                        //let subst = message[Range(message.characters.index(message.endIndex, offsetBy: -1)..<message.endIndex)]
                         let subst = message.substring(with: message.index(message.endIndex, offsetBy: -1)..<message.endIndex)
                         
                         if responceSplit.count < 2 && subst != "\n"{
@@ -241,11 +238,13 @@ open class TcpClient : NSObject, StreamDelegate {
                                 call(res)
                             }
                         }
+
                         let resAdvance = res + "\n"
-                        //message = (responceSplit.count != count) ? message.substring(with: Range<String.Index>(resAdvance.endIndex..<message.endIndex)) : res
-                        message = (responceSplit.count != count) ? message.substring(with: resAdvance.endIndex..<message.endIndex) : res
+                            
+                        message  = (responceSplit.count != count && message.endIndex >= resAdvance.endIndex) ? message.substring(with: resAdvance.endIndex..<message.endIndex) : res
                         
                         count += 1
+
                     }
                 }
             }
