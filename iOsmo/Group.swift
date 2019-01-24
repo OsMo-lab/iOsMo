@@ -73,6 +73,7 @@ open class Group: Equatable{
         if let jsonUsers = json["users"] as? Array<AnyObject> {
             for jsonU in jsonUsers{
                 let user = User(json:jsonU as! Dictionary<String, AnyObject>)
+                user.groupId = Int(self.u) ?? 0
                 self.users.append(user)
             }
         }
@@ -80,6 +81,7 @@ open class Group: Equatable{
         if let jsonPoints = json["point"] as? Array<AnyObject> {
             for jsonP in jsonPoints{
                 let point = Point (json:jsonP as! Dictionary<String, AnyObject>)
+                point.groupId = Int(self.u) ?? 0
                 self.points.append(point)
                 
             }
@@ -87,6 +89,7 @@ open class Group: Equatable{
         if let jsonTracks = json["track"] as? Array<AnyObject> {
             for jsonT in jsonTracks{
                 let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
+                track.groupId = Int(self.u) ?? 0
                 self.tracks.append(track)
             }
         }

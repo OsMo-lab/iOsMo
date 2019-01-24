@@ -11,6 +11,7 @@ import MapKit
 
 open class Track: Equatable {
     var u: Int
+    var groupId: Int = 0
     var type: String = "0"
     var descr: String = ""
     var km: String = ""

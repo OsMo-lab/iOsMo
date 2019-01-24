@@ -52,6 +52,7 @@ open class GroupManager{
                     user.recent = location.location.recent
                     if location.location.speed>=0 {
                         user.speed = location.location.speed
+                        user.subtitle = "\(user.speed)"
                     }
                     user.track.append(clLocation)
                 } else {
@@ -102,6 +103,7 @@ open class GroupManager{
                     } else {
                         if (deleteUser == nil) {
                             let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
+                            nUser.groupId = Int(foundGroup?.u ?? "") ?? 0
                             foundGroup?.users.append(nUser)
                         }
                     }
@@ -169,6 +171,7 @@ open class GroupManager{
                         }
                     } else {
                         let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
+                        pointNew.groupId = Int(foundGroup?.u ?? "") ?? 0
                         foundGroup?.points.append(pointNew)
                     }
                     if uE != 0 {
@@ -201,6 +204,7 @@ open class GroupManager{
                         }
                     } else {
                         let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
+                        track.groupId = Int(foundGroup?.u ?? "") ?? 0
                         foundGroup?.tracks.append(track)
                     }
                     if uE != 0 {

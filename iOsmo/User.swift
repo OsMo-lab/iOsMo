@@ -13,19 +13,19 @@ public class User:NSObject, MKAnnotation {
 
     var u: String!
     var name: String
+    var groupId: Int = 0
     var color: String
     var state: Int = 0
     var online: Int = 0
     var time: Date = Date()
     var connected: Double //time of connected in UNIX time format
-    //var lat: Double = -3000
-    //var lon: Double = -3000
     public dynamic var coordinate : CLLocationCoordinate2D;
-    var speed: Double = 0.0
+
+    public dynamic var speed: Double = 0.0
     var recent = false; //Признак того, что координата получена от сообщения G
     var track = [CLLocationCoordinate2D]()
     
-    public var subtitle: String? = ""
+    public dynamic var subtitle: String? = ""
     
     init(json:Dictionary<String, AnyObject>) {
         var uId = json["u"] as? String
@@ -66,6 +66,7 @@ public class User:NSObject, MKAnnotation {
     open var title: String? {
         return name;
     }
+    
     open var mapId: String! {
         return "u\(u!)";
     }

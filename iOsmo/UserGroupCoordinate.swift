@@ -10,7 +10,7 @@ import Foundation
 open class UserGroupCoordinate{
     
     let groupId: Int
-    let userId: Int
+    let userId: Int //Уникалльный ID
     let location: LocationModel
 
     

@@ -12,6 +12,7 @@ import MapKit
 
 public class Point: NSObject, MKAnnotation {
     var u: Int
+    var groupId: Int = 0
     var lat: Double
     var lon: Double
     var descr: String = ""
