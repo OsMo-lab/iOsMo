@@ -21,8 +21,7 @@ public class User:NSObject, MKAnnotation {
     var connected: Double //time of connected in UNIX time format
     public dynamic var coordinate : CLLocationCoordinate2D;
 
-    public dynamic var speed: Double = 0.0
-    var recent = false; //Признак того, что координата получена от сообщения G
+    public dynamic var speed: Double = -1.0
     var track = [CLLocationCoordinate2D]()
     
     public dynamic var subtitle: String? = ""

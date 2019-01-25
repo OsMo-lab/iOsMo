@@ -453,6 +453,48 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    func updateAnotation(view: MKAnnotationView, user: User) {
+        var longNames: Bool = false;
+        
+        if let sLongNames = SettingsManager.getKey(SettingKeys.longNames) {
+            longNames = sLongNames.boolValue
+        }
+        
+        if let title = user.title {
+            if let letter = view.viewWithTag(1) as? UILabel{
+                if user.speed > 0 {
+                    letter.textColor = UIColor.black
+                } else {
+                    letter.textColor = UIColor.gray
+                }
+                if (longNames) {
+                    letter.text = title;
+                } else {
+                    letter.text = title.substring(to: title.index(title.startIndex, offsetBy: title.count>2 ? 2 : title.count))
+                }
+            }
+        }
+        view.backgroundColor = user.color.hexColor;
+        if user == self.trackedUser {
+            view.layer.borderColor =  UIColor.red.cgColor
+        } else {
+            view.layer.borderColor = UIColor.white.cgColor
+        }
+        if let lblSpeed = view.viewWithTag(2) as? UILabel{
+            if user.speed >= 0 {
+                let formatedSpeed =  (NSString(format:"%.0f", (user.speed * 3.6)))
+                lblSpeed.text = "\(formatedSpeed)";
+                lblSpeed.textColor = UIColor.black
+            } else {
+                let dateFormat = DateFormatter()
+                dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let formatedTime = dateFormat.string(from: user.time)
+                lblSpeed.textColor = UIColor.gray
+                lblSpeed.text = "\(formatedTime)";
+            }
+        }
+    }
+    
     func drawPeoples(location: UserGroupCoordinate){
         print("MapViewController drawPeoples \(location.userId)")
         //let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
@@ -499,7 +541,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     print("add user \(location.userId)")
                     
                 } else {
-                    self.mapView(self.mapView, viewFor: user)?.setNeedsDisplay()
+                    if let userView : OSMOMKAnnotationView = self.mapView.view(for: user) as? OSMOMKAnnotationView {
+                        self.updateAnotation(view: userView, user:user)
+                    }
+                    //userView.setNeedsDisplay()
                 }
                 
                 if user == self.trackedUser {
@@ -611,43 +656,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             } else {
                 userView?.annotation = annotation
             }
-            userView?.backgroundColor = user.color.hexColor;
-            if user == self.trackedUser {
-                userView?.layer.borderColor =  UIColor.red.cgColor
-            } else {
-                userView?.layer.borderColor = UIColor.white.cgColor
-            }
-            if let title = annotation.title {
-                 if let letter = userView!.viewWithTag(1) as? UILabel{
-                    if user.recent {
-                        letter.textColor = UIColor.black
-                    } else {
-                        letter.textColor = UIColor.gray
-                    }
-                    if (longNames) {
-                        letter.text = title;
-                    } else {
-                        letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
-                    }
-                }
-            }
-            if let lblSpeed = userView!.viewWithTag(2) as? UILabel{
-                if user.recent {
-                    let formatedSpeed =  (NSString(format:"%.0f", (user.speed * 3.6)))
-                    lblSpeed.text = "\(formatedSpeed)";
-                    lblSpeed.textColor = UIColor.black
-                } else {
-                    
-                    let dateFormat = DateFormatter()
-                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    let formatedTime = dateFormat.string(from: user.time)
-                    lblSpeed.textColor = UIColor.gray
-
-                    lblSpeed.text = "\(formatedTime)";
-                }
-
-                
-            }
+            self.updateAnotation(view: userView!, user:user)
+            
             return userView
         }
         return nil
@@ -660,15 +670,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if (self.trackedUser == user) {
                 self.trackedUser = nil
                 self.connectionManager.sendTrackUser("-1")
-
-                
             } else {
                 if (self.trackedUser != nil) {
                     self.mapView.removeAnnotation(self.trackedUser! )
                     self.mapView.addAnnotation(self.trackedUser! )
                 }
                 self.trackedUser = user
-                
                 self.connectionManager.sendTrackUser("[\(self.trackedUser!.u ?? "-1")]")
             }
             

@@ -16,8 +16,6 @@ public struct LocationModel{
     var course: Float = 0.0
     var accuracy: Int = 0
     var time: Date
-    var recent: Bool = false
-    
     
     let coordFormat = "%.6f"
     let speedFormat = "S%.2f"
@@ -47,7 +45,6 @@ public struct LocationModel{
             self.time = Date(timeIntervalSince1970: atof(tparts[1]))
         } else {
             self.time = Date()
-            self.recent = true
         }
     }
     

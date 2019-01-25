@@ -49,7 +49,6 @@ open class GroupManager{
                 
                 if let user = self.getUser(location.groupId, user: location.userId){
                     user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
-                    user.recent = location.location.recent
                     if location.location.speed>=0 {
                         user.speed = location.location.speed
                         user.subtitle = "\(user.speed)"
@@ -98,6 +97,7 @@ open class GroupManager{
                                 user.connected = uConnected
                                 user.name = uName
                                 user.time = Date(timeIntervalSince1970: uTime)
+                                user.speed = -1.0
                             }
                         }
                     } else {
@@ -111,6 +111,13 @@ open class GroupManager{
                         max_id = uE
                     }
                 }
+            /*
+                 //Вступление нового пользователя в группу, без кооординат. Ничего не делаем. Ждем users
+            } else if let jsonJoin = g["join"] as? Array<AnyObject> {
+                for json in jsonJoin{
+                 
+                }
+            */
             } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
                 for jsonL in jsonLeave{
                     let u = jsonL as! Dictionary<String, AnyObject>

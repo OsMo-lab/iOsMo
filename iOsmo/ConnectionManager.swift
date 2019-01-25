@@ -305,13 +305,13 @@ open class ConnectionManager: NSObject{
                     self.connectionRun.notify((1, ""))
                     self.shouldReConnect = false
                 } else {
-                    self.log.enqueue("CM.completed Error:\(token?.error)")
+                    self.log.enqueue("CM.completed Error:\(token?.error ?? "")")
                     if (token?.error == "Wrong device key") {
                         SettingsManager.setKey("", forKey: SettingKeys.device)
                         self.connectionRun.notify((1, ""))
                         self.shouldReConnect = true
                     } else {
-                        self.connectionRun.notify((1, "\(token?.error)"))
+                        self.connectionRun.notify((1, "\(token?.error ?? "")"))
                         self.shouldReConnect = false
                     }
                 }
