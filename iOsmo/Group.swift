@@ -30,7 +30,7 @@ open class Group: Equatable{
     }
     
     init (json: Dictionary<String, AnyObject>) {
-        let gName = json["name"] as! String
+        let gName = json["name"] as? String ?? ""
         let gDescr = (json["description"] as? String) ?? ""
         let gPolicy = (json["policy"] as? String) ?? ""
         let gNick = (json["nick"] as? String) ?? ""
@@ -47,7 +47,7 @@ open class Group: Equatable{
         if (gType == nil ){
             gType = "\(json["type"] as? Int)"
         }
-        let gActive = json["active"] as? String == "1"
+        let gActive = (json["active"] as? String ?? "") == "1"
         var gU = json["u"] as? String
         if (gU == nil ){
             let gUint = json["u"] as! Int

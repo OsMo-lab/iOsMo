@@ -141,6 +141,7 @@ enum RemoteCommand: String {
     case TRACKER_WIFI_INFO = "20"
     case TRACKER_WIFI_ON = "21"
     case TRACKER_WIFI_OFF = "22"
+
     case TRACKER_VIBRATE = "41"
     case TRACKER_EXIT = "42"
     case TRACKER_GET_PREFS = "43"

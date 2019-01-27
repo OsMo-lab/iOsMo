@@ -13,6 +13,7 @@ import Foundation
 import FirebaseInstanceID
 import FirebaseMessaging
 import CoreLocation
+import AudioToolbox
 
 let authUrl = URL(string: "https://api.osmo.mobi/new?")
 let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
@@ -285,17 +286,8 @@ open class ConnectionManager: NSObject{
 
                     let request = "\(Tags.auth.rawValue)\(device)"
                     self.connection.send(request)
-                    
-                    
                 }
             }
-            /*
-            if self.monitoringGroupsHandler == nil {
-                self.monitoringGroupsHandler = self.monitoringGroupsUpdated.add({
-                    self.monitoringGroupsUpdated.notify($0)
-                })
-            }
-            */
             self.connection.connect(token!)
             self.shouldReConnect = false //interesting why here? may after connction is successful??
         } else {
@@ -819,6 +811,19 @@ open class ConnectionManager: NSObject{
             
             if (param == RemoteCommand.TRACKER_SYSTEM_INFO.rawValue){
                 sendSystemInfo()
+                return
+            }
+            if (param == RemoteCommand.TRACKER_VIBRATE.rawValue){
+                //for _ in 1...3 {
+                    AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
+                    //sleep(1)
+                //}
+                sendRemoteCommandResponse(param)
+                return
+            }
+            if (param == RemoteCommand.ALARM_ON.rawValue){
+                AudioServicesPlayAlertSound(1005)
+                sendRemoteCommandResponse(param)
                 return
             }
 

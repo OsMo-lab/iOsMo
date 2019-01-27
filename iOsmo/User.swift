@@ -33,7 +33,7 @@ public class User:NSObject, MKAnnotation {
             uId = "\(uIdInt)"
         }
         self.u = uId
-        self.name = json["name"] as! String
+        self.name = json["name"] as? String ?? ""
         self.connected = (json["connected"] as? Double) ?? 0
         self.color = (json["color"] as? String) ?? ""
         self.online = (json["online"] as? Int) ?? 0

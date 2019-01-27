@@ -236,33 +236,39 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         var curAnnotations = [String]()
         var curTracks = [String]()
         var idx = 0;
+        let removeAll : Bool = groups.count == groupManager.allGroups.count ? true : false
         
         for group in groups{
             if group.active {
                 for user in group.users {
                     if user.coordinate.latitude > -3000 && user.coordinate.longitude > -3000 {
-                        
-                        
                         let location = LocationModel(lat: user.coordinate.latitude, lon: user.coordinate.longitude)
                         let gid = Int(group.u)
                         let uid = Int(user.u)
                         let ugc: UserGroupCoordinate = UserGroupCoordinate(group: gid!, user: uid!,  location: location)
                         idx = 0;
                         
-                        //Удаляем пользователей с карты т.к. после обновления групп сформированы новые экземпляры объектов пользователей и старые маркеры не будут обновлятся
-                        for ann in pointAnnotations {
-                            if (ann is User)  {
-                                if (user.u == (ann as! User).u ) {
-                                    print("removing user \(user.u!)")
-                                    self.mapView.removeAnnotation(ann)
-                                    pointAnnotations.remove(at: idx)
-                                    break
+                        let gpUsers = GP?["users"] as? Array<AnyObject>
+
+                        //Удаляем пользователей с карты т.к. после обновления групп по команде GROUP сформированы новые экземпляры объектов пользователей и старые маркеры не будут обновлятся
+                        if removeAll == true {
+                            for ann in pointAnnotations {
+                                if (ann is User)  {
+                                    if (user.u == (ann as! User).u ) {
+                                        print("removing user \(user.u!)")
+                                        self.mapView.removeAnnotation(ann)
+                                        pointAnnotations.remove(at: idx)
+                                        break
+                                    }
                                 }
+                                idx = idx + 1;
                             }
-                            idx = idx + 1;
                         }
                         
-                        self.drawPeoples(location: ugc)
+                        if (gpUsers != nil || GP == nil){
+                            self.drawPeoples(location: ugc)
+                        }
+                        
                         curAnnotations.append("u\(uid!)")
                     }
                 }
@@ -302,11 +308,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
             
-            if (delete == true) {
+            if (delete == true && annObjId != "") {
                 if !(annObjId.contains("wpt")) {
                     self.mapView.removeAnnotation(ann)
                     pointAnnotations.remove(at: idx)
-                    print("removing \(annObjId)")
+                    print("removing \(annObjId!)")
                 }
             } else {
                 idx = idx + 1
@@ -411,22 +417,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     print ("adding waipont \(track.u)")
 
                 }
-                
-                /*
-                 let multiPolyline = OSMMultiPolyline(polylines: polylines)
-                 multiPolyline.objId = "t\(track.u)"
-                 multiPolyline.title = track.name
-                 let source = MGLShapeSource(identifier: multiPolyline.objId, shapes: polylines, options: nil)
-                 mapView.style?.addSource(source)
-                 
-                 let layer = MGLFillStyleLayer(identifier: multiPolyline.objId, source: source)
-                 
-                 layer.fillColor = MGLStyleValue<UIColor>(rawValue: track.color.hexColor.withAlphaComponent(0.8))
-                 layer.fillOutlineColor = MGLStyleValue<UIColor>(rawValue:track.color.hexColor.withAlphaComponent(0.8))
-                 mapView.style?.addLayer(layer)
-                 
-                 self.trackAnnotations.append(multiPolyline)
-                 */
             }
             
         }
@@ -455,14 +445,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func updateAnotation(view: MKAnnotationView, user: User) {
         var longNames: Bool = false;
-        
+        var recent : Bool = false;
+        if user.speed >= 0 {
+            if user.time.timeIntervalSinceNow > -120 {
+                recent = true
+            }
+        }
         if let sLongNames = SettingsManager.getKey(SettingKeys.longNames) {
             longNames = sLongNames.boolValue
         }
         
         if let title = user.title {
             if let letter = view.viewWithTag(1) as? UILabel{
-                if user.speed > 0 {
+                if recent == true {
                     letter.textColor = UIColor.black
                 } else {
                     letter.textColor = UIColor.gray
@@ -481,13 +476,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             view.layer.borderColor = UIColor.white.cgColor
         }
         if let lblSpeed = view.viewWithTag(2) as? UILabel{
-            if user.speed >= 0 {
+            if recent == true {
                 let formatedSpeed =  (NSString(format:"%.0f", (user.speed * 3.6)))
                 lblSpeed.text = "\(formatedSpeed)";
                 lblSpeed.textColor = UIColor.black
             } else {
                 let dateFormat = DateFormatter()
-                dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                dateFormat.dateFormat = "yyyy-MM-dd"
+                if dateFormat.string(from: user.time) == dateFormat.string(from: Date()) {
+                    dateFormat.dateFormat = "HH:mm:ss"
+                } else {
+                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                }
+                
                 let formatedTime = dateFormat.string(from: user.time)
                 lblSpeed.textColor = UIColor.gray
                 lblSpeed.text = "\(formatedTime)";
@@ -497,7 +498,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func drawPeoples(location: UserGroupCoordinate){
         print("MapViewController drawPeoples \(location.userId)")
-        //let clLocation = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon)
         if (self.mapView) != nil {
             if let user = groupManager.getUser(location.groupId, user: location.userId){
                 var annVisible = false;
@@ -528,7 +528,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 for ann in self.pointAnnotations {
                     if (ann is User) {
                         if ((ann as! User).mapId == "u\(location.userId)") {
-                            print("User \(location.userId) is on map")
                             annVisible = true;
                             break;
                             
@@ -678,11 +677,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 self.trackedUser = user
                 self.connectionManager.sendTrackUser("[\(self.trackedUser!.u ?? "-1")]")
             }
-            
-            self.mapView.removeAnnotation(user)
-            self.mapView.addAnnotation(user)
-            
-            mapView.setNeedsDisplay()
+            self.mapView.deselectAnnotation(user, animated: false)
+
+            self.updateAnotation(view: view, user:user)
+            view.setNeedsDisplay()
+            //mapView.setNeedsDisplay()
             if let annotationTitle = view.annotation?.title
             {
                 print("User tapped on annotation with title: \(annotationTitle!)")

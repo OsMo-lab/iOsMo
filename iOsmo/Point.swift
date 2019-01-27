@@ -30,10 +30,10 @@ public class Point: NSObject, MKAnnotation {
         self.u = json["u"] as! Int
         self.lat = atof(json["lat"] as! String)
         self.lon = atof(json["lon"] as! String)
-        self.name = json["name"] as! String
-        self.descr = json["description"] as! String
+        self.name = json["name"] as? String ?? ""
+        self.descr = json["description"] as? String ?? ""
         self.url = json["url"] as? String ?? ""
-        self.color = json["color"] as! String
+        self.color = json["color"] as? String ?? "#ffffff"
         self.mapId = "p\(self.u)"
         self.subtitle = self.descr
     }

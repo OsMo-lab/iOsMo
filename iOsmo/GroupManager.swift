@@ -49,6 +49,7 @@ open class GroupManager{
                 
                 if let user = self.getUser(location.groupId, user: location.userId){
                     user.coordinate = CLLocationCoordinate2D(latitude: location.location.lat, longitude: location.location.lon);
+                    user.time = location.location.time
                     if location.location.speed>=0 {
                         user.speed = location.location.speed
                         user.subtitle = "\(user.speed)"
@@ -65,160 +66,163 @@ open class GroupManager{
             let g = $1 as! Dictionary<String, AnyObject>
             let group = $0
             var max_id = 0
-            let foundGroup = self.allGroups.filter{$0.u == "\(group)"}.first
-            
-            if let jsonUsers = g["users"] as? Array<AnyObject> {
-                for jsonU in jsonUsers{
-                    let u = jsonU as! Dictionary<String, AnyObject>
-                    var uId = (u["u"] as? Int) ?? 0
-                    if (uId == 0) {
-                        uId = Int(u["u"] as! String)!
-                    }
-                    var uE = (u["e"] as? Int) ?? 0
-                    if (uE == 0) {
-                        uE = Int(u["e"] as! String)!
-                    }
-                    let uTime = (u["time"] as? Double) ?? 0
-                    let deleteUser = u["deleted"] as? String
-                    
-                    if let user = self.getUser($0,user: uId) {
-                        if (deleteUser != nil ) {
-                            let uIdx = foundGroup?.users.index(of: user)
-                            if uIdx! > -1 {
-                                foundGroup?.users.remove(at: uIdx!)
+            if let foundGroup = self.allGroups.filter({$0.u == "\(group)"}).first {
+                if let jsonUsers = g["users"] as? Array<AnyObject> {
+                    for jsonU in jsonUsers{
+                        let u = jsonU as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
+                        let uTime = (u["time"] as? Double) ?? 0
+                        let deleteUser = u["deleted"] as? String
+                        
+                        if let user = self.getUser($0,user: uId) {
+                            if (deleteUser != nil ) {
+                                let uIdx = foundGroup.users.index(of: user)
+                                if uIdx! > -1 {
+                                    foundGroup.users.remove(at: uIdx!)
+                                }
+                            } else {
+                                if let uName = u["name"] as? String {
+                                    let uConnected = (u["connected"] as? Double) ?? 0
+                                    let uColor = u["color"] as! String
+                                    let uState = (u["state"] as? Int) ?? 0
+                                    user.state = uState
+                                    user.color = uColor
+                                    user.connected = uConnected
+                                    user.name = uName
+                                    user.time = Date(timeIntervalSince1970: uTime)
+                                    user.speed = -1.0
+                                }
                             }
                         } else {
-                            if let uName = u["name"] as? String {
-                                let uConnected = (u["connected"] as? Double) ?? 0
+                            if (deleteUser == nil) {
+                                let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
+                                nUser.groupId = Int(foundGroup.u) ?? 0
+                                foundGroup.users.append(nUser)
+                            }
+                        }
+                        if uE != 0 {
+                            max_id = uE
+                        }
+                    }
+                    /*
+                     //Вступление нового пользователя в группу, без кооординат. Ничего не делаем. Ждем users
+                     } else if let jsonJoin = g["join"] as? Array<AnyObject> {
+                     for json in jsonJoin{
+                     
+                     }
+                     */
+                } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
+                    for jsonL in jsonLeave{
+                        let u = jsonL as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
+                        if let user = self.getUser($0,user: uId) {
+                            let uIdx = foundGroup.users.index(of: user)
+                            if uIdx! > -1 {
+                                foundGroup.users.remove(at: uIdx!)
+                            }
+                        }
+                        if uE != 0 {
+                            max_id = uE
+                        }
+                        
+                    }
+                } else if let jsonPoints = g["point"] as? Array<AnyObject> {
+                    for jsonP in jsonPoints {
+                        let u = jsonP as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
+                        if let point = self.getPoint($0,point: uId) {
+                            if (u["deleted"] as? String) != nil {
+                                let uIdx = foundGroup.points.index(of: point)
+                                if uIdx! > -1 {
+                                    foundGroup.points.remove(at: uIdx!)
+                                }
+                            } else {
+                                
+                                let lat = atof(u["lat"] as! String)
+                                let lon = atof(u["lon"] as! String)
+                                let uName = u["name"] as? String
+                                let descr = u["description"] as? String
                                 let uColor = u["color"] as! String
-                                let uState = (u["state"] as? Int) ?? 0
-                                user.state = uState
-                                user.color = uColor
-                                user.connected = uConnected
-                                user.name = uName
-                                user.time = Date(timeIntervalSince1970: uTime)
-                                user.speed = -1.0
-                            }
-                        }
-                    } else {
-                        if (deleteUser == nil) {
-                            let nUser = User(json:jsonU as! Dictionary<String, AnyObject>)
-                            nUser.groupId = Int(foundGroup?.u ?? "") ?? 0
-                            foundGroup?.users.append(nUser)
-                        }
-                    }
-                    if uE != 0 {
-                        max_id = uE
-                    }
-                }
-            /*
-                 //Вступление нового пользователя в группу, без кооординат. Ничего не делаем. Ждем users
-            } else if let jsonJoin = g["join"] as? Array<AnyObject> {
-                for json in jsonJoin{
-                 
-                }
-            */
-            } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
-                for jsonL in jsonLeave{
-                    let u = jsonL as! Dictionary<String, AnyObject>
-                    var uId = (u["u"] as? Int) ?? 0
-                    if (uId == 0) {
-                        uId = Int(u["u"] as! String)!
-                    }
-                    
-                    var uE = (u["e"] as? Int) ?? 0
-                    if (uE == 0) {
-                        uE = Int(u["e"] as! String)!
-                    }
-                    if let user = self.getUser($0,user: uId) {
-                        let uIdx = foundGroup?.users.index(of: user)
-                        if uIdx! > -1 {
-                            foundGroup?.users.remove(at: uIdx!)
-                        }
-                    }
-                    if uE != 0 {
-                        max_id = uE
-                    }
-                    
-                }
-            } else if let jsonPoints = g["point"] as? Array<AnyObject> {
-                for jsonP in jsonPoints {
-                    let u = jsonP as! Dictionary<String, AnyObject>
-                    var uId = (u["u"] as? Int) ?? 0
-                    if (uId == 0) {
-                        uId = Int(u["u"] as! String)!
-                    }
-                    
-                    var uE = (u["e"] as? Int) ?? 0
-                    if (uE == 0) {
-                        uE = Int(u["e"] as! String)!
-                    }
-                    if let point = self.getPoint($0,point: uId) {
-                        if (u["deleted"] as? String) != nil {
-                            let uIdx = foundGroup?.points.index(of: point)
-                            if uIdx! > -1 {
-                                foundGroup?.points.remove(at: uIdx!)
+                                let uURL = u["url"] as? String ?? ""
+                                
+                                point.color = uColor
+                                point.name = uName!
+                                point.lat = lat
+                                point.lon = lon
+                                point.descr = descr!
+                                point.url = uURL
+                                
                             }
                         } else {
-                            
-                            let lat = atof(u["lat"] as! String)
-                            let lon = atof(u["lon"] as! String)
-                            let uName = u["name"] as? String
-                            let descr = u["description"] as? String
-                            let uColor = u["color"] as! String
-                            let uURL = u["url"] as? String ?? ""
-                            
-                            point.color = uColor
-                            point.name = uName!
-                            point.lat = lat
-                            point.lon = lon
-                            point.descr = descr!
-                            point.url = uURL
-                            
+                            let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
+                            pointNew.groupId = Int(foundGroup.u) ?? 0
+                            foundGroup.points.append(pointNew)
                         }
-                    } else {
-                        let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
-                        pointNew.groupId = Int(foundGroup?.u ?? "") ?? 0
-                        foundGroup?.points.append(pointNew)
+                        if uE != 0 {
+                            max_id = uE
+                        }
                     }
-                    if uE != 0 {
-                        max_id = uE
-                    }
-                }
-            } else if let jsonTracks = g["track"] as? Array<AnyObject> {
-                for jsonT in jsonTracks {
-                    let u = jsonT as! Dictionary<String, AnyObject>
-                    var uId = (u["u"] as? Int) ?? 0
-                    if (uId == 0) {
-                        uId = Int(u["u"] as! String)!
-                    }
-                    
-                    var uE = (u["e"] as? Int) ?? 0
-                    if (uE == 0) {
-                        uE = Int(u["e"] as! String)!
-                    }
-                    if let track = self.getTrack($0,track: uId) {
-                        if (u["deleted"] as? String) != nil {
-                            let uIdx = foundGroup?.tracks.index(of: track)
-                            if uIdx! > -1 {
-                                foundGroup?.tracks.remove(at: uIdx!)
+                } else if let jsonTracks = g["track"] as? Array<AnyObject> {
+                    for jsonT in jsonTracks {
+                        let u = jsonT as! Dictionary<String, AnyObject>
+                        var uId = (u["u"] as? Int) ?? 0
+                        if (uId == 0) {
+                            uId = Int(u["u"] as! String)!
+                        }
+                        
+                        var uE = (u["e"] as? Int) ?? 0
+                        if (uE == 0) {
+                            uE = Int(u["e"] as! String)!
+                        }
+                        if let track = self.getTrack($0,track: uId) {
+                            if (u["deleted"] as? String) != nil {
+                                let uIdx = foundGroup.tracks.index(of: track)
+                                if uIdx! > -1 {
+                                    foundGroup.tracks.remove(at: uIdx!)
+                                }
+                            } else {
+                                let uName = u["name"] as! String
+                                let uColor = u["color"] as! String
+                                track.name = uName
+                                track.color = uColor
                             }
                         } else {
-                            let uName = u["name"] as! String
-                            let uColor = u["color"] as! String
-                            track.name = uName
-                            track.color = uColor
+                            let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
+                            track.groupId = Int(foundGroup.u ) ?? 0
+                            foundGroup.tracks.append(track)
                         }
-                    } else {
-                        let track = Track(json:jsonT as! Dictionary<String, AnyObject>)
-                        track.groupId = Int(foundGroup?.u ?? "") ?? 0
-                        foundGroup?.tracks.append(track)
-                    }
-                    if uE != 0 {
-                        max_id = uE
+                        if uE != 0 {
+                            max_id = uE
+                        }
                     }
                 }
+                
             }
+            
+            
             if max_id != 0 {
                 self.connection.sendUpdateGroupResponse(group: group, event: max_id)
             }
