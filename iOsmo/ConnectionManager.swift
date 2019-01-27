@@ -14,6 +14,7 @@ import FirebaseInstanceID
 import FirebaseMessaging
 import CoreLocation
 import AudioToolbox
+import AVFoundation
 
 let authUrl = URL(string: "https://api.osmo.mobi/new?")
 let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
@@ -822,7 +823,15 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (param == RemoteCommand.ALARM_ON.rawValue){
-                AudioServicesPlayAlertSound(1005)
+                if let fileURL = Bundle.main.path(forResource: "signal", ofType: "mp3") {
+                    do {
+                        let audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: fileURL))
+                        audioPlayer.play()
+                    } catch {
+                        
+                        
+                    }
+                }
                 sendRemoteCommandResponse(param)
                 return
             }
