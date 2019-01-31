@@ -27,7 +27,15 @@ class OSMMapKitPolyline: MKPolyline {
 class OSMOMKAnnotationView: MKAnnotationView {
     override init(annotation: MKAnnotation!, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-
+        
+        /*
+        if #available(iOS 11.0, *) {
+            if self.reuseIdentifier == "user" {
+                clusteringIdentifier = "user"
+            }
+        }
+        */
+        
         self.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
         var lWidth : CGFloat = 20;
         

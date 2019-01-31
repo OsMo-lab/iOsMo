@@ -41,21 +41,18 @@ enum Keys: String{
     case uid = "uid"
     case name = "name"
     case device = "device"
+    case motd = "motd"
+    case pro = "pro"
     
     case error = "error"
     case errorDesc = "error_description"
     case push_token = "push_token"
+    
+    case sessionUrl = "url"
+    case permanent = "permanent"
+    case id = "id"
 }
 
-enum ParseKeys: String{
-    case sessionUrl = "url"
-    case getGroups = "GROUP"
-    case status = "status"
-    case gda = "GDA"
-    case gaa = "GAA"
-    case id = "id"
-    case permanent = "permanent"
-}
 
 
 enum AnswTags: String{
@@ -97,6 +94,8 @@ enum SettingKeys: String {
     case device = "deviceKey"
     case trackerId = "trackerID"
     case isStayAwake = "isStayAwake"
+    case motd = "motd"
+    case motdtime = "motdtime"
     
     case user = "user"
     case sendTime = "sendTime"
@@ -152,7 +151,7 @@ enum RemoteCommand: String {
     case TRACKER_SESSION_CONTINUE = "5"
     case TRACKER_SESSION_PAUSE = "6"
     
-    case REFRESH_DEVICES = "91"
+    //case REFRESH_DEVICES = "91" Deprecated
     case REFRESH_GROUPS = "92"
     case SIGNAL_STATUS = "30"
     case SIGNAL_OFF = "32"

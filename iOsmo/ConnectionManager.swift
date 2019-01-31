@@ -77,6 +77,8 @@ open class ConnectionManager: NSObject{
     open var shouldReConnect = false
     open var isGettingLocation = false
     
+    var audioPlayer = AVAudioPlayer()
+    
     class var sharedConnectionManager : ConnectionManager{
         
         struct Static {
@@ -102,9 +104,14 @@ open class ConnectionManager: NSObject{
         
         //!! subscribtion for almost all types events
         connection.answerObservers.add(notifyAnswer)
-
+        
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+        } catch {
+            log.enqueue("CM.Inint: Unable to set AVAudioSessionCategory \(error)")
+        }
     }
-    
     
     func getServerInfo(key:String?) {
         
@@ -162,7 +169,7 @@ open class ConnectionManager: NSObject{
                 var res : NSDictionary = [:]
 
                 do {
-                     let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
+                    let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
                     res = (jsonDict as? NSDictionary)!
 
                     if let newKey = res[Keys.device.rawValue] as? String {
@@ -565,7 +572,13 @@ open class ConnectionManager: NSObject{
     fileprivate func notifyAnswer(output: String){
         
         var command = output.components(separatedBy: "|").first!
-        let addict = output.components(separatedBy: "|").last!
+        
+        //let index = output.firstIndex(of: "|") ?? output.endIndex
+        let index = command.count + 1
+        let addict = index < output.count ? output.substring(with: output.index(output.startIndex, offsetBy: index)..<output.endIndex) : ""
+
+        //let addict = output.components(separatedBy: "|").last!""
+
         var param = ""
         if command.contains(":"){
             param = command.components(separatedBy: ":").last!
@@ -581,23 +594,32 @@ open class ConnectionManager: NSObject{
                 name = result.1
                 
                 if result.0 == 0 {
-                    if let trackerID = parseTag(output, key: ParseKeys.id) {
-                        sessionTrackerID = trackerID
-                    } else {
-                        sessionTrackerID = "error parsing TrackerID"
-                    }
-                    if let spermanent = parseTag(output, key: ParseKeys.permanent) {
-                        if spermanent == "1" {
-                            self.permanent = true;
-                        }
-                        
-                    }
                     //means response to try connecting
                     log.enqueue("connected with Auth")
                     self.connecting = false
                     
                     self.connected = answer == 0;
-                    if (answer == 100) {
+                    
+                    if let trackerID = parseTag(output, key: Keys.id) {
+                        sessionTrackerID = trackerID
+                    } else {
+                        sessionTrackerID = "error parsing TrackerID"
+                    }
+                    if let spermanent = parseTag(output, key: Keys.permanent) {
+                        if spermanent == "1" {
+                            self.permanent = true;
+                        }
+                        
+                    }
+                    if let motd = parseTag(output, key: Keys.motd) {
+                        let cur_motd = SettingsManager.getKey(SettingKeys.motdtime) as String? ?? "0"
+                        if (Int(motd)! > Int(cur_motd)!) {
+                            SettingsManager.setKey(motd as NSString, forKey: SettingKeys.motdtime)
+                            self.getMessageOfTheDay()
+                        }
+                    }
+                    
+                    if (answer == 10 || answer == 100) {
                         DispatchQueue.main.async {
                             SettingsManager.clearKeys()
                             self.connection.closeConnection()
@@ -618,7 +640,7 @@ open class ConnectionManager: NSObject{
                         connectionRun.notify((answer, name))
                     }
                 } else {
-                    connectionRun.notify((result.0,  result.1))
+                    connectionRun.notify((answer, name))
                 }
                 
             }
@@ -714,7 +736,7 @@ open class ConnectionManager: NSObject{
                 if result.0 == 0 {
                     sessionOpened = true
                     
-                    if let sessionUrl = parseTag(output, key: ParseKeys.sessionUrl) {
+                    if let sessionUrl = parseTag(output, key: Keys.sessionUrl) {
                         sessionUrlParsed = sessionUrl
                     } else {
                         sessionUrlParsed = "error parsing url"
@@ -794,6 +816,7 @@ open class ConnectionManager: NSObject{
         }
         if command == AnswTags.messageDay.rawValue {
             if (command != "" && addict != "") {
+                SettingsManager.setKey(addict as NSString, forKey: SettingKeys.motd)
                 messageOfTheDayReceived.notify((1, addict))
             }
             else {
@@ -825,16 +848,28 @@ open class ConnectionManager: NSObject{
             if (param == RemoteCommand.ALARM_ON.rawValue){
                 if let fileURL = Bundle.main.path(forResource: "signal", ofType: "mp3") {
                     do {
-                        let audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: fileURL))
+                        audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: fileURL))
+                        audioPlayer.numberOfLoops = 3
+                        audioPlayer.prepareToPlay()
                         audioPlayer.play()
+                        sendRemoteCommandResponse(param)
                     } catch {
                         
                         
                     }
                 }
-                sendRemoteCommandResponse(param)
+                
                 return
             }
+            if (param == RemoteCommand.ALARM_OFF.rawValue){
+                if audioPlayer.isPlaying {
+                    audioPlayer.stop()
+                    sendRemoteCommandResponse(param)
+                }
+                
+                return
+            }
+            
 
             if (param == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 sendingManger.stopSendingCoordinates(param)
@@ -870,6 +905,11 @@ open class ConnectionManager: NSObject{
             
             if (param == RemoteCommand.REFRESH_GROUPS.rawValue){
                 sendGetGroups()
+                sendRemoteCommandResponse(param)
+                return
+            }
+            if (param == RemoteCommand.CHANGE_MOTD_TEXT.rawValue){
+                messageOfTheDayReceived.notify((1, addict))
                 sendRemoteCommandResponse(param)
                 return
             }
@@ -1047,7 +1087,7 @@ open class ConnectionManager: NSObject{
         return nil
     }
     
-    fileprivate func parseTag(_ responce: String, key: ParseKeys) -> String? {
+    fileprivate func parseTag(_ responce: String, key: Keys) -> String? {
         
         if let responceValues: NSDictionary = parseJson(responce) as? Dictionary<String, AnyObject> as NSDictionary? {
             if let tag = responceValues.object(forKey: key.rawValue) as? String {

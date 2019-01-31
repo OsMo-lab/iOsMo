@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/AppDelegate.swift"
-            timestampString = "570225670.342652"
+            timestampString = "570567481.607159"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "422"
@@ -38,16 +38,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "iOsmo/MapViewController.swift"
-            timestampString = "570277597.310921"
+            filePath = "iOsmo/ConnectionManager.swift"
+            timestampString = "570567481.607263"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "667"
-            endingLineNumber = "667"
-            landmarkName = "mapView(_:didSelect:)"
+            startingLineNumber = "818"
+            endingLineNumber = "818"
+            landmarkName = "notifyAnswer(output:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

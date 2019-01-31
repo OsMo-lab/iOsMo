@@ -50,6 +50,7 @@
 		4D8C634C21FDCDBD0085D1C3 /* signal.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D8C634921FDCDBD0085D1C3 /* signal.mp3 */; };
 		4D8C634D21FDCDBD0085D1C3 /* signalonoff.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D8C634A21FDCDBD0085D1C3 /* signalonoff.mp3 */; };
 		4D8C634E21FDCDBD0085D1C3 /* sendsound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D8C634B21FDCDBD0085D1C3 /* sendsound.mp3 */; };
+		4D8C635021FE2DA20085D1C3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D8C634F21FE2DA20085D1C3 /* AVFoundation.framework */; };
 		4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE661EA2B797009E96B5 /* Track.swift */; };
 		4DB4CE691EA3EB31009E96B5 /* XML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE681EA3EB31009E96B5 /* XML.swift */; };
 		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
@@ -145,6 +146,7 @@
 		4D8C634921FDCDBD0085D1C3 /* signal.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = signal.mp3; sourceTree = "<group>"; };
 		4D8C634A21FDCDBD0085D1C3 /* signalonoff.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = signalonoff.mp3; sourceTree = "<group>"; };
 		4D8C634B21FDCDBD0085D1C3 /* sendsound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sendsound.mp3; sourceTree = "<group>"; };
+		4D8C634F21FE2DA20085D1C3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4D9359B21E43A697006C9FC9 /* apple-app-site-association */ = {isa = PBXFileReference; lastKnownFileType = text; path = "apple-app-site-association"; sourceTree = "<group>"; };
 		4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOsmo.entitlements; sourceTree = "<group>"; };
 		4DB4CE661EA2B797009E96B5 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D8C635021FE2DA20085D1C3 /* AVFoundation.framework in Frameworks */,
 				4DEACF0F21E09F7200D1A32D /* FirebaseCore.framework in Frameworks */,
 				4DEACF1121E09F7200D1A32D /* FirebaseInstanceID.framework in Frameworks */,
 				29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */,
@@ -413,6 +416,7 @@
 		A005A965362B6B855E2213B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D8C634F21FE2DA20085D1C3 /* AVFoundation.framework */,
 				4DEACF0021E09F7100D1A32D /* Analytics */,
 				4DEACF0921E09F7100D1A32D /* Messaging */,
 			);
