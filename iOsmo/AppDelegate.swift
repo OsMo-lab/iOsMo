@@ -46,14 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if $0  == 0{
                 self.log.enqueue("CM.pushActivated")
             }
-            //self.activateSwitcher.isOn = $0
         }
         _ = connectionManager.sessionRun.add{
             let theChange = $0.0
             
             if theChange == 0 {
-                self.displayNotification()
-                
+                self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
             } else {
                 
             }
@@ -140,12 +138,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         self.appIsStarting = false;
 
-
         self.connectionManager.activatePoolGroups(-1)
+        self.connectionManager.sendTrackUser("-1")
         self.groupManager.saveCache()
         
         if (connectionManager.connected && connectionManager.sessionOpened) {
-            self.displayNotification()
+            self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {
@@ -173,10 +171,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
  */
     
-    func displayNotification() {
+    func displayNotification(_ title: String, _ body: String) {
         if self.localNotification == nil {
             self.localNotification = UILocalNotification()
-            self.localNotification?.alertBody = NSLocalizedString("Tracking location", comment: "Tracking location")
+            self.localNotification?.alertTitle = title
+            self.localNotification?.alertBody = body
             
             //set the notification
             UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
@@ -226,8 +225,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     var identifiers: [String] = [];
                     
                     notifications.forEach({ (notification) in
-                        
-                        
                         DispatchQueue.main.async {
                             let userInfo = notification.request.content.userInfo
                             self.log.enqueue("userInfo : \(userInfo)")
@@ -317,7 +314,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
         }
-
         
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -381,9 +377,9 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         // Change this to your preferred presentation option
         if UIApplication.shared.applicationState == .active {
-            completionHandler(.badge)
+            completionHandler([.badge, .alert])
         }else {
-            completionHandler(.alert)
+            completionHandler([.alert])
         }
     }
     

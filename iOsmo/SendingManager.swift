@@ -37,66 +37,50 @@ open class SendingManager: NSObject{
         
         return Static.instance
     }
-    
+ 
     override init(){
         
         super.init()
         
-        
-        
+        self.onLocationUpdated = locationTracker.locationUpdated.add {
+            if self.connectionManager.isGettingLocation  {
+
+                self.connectionManager.sendCoordinate($0)
+                self.connectionManager.isGettingLocation = false
+                //self.locationTracker.locationUpdated.remove(self.onLocationUpdated!)
+            }
+        }
+
     }
 
 
-    open func startSendingCoordinates(_ rc: String,  _ once: Bool){
-
+    open func startSendingCoordinates(_ once: Bool){
         locationTracker.turnMonitorinOn(once: once) //start getting coordinates
         if (once) {
-            self.onLocationUpdated = locationTracker.locationUpdated.add {
-                self.locationTracker.turnMonitoringOff()
-                self.connectionManager.sendCoordinate($0)
-                self.connectionManager.isGettingLocation = false
-                self.locationTracker.locationUpdated.remove(self.onLocationUpdated!)
-            }
             return
         }
 
         if !connectionManager.connected {
-            if once {
-                self.startSending()
-            } else {
-                self.onConnectionRun = connectionManager.connectionRun.add{
-                    if $0.0 == 0{
-                        self.onSessionRun = self.connectionManager.sessionRun.add{
-                            if $0.0 == 0{
-                                self.startSending()
-                                if (rc != "") {
-                                    self.connectionManager.sendRemoteCommandResponse(rc)
-                                }
-                            }
-                        }
-                        if rc != RemoteCommand.WHERE.rawValue {
-                            self.connectionManager.openSession()
-                        }else{
+            self.onConnectionRun = connectionManager.connectionRun.add{
+                if $0.0 == 0{
+                    self.onSessionRun = self.connectionManager.sessionRun.add{
+                        if $0.0 == 0{
                             self.startSending()
                         }
-                        
                     }
-                    
-                    // unsubscribe because it is single event
-                    if let onConRun = self.onConnectionRun {
-                        self.connectionManager.connectionRun.remove(onConRun)
-                    }
+                    self.connectionManager.openSession()
                 }
-            
-                connectionManager.connect()
+                
+                // unsubscribe because it is single event
+                if let onConRun = self.onConnectionRun {
+                    self.connectionManager.connectionRun.remove(onConRun)
+                }
             }
+            connectionManager.connect()
         } else if !connectionManager.sessionOpened {
             self.onSessionRun = self.connectionManager.sessionRun.add{
                 if ($0.0 == 0){
                     self.startSending()
-                    if (rc != ""){
-                        self.connectionManager.sendRemoteCommandResponse(rc)
-                    }
                 } else {
                     //unsibscribe when stop monitoring
                     if let onSesRun = self.onSessionRun {
@@ -104,34 +88,24 @@ open class SendingManager: NSObject{
                     }
                 }
             }
-            if (rc != RemoteCommand.WHERE.rawValue && rc != RemoteCommand.WHERE_NETWORK_ONLY.rawValue && rc != RemoteCommand.WHERE_GPS_ONLY.rawValue) {
-                self.connectionManager.openSession()
-            }else{
-                self.startSending()
-            }
+            self.connectionManager.openSession()
         } else {
             startSending()
-            if (rc != "" && rc != RemoteCommand.WHERE.rawValue && rc != RemoteCommand.WHERE_NETWORK_ONLY.rawValue && rc != RemoteCommand.WHERE_GPS_ONLY.rawValue) {
-                self.connectionManager.sendRemoteCommandResponse(rc)
-            }
         }
     }
     
-    open func pauseSendingCoordinates(_ rc: String){
+    open func pauseSendingCoordinates(){
         locationTracker.turnMonitoringOff()
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
         sessionPaused.notify((0))
         UIApplication.shared.isIdleTimerDisabled = false
-        if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
-            self.connectionManager.sendRemoteCommandResponse(rc)
-        }
-
+        
     }
     
-    open func stopSendingCoordinates(_ rc: String){
-        pauseSendingCoordinates(rc)
+    open func stopSendingCoordinates(){
+        pauseSendingCoordinates()
         connectionManager.closeSession()
     }
     

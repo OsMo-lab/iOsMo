@@ -156,8 +156,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         print("MapViewController viewDidLoad")
         
-        
-        
         self.setupTileRenderer()
 
         self.mapView.showsCompass = true
@@ -168,14 +166,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if ((lat_delta != 0) && (lon_delta != 0)) {
                     let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon), span: MKCoordinateSpan(latitudeDelta: lat_delta, longitudeDelta: lon_delta))
                     self.mapView.setRegion(region, animated: false)
-
-                    
                 }else {
                     self.mapView.setCenter(CLLocationCoordinate2D(latitude: lat, longitude: lon), animated: true)
                 }
-                
             }
-            
         }
         self.onMonitoringGroupsUpdated = self.groupManager.monitoringGroupsUpdated.add{
             for coord in $0 {
@@ -246,6 +240,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         var idx = 0;
         let removeAll : Bool = groups.count == groupManager.allGroups.count ? true : false
         
+        //Удаляем пользователей с карты т.к. после обновления групп по команде GROUP сформированы новые экземпляры объектов пользователей и старые маркеры не будут обновлятся
+        if removeAll == true {
+            for ann in pointAnnotations {
+                if (ann is User)  {
+                    print("removing user \((ann as! User).u!)")
+                    self.mapView.removeAnnotation(ann)
+                    pointAnnotations.remove(at: idx)
+                    continue
+                }
+                idx = idx + 1;
+            }
+        }
+        
         for group in groups{
             if group.active {
                 for user in group.users {
@@ -259,6 +266,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         let gpUsers = GP?["users"] as? Array<AnyObject>
 
                         //Удаляем пользователей с карты т.к. после обновления групп по команде GROUP сформированы новые экземпляры объектов пользователей и старые маркеры не будут обновлятся
+                        /*
                         if removeAll == true {
                             for ann in pointAnnotations {
                                 if (ann is User)  {
@@ -272,6 +280,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 idx = idx + 1;
                             }
                         }
+                         */
                         
                         if (gpUsers != nil || GP == nil){
                             self.drawPeoples(location: ugc)
@@ -670,8 +679,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         return nil
     }
     
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
-    {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if view.annotation is User {
             let user : User = (view.annotation as! User)
             if (self.trackedUser == user) {
@@ -683,11 +691,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     self.mapView.addAnnotation(self.trackedUser! )
                 }
                 self.trackedUser = user
-                self.connectionManager.sendTrackUser("[\(self.trackedUser!.u ?? "-1")]")
+                self.connectionManager.sendTrackUser("\(self.trackedUser!.u ?? "-1")")
             }
             self.mapView.deselectAnnotation(user, animated: false)
 
             self.updateAnotation(view: view, user:user)
+            
             view.setNeedsDisplay()
             //mapView.setNeedsDisplay()
             if let annotationTitle = view.annotation?.title
@@ -744,7 +753,6 @@ class OSMTileOverlay: MKTileOverlay {
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
         sUrl = sUrl?.replacingOccurrences(of: "{y}", with: "\(path.y)")
-        //print(sUrl)
 
         return URL(string: sUrl!)!
     }
@@ -767,22 +775,13 @@ class OSMTileOverlay: MKTileOverlay {
         
         do {
             try data.write(to: URL(fileURLWithPath: fullPath))
-                print("cached \(fullPath)")
-            
         } catch {
             print("Failed to cache \(fullPath)")
-            
         }
     }
  
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
-        /*
-        if (!result) {
-            return
-        }*/
-
         let url = self.url(forTilePath: path)
-
         
         let urlString = "\(url.host!)\(url.path)"
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
@@ -828,10 +827,8 @@ class OSMTileOverlay: MKTileOverlay {
             return
         }
         */
-        print(url)
         let task = session.dataTask(with: urlReq as URLRequest) {(data, response, error) in
             guard let data = data, error == nil else {
-                print("error: on send post request")
                 LogQueue.sharedLogQueue.enqueue("error: on getting tile")
                 return
             }

@@ -39,7 +39,7 @@ class ConnectionHelper: NSObject {
     var backgroundCompletionHandler: (() -> Void)?
     private var session: URLSession!
     
-    var onCompleted: (( URL, Data) -> ())?
+    var onCompleted: (( URL, Data?) -> ())?
     
     // MARK: - Singleton
     static let shared = ConnectionHelper()
@@ -85,15 +85,10 @@ class ConnectionHelper: NSObject {
                 } catch {
                     completed(false, nil)
                 }
-                
             }
         })
         task.resume()
     }
-    
-    
-    
-    
 }
 
 
@@ -110,21 +105,22 @@ extension ConnectionHelper: URLSessionDelegate {
 
 // MARK: - URLSessionDownloadDelegate
 extension ConnectionHelper: URLSessionDownloadDelegate {
-    
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         LogQueue.sharedLogQueue.enqueue("CH.didFinishDownloadingTo")
-        var data: Data = Data();
+        var data: Data;
         do {
             data = try Data(contentsOf: location)
             LogQueue.sharedLogQueue.enqueue("DATA OK")
+            DispatchQueue.main.async {
+                self.onCompleted?(location, data)
+            }
         } catch {
             LogQueue.sharedLogQueue.enqueue("DATA INVALID")
+            DispatchQueue.main.async {
+                self.onCompleted?(location, nil)
+            }
         }
-        DispatchQueue.main.async {
-            
-            self.onCompleted?(location, data)
-            
-        }
+        
     }
     /*
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {

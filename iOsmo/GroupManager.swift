@@ -229,17 +229,23 @@ open class GroupManager{
             self.saveCache()
             self.groupsUpdated.notify(($0,$1))
         })
+        
+        self.onGroupListUpdated = connection.groupList.add{
+            self.allGroups = $0
+            self.groupListUpdated.notify($0)
+            self.saveCache()
+            for group in $0 {
+                for track in group.tracks{
+                    self.downloadIfNeeded(track)
+                }
+            }
+        }
 
-        
-        
     }
     
     open func activateGroup(_ name: String){
-        
         self.onActivateGroup = connection.groupActivated.add{
-            
             self.groupActivated.notify($0, $1)
-            
             print("ACTIVATED! \($0) \(name)")
             if($0 == 0) {
                 do {
@@ -264,7 +270,6 @@ open class GroupManager{
     
     open func deactivateGroup(_ name: String) {
         self.onDeactivateGroup = connection.groupDeactivated.add{
-            
             self.groupDeactivated.notify($0, $1)
             
             print("DEACTIVATED \(name)! \($0) ")
@@ -279,7 +284,6 @@ open class GroupManager{
             }
             self.connection.groupDeactivated.remove(self.onDeactivateGroup!)
         }
-        
         connection.deactivateGroup(name)
     }
     
@@ -293,7 +297,6 @@ open class GroupManager{
     var onCreateGroup : ObserverSetEntry<(Int, String)>?
 
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
-        
         self.onCreateGroup = connection.groupCreated.add{
             if ($0 != 0) {
                 self.groupList(false)
@@ -308,13 +311,9 @@ open class GroupManager{
     }
     
     open func enterGroup(_ name: String, nick: String){
-    
         self.onEnterGroup = connection.groupEntered.add{
-        
             self.groupEntered.notify($0, $1)
-            
             print("ENTERED! \($0) ")
-            
             self.connection.groupEntered.remove(self.onEnterGroup!)
         }
         connection.enterGroup(name, nick: nick)
@@ -322,7 +321,6 @@ open class GroupManager{
     
     open func leaveGroup(_ u: String) {
         self.onLeaveGroup = connection.groupLeft.add{
-            
             self.groupLeft.notify($0, $1)
             if $0 == 0 {
                 let foundGroup = self.allGroups.filter{$0.u == "\(u)"}.first
@@ -414,19 +412,7 @@ open class GroupManager{
     }
     
     open func groupList(_ cached: Bool){
-        if self.onGroupListUpdated == nil {
-            self.onGroupListUpdated = connection.groupList.add{
-                
-                self.allGroups = $0
-                self.groupListUpdated.notify($0)
-                self.saveCache()
-                for group in $0 {
-                    for track in group.tracks{
-                        self.downloadIfNeeded(track)
-                    }
-                }
-            }
-        }
+        
 
         var shouldDownload = true;
         if (cached) {

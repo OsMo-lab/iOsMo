@@ -114,12 +114,18 @@ open class ConnectionManager: NSObject{
     }
     
     func getServerInfo(key:String?) {
-        
         conHelper.onCompleted = {(dataURL, data) in
-            LogQueue.sharedLogQueue.enqueue("CM.getServerInfo.onCompleted")
-
             var res : NSDictionary = [:]
             var tkn : Token;
+            LogQueue.sharedLogQueue.enqueue("CM.getServerInfo.onCompleted")
+            guard let data = data else {
+                tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                tkn.error = "Server address not received"
+                self.completed(result: false, token: tkn)
+                return
+            }
+            
+            
             do {
                 let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
                 res = (jsonDict as? NSDictionary)!
@@ -133,11 +139,11 @@ open class ConnectionManager: NSObject{
                         }
                     }
                     tkn = Token(tokenString:"", address: "", port: 0, key: "")
-                    tkn.error = "Server adderess not parsed"
-                    self.completed(result: true, token: tkn)
+                    tkn.error = "Server address not parsed"
+                    self.completed(result: false, token: tkn)
                 } else {
                     tkn = Token(tokenString:"", address: "", port: 0, key: "")
-                    tkn.error = "Server adderess not received"
+                    tkn.error = "Server address not received"
                     self.completed(result: false, token: tkn)
                 }
             } catch {
@@ -146,28 +152,20 @@ open class ConnectionManager: NSObject{
                 tkn.error = "error serializing JSON"
                 self.completed(result: false, token: tkn)
             }
-            
         }
         LogQueue.sharedLogQueue.enqueue("CM.getServerInfo")
         let requestString = "app=\(iOsmoAppKey)"
         conHelper.backgroundRequest(servUrl!, requestBody: requestString as NSString)
-        
     }
     
     func Authenticate () {
         let device = SettingsManager.getKey(SettingKeys.device)
         if device == nil || device?.length == 0{
-            let vendorKey = UIDevice.current.identifierForVendor!.uuidString
-            let model = UIDevice.current.modelName
-            let version = UIDevice.current.systemVersion
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:getting key from server")
-            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
             
             conHelper.onCompleted = {(dataURL, data) in
-                LogQueue.sharedLogQueue.enqueue("CM.Authenticate.onCompleted")
-
+                guard let data = data else { return }
                 var res : NSDictionary = [:]
-
                 do {
                     let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
                     res = (jsonDict as? NSDictionary)!
@@ -177,18 +175,17 @@ open class ConnectionManager: NSObject{
                         SettingsManager.setKey(newKey as NSString, forKey: SettingKeys.device)
                         self.Authenticated = true
                         self.getServerInfo(key: newKey)
-                        
                     } else {
 
                     }
-
                 } catch {
                     LogQueue.sharedLogQueue.enqueue("CM.Authenticate: error serializing key")
                 }
-                
             }
-            
-            
+            let vendorKey = UIDevice.current.identifierForVendor!.uuidString
+            let model = UIDevice.current.modelName
+            let version = UIDevice.current.systemVersion
+            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
             conHelper.backgroundRequest(authUrl!, requestBody: requestString as NSString)
         } else {
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device!)")
@@ -225,11 +222,8 @@ open class ConnectionManager: NSObject{
                     
                     connectionRun.notify((1, "")) //error but is not need to be popuped
                 }
-            
-
         }
         if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
-            
             log.enqueue("Reconnect action")
             connect(true)
         }
@@ -390,6 +384,7 @@ open class ConnectionManager: NSObject{
 
                 if let url = URL(string: (apiUrl + "k=" + device + "&m=" + escapedRequest! ) ) {
                     conHelper.onCompleted = {(dataURL, data) in
+                        guard let data = data else { return }
                         LogQueue.sharedLogQueue.enqueue("CM.Send.onCompleted")
                         if let output = String(data:data, encoding:.utf8) {
                             LogQueue.sharedLogQueue.enqueue(output)
@@ -422,7 +417,7 @@ open class ConnectionManager: NSObject{
         }
     }
     open func sendRemoteCommandResponse(_ rc: String) {
-        let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)"
+        let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)|1"
         send(request: request)
     }
     
@@ -872,26 +867,31 @@ open class ConnectionManager: NSObject{
             
 
             if (param == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
-                sendingManger.stopSendingCoordinates(param)
+                sendingManger.stopSendingCoordinates()
+                sendRemoteCommandResponse(param)
 
                 return
             }
             if (param == RemoteCommand.TRACKER_EXIT.rawValue){
-                sendingManger.stopSendingCoordinates(param)
+                sendingManger.stopSendingCoordinates()
+                sendRemoteCommandResponse(param)
                 connection.closeConnection()
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_START.rawValue){
                 self.isGettingLocation = false
-                sendingManger.startSendingCoordinates(param, false)
+                sendingManger.startSendingCoordinates(false)
+                sendRemoteCommandResponse(param)
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
-                sendingManger.pauseSendingCoordinates(param)
+                sendingManger.pauseSendingCoordinates()
+                sendRemoteCommandResponse(param)
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_CONTINUE.rawValue){
-                sendingManger.startSendingCoordinates(param, false)
+                sendingManger.startSendingCoordinates(false)
+                sendRemoteCommandResponse(param)
                 return
             }
             if (param == RemoteCommand.TRACKER_GCM_ID.rawValue) {
@@ -915,7 +915,7 @@ open class ConnectionManager: NSObject{
             }
 
             if (param == RemoteCommand.WHERE.rawValue || param == RemoteCommand.WHERE_GPS_ONLY.rawValue || param == RemoteCommand.WHERE_NETWORK_ONLY.rawValue) {
-                //sendRemoteCommandResponse(param)
+                sendRemoteCommandResponse(param)
                 if self.sessionOpened == false {
                     if (param == RemoteCommand.WHERE.rawValue) {
                         LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -925,7 +925,7 @@ open class ConnectionManager: NSObject{
                         LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyKilometer
                     }
                     self.isGettingLocation = true
-                    sendingManger.startSendingCoordinates(param, true)
+                    sendingManger.startSendingCoordinates(true)
                 }
                 return
             }

@@ -177,7 +177,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                         self.allSessionLocations.append(locationModel)
                     } else {
                         locationUpdated.notify(locationModel)
-                        manager.stopUpdatingLocation()
                     }
 
                     prevLM = locationModel;
