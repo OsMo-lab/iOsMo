@@ -61,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
             
-            
             // For iOS 10 data message (sent via FCM)
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
@@ -151,6 +150,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                     self?.endBackgroundTask()
                 }
+                connectionManager.timer.invalidate()
                 DispatchQueue.main.async {
                     self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
                 }
@@ -191,6 +191,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func disconnectByTimer() {
         connectionManager.closeConnection()
+
         self.endBackgroundTask()
     }
     

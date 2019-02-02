@@ -79,6 +79,9 @@ open class ConnectionManager: NSObject{
     
     var audioPlayer = AVAudioPlayer()
     
+    public var timer = Timer()
+    
+    
     class var sharedConnectionManager : ConnectionManager{
         
         struct Static {
@@ -225,7 +228,7 @@ open class ConnectionManager: NSObject{
         }
         if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
             log.enqueue("Reconnect action")
-            connect(true)
+            connect()
         }
     }
     
@@ -256,7 +259,7 @@ open class ConnectionManager: NSObject{
                     self.connectionRun.notify((1, ""))
                     
                     if (self.shouldReConnect) {
-                        self.connect(self.shouldReConnect)
+                        self.connect()
                     }
                 }
             }
@@ -269,6 +272,8 @@ open class ConnectionManager: NSObject{
             if self.connection.addCallBackOnSendEnd == nil {
                 self.connection.addCallBackOnSendEnd = {
                     () -> Void in
+                    
+                    self.timer.invalidate()
                     self.dataSendEnd.notify(())
                 }
             }
@@ -319,7 +324,7 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    open func connect(_ reconnect: Bool = false){
+    open func connect(){
         log.enqueue("CM: connect")
         if self.connecting {
             log.enqueue("Conection already in process")
@@ -374,8 +379,10 @@ open class ConnectionManager: NSObject{
         } else {
             if UIApplication.shared.applicationState == .active {
                 log.enqueue("CM.send appActive")
-                
                 delayedRequests.append(request)
+                if (!self.timer.isValid) {
+                    self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
+                }
             } else {
                 log.enqueue("CM.send appInActive")
                 self.connecting = false;
@@ -396,6 +403,10 @@ open class ConnectionManager: NSObject{
                 }
             }
         }
+    }
+    
+    func connectByTimer() {
+        self.connect()
     }
     
     //probably should be refactored and moved to ReconnectManager

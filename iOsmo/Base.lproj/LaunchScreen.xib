@@ -29,7 +29,7 @@ All rights reserved.</string>
                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="APP_VERSION" text="v.1.13.154" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGV-kz-4ch" userLabel="APP_VERSION">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="APP_VERSION" text="v.1.13.156" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGV-kz-4ch" userLabel="APP_VERSION">
                     <rect key="frame" x="208.5" y="197.5" width="63" height="18"/>
                     <accessibility key="accessibilityConfiguration" identifier="APP_VERSION" label="APP_VERSION"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
