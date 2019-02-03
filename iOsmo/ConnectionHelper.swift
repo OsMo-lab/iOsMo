@@ -110,7 +110,6 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
         var data: Data;
         do {
             data = try Data(contentsOf: location)
-            LogQueue.sharedLogQueue.enqueue("DATA OK")
             DispatchQueue.main.async {
                 self.onCompleted?(location, data)
             }
@@ -120,7 +119,6 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
                 self.onCompleted?(location, nil)
             }
         }
-        
     }
     /*
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {

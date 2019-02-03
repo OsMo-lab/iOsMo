@@ -89,10 +89,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
             }
             textField.resignFirstResponder()
-            
         }
-        
-        
     }
     
     @IBAction func SelectMapStyle(_ sender: UIButton) {

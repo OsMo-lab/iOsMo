@@ -58,10 +58,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
 
     open func turnMonitorinOn(once : Bool){
-        if once && self.isGettingLocationOnce {
-            log.enqueue("CM: ALready getting location!")
-            return
-        }
         self.distance = 0
         self.isDeferingUpdates = false
         self.isGettingLocationOnce = once
@@ -203,13 +199,10 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 log.enqueue("locationManager error \(error)")
             case CLError.Code.locationUnknown:
                 log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
-                if (self.isGettingLocationOnce){
-                    
-                    
-                }
             default:
                 log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
         }
+        self.isGettingLocationOnce = false
     }
     
     open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
