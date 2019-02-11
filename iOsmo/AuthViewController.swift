@@ -142,8 +142,6 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
             }
             let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             
-            print("send post request \(url?.absoluteURL):\(requestBody)\n answer: \(dataStr!)")
-            LogQueue.sharedLogQueue.enqueue("send post request \(requestBody), answer: \(dataStr!)")
             
             do {
                 let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);

@@ -3,67 +3,56 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         contextName = "closure #1 in ConnectionManager.getServerInfo(key:):ConnectionManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AppDelegate.presentViewController(url : URL) -&gt; Bool:AppDelegate.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.view.frame">
+               value = "url.pathComponents[2]">
+            </PersistentString>
+            <PersistentString
+               value = "url.pathComponents[1]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "TcpConnection.parseOutput(String) -&gt; ():TcpConnection.swift">
+         contextName = "SendingManager.sending():SendingManager.swift">
          <PersistentStrings>
             <PersistentString
-               value = "output">
+               value = "connectionManager">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
-      </ContextState>
-      <ContextState
-         contextName = "GroupManager.getUser(Int, user : Int) -&gt; User?:GroupManager.swift">
+         contextName = "GroupManager.(leaveGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
          <PersistentStrings>
             <PersistentString
-               value = "foundGroup?.users.filter{$0.id == &quot;\(user)&quot;}">
-            </PersistentString>
-            <PersistentString
-               value = "allGroups">
+               value = "u">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #6):AccountViewController.swift">
-      </ContextState>
-      <ContextState
-         contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
+         contextName = "MapViewController.(viewDidLoad() -&gt; ()).(closure #2).(closure #1):MapViewController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "logQueue">
+               value = "$1">
             </PersistentString>
             <PersistentString
-               value = "toDisplay">
+               value = "$0">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "ObserverSet.notify(A) -&gt; ():ObserverSet.swift">
-      </ContextState>
-      <ContextState
-         contextName = "BaseTcpConnection.closeSession(String) -&gt; ():BaseTcpConnection.swift">
+         contextName = "ConnectionManager.send(request:):ConnectionManager.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.shouldCloseSession">
+               value = "device">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "indexPath.group">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
       </ContextState>
       <ContextState
          contextName = "LogViewController.viewDidLoad() -&gt; ():LogViewController.swift">
@@ -80,59 +69,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "AppDelegate.presentViewController(url : URL) -&gt; Bool:AppDelegate.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "url.pathComponents[2]">
-            </PersistentString>
-            <PersistentString
-               value = "url.pathComponents[1]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "TcpConnection.parseJSONgroup(Any) -&gt; Group:TcpConnection.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "g[&quot;u&quot;]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
-      </ContextState>
-      <ContextState
-         contextName = "static ConnectionHelper.connectToServ() -&gt; Token?:ConnectionHelper.swift">
-      </ContextState>
-      <ContextState
-         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
-      </ContextState>
-      <ContextState
-         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "$1">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">
-      </ContextState>
-      <ContextState
-         contextName = "GroupManager.(activateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "$2">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "GroupManager.(deactivateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "name">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "GroupManager.(updateGroupsOnMap([Int]) -&gt; ()).(closure #2):GroupManager.swift">
       </ContextState>
       <ContextState
          contextName = "BaseTcpConnection.onSentCoordinate() -&gt; ():BaseTcpConnection.swift">
@@ -143,18 +80,151 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "GroupManager.(leaveGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
+         contextName = "BaseTcpConnection.closeSession(String) -&gt; ():BaseTcpConnection.swift">
          <PersistentStrings>
             <PersistentString
-               value = "u">
+               value = "self.shouldCloseSession">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in closure #1 in AppDelegate.applicationDidBecomeActive(_:):AppDelegate.swift">
+      </ContextState>
+      <ContextState
+         contextName = "BaseTcpConnection.sendNextCoordinates() -&gt; ():BaseTcpConnection.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #7):AccountViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(deactivateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.getUser(Int, user : Int) -&gt; User?:GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "foundGroup?.users.filter{$0.id == &quot;\(user)&quot;}">
+            </PersistentString>
+            <PersistentString
+               value = "allGroups">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ObserverSet.notify(A) -&gt; ():ObserverSet.swift">
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.tableView(UITableView, cellForRowAtIndexPath : NSIndexPath) -&gt; UITableViewCell:AccountViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.group">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "GroupManager.(activateGroup(String) -&gt; ()).(closure #1):GroupManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$2">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ConnectionManager.notifyAnswer(output:):ConnectionManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ConnectionManager.connect(_:):ConnectionManager.swift">
       </ContextState>
       <ContextState
          contextName = "GroupManager.groupList(Bool) -&gt; ():GroupManager.swift">
       </ContextState>
       <ContextState
+         contextName = "TcpConnection.parseOutput(String) -&gt; ():TcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "output">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AccountViewController.(viewDidLoad() -&gt; ()).(closure #6):AccountViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$0.1.error_description">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MapViewController.updateGroupsOnMap(groups : [Group]) -&gt; ():MapViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.uiSettings() -&gt; ():MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "LogViewController.Load(AnyObject) -&gt; ():LogViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "logQueue">
+            </PersistentString>
+            <PersistentString
+               value = "toDisplay">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "GroupManager.(enterGroup(String, nick : String) -&gt; ()).(closure #1):GroupManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "static SettingsManager.getKeyFromSettings(_:):SettingManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "key">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ConnectionManager.notifyAnswer(_:name:answer:):ConnectionManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MapViewController.drawTrack(track : Track) -&gt; ():MapViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "TcpConnection.parseJSONgroup(Any) -&gt; Group:TcpConnection.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "g[&quot;u&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "$1">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:):AppDelegate.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #5 in ConnectionManager.completed(result:token:):ConnectionManager.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

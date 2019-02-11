@@ -68,6 +68,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             Analytics.logEvent("trip_pause", parameters: nil)
             sendingManger.pauseSendingCoordinates("")
         } else {
+            connectionManager.isGettingLocation = false
             sendingManger.startSendingCoordinates("")
         }
     }
@@ -84,7 +85,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         } else {
             log.enqueue("error: invalid url")
         }
-
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
@@ -202,7 +202,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.MDView.text = $1
                 }
                 self.groupManager.groupList(true)
-                self.connectionManager.getMessageOfTheDay()
+                self.connectionManager.getMessageOfTheDay() //Запрашиваем сообщение дня
+                self.connectionManager.activatePoolGroups(1) //Активируем получение обновления групп
                 
             } else if let glUpdated = self.onGroupListUpdated {
                 

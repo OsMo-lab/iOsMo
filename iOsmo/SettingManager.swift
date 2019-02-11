@@ -29,7 +29,7 @@ struct SettingsManager {
 
     }
     static func setKey(_ key: NSString, forKey: SettingKeys){
-        if let getPath = getSettingPath as? String, let fileData = NSMutableDictionary(contentsOfFile: getPath){
+        if let getPath = getSettingPath as String?, let fileData = NSMutableDictionary(contentsOfFile: getPath){
             
             fileData.setValue(key, forKey: forKey.rawValue)
             fileData.write(toFile: getPath, atomically: true)

@@ -11,12 +11,11 @@ public struct LocationModel{
     
     var lat: Double
     var lon: Double
-    var speed: Double = 0.0
+    var speed: Double = -1.0
     var alt: Int = 0
     var course: Float = 0.0
     var accuracy: Int = 0
     var time: Date
-    
     
     let coordFormat = "%.6f"
     let speedFormat = "S%.2f"
@@ -32,15 +31,21 @@ public struct LocationModel{
     init(coordString: String){
         
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
+        //G:9938|["21542|L46.654809:31.020692S3A48","21646|L46.484945:30.689059S7A78"]
         let parts = coordString.components(separatedBy: "S")
         self.speed = atof(parts[1])
         
-        let coordinatesMerged = parts[0].substring(from: parts[0].characters.index(parts[0].startIndex, offsetBy: 1))
+        let coordinatesMerged = parts[0].substring(from: parts[0].index(parts[0].startIndex, offsetBy: 1))
         let coordinates = coordinatesMerged.components(separatedBy: ":")
         self.lat = atof(coordinates[0])
         self.lon = atof(coordinates[1])
-        self.time = Date()
         
+        let tparts = coordString.components(separatedBy: "T")
+        if tparts.count>1 {
+            self.time = Date(timeIntervalSince1970: atof(tparts[1]))
+        } else {
+            self.time = Date()
+        }
     }
     
     var getCoordinateRequest: String{
@@ -50,11 +55,10 @@ public struct LocationModel{
             isSimulated = true
         }
         var formatedTime = ""
-        //let locationAge = -time.timeIntervalSinceNow
-        //if locationAge > 1 {
-            let t:TimeInterval = time.timeIntervalSince1970
-            formatedTime = NSString(format:timeFormat as NSString, t) as String
-        //}
+
+        let t:TimeInterval = time.timeIntervalSince1970
+        formatedTime = NSString(format:timeFormat as NSString, t) as String
+
         
         let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
         let formatedCourse = (speed > 5 && course > 0)  ? (NSString(format:courseFormat as NSString, course)): ""

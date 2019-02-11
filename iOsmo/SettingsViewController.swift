@@ -22,6 +22,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var awakeModeSwitcher: UISwitch!
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
     @IBOutlet weak var showTracksSwitcher: UISwitch!
+    @IBOutlet weak var longNamesSwitcher: UISwitch!
     @IBOutlet weak var intervalTextField: UITextField!
     @IBOutlet weak var distanceTextField: UITextField!
     @IBOutlet weak var locTimeTextField: UITextField!
@@ -41,9 +42,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
-    
-    
+
     /*Сброс авторизации устройства*/
     @IBAction func ResetModeChanged(_ sender: AnyObject) {
         if self.resetAuthSwitcher.isOn {
@@ -60,6 +59,10 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func ShowTracksChanged(_ sender: AnyObject) {
         SettingsManager.setKey(showTracksSwitcher.isOn ? "1" : "0", forKey: SettingKeys.showTracks)
+    }
+    
+    @IBAction func LongNamesChanged(_ sender: AnyObject) {
+        SettingsManager.setKey(longNamesSwitcher.isOn ? "1" : "0", forKey: SettingKeys.longNames)
     }
     
     @IBAction func textFieldEnter(_sender: UITextField){
@@ -86,10 +89,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
                 SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
             }
             textField.resignFirstResponder()
-            
         }
-        
-        
     }
     
     @IBAction func SelectMapStyle(_ sender: UIButton) {
@@ -137,6 +137,12 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         
         if let isStayAwake = SettingsManager.getKey(SettingKeys.isStayAwake) {
             awakeModeSwitcher.setOn(isStayAwake.boolValue, animated: false)
+        }
+        if let showTracks = SettingsManager.getKey(SettingKeys.showTracks) {
+            showTracksSwitcher.setOn(showTracks.boolValue, animated: false)
+        }
+        if let longNames = SettingsManager.getKey(SettingKeys.longNames) {
+            longNamesSwitcher.setOn(longNames.boolValue, animated: false)
         }
         
         if let device = SettingsManager.getKey(SettingKeys.device) {

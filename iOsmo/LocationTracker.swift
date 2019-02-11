@@ -14,6 +14,7 @@ import CoreMotion
 open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     fileprivate let log = LogQueue.sharedLogQueue
+
     private let motionManager = CMMotionActivityManager()
     
     
@@ -22,6 +23,8 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open var distance = 0.0;
     var isDeferingUpdates = false;
     var isGettingLocationOnce = false;
+    
+    let locationUpdated = ObserverSet<(LocationModel)>()
     
     class var sharedLocationManager : CLLocationManager {
         struct Static {
@@ -53,7 +56,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             LocationTracker.sharedLocationManager.distanceFilter = 100
         }
     }
-    
+
     open func turnMonitorinOn(once : Bool){
         self.distance = 0
         self.isDeferingUpdates = false
@@ -67,8 +70,20 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 authorizationStatus == CLAuthorizationStatus.denied){
                     log.enqueue("Location authorization failed")
             } else {
-                LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
-                log.enqueue("Location request When in use authorization was sent to user")
+                
+                switch authorizationStatus {
+                    case .notDetermined:
+                        LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
+                        log.enqueue("Location request When in use authorization was sent to user")
+                        break
+                    case .authorizedWhenInUse:
+                        LocationTracker.sharedLocationManager.requestAlwaysAuthorization()
+                        log.enqueue("Location request Always authorization was sent to user")
+                        break
+                    default:
+                        break
+                }
+                
 
                 if (once) {
                     log.enqueue("requestLocation")
@@ -76,25 +91,21 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 } else {
                     log.enqueue("startUpdatingLocation")
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
-                    //LocationTracker.sharedLocationManager.startMonitoringSignificantLocationChanges()
                     
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)
                     })
                 
                 }
-                
-                
             }
         }
-        
     }
     
     
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
-        log.enqueue("stopUpdatingLocation")
+        log.enqueue("LT.turnMonitoringOff")
         self.isDeferingUpdates = false
     }
     
@@ -108,11 +119,11 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     
     open func locationManager(_ manager: CLLocationManager,
         didChangeAuthorization status: CLAuthorizationStatus){
-        log.enqueue("Location didChangeAuthorizationStatus to \(status.rawValue)")
+        log.enqueue("LT.didChangeAuthorizationStatus to \(status.rawValue)")
     }
     
     open func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        log.enqueue("didUpdateLocation")
+        log.enqueue("LT.didUpdateLocations")
         var prevLM = allSessionLocations.last
         var prev_loc = locations.first
         /*
@@ -157,14 +168,20 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     let distanceInMeters = loc.distance(from: prev_loc!)
                     distance = distance + distanceInMeters / 1000
                     prev_loc = loc
-                    self.lastLocations.append(locationModel)
-                    if !(self.isGettingLocationOnce) {
-                        self.allSessionLocations.append(locationModel)
-                    }
                     
+                    if !(self.isGettingLocationOnce) {
+                        self.lastLocations.append(locationModel)
+                        self.allSessionLocations.append(locationModel)
+                    } else {
+                        locationUpdated.notify(locationModel)
+                    }
+
                     prevLM = locationModel;
+                    
                 }
             }
+            
+            
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
@@ -175,21 +192,22 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-        log.enqueue("locationManager error \(error)")
-        
         switch (error){
         	case CLError.Code.network:
-                print("network")
+                log.enqueue("locationManager error \(error)")
             case CLError.Code.denied:
-                print("denied")
+                log.enqueue("locationManager error \(error)")
+            case CLError.Code.locationUnknown:
+                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
             default:
-                print("some error")
+                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
         }
+        self.isGettingLocationOnce = false
     }
     
     open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         if (error != nil) {
-            log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error)")
+            log.enqueue("locationManager didFinishDeferredUpdatesWithError \(error!)")
         }
         self.isDeferingUpdates = false
     }

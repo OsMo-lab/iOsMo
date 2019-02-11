@@ -4,10 +4,15 @@
 //
 //  Created by Olga Grineva on 23/03/15.
 //  Modified by Alexey Sirotkin on 08/08/16.
-//  Copyright (c) 2015 Olga Grineva, (c) 2016 Alexey Sirotkin. All rights reserved.
+//  Copyright (c) 2015 Olga Grineva, (c) 2019 Alexey Sirotkin. All rights reserved.
 //
 
 import Foundation
+
+enum DataRequestResult<T> {
+    case success(T)
+    case failure(Error)
+}
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
@@ -30,41 +35,38 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 }
 
 
-struct ConnectionHelper {
+class ConnectionHelper: NSObject {
+    var backgroundCompletionHandler: (() -> Void)?
+    private var session: URLSession!
     
-    static let authUrl = URL(string: "https://api.osmo.mobi/new?")
-    static let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
-    static let iOsmoAppKey = "gg74527-jJRrqJ18kApQ1o7"
-    /// [Register device to the server]
+    var onCompleted: (( URL, Data?) -> ())?
     
-    static func postRequest (_ url: URL, requestBody: NSString, postCompleted : @escaping (_ succeeded: Bool, _ res: NSDictionary) -> ()) {
-        let session = URLSession.shared;
+    // MARK: - Singleton
+    static let shared = ConnectionHelper()
+
+    // MARK: - Init
+    
+    override init() {
+        super.init()
+        
+        let configuration = URLSessionConfiguration.background(withIdentifier: "\(Bundle.main.bundleIdentifier!).background.download.session")
+        configuration.sessionSendsLaunchEvents = true
+        session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+    }
+    
+    // MARK: - postRequest
+    func backgroundRequest (_ url: URL, requestBody: NSString  ) {
+        LogQueue.sharedLogQueue.enqueue("CH.backgroundRequest for \(url)")
+        let configuration = URLSessionConfiguration.background(withIdentifier:"bgSessionConfiguration")
+
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        
         var urlReq = URLRequest(url: url);
         
         urlReq.httpMethod = "POST"
         urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
-        //urlReq.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        //urlReq.setValue("application/json", forHTTPHeaderField: "Accept")
         urlReq.httpBody = requestBody.data(using: String.Encoding.utf8.rawValue)
-        let task = session.dataTask(with: urlReq as URLRequest) {(data, response, error) in
-            var res : NSDictionary = [:]
-            guard let data = data, let _:URLResponse = response, error == nil else {
-                print("error: on send post request")
-                postCompleted(false, res)
-                return
-            }
-            let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-            
-            print("send post request \(url.absoluteURL):\(requestBody)\n answer: \(dataStr)")
-            do {
-                let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
-                res = (jsonDict as? NSDictionary)!
-                postCompleted(true, res)
-            } catch {
-                print("error serializing JSON from POST")
-                postCompleted(false, res)
-            }
-        }
+        let task = session.downloadTask(with: urlReq)
         task.resume()
     }
     
@@ -76,92 +78,65 @@ struct ConnectionHelper {
         urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
         let task = session.downloadTask(with: urlReq, completionHandler:  {(url, response, error) in
             if url != nil {
-                let data:Data! = try? Data(contentsOf: url!)
+                
                 do {
+                    let data:Data! = try Data(contentsOf: url!)
                     completed(true, data)
                 } catch {
                     completed(false, nil)
                 }
-                
             }
         })
         task.resume()
     }
-    
-    static func authenticate(completed : @escaping (_ key: String?) -> ()) -> Void{
-        let device = SettingsManager.getKey(SettingKeys.device)
-        if device == nil || device?.length == 0{
-            let vendorKey = UIDevice.current.identifierForVendor!.uuidString
-            let model = UIDevice.current.model
-            let version = UIDevice.current.systemVersion
-            print("Authenticate:getting key from server")
-            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
-            self.postRequest(authUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
-                if result {
-                    if let newKey = responceData.object(forKey: Keys.device.rawValue) as? String {
-                        print ("got key by post request \(newKey)")
-                        SettingsManager.setKey(newKey as NSString, forKey: SettingKeys.device)
-                        completed(newKey)
-                    } else {
-                        completed(nil)
-                    }
-                } else {
-                    completed(nil)
-                }
-            })
-        } else {
-            print("Authenticate:using local key \(device)")
-            completed((device as! String))
+}
+
+
+// MARK: - URLSessionDelegate
+extension ConnectionHelper: URLSessionDelegate {
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        DispatchQueue.main.async {
+            LogQueue.sharedLogQueue.enqueue("CH.urlSessionDidFinishEvents")
+            self.backgroundCompletionHandler?()
+            self.backgroundCompletionHandler = nil
         }
     }
-    
-    static func getServerInfo( completed : @escaping (_ succeeded: Bool, _ res: Token?) -> ()) -> Void {
-        authenticate(completed: {key -> Void in
-            if (key != nil) {
-                print("Authenticated with key")
-                let requestString = "app=\(iOsmoAppKey)"
-                
-                postRequest(servUrl!, requestBody: requestString as NSString, postCompleted: {result, responceData -> Void in
-                    var tkn : Token?;
-                    if result {
-                        print("get server info by post request")
-                        
-                        if let err = responceData.object(forKey: Keys.error.rawValue) as? NSNumber , let errDesc = responceData.object(forKey: Keys.errorDesc.rawValue) as? NSString {
-                            
-                            tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                            tkn?.error = errDesc as String
-                            completed(false,tkn)
-                            return
-                        }  else {
-                            if let server = responceData.object(forKey: Keys.address.rawValue) as? NSString {
-                                print("server is \(server)")
-                                
-                                let server_arr = server.components(separatedBy: ":")
-                                if server_arr.count > 1 {
-     
-                                    
-                                    if let tknPort = Int(server_arr[1]) {
-                                        tkn =  Token(tokenString:"", address: server_arr[0], port: tknPort, key: key! as String)
-                                        completed(true,tkn)
-                                        return
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        print("Unable to connect to server")
-                    }
-                    if (tkn == nil) {
-                        tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                        completed(false,tkn)
-                        return
-                    }
-                })
-            } else {
-                print("Unable to receive token")
-                let tkn = Token(tokenString: "", address: "", port: 0, key: "")
-                completed(false,tkn)
+}
+
+// MARK: - URLSessionDownloadDelegate
+extension ConnectionHelper: URLSessionDownloadDelegate {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        LogQueue.sharedLogQueue.enqueue("CH.didFinishDownloadingTo")
+        var data: Data;
+        do {
+            data = try Data(contentsOf: location)
+            DispatchQueue.main.async {
+                self.onCompleted?(location, data)
             }
-        })
+        } catch {
+            LogQueue.sharedLogQueue.enqueue("DATA INVALID")
+            DispatchQueue.main.async {
+                self.onCompleted?(location, nil)
+            }
+        }
     }
+    /*
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        guard let originalRequestURL = downloadTask.originalRequest?.url, let downloadItem = context.loadDownloadItem(withURL: originalRequestURL) else {
+            return
+        }
+        
+        print("Downloaded: \(downloadItem.remoteURL)")
+        
+        do {
+            try fileManager.moveItem(at: location, to: downloadItem.filePathURL)
+            
+            downloadItem.foregroundCompletionHandler?(.success(downloadItem.filePathURL))
+        } catch {
+            downloadItem.foregroundCompletionHandler?(.failure(APIError.invalidData))
+        }
+        
+        context.deleteDownloadItem(downloadItem)
+    }
+ */
 }

@@ -16,8 +16,10 @@ open class SendingManager: NSObject{
     let sentObservers = ObserverSet<LocationModel>()
     
     fileprivate let connectionManager = ConnectionManager.sharedConnectionManager
-    open let locationTracker = LocationTracker()
+    public let locationTracker = LocationTracker()
     fileprivate let log = LogQueue.sharedLogQueue
+    
+    var onLocationUpdated : ObserverSetEntry<(LocationModel)>?
     
     fileprivate var lcSendTimer: Timer?
     let aSelector : Selector = #selector(SendingManager.sending)
@@ -25,6 +27,7 @@ open class SendingManager: NSObject{
     fileprivate var onSessionRun: ObserverSetEntry<(Int, String)>?
     let sessionStarted = ObserverSet<(Int)>()
     let sessionPaused = ObserverSet<(Int)>()
+    var lastLocations = [LocationModel]()
 
     
     class var sharedSendingManager: SendingManager {
@@ -34,51 +37,28 @@ open class SendingManager: NSObject{
         
         return Static.instance
     }
-    
+ 
     override init(){
         
         super.init()
+        
+        self.onLocationUpdated = locationTracker.locationUpdated.add {
+            if self.connectionManager.isGettingLocation  {
+
+                self.connectionManager.sendCoordinate($0)
+                self.connectionManager.isGettingLocation = false
+                //self.locationTracker.locationUpdated.remove(self.onLocationUpdated!)
+            }
+        }
+
     }
 
-    open func sendSystemInfo(){
-        if !connectionManager.connected {
-            self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 == 0 {
-                    self.connectionManager.connection.sendSystemInfo()
-                }
-                
-                // unsubscribe because it is single event
-                if let onConRun = self.onConnectionRun {
-                    self.connectionManager.connectionRun.remove(onConRun)
-                }
-            }
-            connectionManager.connect()
-        }else{
-            self.connectionManager.connection.sendSystemInfo()
-        }
-    }
-    
-    open func sendBatteryStatus(_ rc: String){
-        if !connectionManager.connected {
-            self.onConnectionRun = connectionManager.connectionRun.add{
-                if $0.0 == 0 {
-                    self.connectionManager.connection.sendBatteryStatus()
-                }
 
-                // unsubscribe because it is single event
-                if let onConRun = self.onConnectionRun {
-                    self.connectionManager.connectionRun.remove(onConRun)
-                }
-            }
-            connectionManager.connect()
-        }else{
-            self.connectionManager.connection.sendBatteryStatus()
-        }
-    }
-    
-    open func startSendingCoordinates(_ rc: String){
-        let once = (!connectionManager.sessionOpened && rc == RemoteCommand.WHERE.rawValue) ? true : false;
+    open func startSendingCoordinates(_ once: Bool){
         locationTracker.turnMonitorinOn(once: once) //start getting coordinates
+        if (once) {
+            return
+        }
 
         if !connectionManager.connected {
             self.onConnectionRun = connectionManager.connectionRun.add{
@@ -86,17 +66,9 @@ open class SendingManager: NSObject{
                     self.onSessionRun = self.connectionManager.sessionRun.add{
                         if $0.0 == 0{
                             self.startSending()
-                            if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
-                                self.connectionManager.connection.sendRemoteCommandResponse(rc)
-                            }
                         }
                     }
-                    if rc != RemoteCommand.WHERE.rawValue {
-                        self.connectionManager.openSession()
-                    }else{
-                        self.startSending()
-                    }
-                    
+                    self.connectionManager.openSession()
                 }
                 
                 // unsubscribe because it is single event
@@ -109,9 +81,6 @@ open class SendingManager: NSObject{
             self.onSessionRun = self.connectionManager.sessionRun.add{
                 if ($0.0 == 0){
                     self.startSending()
-                    if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
-                        self.connectionManager.connection.sendRemoteCommandResponse(rc)
-                    }
                 } else {
                     //unsibscribe when stop monitoring
                     if let onSesRun = self.onSessionRun {
@@ -119,34 +88,24 @@ open class SendingManager: NSObject{
                     }
                 }
             }
-            if rc != RemoteCommand.WHERE.rawValue {
-                self.connectionManager.openSession()
-            }else{
-                self.startSending()
-            }
+            self.connectionManager.openSession()
         } else {
             startSending()
-            if (rc != "" && rc != RemoteCommand.WHERE.rawValue) {
-                self.connectionManager.connection.sendRemoteCommandResponse(rc)
-            }
         }
     }
     
-    open func pauseSendingCoordinates(_ rc: String){
+    open func pauseSendingCoordinates(){
         locationTracker.turnMonitoringOff()
         
         self.lcSendTimer?.invalidate()
         self.lcSendTimer = nil
         sessionPaused.notify((0))
         UIApplication.shared.isIdleTimerDisabled = false
-        if (rc != "" && rc != RemoteCommand.WHERE.rawValue){
-            self.connectionManager.connection.sendRemoteCommandResponse(rc)
-        }
-
+        
     }
     
-    open func stopSendingCoordinates(_ rc: String){
-        pauseSendingCoordinates(rc)
+    open func stopSendingCoordinates(){
+        pauseSendingCoordinates()
         connectionManager.closeSession()
     }
     
@@ -169,10 +128,7 @@ open class SendingManager: NSObject{
                     //notify about all - because it draw on map
                     self.sentObservers.notify(c)
                 }
-                if (connectionManager.isGettingLocation && !connectionManager.sessionOpened) {
-                    pauseSendingCoordinates("")
-                    connectionManager.isGettingLocation = false
-                }
+                
            }
         }
     }
@@ -180,7 +136,7 @@ open class SendingManager: NSObject{
     fileprivate func startSending(){
         if (connectionManager.sessionOpened || connectionManager.isGettingLocation) {
             
-            log.enqueue("CoordinateManager: start Sending")
+            log.enqueue("Sending Manager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
             var sendTime:TimeInterval = 4;
@@ -191,6 +147,7 @@ open class SendingManager: NSObject{
                 }
             
             }
+            
             self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
             if connectionManager.sessionOpened {
                 sessionStarted.notify((0))
