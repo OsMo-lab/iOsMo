@@ -25,7 +25,7 @@ open class ObserverSet<Parameters>: CustomStringConvertible {
     
     fileprivate var queue = DispatchQueue(label: "com.iOsmo.ObserverSet", attributes: [])
     
-    fileprivate func synchronized(_ f: (Void) -> Void) {
+    fileprivate func synchronized(_ f: () -> Void) {
         queue.sync(execute: f)
     }
     
@@ -84,7 +84,7 @@ open class ObserverSet<Parameters>: CustomStringConvertible {
             entry in
             (entry.object === self
                 ? "\(entry.f)"
-                : "\(entry.object) \(entry.f)")
+                : "\(entry.object! ) \(entry.f)")
         }
         
         //let joined = ", ".join(strings)

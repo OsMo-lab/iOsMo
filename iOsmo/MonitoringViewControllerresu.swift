@@ -68,6 +68,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             Analytics.logEvent("trip_pause", parameters: nil)
             sendingManger.pauseSendingCoordinates("")
         } else {
+            connectionManager.isGettingLocation = false
             sendingManger.startSendingCoordinates("")
         }
     }
@@ -84,7 +85,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         } else {
             log.enqueue("error: invalid url")
         }
-
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {

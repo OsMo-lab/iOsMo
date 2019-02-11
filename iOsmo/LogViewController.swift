@@ -86,7 +86,7 @@ class LogViewController: UIViewController {
         
         let newLineStr = "\n"
         //let text = "\(self.logBox.text) \(message)\(newLineStr)"
-        let text = "\(self.logBox.text)test\(newLineStr)"
+        let text = "\(self.logBox.text ?? "")test\(newLineStr)"
         self.logBox.text = text
        
     }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+                                                                                                                                                                                                                                                               
 enum Tags: String {
     case token = "INIT|"
     case auth = "AUTH|"
@@ -25,8 +25,11 @@ enum Tags: String {
     case deactivateGroup = "GD:"
     case remoteCommandResponse = "RCR:"
     case activatePoolGroups = "PG"
+    case setTrackedkUser = "SP"
     case updateGroupResponse = "GPR"
     case groupSwitch = "GS"
+    case groupChat = "GC"
+    case groupChatSend = "GCS"
     case coordinate = "T"
     case buffer = "B"
 }
@@ -38,47 +41,46 @@ enum Keys: String{
     case uid = "uid"
     case name = "name"
     case device = "device"
+    case motd = "motd"
+    case pro = "pro"
     
     case error = "error"
     case errorDesc = "error_description"
     case push_token = "push_token"
+    
+    case sessionUrl = "url"
+    case permanent = "permanent"
+    case id = "id"
 }
 
-enum ParseKeys: String{
-    case sessionUrl = "url"
-    case getGroups = "GROUP"
-    case status = "status"
-    case gda = "GDA"
-    case gaa = "GAA"
-    case id = "id"
-    case permanent = "permanent"
-}
 
 
 enum AnswTags: String{
-    case openedSession = "TO|"
+    case openedSession = "TO"
     case getGroups = "GROUP"
     case push = "PUSH"
     case createGroup = "GRPA"
-    case activateGroup = "GA:"
-    case deactivateGroup = "GD:"
-    case enterGroup = "GE:"
-    case leaveGroup = "GL:"
-    case remoteCommand = "RC:"
+    case activateGroup = "GA"
+    case deactivateGroup = "GD"
+    case enterGroup = "GE"
+    case leaveGroup = "GL"
+    case remoteCommand = "RC"
+    case remoteCommandResponse = "RCR"
+    
     //case activatePG = "PG"
-    case bye = "BYE|"
-    case kick = "KICK|"
+    case bye = "BYE"
+    case kick = "KICK"
     case pong = "PP"
     case coordinate = "T"
     case buffer = "B"
-    case closeSession = "TC|"
-    case token = "INIT|"
-    case auth = "AUTH|"
-    case gda = "GDA|"
-    case gaa = "GAA|"
-    case grCoord = "G:"
+    case closeSession = "TC"
+    case token = "INIT"
+    case auth = "AUTH"
+    case gda = "GDA"
+    case gaa = "GAA"
+    case grCoord = "G"
     case updateGroup = "GP"
-    case messageDay = "MD|"
+    case messageDay = "MD"
 }
 
 enum UpdatesEnum: String {
@@ -92,6 +94,8 @@ enum SettingKeys: String {
     case device = "deviceKey"
     case trackerId = "trackerID"
     case isStayAwake = "isStayAwake"
+    case motd = "motd"
+    case motdtime = "motdtime"
     
     case user = "user"
     case sendTime = "sendTime"
@@ -108,6 +112,7 @@ enum SettingKeys: String {
     
     case showTracks = "showTracks"
     case tileSource = "tileSource"
+    case longNames = "longNames"
     
 }
 
@@ -128,21 +133,37 @@ enum RemoteCommand: String {
     case TRACKER_GCM_ID = "80"
     case TRACKER_BATTERY_INFO = "11"
     case WHERE = "12"
+    case WHERE_GPS_ONLY = "15"
+    case WHERE_NETWORK_ONLY = "16"
     case TRACKER_SATELLITES_INFO = "13"
     case TRACKER_SYSTEM_INFO = "14"
     case TRACKER_WIFI_INFO = "20"
     case TRACKER_WIFI_ON = "21"
     case TRACKER_WIFI_OFF = "22"
+
     case TRACKER_VIBRATE = "41"
     case TRACKER_EXIT = "42"
     case TRACKER_GET_PREFS = "43"
     case TRACKER_SET_PREFS = "44"
-    case TRACKER_SESSION_CONTINUE = "5"
-    case TRACKER_SESSION_PAUSE = "6"
+    
     case TRACKER_SESSION_START = "1"
     case TRACKER_SESSION_STOP = "2"
-    case REFRESH_DEVICES = "91"
+    case TRACKER_SESSION_CONTINUE = "5"
+    case TRACKER_SESSION_PAUSE = "6"
+    
+    //case REFRESH_DEVICES = "91" Deprecated
     case REFRESH_GROUPS = "92"
+    case SIGNAL_STATUS = "30"
+    case SIGNAL_OFF = "32"
+    case SIGNAL_ON = "31"
+    case ALARM_OFF = "34"
+    case ALARM_ON = "33"
+    case FLASH_ON = "47"
+    case FLASH_BLINK = "48"
+    case FLASH_OFF = "49"
+    case SOS_DEPRESS = "95"
+    case CHANGE_MOTD_TEXT = "85"
+    
     case TTS = "46"
 }
 

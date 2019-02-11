@@ -11,6 +11,7 @@ import MapKit
 
 open class Track: Equatable {
     var u: Int
+    var groupId: Int = 0
     var type: String = "0"
     var descr: String = ""
     var km: String = ""
@@ -24,12 +25,12 @@ open class Track: Equatable {
     init (json: Dictionary<String, AnyObject>) {
         print(json)
         self.u = json["u"] as! Int
-        self.size = Int(json["size"] as! String)!
-        self.name = json["name"] as! String
-        self.descr = (json["description"] as? String)!
-        self.color = json["color"] as! String
-        self.url = json["url"] as! String
-        self.type = json["type"] as! String
+        self.size = Int(json["size"] as? String ?? "0")!
+        self.name = json["name"] as? String ?? ""
+        self.descr = (json["description"] as? String ?? "")
+        self.color = json["color"] as? String ?? "#ffffff"
+        self.url = json["url"] as? String ?? ""
+        self.type = json["type"] as? String ?? "0"
     }
     
     

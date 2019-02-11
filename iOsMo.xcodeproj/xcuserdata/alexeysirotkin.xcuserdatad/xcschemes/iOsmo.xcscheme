@@ -92,7 +92,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "../../../../Downloads/RK_gpx _2017-02-23_2111.gpx"
+         identifier = "../../RK_gpx _2017-03-01_2007.gpx"
          referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>

@@ -3,7 +3,7 @@
 //  iOsmo
 //
 //  Created by Olga Grineva on 07/12/14.
-//  Copyright (c) 2014 Olga Grineva, (c) 2017 Alexey Sirotkin All rights reserved.
+//  Copyright (c) 2014 Olga Grineva, (c) 2019 Alexey Sirotkin All rights reserved.
 //
 
 import UIKit
@@ -23,29 +23,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var localNotification: UILocalNotification? = nil;
-    
+    var appIsStarting: Bool = false;
     fileprivate var timer = Timer()
     
-    let gcmMessageIDKey = "GCM"
+    let gcmMessageIDKey = "GCM" //"GCM"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+        UIApplication.shared.registerForRemoteNotifications()
+
+        
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
+        
+        if let _ = launchOptions?[.remoteNotification] {
+            self.appIsStarting = true;
+        }
         
         // Override point for customization after application launch.
         
         _ = connectionManager.pushActivated.add{
             if $0  == 0{
-                self.log.enqueue("connectionManager.pushActivated")
+                self.log.enqueue("CM.pushActivated")
             }
-            //self.activateSwitcher.isOn = $0
         }
         _ = connectionManager.sessionRun.add{
             let theChange = $0.0
             
             if theChange == 0 {
-                self.displayNotification()
-                
+                self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
             } else {
                 
             }
@@ -55,24 +61,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // For iOS 10 display notification (sent via APNS)
             UNUserNotificationCenter.current().delegate = self
             
-            
             // For iOS 10 data message (sent via FCM)
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
                 completionHandler: {_, _ in })
+            
         } else {
             let settings: UIUserNotificationSettings =
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
+            Messaging.messaging().shouldEstablishDirectChannel = true;
         }
         UIApplication.shared.applicationIconBadgeNumber = 0
         
         
         
         // [START set_messaging_delegate]
-        Messaging.messaging().shouldEstablishDirectChannel = true;
         Messaging.messaging().delegate = self
+        
+        
         // [END set_messaging_delegate]
         
         // Add observer for InstanceID token refresh callback.
@@ -108,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        UIApplication.shared.registerForRemoteNotifications()
+        
 
         Analytics.logEvent("app_open", parameters: nil)
         if let url = launchOptions?[.url] as? URL {
@@ -121,25 +129,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+        self.appIsStarting = false;
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-
+        self.appIsStarting = false;
 
         self.connectionManager.activatePoolGroups(-1)
+        self.connectionManager.sendTrackUser("-1")
         self.groupManager.saveCache()
         
         if (connectionManager.connected && connectionManager.sessionOpened) {
-            self.displayNotification()
+            self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {
-            if self.connectionManager.connection.permanent == false {
+            if self.connectionManager.permanent == false {
                 backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
                     self?.endBackgroundTask()
                 }
+                connectionManager.timer.invalidate()
                 DispatchQueue.main.async {
                     self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.disconnectByTimer), userInfo: nil, repeats: false)
                 }
@@ -149,10 +160,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    func displayNotification() {
+    /*
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        log.enqueue("Firebase registration token: \(fcmToken)")
+        
+        let dataDict:[String: String] = ["token": fcmToken]
+        //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        // TODO: If necessary send token to application server.
+        // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+ */
+    
+    func displayNotification(_ title: String, _ body: String) {
         if self.localNotification == nil {
             self.localNotification = UILocalNotification()
-            self.localNotification?.alertBody = NSLocalizedString("Tracking location", comment: "Tracking location")
+            self.localNotification?.alertTitle = title
+            self.localNotification?.alertBody = body
             
             //set the notification
             UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
@@ -168,6 +191,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func disconnectByTimer() {
         connectionManager.closeConnection()
+
         self.endBackgroundTask()
     }
     
@@ -179,19 +203,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        self.appIsStarting = true;
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        self.appIsStarting = false;
         if (backgroundTask != UIBackgroundTaskInvalid) {
             UIApplication.shared.endBackgroundTask(backgroundTask)
             backgroundTask = UIBackgroundTaskInvalid
         }
-        //self.connectToFcm()
+
         if (self.localNotification != nil) {
             UIApplication.shared.cancelLocalNotification(self.localNotification!)
             self.localNotification = nil
         }
+        
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
+                self.log.enqueue ("unprocessed notification count: \(notifications.count)")
+                if notifications.count > 0 {
+                    var identifiers: [String] = [];
+                    
+                    notifications.forEach({ (notification) in
+                        DispatchQueue.main.async {
+                            let userInfo = notification.request.content.userInfo
+                            self.log.enqueue("userInfo : \(userInfo)")
+                            if let messageID = userInfo[self.gcmMessageIDKey] {
+                                self.log.enqueue("getDeliveredNotifications FCM : \(messageID)")
+                                self.connectionManager.connection.parseOutput(messageID as! String)
+                            }
+                        }
+                        identifiers.append( notification.request.identifier)
+                        
+                    })
+                    if (identifiers.count > 0) {
+                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: identifiers)
+                    }
+                }
+            }
+        }
+        
+        
+        
         UIApplication.shared.cancelAllLocalNotifications()
         
      }
@@ -228,6 +282,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // [START receive_message]
+    /* DEPRECATED
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
@@ -244,6 +299,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Print full message.
         //print(userInfo)
     }
+ */
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -252,16 +308,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
+        log.enqueue("app didReceiveRemoteNotification \(userInfo)")
         
-        // TODO: Handle data of notification
-        // Print message ID.
+        // TODO: У нас есть 30 секунд !!!!!! на обработку события
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
         }
-        
-        // Print full message.
-        //print(userInfo)
         
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -287,15 +340,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     
         log.enqueue("APNs token retrieved: \(token)")
-
+       
         // With swizzling disabled you must set the APNs token here.
         Messaging.messaging().apnsToken = deviceToken
         //Messaging.messaging().setAPNSToken(deviceToken, type: .prod)
     }
-    
-
     // [END connect_on_active]
-	}
+
+    // MARK: - Background
+    
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        ConnectionHelper.shared.backgroundCompletionHandler = completionHandler
+    }
+}
 
 
 // [START ios_10_message_handling]
@@ -319,11 +376,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             connectionManager.connection.parseOutput(messageID as! String)
         }
         
-        // Print full message.
-        //print(userInfo)
-        
         // Change this to your preferred presentation option
-        completionHandler([])
+        if UIApplication.shared.applicationState == .active {
+            completionHandler([.badge, .alert])
+        }else {
+            completionHandler([.alert])
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -344,9 +402,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 // [END ios_10_message_handling]
 // [START ios_10_data_message_handling]
 extension AppDelegate : MessagingDelegate {
-
     // [START refresh_token]
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         log.enqueue("Firebase registration token: \(fcmToken)")
         connectionManager.sendPush(fcmToken)
         
