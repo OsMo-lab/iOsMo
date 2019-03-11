@@ -66,10 +66,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         if isMonitoringOn {
             Analytics.logEvent("trip_pause", parameters: nil)
-            sendingManger.pauseSendingCoordinates("")
+            sendingManger.pauseSendingCoordinates()
         } else {
             connectionManager.isGettingLocation = false
-            sendingManger.startSendingCoordinates("")
+            sendingManger.startSendingCoordinates(false)
         }
     }
     
@@ -91,12 +91,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         if SettingsManager.getKey(SettingKeys.trackerId) as? String != ""{
             if isSessionPaused || isMonitoringOn {
                 Analytics.logEvent("trip_stop", parameters: nil)
-                sendingManger.stopSendingCoordinates("")
+                sendingManger.stopSendingCoordinates()
                 
                 //UIApplication.shared.isIdleTimerDisabled = false
             } else {
                 Analytics.logEvent("trip_start", parameters: nil)
-                sendingManger.startSendingCoordinates("")
+                sendingManger.startSendingCoordinates(false)
                 
                 //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
             }

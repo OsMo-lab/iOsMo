@@ -27,6 +27,7 @@ open class ConnectionManager: NSObject{
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
 
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
+    var onMessageListUpdated: ObserverSetEntry<(Int)>?
     var onGroupCreated: ObserverSetEntry<(Int, String)>?
     
     // add name of group in return
@@ -35,10 +36,13 @@ open class ConnectionManager: NSObject{
     let groupLeft = ObserverSet<(Int, String)>()
     let groupActivated = ObserverSet<(Int, String)>()
     let groupsUpdated = ObserverSet<(Int, Any)>()
+    let messagesUpdated = ObserverSet<(Int, Any)>()
+    let messageSent = ObserverSet<(Int, String)>()
     
     let pushActivated = ObserverSet<Int>()
     let groupDeactivated = ObserverSet<(Int, String)>()
     let groupListDownloaded = ObserverSet<[Group]>()
+    
     let groupList = ObserverSet<[Group]>()
     let trackDownoaded = ObserverSet<(Track)>()
     
@@ -435,13 +439,15 @@ open class ConnectionManager: NSObject{
     // Groups funcs
     open func getGroups(){
         if self.onGroupListUpdated == nil {
-            
             self.onGroupListUpdated = self.groupListDownloaded.add {
                 self.groupList.notify($0)
-                
             }
         }
         self.sendGetGroups()
+    }
+    
+    open func getChatMessages(u: Int){
+        self.send(request: "\(Tags.groupChat.rawValue):\(u)")
     }
     
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
@@ -511,6 +517,21 @@ open class ConnectionManager: NSObject{
         let request = "\(Tags.updateGroupResponse.rawValue):\(group)|\(event)"
         send(request: request)
     }
+    
+    open func sendChatMessage(group: Int, text: String){
+        let jsonInfo: NSDictionary = try ["text": text]
+        do{
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let request = "\(Tags.groupChatSend.rawValue):\(group)|\(jsonString)"
+                send(request: request)
+            }
+        
+        }catch {
+            print("error generating system info")
+        }
+    }
+    
     open func getMessageOfTheDay(){
         let request = "\(Tags.messageDay.rawValue)"
         send(request: request)
@@ -708,7 +729,34 @@ open class ConnectionManager: NSObject{
             }
             return
         }
-        
+        if command == Tags.groupChat.rawValue {
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                self.messagesUpdated.notify((grId, res))
+            }else {
+                log.enqueue("error: groups chat answer cannot be parsed")
+            }
+     
+            return
+        }
+        if command == Tags.groupChatMessage.rawValue {
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                self.messagesUpdated.notify((grId, res))
+            }else {
+                log.enqueue("error: groups chat message cannot be parsed")
+            }
+            
+            return
+        }
+        if command == Tags.groupChatSend.rawValue {
+            if let result = parseForErrorJson(output){
+                messageSent.notify((result.0,  result.1))
+            } else {
+                log.enqueue("error: message sent cannot be parsed")
+            }
+            return
+        }
         if command == AnswTags.push.rawValue {
             log.enqueue("PUSH activated")
             
