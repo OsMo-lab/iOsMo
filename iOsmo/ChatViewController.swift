@@ -36,6 +36,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let _ = $0
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
             }
         }
         _ = groupManager.messageSent.add {
@@ -43,10 +44,12 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             DispatchQueue.main.async {
                 self.message.text = ""
                 self.tableView.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
             }
         }
+        setupViewResizerOnKeyboardShown()
     }
-    
+
     // MARK UITableViewDelegate
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1

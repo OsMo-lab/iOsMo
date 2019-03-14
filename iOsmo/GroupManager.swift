@@ -412,11 +412,12 @@ open class GroupManager{
     
     open func sendChatMessage(group: Int, text: String) {
         self.onMessageSent = connection.messageSent.add{
+            /*
             if let foundGroup = self.allGroups.filter({$0.u == "\(group)"}).first {
                 let message = ChatMessage.init(text:text);
                 foundGroup.messages.append(message)
                 
-            }
+            }*/
             self.messageSent.notify($0, $1)
             self.connection.messageSent.remove(self.onMessageSent!)
         }

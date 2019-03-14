@@ -1,1 +1,9 @@
-/* No Localized Strings */
+/* Privacy - Location Always and When In Use Usage Description */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Фоновое определение координат требуется для отслеживания ваших координат и их передаче вашим близким";
+
+/* Privacy - Location Always Usage Description */
+"NSLocationAlwaysUsageDescription" = "Фоновое определение координат требуется для отслеживания ваших координат и их передаче вашим близким";
+
+/* Privacy - Location When In Use Usage Description */
+"NSLocationWhenInUseUsageDescription" = "Определение координат требуется для отслеживания ваших координат и их передаче вашим близким";
+
