@@ -30,6 +30,7 @@ enum Tags: String {
     case groupSwitch = "GS"
     case groupChat = "GC"
     case groupChatSend = "GCS"
+    case groupChatMessage = "GPC"
     case coordinate = "T"
     case buffer = "B"
 }

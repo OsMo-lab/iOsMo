@@ -22,6 +22,7 @@ open class Group: Equatable{
     var users: [User] = [User]()
     var points: [Point] = [Point]()
     var tracks: [Track] = [Track]()
+    var messages: [ChatMessage] = [ChatMessage]()
     
     init(u: String, name: String,  active: Bool){
         self.u = u
@@ -68,8 +69,7 @@ open class Group: Equatable{
         }
 
         self.type = gType!;
-        
-        
+
         if let jsonUsers = json["users"] as? Array<AnyObject> {
             for jsonU in jsonUsers{
                 let user = User(json:jsonU as! Dictionary<String, AnyObject>)

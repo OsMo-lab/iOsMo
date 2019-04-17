@@ -28,11 +28,17 @@
 /* Alert title for Error on logout */
 "Error on logout" = "Ошибка выхода";
 
+/* female */
+"female" = "жен.";
+
 /* Leave group */
 "Leave" = "Выйти";
 
 /* LogView unlocked */
 "LogView unlocked" = "Журнал разблокирован";
+
+/* male */
+"male" = "муж.";
 
 /* Passwords didn't match! */
 "Passwords didn't match!" = "Пароли не совпадают!";
@@ -42,6 +48,9 @@
 
 /* Restart iOsMo */
 "Restart iOsMo" = "Перезапустите iOsMo";
+
+/* session was closed */
+"session was closed" = "поездка завершена";
 
 /* Sign-in label */
 "Sign-In" = "Вход";
@@ -54,13 +63,4 @@
 
 /* Unknown user */
 "Unknown" = "Неизвестен";
-
-/* female */
-"female" = "жен.";
-
-/* male */
-"male" = "муж.";
-
-/* session was closed */
-"session was closed" = "поездка завершена";
 

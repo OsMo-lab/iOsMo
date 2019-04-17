@@ -32,6 +32,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
+    var selectedGroup : Group?
 
     public func btnEnterGroupPress(_sender: AnyObject, _ group: String?) {
         groupToEnter = group!;
@@ -253,9 +254,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         if segue.identifier == "toAuth" {
             if let vC = segue.destination as? AuthViewController { vC.delegate = self}
+        } else if segue.identifier == "toChat" {
+            if let vC = segue.destination as? ChatViewController, let group = self.selectedGroup {
+                vC.group = group
+                if (group.messages.count == 0) {
+                    self.connectionManager.getChatMessages(u: (Int(group.u) ?? 0))
+                }
+            }
         }
     }
     
@@ -275,7 +282,12 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 return true
             }
 
-        }
+        } else if identifier == "toChat" {
+            if (self.selectedGroup != nil)  {
+                return true
+            } else {
+                return false
+            }        }
         //by default
         return true
     }
@@ -389,26 +401,11 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0{
-            /*
-            var isUser = false;
-            if let user = SettingsManager.getKey(SettingKeys.user) {
-                if user.length > 0 {
-                    isUser = true;
-                }
-            }
-            */
             if groupAction == GroupActions.new{
                 return 150;
             } else {
                 return 85;
             }
-            
-            /*if isUser {
-                return 85;
-            } else {
-                return 150;
-            }
- */
         } else {
             return 85;
         }
@@ -496,16 +493,21 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     // MARK UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        /*
         let row = (indexPath as NSIndexPath).row
         let section = (indexPath as NSIndexPath).section
         
         if (section < 2) {
+            tableView.deselectRow(at: indexPath, animated: true)
         } else {
-            let group = groupManager.allGroups[row]
+            self.selectedGroup = groupManager.allGroups[row]
+            if let group = self.selectedGroup {
+                if (group.active == true) {
+                    performSegue(withIdentifier: "toChat", sender: self)
+                }
+                
+            }
             
-        }*/
+        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

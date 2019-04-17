@@ -75,8 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         UIApplication.shared.applicationIconBadgeNumber = 0
         
-        
-        
         // [START set_messaging_delegate]
         Messaging.messaging().delegate = self
         
