@@ -30,8 +30,10 @@ enum Tags: String {
     case groupSwitch = "GS"
     case groupChat = "GC"
     case groupChatSend = "GCS"
+    case groupChatMessage = "GPC"
     case coordinate = "T"
     case buffer = "B"
+    case history = "HISTORY"
 }
 
 
@@ -184,7 +186,7 @@ enum AnnotationType: Int {
 enum TileSource: Int32 {
     case Mapnik = 0
     ,Hotosm
-    ,Mtb
+    ,wiki
     ,Sputnik
     ,SOURCES_COUNT
 }

@@ -21,14 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let connectionManager = ConnectionManager.sharedConnectionManager
     let groupManager = GroupManager.sharedGroupManager
     let log = LogQueue.sharedLogQueue
-    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
     var localNotification: UILocalNotification? = nil;
     var appIsStarting: Bool = false;
     fileprivate var timer = Timer()
     
     let gcmMessageIDKey = "GCM" //"GCM"
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         UIApplication.shared.registerForRemoteNotifications()
 
@@ -75,8 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         UIApplication.shared.applicationIconBadgeNumber = 0
         
-        
-        
         // [START set_messaging_delegate]
         Messaging.messaging().delegate = self
         
@@ -96,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Добавляем обработчик возврата из background-а для восстановления связи с сервером
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.connectOnActivate),
-                                               name: NSNotification.Name.UIApplicationWillEnterForeground,
+                                               name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
         
         if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
@@ -197,8 +195,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func endBackgroundTask() {
         print("Background task ended.")
-        UIApplication.shared.endBackgroundTask(backgroundTask)
-        backgroundTask = UIBackgroundTaskInvalid
+        UIApplication.shared.endBackgroundTask(convertToUIBackgroundTaskIdentifier(backgroundTask.rawValue))
+        backgroundTask = UIBackgroundTaskIdentifier.invalid
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -209,9 +207,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         self.appIsStarting = false;
-        if (backgroundTask != UIBackgroundTaskInvalid) {
-            UIApplication.shared.endBackgroundTask(backgroundTask)
-            backgroundTask = UIBackgroundTaskInvalid
+        if (backgroundTask != UIBackgroundTaskIdentifier.invalid) {
+            UIApplication.shared.endBackgroundTask(convertToUIBackgroundTaskIdentifier(backgroundTask.rawValue))
+            backgroundTask = UIBackgroundTaskIdentifier.invalid
         }
 
         if (self.localNotification != nil) {
@@ -254,7 +252,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) ->Void) -> Bool {
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) ->Void) -> Bool {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             let webURL = userActivity.webpageURL!;
             if !presentViewController(url:webURL) {
@@ -428,3 +426,8 @@ extension AppDelegate : MessagingDelegate {
     
 }
 // [END ios_10_data_message_handling]
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIBackgroundTaskIdentifier(_ input: Int) -> UIBackgroundTaskIdentifier {
+	return UIBackgroundTaskIdentifier(rawValue: input)
+}

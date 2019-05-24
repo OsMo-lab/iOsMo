@@ -28,11 +28,11 @@ open class TcpClient : NSObject, StreamDelegate {
     deinit{
         if let inputStr = self.inputStream{
             inputStr.close()
-            inputStr.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            inputStr.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         }
         if let outputStr = self.outputStream{
             outputStr.close()
-            outputStr.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            outputStr.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         }
     }
     
@@ -44,8 +44,8 @@ open class TcpClient : NSObject, StreamDelegate {
                 inputStream!.delegate = self
                 outputStream!.delegate = self
 
-                inputStream!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
-                outputStream!.schedule(in: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+                inputStream!.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
+                outputStream!.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
                 
                 inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
@@ -80,13 +80,13 @@ open class TcpClient : NSObject, StreamDelegate {
         if (inputStream != nil) {
             inputStream?.delegate = nil
             inputStream?.close()
-            inputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            inputStream?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
             
         }
         if (outputStream != nil) {
             outputStream?.delegate = nil
             outputStream?.close()
-            outputStream?.remove(from: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
+            outputStream?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
         }
         isOpen = false
         if (self.callbackOnCloseConnection != nil) {

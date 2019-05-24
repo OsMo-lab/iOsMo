@@ -348,7 +348,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             
             if (delete == true) {
-                self.mapView.remove(ann)
+                self.mapView.removeOverlay(ann)
                 trackAnnotations.remove(at: idx)
                 print("removing track \(ann.objId)")
                 
@@ -389,8 +389,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             let gpx = xml.children[0]
             for trk in gpx.children {
                 if trk.name == "trk" {
-                    //var polylines = [OSMPolyline]()
-                    
                     for trkseg in trk.children {
                         if trkseg.name == "trkseg" {
                             var coordinates = [CLLocationCoordinate2D]()
@@ -408,7 +406,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 polyline.title = track.name
                                 polyline.objId = "t\(track.u)"
                                 
-                                self.mapView.add(polyline)
+                                self.mapView.addOverlay(polyline)
                                 self.trackAnnotations.append(polyline)
                                 print("adding track \(track.u)")
 
@@ -532,14 +530,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     polyline.title = user.name
                     polyline.objId = "utrk\(location.userId)"
                     
-                    self.mapView.add(polyline)
+                    self.mapView.addOverlay(polyline)
                     if (exTrack == nil) {
                         self.trackAnnotations.append(polyline)
                     }
                 }
                 if (exTrack != nil) {
                     print("removing prev usertrack")
-                    self.mapView.remove(exTrack!)
+                    self.mapView.removeOverlay(exTrack!)
                 }
                 
                 for ann in self.pointAnnotations {
@@ -583,8 +581,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 template = "https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png";
             case TileSource.Sputnik:
                 template = "http://{s}.tiles.maps.sputnik.ru/{z}/{x}/{y}.png"
-            case TileSource.Mtb:
-                template = "http://tile.mtbmap.cz/mtbmap_tiles/{z}/{x}/{y}.png"
+            case TileSource.wiki:
+                template = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png"
             default:
                 template = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         }
@@ -605,7 +603,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         
         // 4
-        self.mapView.add(overlay, level: .aboveLabels)
+        self.mapView.addOverlay(overlay, level: .aboveLabels)
         
         //5
         tileRenderer = MKTileOverlayRenderer(tileOverlay: overlay)

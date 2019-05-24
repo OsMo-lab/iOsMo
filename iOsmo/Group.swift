@@ -22,6 +22,7 @@ open class Group: Equatable{
     var users: [User] = [User]()
     var points: [Point] = [Point]()
     var tracks: [Track] = [Track]()
+    var messages: [ChatMessage] = [ChatMessage]()
     
     init(u: String, name: String,  active: Bool){
         self.u = u
@@ -39,13 +40,13 @@ open class Group: Equatable{
         if (gPermanent == nil ){
             let gPermentntInt = json["permanent"] as? Int
 
-            gPermanent = "\(gPermentntInt)"
+            gPermanent = "\(gPermentntInt ?? 0)"
         }
         
         let gURL = json["url"] as! String
         var gType = json["type"] as? String
         if (gType == nil ){
-            gType = "\(json["type"] as? Int)"
+            gType = "\(json["type"] as? Int ?? 0)"
         }
         let gActive = (json["active"] as? String ?? "") == "1"
         var gU = json["u"] as? String
@@ -68,8 +69,7 @@ open class Group: Equatable{
         }
 
         self.type = gType!;
-        
-        
+
         if let jsonUsers = json["users"] as? Array<AnyObject> {
             for jsonU in jsonUsers{
                 let user = User(json:jsonU as! Dictionary<String, AnyObject>)

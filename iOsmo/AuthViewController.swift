@@ -80,8 +80,8 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
             actButton.setTitle(NSLocalizedString("Sign-In", comment: "Sign-in label"), for: .normal)
             
             signLabel.text = NSLocalizedString("Sign-In", comment: "Sign-in label")
-            signToRegConstraint.priority = 500
-            signToPassConstraint.priority = 999
+            signToRegConstraint.priority = UILayoutPriority(rawValue: 500)
+            signToPassConstraint.priority = UILayoutPriority(rawValue: 999)
             
             registerView.isHidden = true
             forgotButton.isHidden = false
@@ -90,8 +90,8 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
             actButton.setTitle(NSLocalizedString("Register", comment: "Register label"), for: .normal)
             
             signLabel.text = NSLocalizedString("Register", comment: "Register label")
-            signToRegConstraint.priority = 999
-            signToPassConstraint.priority = 500
+            signToRegConstraint.priority = UILayoutPriority(rawValue: 999)
+            signToPassConstraint.priority = UILayoutPriority(rawValue: 500)
             
             registerView.isHidden = false
             forgotButton.isHidden = true
@@ -207,7 +207,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
     }
     
     
-    open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+    open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
         
         
         if let url = request.url, let host = url.host {

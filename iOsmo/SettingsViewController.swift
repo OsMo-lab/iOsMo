@@ -102,8 +102,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             switch act.title! {
             case "Hot OSM":
                 mapStyle = TileSource.Hotosm.rawValue
-            case "MTB":
-                mapStyle = TileSource.Mtb.rawValue
+            case "wiki":
+                mapStyle = TileSource.wiki.rawValue
             case "Sputnik":
                 mapStyle = TileSource.Sputnik.rawValue
             default:
@@ -167,7 +167,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         if let mapStyle = SettingsManager.getKey(SettingKeys.tileSource)?.intValue{
             mapTitle = tileSourceName(mapStyle)
         }
-        mapStyleButton.setTitle(mapTitle, for: UIControlState.normal)
+        mapStyleButton.setTitle(mapTitle, for: UIControl.State.normal)
         
         //intervalTextField.becomeFirstResponder()
         // Do any additional setup after loading the view.
@@ -183,8 +183,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
         switch source {
             case TileSource.Hotosm.rawValue:
                 mapTitle = "Hot OSM"
-            case TileSource.Mtb.rawValue:
-                mapTitle  = "MTB"
+            case TileSource.wiki.rawValue:
+                mapTitle  = "wiki"
             case TileSource.Sputnik.rawValue:
                 mapTitle  = "Sputnik"
             default:

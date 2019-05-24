@@ -27,7 +27,8 @@ open class ConnectionManager: NSObject{
     var monitoringGroupsHandler: ObserverSetEntry<[UserGroupCoordinate]>?
 
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
-    var onGroupCreated: ObserverSetEntry<(Int, String)>?
+    var onMessageListUpdated: ObserverSetEntry<(Int)>?
+    //var onGroupCreated: ObserverSetEntry<(Int, String)>?
     
     // add name of group in return
     let groupEntered = ObserverSet<(Int, String)>()
@@ -35,10 +36,13 @@ open class ConnectionManager: NSObject{
     let groupLeft = ObserverSet<(Int, String)>()
     let groupActivated = ObserverSet<(Int, String)>()
     let groupsUpdated = ObserverSet<(Int, Any)>()
+    let messagesUpdated = ObserverSet<(Int, Any)>()
+    let messageSent = ObserverSet<(Int, String)>()
     
     let pushActivated = ObserverSet<Int>()
     let groupDeactivated = ObserverSet<(Int, String)>()
     let groupListDownloaded = ObserverSet<[Group]>()
+    
     let groupList = ObserverSet<[Group]>()
     let trackDownoaded = ObserverSet<(Track)>()
     
@@ -46,6 +50,7 @@ open class ConnectionManager: NSObject{
     let sessionRun = ObserverSet<(Int, String)>()
     let groupsEnabled = ObserverSet<Int>()
     let messageOfTheDayReceived = ObserverSet<(Int, String)>()
+    let historyReceived = ObserverSet<(Int, Any)>()
     let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
@@ -109,11 +114,19 @@ open class ConnectionManager: NSObject{
         connection.answerObservers.add(notifyAnswer)
         
         let audioSession = AVAudioSession.sharedInstance()
+        
+        
         do {
-            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            if #available(iOS 10.0, *) {
+                try audioSession.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode.default)
+            } else {
+                // Fallback on earlier versions
+            }
         } catch {
             log.enqueue("CM.Inint: Unable to set AVAudioSessionCategory \(error)")
         }
+            
+        
     }
     
     func getServerInfo(key:String?) {
@@ -127,7 +140,6 @@ open class ConnectionManager: NSObject{
                 self.completed(result: false, token: tkn)
                 return
             }
-            
             
             do {
                 let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
@@ -435,22 +447,27 @@ open class ConnectionManager: NSObject{
     // Groups funcs
     open func getGroups(){
         if self.onGroupListUpdated == nil {
-            
-            self.onGroupListUpdated = self.groupListDownloaded.add {
+            self.onGroupListUpdated = self.groupListDownloaded.add{
                 self.groupList.notify($0)
-                
             }
         }
         self.sendGetGroups()
     }
     
+    open func getChatMessages(u: Int){
+        self.send(request: "\(Tags.groupChat.rawValue):\(u)")
+    }
+    
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
+        /*
         if self.onGroupCreated == nil {
-            self.onGroupCreated = self.groupCreated.add {
+            print("CM.creatGroup add onGroupCreated")
+            self.onGroupCreated = self.groupCreated.add{
+                print("CM.onGroupCreated notify")
                 self.groupCreated.notify($0)
             }
         }
-        
+        */
         let jsonInfo: NSDictionary =
             ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
         
@@ -511,8 +528,28 @@ open class ConnectionManager: NSObject{
         let request = "\(Tags.updateGroupResponse.rawValue):\(group)|\(event)"
         send(request: request)
     }
+    
+    open func sendChatMessage(group: Int, text: String){
+        let jsonInfo: NSDictionary = try ["text": text]
+        do{
+            let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+            if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                let request = "\(Tags.groupChatSend.rawValue):\(group)|\(jsonString)"
+                send(request: request)
+            }
+        
+        }catch {
+            print("error generating system info")
+        }
+    }
+    
     open func getMessageOfTheDay(){
         let request = "\(Tags.messageDay.rawValue)"
+        send(request: request)
+    }
+    
+    open func getHistory(){
+        let request = "\(Tags.history.rawValue)"
         send(request: request)
     }
     
@@ -676,7 +713,7 @@ open class ConnectionManager: NSObject{
         if command == AnswTags.activateGroup.rawValue {
             if let result = parseForErrorJson(output){
                 let value = (result.0==1 ? result.1 : (result.1=="" ? output.components(separatedBy: "|")[1] : result.1 ))
-                groupActivated.notify(result.0, value)
+                groupActivated.notify((result.0, value))
             }else {
                 log.enqueue("error: activate group asnwer cannot be parsed")
             }
@@ -685,7 +722,7 @@ open class ConnectionManager: NSObject{
         }
         if command == AnswTags.deactivateGroup.rawValue {
             if let result = parseForErrorJson(output){
-                groupDeactivated.notify(result.0,  result.1)
+                groupDeactivated.notify((result.0,  result.1))
             }else {
                 log.enqueue("error: deactivate group asnwer cannot be parsed")
             }
@@ -708,7 +745,34 @@ open class ConnectionManager: NSObject{
             }
             return
         }
-        
+        if command == Tags.groupChat.rawValue {
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                self.messagesUpdated.notify((grId, res))
+            }else {
+                log.enqueue("error: groups chat answer cannot be parsed")
+            }
+     
+            return
+        }
+        if command == Tags.groupChatMessage.rawValue {
+            let parseRes = parseGroupUpdate(output)
+            if let grId = parseRes.0, let res = parseRes.1 {
+                self.messagesUpdated.notify((grId, res))
+            }else {
+                log.enqueue("error: groups chat message cannot be parsed")
+            }
+            
+            return
+        }
+        if command == Tags.groupChatSend.rawValue {
+            if let result = parseForErrorJson(output){
+                messageSent.notify((result.0,  result.1))
+            } else {
+                log.enqueue("error: message sent cannot be parsed")
+            }
+            return
+        }
         if command == AnswTags.push.rawValue {
             log.enqueue("PUSH activated")
             
@@ -722,8 +786,8 @@ open class ConnectionManager: NSObject{
         }
         if command == AnswTags.createGroup.rawValue {
             if let result = parseForErrorJson(output){
-                
-                groupCreated.notify((result))
+                let value = (result.0==1 ? result.1 : (result.1=="" ? output.components(separatedBy: "|")[1] : result.1 ))
+                groupCreated.notify((result.0,  value))
                 return
             } else {
                 log.enqueue("error: create group asnwer cannot be parsed")
@@ -827,6 +891,19 @@ open class ConnectionManager: NSObject{
             }
             else {
                 log.enqueue("error: wrong parsing MD")
+            }
+            
+            return
+        }
+        
+        if command == Tags.history.rawValue {
+            if (command != "" && addict != "") {
+                if let json = parseJson(output) {
+                    historyReceived.notify((1, json))
+                }
+            }
+            else {
+                log.enqueue("error: wrong parsing HISTORY")
             }
             
             return
@@ -1109,4 +1186,9 @@ open class ConnectionManager: NSObject{
         }
         return nil
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
+	return input.rawValue
 }

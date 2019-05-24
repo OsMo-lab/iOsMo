@@ -15,18 +15,28 @@ open class GroupManager{
     var monitoringGroupsUpdated = ObserverSet<[UserGroupCoordinate]>()
  
     var groupListUpdated = ObserverSet<[Group]>()
+  
+    
     var groupEntered = ObserverSet<(Int, String)>()
     var groupLeft = ObserverSet<(Int, String)>()
     var groupActivated = ObserverSet<(Int, String)>()
     var groupDeactivated = ObserverSet<(Int, String)>()
     var groupCreated = ObserverSet<(Int, String)>()
     var groupsUpdated = ObserverSet<(Int, Any)>()
+    var messagesUpdated = ObserverSet<(Int, Any)>()
+    var messageSent = ObserverSet<(Int, String)>()
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
+
     
     var onActivateGroup : ObserverSetEntry<(Int, String)>?
     var onDeactivateGroup : ObserverSetEntry<(Int, String)>?
     var onUpdateGroup : ObserverSetEntry<(Int, Any)>?
+    var onMessagesUpdated : ObserverSetEntry<(Int, Any)>?
     var trackDownloaded : ObserverSet<(Track)>?
+    var onEnterGroup : ObserverSetEntry<(Int, String)>?
+    var onLeaveGroup : ObserverSetEntry<(Int, String)>?
+    var onMessageSent : ObserverSetEntry<(Int, String)>?
+    var onCreateGroup : ObserverSetEntry<(Int, String)>?
     
     fileprivate let log = LogQueue.sharedLogQueue
     
@@ -240,12 +250,26 @@ open class GroupManager{
                 }
             }
         }
+        self.onMessagesUpdated = connection.messagesUpdated.add({
+            let json = $1
+            let group = $0
 
+            if let jsonarr = json as? Array<Any>, let foundGroup = self.allGroups.filter({$0.u == "\(group)"}).first {
+                for m in jsonarr {
+                    let message = ChatMessage.init(json: m as! Dictionary<String, AnyObject>)
+                    foundGroup.messages.append(message)
+                }
+            } else if let foundGroup = self.allGroups.filter({$0.u == "\(group)"}).first {
+                let message = ChatMessage.init(json: json as! Dictionary<String, AnyObject>)
+                foundGroup.messages.append(message)
+            }
+            self.messagesUpdated.notify((group, json))
+        })
     }
     
     open func activateGroup(_ name: String){
         self.onActivateGroup = connection.groupActivated.add{
-            self.groupActivated.notify($0, $1)
+            self.groupActivated.notify(($0, $1))
             print("ACTIVATED! \($0) \(name)")
             if($0 == 0) {
                 do {
@@ -270,7 +294,7 @@ open class GroupManager{
     
     open func deactivateGroup(_ name: String) {
         self.onDeactivateGroup = connection.groupDeactivated.add{
-            self.groupDeactivated.notify($0, $1)
+            self.groupDeactivated.notify(($0, $1))
             
             print("DEACTIVATED \(name)! \($0) ")
             if($0 == 0) {
@@ -292,19 +316,30 @@ open class GroupManager{
     }
 
     
-    var onEnterGroup : ObserverSetEntry<(Int, String)>?
-    var onLeaveGroup : ObserverSetEntry<(Int, String)>?
-    var onCreateGroup : ObserverSetEntry<(Int, String)>?
+    
 
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         self.onCreateGroup = connection.groupCreated.add{
-            if ($0 != 0) {
+            print("GM.createGroup add")
+            /*if ($0 != 0) {
                 self.groupList(false)
+            }*/
+            
+            if ($0 == 0) {
+                do {
+                    if let data: Data = $1.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) {
+                        
+                        let group = Group.init(json: jsonObject as! Dictionary<String, AnyObject>)
+                        self.allGroups.append(group)
+                    }
+                    self.saveCache()
+                } catch {}
+                
             }
-            self.groupCreated.notify($0, $1)
             
+            
+            self.groupCreated.notify(($0, $1))
             print("CREATED! \($0) ")
-            
             self.connection.groupCreated.remove(self.onCreateGroup!)
         }
         connection.createGroup(name, email: email, nick: nick, gtype: gtype, priv: priv)
@@ -312,7 +347,7 @@ open class GroupManager{
     
     open func enterGroup(_ name: String, nick: String){
         self.onEnterGroup = connection.groupEntered.add{
-            self.groupEntered.notify($0, $1)
+            self.groupEntered.notify(($0, $1))
             print("ENTERED! \($0) ")
             self.connection.groupEntered.remove(self.onEnterGroup!)
         }
@@ -321,7 +356,7 @@ open class GroupManager{
     
     open func leaveGroup(_ u: String) {
         self.onLeaveGroup = connection.groupLeft.add{
-            self.groupLeft.notify($0, $1)
+            self.groupLeft.notify(($0, $1))
             if $0 == 0 {
                 let foundGroup = self.allGroups.filter{$0.u == "\(u)"}.first
                 let idx = self.allGroups.index(of: foundGroup!)
@@ -389,6 +424,20 @@ open class GroupManager{
         }
     }
     
+    open func sendChatMessage(group: Int, text: String) {
+        self.onMessageSent = connection.messageSent.add{
+            /*
+            if let foundGroup = self.allGroups.filter({$0.u == "\(group)"}).first {
+                let message = ChatMessage.init(text:text);
+                foundGroup.messages.append(message)
+                
+            }*/
+            self.messageSent.notify(($0, $1))
+            self.connection.messageSent.remove(self.onMessageSent!)
+        }
+        connection.sendChatMessage(group: group, text: text)
+    }
+    
     open func clearCache() {
         log.enqueue("Clearing GROUP cache")
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
@@ -412,8 +461,6 @@ open class GroupManager{
     }
     
     open func groupList(_ cached: Bool){
-        
-
         var shouldDownload = true;
         if (cached) {
             var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
