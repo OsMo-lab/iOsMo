@@ -167,6 +167,7 @@ open class TcpClient : NSObject, StreamDelegate {
         }
     }
     
+    private var message = "";
     
     open func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch (eventCode) {
@@ -199,7 +200,7 @@ open class TcpClient : NSObject, StreamDelegate {
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
             var len: Int = 0
-            var message = ""
+            
             if let iStream = inputStream {
                 if (callbackOnSendStart != nil) {
                     callbackOnSendStart!()
@@ -224,6 +225,7 @@ open class TcpClient : NSObject, StreamDelegate {
             if !message.isEmpty {
                 //Копим сообщение, пока не получим от сервера \n
                 let responceSplit = message.components(separatedBy: "\n")
+                //print(message)
                 var count = 0
                 for res in responceSplit {
                     if !res.isEmpty{

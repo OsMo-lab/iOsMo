@@ -209,7 +209,7 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    open func reachabilityChanged(_ note: Notification) {
+    @objc open func reachabilityChanged(_ note: Notification) {
         log.enqueue("CM.reachability changed")
         let reachability = note.object as! Reachability
         reachabilityStatus = reachability.connection
