@@ -33,10 +33,20 @@ open class Track: Equatable {
         self.type = json["type"] as? String ?? "0"
     }
     
+    init (track: History) {
+        self.u = track.u
+        self.groupId = 0
+        self.color = "#0000ff"
+        self.km = "\(track.distantion / 1000.0)"
+        self.name = track.name
+        self.url = track.gpx_optimal
+        self.start = track.start
+        self.finish = track.end
+    }
     
     open func getTrackData() -> XML? {
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
-        let filename = "\(u).gpx"
+        let filename = "\(groupId)-\(u).gpx"
         let path =  "\(paths[0])/channelsgpx/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
         if file != nil {

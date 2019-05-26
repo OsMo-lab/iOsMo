@@ -246,7 +246,7 @@ open class GroupManager{
             self.saveCache()
             for group in $0 {
                 for track in group.tracks{
-                    self.downloadIfNeeded(track)
+                    self.getTrackData(track)
                 }
             }
         }
@@ -526,15 +526,15 @@ open class GroupManager{
             self.clearCache()
             connection.getGroups()
         }
-        
     }
     
-    func downloadIfNeeded(_ track:Track) {
+    func getTrackData(_ track:Track) {
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
-        let filename = "\(track.u).gpx"
+        let filename = "\(track.groupId)-\(track.u).gpx"
         let path =  "\(paths[0])/channelsgpx/"
         let fileManager = FileManager.default;
         var shouldDownload = true;
+        print(track.url)
         
         if fileManager.fileExists(atPath: "\(path)\(filename)") {
             do {

@@ -11,21 +11,30 @@ import Foundation
 class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     var connectionManager = ConnectionManager.sharedConnectionManager
+    var groupManager = GroupManager.sharedGroupManager
     var history: [History] = [History]()
     var onHistoryUpdated: ObserverSetEntry<(Int, Any)>?
     
     var task: URLSessionDownloadTask!
     var session: URLSession!
     var cache:NSCache<AnyObject, AnyObject>!
-    
+    private let refreshControl = UIRefreshControl()
     
     let trackCell = "trackCell"
     
     override func viewWillAppear(_ animated:Bool) {
         print("HistoryViewController WillApear")
         super.viewWillAppear(animated)
-        
+        getHistory()
+    }
+    
+    private func getHistory() {
+        history.removeAll()
         connectionManager.getHistory()
+    }
+    
+    @objc private func refreshHistory(_ sender: Any) {
+        getHistory()
     }
     
     override func viewDidLoad() {
@@ -34,6 +43,15 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         session = URLSession.shared
         task = URLSessionDownloadTask()
         self.cache = NSCache()
+        // Add Refresh Control to Table View
+
+        if #available(iOS 10.0, *) {
+            self.tableView.refreshControl = refreshControl
+        } else {
+            self.tableView.addSubview(refreshControl)
+        }
+        // Configure Refresh Control
+        refreshControl.addTarget(self, action: #selector(refreshHistory(_:)), for: .valueChanged)
         
         self.onHistoryUpdated = self.connectionManager.historyReceived.add{
             let jsonarr = $1 as! Array<AnyObject>
@@ -42,12 +60,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             //if let jsonarr = json as? Array<Any> {
                 for m in jsonarr {
                     let track = History.init(json: m as! Dictionary<String, AnyObject>)
-                    self.history.append(track)
-                    
-                }
+                    self.history.append(track) 
+            }
             //}
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.refreshControl.endRefreshing()
+                //self.self.activityIndicatorView.stopAnimating()
+                
             }
         }
     }
@@ -131,6 +151,21 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
  
         }
         return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let row = (indexPath as NSIndexPath).row
+        let section = (indexPath as NSIndexPath).section
+        let track = Track.init(track: history[indexPath.row])
+        
+        groupManager.getTrackData(track)
+        
+        let tbc:UITabBarController = self.tabBarController!
+        let mvc: MapViewController = tbc.viewControllers![2] as! MapViewController;
+        mvc.putHistoryOnMap(tracks: [track])
+        tbc.selectedViewController = mvc;
+        
+        
     }
     
 }

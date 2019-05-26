@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  LogViewController.swift
 //  iOsmo
 //
 //  Created by Olga Grineva on 07/12/14.

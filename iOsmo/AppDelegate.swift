@@ -169,7 +169,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
  */
     
-    func displayNotification(_ title: String, _ body: String) {
+    public func displayNotification(_ title: String, _ body: String) {
         if self.localNotification == nil {
             self.localNotification = UILocalNotification()
             self.localNotification?.alertTitle = title
@@ -184,7 +184,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if !connectionManager.connected {
             connectionManager.connect()
         }
-        
     }
     
     func disconnectByTimer() {
@@ -368,7 +367,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
-        // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
@@ -387,7 +385,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         log.enqueue("userNotificationCenter didReceive: \(userInfo)")
-        // Print message ID.
+
         if let messageID = userInfo[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)
@@ -416,7 +414,6 @@ extension AppDelegate : MessagingDelegate {
         let data = remoteMessage.appData
         log.enqueue("Received remote message: \(remoteMessage.appData)")
         
-        // Print message ID.
         if let messageID = data[gcmMessageIDKey] {
             log.enqueue("FCM: \(messageID)")
             connectionManager.connection.parseOutput(messageID as! String)

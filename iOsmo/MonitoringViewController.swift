@@ -200,6 +200,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if theChange {
                 self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
                     self.MDView.text = $1
+                    if UIApplication.shared.applicationState != .active {
+                        let app = UIApplication.shared.delegate as! AppDelegate
+                        app.displayNotification("iOSMo", $1)
+                    }
                 }
                 self.groupManager.groupList(true)
                 self.connectionManager.getMessageOfTheDay() //Запрашиваем сообщение дня

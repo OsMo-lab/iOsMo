@@ -51,7 +51,8 @@ open class History: Equatable {
         self.gpx_full = json["gpx_full"] as? String ?? ""
    
         self.start = Date(timeIntervalSince1970: (json["start"] as? Double) ?? 0)
-   
+        self.end = Date(timeIntervalSince1970: (json["end"] as? Double) ?? 0)
+        
     }
     
     open func getGPXOptimalData() -> XML? {
