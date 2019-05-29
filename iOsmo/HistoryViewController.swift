@@ -164,8 +164,5 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         let mvc: MapViewController = tbc.viewControllers![2] as! MapViewController;
         mvc.putHistoryOnMap(tracks: [track])
         tbc.selectedViewController = mvc;
-        
-        
     }
-    
 }

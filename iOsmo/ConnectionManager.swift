@@ -140,7 +140,9 @@ open class ConnectionManager: NSObject{
                 self.completed(result: false, token: tkn)
                 return
             }
-            
+            if let output = String(data:data, encoding:.utf8) {
+                LogQueue.sharedLogQueue.enqueue("server: \(output)")
+            }
             do {
                 let jsonDict = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers);
                 res = (jsonDict as? NSDictionary)!
@@ -163,6 +165,7 @@ open class ConnectionManager: NSObject{
                 }
             } catch {
                 LogQueue.sharedLogQueue.enqueue("error serializing JSON from POST")
+                
                 tkn = Token(tokenString:"", address: "", port: 0, key: "")
                 tkn.error = "error serializing JSON"
                 self.completed(result: false, token: tkn)

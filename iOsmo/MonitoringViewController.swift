@@ -108,7 +108,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
-        MDView.text = ""
+        if let md = SettingsManager.getKey(SettingKeys.motd) as String? {
+            MDView.text = md
+        } else {
+            MDView.text = ""
+        }
         
         if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as? String {
             self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
@@ -206,11 +210,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     }
                 }
                 self.groupManager.groupList(true)
-                self.connectionManager.getMessageOfTheDay() //Запрашиваем сообщение дня
                 self.connectionManager.activatePoolGroups(1) //Активируем получение обновления групп
-                
             } else if let glUpdated = self.onGroupListUpdated {
-                
                 self.groupManager.groupListUpdated.remove(glUpdated)
             }
             DispatchQueue.main.async {

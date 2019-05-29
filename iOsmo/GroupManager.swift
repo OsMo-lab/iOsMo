@@ -184,7 +184,6 @@ open class GroupManager{
                                 point.lon = lon
                                 point.descr = descr!
                                 point.url = uURL
-                                
                             }
                         } else {
                             let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)

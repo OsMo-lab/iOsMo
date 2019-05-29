@@ -180,7 +180,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func connectOnActivate () {
+    @objc func connectOnActivate () {
         if !connectionManager.connected {
             connectionManager.connect()
         }

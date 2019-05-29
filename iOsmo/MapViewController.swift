@@ -183,10 +183,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         //Информация об изменениях в группе
         _ = self.groupManager.groupsUpdated.add{
             let g = $1 as! Dictionary<String, AnyObject>
-            //let group = $0
-            //let foundGroup = self.groupManager.allGroups.filter{$0.u == "\(group)"}.first
-            DispatchQueue.main.async {
-                self.updateGroupsOnMap(groups: self.groupManager.allGroups, GP:g )
+            let group = $0
+            if let foundGroup = (self.groupManager.allGroups.filter{$0.u == "\(group)"}.first) {
+                DispatchQueue.main.async {
+                    self.updateGroupsOnMap(groups: [foundGroup], GP:g )
+                    //self.updateGroupsOnMap(groups: self.groupManager.allGroups, GP:g )
+                }
             }
         }
         //Обновление списка групп
@@ -407,21 +409,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func drawTrack(track:Track) {
-        print ("MapViewController drawTrack")
-        /*
-        var annVisible = false;
-        for ann in self.trackAnnotations {
-            if (ann is OSMMapKitPolyline) {
-                if ((ann as! OSMMapKitPolyline).objId == "t\(track.u)") {
-                    annVisible = true;
-                    return;
-                    
-                }
-            }
-        }
-        */
+        print ("MapViewController drawTrack \(track.groupId)-\(track.u)")
+        
+        
+        
         
         if let xml = track.getTrackData() {
+            var annVisible = false;
+            var idx = 0;
+            for ann in self.trackAnnotations {
+                if (ann.objId == "t-\(track.groupId)-\(track.u)") {
+                    print("removing track \(ann.objId)")
+                    self.mapView.removeOverlay(ann)
+                    self.trackAnnotations.remove(at: idx)
+                } else {
+                    idx  = idx + 1
+                }
+            }
             let gpx = xml.children[0]
             for trk in gpx.children {
                 if trk.name == "trk" {
@@ -444,7 +448,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 
                                 self.mapView.addOverlay(polyline)
                                 self.trackAnnotations.append(polyline)
-                                print("adding track \(track.u)")
+                                print("adding track \(polyline.objId)")
 
                             }
                         }
@@ -466,10 +470,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     self.mapView.addAnnotation(point);
                     self.pointAnnotations.append(point)
                     print ("adding waipont \(track.u)")
-
                 }
             }
-            
+        } else{
+            groupManager.getTrackData(track)
         }
     }
     
@@ -572,7 +576,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     }
                 }
                 if (exTrack != nil) {
-                    print("removing prev usertrack")
+                    print("removing prev usertrack \(exTrack?.objId)")
                     self.mapView.removeOverlay(exTrack!)
                 }
                 
