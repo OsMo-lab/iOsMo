@@ -82,6 +82,7 @@ open class Group: Equatable{
             for jsonP in jsonPoints{
                 let point = Point (json:jsonP as! Dictionary<String, AnyObject>)
                 point.groupId = Int(self.u) ?? 0
+                point.mapId = "p-\(self.u)-\(point.u)"
                 self.points.append(point)
                 
             }

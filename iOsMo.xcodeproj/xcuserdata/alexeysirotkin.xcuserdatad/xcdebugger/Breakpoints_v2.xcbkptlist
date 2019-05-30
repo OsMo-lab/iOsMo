@@ -78,7 +78,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/ConnectionManager.swift"
-            timestampString = "580675364.567165"
+            timestampString = "580929237.6738909"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "454"
@@ -94,12 +94,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/MapViewController.swift"
-            timestampString = "580837067.305925"
+            timestampString = "580929237.673997"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "205"
             endingLineNumber = "205"
             landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "iOsmo/MapViewController.swift"
+            timestampString = "580929237.674684"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
+            landmarkName = "updateGroupsOnMap(groups:GP:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -1716,19 +1716,19 @@
                                             <color key="highlightedColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7jZ-E4-SbP" userLabel="TrackView">
-                                            <rect key="frame" x="0.0" y="40" width="600" height="260"/>
+                                            <rect key="frame" x="0.0" y="40" width="279.66666666666669" height="260"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" red="0.074509803920000006" green="0.074509803920000006" blue="0.074509803920000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstItem="Mzq-5i-TsE" firstAttribute="top" secondItem="X12-YJ-Fvg" secondAttribute="top" id="Eov-ny-uu5"/>
                                         <constraint firstAttribute="trailing" secondItem="p6k-rI-trZ" secondAttribute="trailing" constant="6" id="FND-fx-cVT"/>
-                                        <constraint firstItem="7jZ-E4-SbP" firstAttribute="width" secondItem="X12-YJ-Fvg" secondAttribute="width" id="KNx-9r-6pS"/>
                                         <constraint firstItem="p6k-rI-trZ" firstAttribute="top" secondItem="bKO-GC-XPI" secondAttribute="top" id="TRX-i7-XBl"/>
                                         <constraint firstItem="Mzq-5i-TsE" firstAttribute="width" secondItem="X12-YJ-Fvg" secondAttribute="width" constant="-20" id="VH4-tk-lyp"/>
                                         <constraint firstItem="bKO-GC-XPI" firstAttribute="leading" secondItem="Mzq-5i-TsE" secondAttribute="leading" id="azV-sD-ned"/>
                                         <constraint firstItem="7jZ-E4-SbP" firstAttribute="top" secondItem="p6k-rI-trZ" secondAttribute="bottom" id="bMZ-kN-BbU"/>
                                         <constraint firstItem="Mzq-5i-TsE" firstAttribute="leading" secondItem="X12-YJ-Fvg" secondAttribute="leading" constant="6" id="iNf-Eg-ZVX"/>
+                                        <constraint firstItem="7jZ-E4-SbP" firstAttribute="width" secondItem="X12-YJ-Fvg" secondAttribute="height" constant="-20" id="nft-Q1-h6H"/>
                                         <constraint firstItem="bKO-GC-XPI" firstAttribute="top" secondItem="Mzq-5i-TsE" secondAttribute="bottom" id="sCF-Ne-jvv"/>
                                         <constraint firstAttribute="bottom" secondItem="7jZ-E4-SbP" secondAttribute="bottom" constant="-0.33333333333331439" id="seg-4e-sMZ"/>
                                         <constraint firstItem="7jZ-E4-SbP" firstAttribute="leading" secondItem="X12-YJ-Fvg" secondAttribute="leading" id="tdc-0H-ElA"/>

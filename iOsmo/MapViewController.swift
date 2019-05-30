@@ -278,7 +278,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         if removeAll == true {
             for ann in pointAnnotations {
                 if (ann is User)  {
-                    print("removing user \((ann as! User).u!)")
+                    print("removing All users: \((ann as! User).u!)")
                     self.mapView.removeAnnotation(ann)
                     pointAnnotations.remove(at: idx)
                     continue
@@ -320,7 +320,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                             self.drawPeoples(location: ugc)
                         }
                         
-                        curAnnotations.append("u\(uid!)")
+                        curAnnotations.append("u-\(gid!)-\(uid!)")
                     }
                 }
                 let points = GP?["point"] as? Array<AnyObject>
@@ -328,7 +328,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if (points != nil || GP == nil) {
                         drawPoint(point: point, group:group)
                     }
-                    curAnnotations.append("p\(point.u)")
+                    curAnnotations.append("p-\(point.groupId)-\(point.u)")
                 }
                 let tracks = GP?["track"] as? Array<AnyObject>
                 for track in group.tracks {
@@ -360,7 +360,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             
             if (delete == true && annObjId != "") {
-                if !(annObjId.contains("wpt")) {
+                if (!removeAll && GP != nil && groups.count == 1) {
+                    //При обновлении группы удаляем только точки и пользователей этой группы
+                    if !(annObjId.contains("-\(groups[0].u)-")) {
+                        delete = false;
+                    }
+                }
+                //if !(annObjId.contains("wpt")) {
+                if (delete == true && !(annObjId.contains("wpt"))) {
                     self.mapView.removeAnnotation(ann)
                     pointAnnotations.remove(at: idx)
                     print("removing \(annObjId!)")
@@ -369,12 +376,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 idx = idx + 1
             }
         }
+        
         idx = 0;
         for ann in trackAnnotations {
             var delete = true;
             if ann.objId.contains("t-0-") {
                 delete = false;
-                break;
             }
             if curTracks.count > 0 {
                 for objId in curTracks {
@@ -384,7 +391,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     }
                 }
             }
-            
+            if (!removeAll && GP != nil && groups.count == 1) {
+                //При обновлении группы удаляем только треки этой группы
+                if !(ann.objId.contains("t-\(groups[0].u)-")) {
+                    delete = false;
+                }
+            }
             if (delete == true) {
                 self.mapView.removeOverlay(ann)
                 trackAnnotations.remove(at: idx)
@@ -393,9 +405,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 //Удаляем Waypoint-ы трека
                 var wpt_idx = 0;
                 for wpt in pointAnnotations {
-                    if (wpt is Point && (wpt as! Point).mapId == "wp\(ann.objId)") {
+                    let wptId = ann.objId.replacingOccurrences(of: "t-", with: "wpt-");
+                    if (wpt is Point && (wpt as! Point).mapId! == wptId) {
                         self.mapView.removeAnnotation(wpt)
-                        
                         pointAnnotations.remove(at: wpt_idx)
                         print("removing waypoint for \(ann.objId)")
                     } else {
@@ -409,17 +421,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func drawTrack(track:Track) {
-        print ("MapViewController drawTrack \(track.groupId)-\(track.u)")
-        
-        
-        
-        
+        print ("MVC drawTrack \(track.groupId)-\(track.u)")
+
         if let xml = track.getTrackData() {
-            var annVisible = false;
             var idx = 0;
             for ann in self.trackAnnotations {
                 if (ann.objId == "t-\(track.groupId)-\(track.u)") {
-                    print("removing track \(ann.objId)")
+                    print("MVC drawTrack removing track \(ann.objId)")
                     self.mapView.removeOverlay(ann)
                     self.trackAnnotations.remove(at: idx)
                 } else {
@@ -448,8 +456,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 
                                 self.mapView.addOverlay(polyline)
                                 self.trackAnnotations.append(polyline)
-                                print("adding track \(polyline.objId)")
-
+                                print("add track \(polyline.objId)")
                             }
                         }
                         
@@ -465,11 +472,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         ["u": track.u, "name": name ?? "", "description": "Waypoint", "color": track.color, "lat": "\(lat)", "lon": "\(lon)"];
                     
                     let point = Point(json: pointDict as! Dictionary<String, AnyObject>)
-                    point.mapId = "wpt\(track.u)"
                     point.groupId = track.groupId
+                    point.mapId = "wpt-\(track.groupId)-\(track.u)"
                     self.mapView.addAnnotation(point);
                     self.pointAnnotations.append(point)
-                    print ("adding waipont \(track.u)")
+                    print ("add waipont \(point.mapId!)")
                 }
             }
         } else{
@@ -477,6 +484,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    //Рисуем точку группы
     func drawPoint(point: Point, group: Group){
         print("MapViewController drawPoint")
         if (self.mapView) != nil {
@@ -493,7 +501,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 point.subtitle = "\(group.name)\n\(point.descr)\n\(point.url)"
                 self.mapView.addAnnotation(point);
                 self.pointAnnotations.append(point)
-                print("adding point \(point.u)")
+                print("add point \(point.mapId!)")
             }
         }
     }
@@ -559,7 +567,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 var exTrack: OSMMapKitPolyline? = nil;
             
                 for ann in trackAnnotations {
-                    if ann.objId == "utrk\(location.userId)" {
+                    if ann.objId == "utrk-\(location.groupId)-\(location.userId)" {
                         exTrack = ann;
                         break;
                     }
@@ -568,7 +576,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     let polyline = OSMMapKitPolyline(coordinates: &user.track, count: user.track.count)
                     polyline.color = user.color.hexColor.withAlphaComponent(0.8)
                     polyline.title = user.name
-                    polyline.objId = "utrk\(location.userId)"
+                    polyline.objId = "utrk-\(location.groupId)-\(location.userId)"
                     
                     self.mapView.addOverlay(polyline)
                     if (exTrack == nil) {
@@ -582,17 +590,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 
                 for ann in self.pointAnnotations {
                     if (ann is User) {
-                        if ((ann as! User).mapId == "u\(location.userId)") {
+                        if ((ann as! User).mapId == "u-\(location.groupId)-\(location.userId)") {
                             annVisible = true;
                             break;
-                            
                         }
                     }
                 }
                 if !annVisible {
                     self.mapView.addAnnotation(user);
                     self.pointAnnotations.append(user);
-                    print("add user \(location.userId)")
+                    print("add user \(user.mapId!)")
                     
                 } else {
                     if let userView : OSMOMKAnnotationView = self.mapView.view(for: user) as? OSMOMKAnnotationView {

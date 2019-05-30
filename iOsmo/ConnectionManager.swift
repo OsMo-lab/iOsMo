@@ -18,7 +18,7 @@ import AVFoundation
 
 let authUrl = URL(string: "https://api.osmo.mobi/new?")
 let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
-let iOsmoAppKey = "hD74_vDa3Lc_3rDs"
+let iOsmoAppKey = "Jdf43G_fVl3Opa42"
 let apiUrl = "https://api.osmo.mobi/iProx?"
 
 open class ConnectionManager: NSObject{
