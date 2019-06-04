@@ -425,6 +425,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
         if let xml = track.getTrackData() {
             var idx = 0;
+            var first_coordinate: CLLocationCoordinate2D = self.mapView.centerCoordinate
             for ann in self.trackAnnotations {
                 if (ann.objId == "t-\(track.groupId)-\(track.u)") {
                     print("MVC drawTrack removing track \(ann.objId)")
@@ -457,9 +458,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                                 self.mapView.addOverlay(polyline)
                                 self.trackAnnotations.append(polyline)
                                 print("add track \(polyline.objId)")
+                                first_coordinate = coordinates[0]
                             }
                         }
-                        
                     }
                 }
                 
@@ -478,6 +479,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     self.pointAnnotations.append(point)
                     print ("add waipont \(point.mapId!)")
                 }
+            }
+            if (track.groupId == 0)  {
+                self.mapView.setCenter(first_coordinate, animated: true)
             }
         } else{
             groupManager.getTrackData(track)

@@ -109,7 +109,7 @@ open class SendingManager: NSObject{
         connectionManager.closeSession()
     }
     
-    open func sending(){
+    @objc open func sending(){
         //MUST REFACTOR
         if (connectionManager.sessionOpened || connectionManager.isGettingLocation)  && connectionManager.connected {
             let coors: [LocationModel] = locationTracker.getLastLocations()
