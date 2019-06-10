@@ -155,18 +155,18 @@ open class ConnectionManager: NSObject{
                             return
                         }
                     }
-                    tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                    tkn = Token(tokenString:"", address: "", port: -1, key: "")
                     tkn.error = "Server address not parsed"
                     self.completed(result: false, token: tkn)
                 } else {
-                    tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                    tkn = Token(tokenString:"", address: "", port: -1, key: "")
                     tkn.error = "Server address not received"
                     self.completed(result: false, token: tkn)
                 }
             } catch {
                 LogQueue.sharedLogQueue.enqueue("error serializing JSON from POST")
                 
-                tkn = Token(tokenString:"", address: "", port: 0, key: "")
+                tkn = Token(tokenString:"", address: "", port: -1, key: "")
                 tkn.error = "error serializing JSON"
                 self.completed(result: false, token: tkn)
             }
@@ -325,7 +325,11 @@ open class ConnectionManager: NSObject{
                         self.connectionRun.notify((1, ""))
                         self.shouldReConnect = true
                     } else {
-                        self.connectionRun.notify((1, "\(token?.error ?? "")"))
+                        if (token?.port ?? 0 >= 0 ) {
+                            self.connectionRun.notify((1, "\(token?.error ?? "")"))
+                        } else {
+                            self.connectionRun.notify((1, ""))
+                        }
                         self.shouldReConnect = false
                     }
                 }
@@ -420,7 +424,7 @@ open class ConnectionManager: NSObject{
         }
     }
     
-    func connectByTimer() {
+    @objc func connectByTimer() {
         self.connect()
     }
     

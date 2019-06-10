@@ -57,17 +57,13 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             let jsonarr = $1 as! Array<AnyObject>
             let res = $0
             
-            //if let jsonarr = json as? Array<Any> {
-                for m in jsonarr {
-                    let track = History.init(json: m as! Dictionary<String, AnyObject>)
-                    self.history.append(track) 
+            for m in jsonarr {
+                let track = History.init(json: m as! Dictionary<String, AnyObject>)
+                self.history.append(track)
             }
-            //}
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
-                //self.self.activityIndicatorView.stopAnimating()
-                
             }
         }
     }
@@ -99,13 +95,12 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         var cell: UITableViewCell?
         if (section == 0) {
-            
             cell = tableView.dequeueReusableCell(withIdentifier: trackCell, for: indexPath)
             if (cell == nil) {
                 cell = UITableViewCell(style:UITableViewCell.CellStyle.default, reuseIdentifier:trackCell)
                 
             }
-            
+           
             if let nameLabel = cell!.contentView.viewWithTag(1) as? UILabel{
                 nameLabel.text = history[row].name
             }
@@ -147,15 +142,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                     task.resume()
                 }
             }
-            
- 
         }
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let row = (indexPath as NSIndexPath).row
-        let section = (indexPath as NSIndexPath).section
         let track = Track.init(track: history[indexPath.row])
         
         groupManager.getTrackData(track)

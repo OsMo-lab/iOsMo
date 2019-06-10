@@ -101,7 +101,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		293C95701A34B217005DD4CE /* iOsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		293C95701A34B217005DD4CE /* OsMo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OsMo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C95741A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C95751A34B217005DD4CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		293C95791A34B217005DD4CE /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
@@ -232,7 +232,7 @@
 		293C95711A34B217005DD4CE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				293C95701A34B217005DD4CE /* iOsMo.app */,
+				293C95701A34B217005DD4CE /* OsMo.app */,
 				293C95871A34B217005DD4CE /* iOsmoTests.xctest */,
 			);
 			name = Products;
@@ -460,7 +460,7 @@
 			);
 			name = iOsMo;
 			productName = iOsmo;
-			productReference = 293C95701A34B217005DD4CE /* iOsMo.app */;
+			productReference = 293C95701A34B217005DD4CE /* OsMo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		293C95861A34B217005DD4CE /* iOsmoTests */ = {
@@ -826,7 +826,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
@@ -861,7 +861,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";

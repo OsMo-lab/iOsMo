@@ -588,7 +588,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     }
                 }
                 if (exTrack != nil) {
-                    print("removing prev usertrack \(exTrack?.objId)")
+                    print("removing prev usertrack \(exTrack?.objId ?? "")")
                     self.mapView.removeOverlay(exTrack!)
                 }
                 

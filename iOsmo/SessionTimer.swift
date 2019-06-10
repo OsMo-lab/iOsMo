@@ -40,7 +40,7 @@ open class SessionTimer: NSObject{
         self.isStarted = false
     }
     
-    func tick() {
+    @objc func tick() {
     
         self.elapsedTime += 1
         

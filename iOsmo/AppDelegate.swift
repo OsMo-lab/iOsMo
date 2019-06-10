@@ -186,7 +186,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func disconnectByTimer() {
+    @objc func disconnectByTimer() {
         connectionManager.closeConnection()
 
         self.endBackgroundTask()
@@ -218,8 +218,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
-                self.log.enqueue ("unprocessed notification count: \(notifications.count)")
                 if notifications.count > 0 {
+                    self.log.enqueue ("unprocessed notification count: \(notifications.count)")
                     var identifiers: [String] = [];
                     
                     notifications.forEach({ (notification) in

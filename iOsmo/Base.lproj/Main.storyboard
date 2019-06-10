@@ -12,7 +12,7 @@
         <!--Monitoring View Controller-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="MonitoringViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="9pv-A4-QxB" customClass="MonitoringViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3yC-x5-ieH"/>
                         <viewControllerLayoutGuide type="bottom" id="NS6-Sg-xXz"/>
@@ -301,7 +301,7 @@
         <!--Account View Controller-->
         <scene sceneID="E10-fJ-RQE">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Sgt-SC-42k" customClass="AccountViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Sgt-SC-42k" customClass="AccountViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="fVz-jj-f8h"/>
                         <viewControllerLayoutGuide type="bottom" id="0q2-9m-ea4"/>
@@ -796,10 +796,10 @@
             </objects>
             <point key="canvasLocation" x="-1588" y="121"/>
         </scene>
-        <!--Log View Controller-->
+        <!--Log-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
-                <viewController id="8rJ-Kc-sve" customClass="LogViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8rJ-Kc-sve" customClass="LogViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="RQ5-bC-qnL"/>
                         <viewControllerLayoutGuide type="bottom" id="uGr-UK-UTG"/>
@@ -899,7 +899,7 @@
                             <constraint firstItem="voL-dJ-cjX" firstAttribute="leading" secondItem="ors-8k-0GG" secondAttribute="trailing" constant="16" id="v3e-E5-aqj"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="about-32" id="cPa-gy-q4n">
+                    <tabBarItem key="tabBarItem" title="Log" image="about-32" id="cPa-gy-q4n">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <connections>
@@ -914,7 +914,7 @@
         <!--Settings View Controller-->
         <scene sceneID="nfv-zV-zEm">
             <objects>
-                <viewController id="e7e-HH-qS7" customClass="SettingsViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="e7e-HH-qS7" customClass="SettingsViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="grg-UM-vDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="dpF-CB-0L0"/>
@@ -1137,7 +1137,6 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="uJG-x5-g9A">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="5"/>
                     </tabBarItem>
                     <connections>
                         <outlet property="awakeModeSwitcher" destination="7oa-6p-5Qs" id="39A-fT-cCB"/>
@@ -1187,7 +1186,7 @@
         <!--AuthViewController-->
         <scene sceneID="hjy-dJ-2QC">
             <objects>
-                <viewController id="LlK-9l-b3c" userLabel="AuthViewController" customClass="AuthViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="LlK-9l-b3c" userLabel="AuthViewController" customClass="AuthViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="I9s-QF-Jdn"/>
                         <viewControllerLayoutGuide type="bottom" id="KUa-SJ-tmd"/>
@@ -1450,7 +1449,7 @@
         <!--MapView Controller-->
         <scene sceneID="p61-Na-REU">
             <objects>
-                <viewController id="oZz-fs-szh" userLabel="MapView Controller" customClass="MapViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="oZz-fs-szh" userLabel="MapView Controller" customClass="MapViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="F3k-hq-PU0"/>
                         <viewControllerLayoutGuide type="bottom" id="Yb2-lg-fIO"/>
@@ -1498,7 +1497,7 @@
         <!--Chat View Controller-->
         <scene sceneID="eaI-fG-pf0">
             <objects>
-                <viewController id="1fM-06-9zA" userLabel="Chat View Controller" customClass="ChatViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="1fM-06-9zA" userLabel="Chat View Controller" customClass="ChatViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Oez-hG-vdO"/>
                         <viewControllerLayoutGuide type="bottom" id="Uie-Wu-GAY"/>
@@ -1673,7 +1672,7 @@
         <!--History View Controller-->
         <scene sceneID="om7-qh-FD4">
             <objects>
-                <tableViewController id="zNo-gR-XBI" userLabel="History View Controller" customClass="HistoryViewController" customModule="iOsMo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="zNo-gR-XBI" userLabel="History View Controller" customClass="HistoryViewController" customModule="OsMo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="6bc-6m-82G">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1746,7 +1745,6 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="" image="History" id="9XY-YN-W3G">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="5"/>
                     </tabBarItem>
                     <connections>
                         <outlet property="tableView" destination="6bc-6m-82G" id="T58-Yr-U5h"/>
