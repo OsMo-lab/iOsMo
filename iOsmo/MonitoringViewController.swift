@@ -88,7 +88,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-        if SettingsManager.getKey(SettingKeys.trackerId) as? String != ""{
+        if SettingsManager.getKey(SettingKeys.trackerId) as String? != ""{
             if isSessionPaused || isMonitoringOn {
                 Analytics.logEvent("trip_stop", parameters: nil)
                 sendingManger.stopSendingCoordinates()
@@ -114,7 +114,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             MDView.text = ""
         }
         
-        if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as? String {
+        if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as String? {
             self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
         }
 

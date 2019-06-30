@@ -137,7 +137,7 @@ extension UIViewController {
                                                object: nil)
     }
     
-    func keyboardWillShowForResizing(notification: Notification) {
+    @objc func keyboardWillShowForResizing(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
             let window = self.view.window?.frame {
             // We're not just minusing the kb height from the view height because
@@ -151,7 +151,7 @@ extension UIViewController {
         }
     }
     
-    func keyboardWillHideForResizing(notification: Notification) {
+    @objc func keyboardWillHideForResizing(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let viewHeight = self.view.frame.height
             self.view.frame = CGRect(x: self.view.frame.origin.x,

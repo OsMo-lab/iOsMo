@@ -119,7 +119,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
             }
         }
         
-        let device = SettingsManager.getKey(SettingKeys.device) as! String
+        let device = SettingsManager.getKey(SettingKeys.device)! as String
         let url = URL(string: signAction == SignActions.SignIn ? "https://api.osmo.mobi/signin?" : "https://api.osmo.mobi/signup?")
         let session = URLSession.shared;
         var urlReq = URLRequest(url: url!);
@@ -191,7 +191,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
 
 
     func reload(){
-        let device = SettingsManager.getKey(SettingKeys.device) as! String
+        let device = SettingsManager.getKey(SettingKeys.device)! as String
         let url = "https://osmo.mobi/signin?type=m&key=\(device)"
         log.enqueue("Authenticationg at \(url)")
         if let checkURL = URL(string: url as String) {

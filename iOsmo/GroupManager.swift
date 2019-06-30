@@ -25,6 +25,8 @@ open class GroupManager{
     var groupsUpdated = ObserverSet<(Int, Any)>()
     var messagesUpdated = ObserverSet<(Int, Any)>()
     var messageSent = ObserverSet<(Int, String)>()
+    let trackDownloaded =  ObserverSet<(Track)>()
+    
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
 
     
@@ -32,7 +34,7 @@ open class GroupManager{
     var onDeactivateGroup : ObserverSetEntry<(Int, String)>?
     var onUpdateGroup : ObserverSetEntry<(Int, Any)>?
     var onMessagesUpdated : ObserverSetEntry<(Int, Any)>?
-    var trackDownloaded : ObserverSet<(Track)>?
+    
     var onEnterGroup : ObserverSetEntry<(Int, String)>?
     var onLeaveGroup : ObserverSetEntry<(Int, String)>?
     var onMessageSent : ObserverSetEntry<(Int, String)>?
@@ -563,8 +565,8 @@ open class GroupManager{
                         let fileURL = URL(fileURLWithPath: "\(path)\(filename)")
                         do {
                             try data?.write(to: fileURL)
-                            self.trackDownloaded?.notify(track)
                             print("Saved file \(path)\(filename)")
+                            self.trackDownloaded.notify((track))
                         } catch{
                             print("Error saving \(path)\(filename)")
                         }

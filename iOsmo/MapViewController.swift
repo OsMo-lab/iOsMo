@@ -199,12 +199,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         //Завершение загрузки трека
-        _ = self.groupManager.trackDownloaded?.add{
+      
+        
+        
+        _ = self.groupManager.trackDownloaded.add{
             let track = $0
             DispatchQueue.main.async {
+                print("trackDownloaded \(track.u)")
                 self.drawTrack(track: track)
             }
         }
+ 
         self.mapView.delegate = self
         self.addObserver(self, forKeyPath: #keyPath(User.subtitle), options: [.old,.new], context: nil)
     }
@@ -532,7 +537,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if (longNames) {
                     letter.text = title;
                 } else {
-                    letter.text = title.substring(to: title.index(title.startIndex, offsetBy: title.count>2 ? 2 : title.count))
+                    letter.text = String(title[..<title.index(title.startIndex, offsetBy: title.count>2 ? 2 : title.count)]);
                 }
             }
         }
@@ -703,7 +708,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if (longNames) {
                         letter.text = title;
                     } else {
-                        letter.text = title!.substring(to: title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count))
+                        letter.text = String(title![..<title!.index(title!.startIndex, offsetBy: title!.count>2 ? 2 : title!.count)]);
                     }
                 }
             }

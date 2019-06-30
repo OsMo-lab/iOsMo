@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/AccountViewController.swift"
-            timestampString = "580659796.006543"
+            timestampString = "582487746.795176"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "230"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/AppDelegate.swift"
-            timestampString = "581883473.859362"
+            timestampString = "582487746.795337"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "415"
@@ -62,28 +62,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/ConnectionManager.swift"
-            timestampString = "581883473.859901"
+            timestampString = "583265276.54965"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "458"
-            endingLineNumber = "458"
+            startingLineNumber = "457"
+            endingLineNumber = "457"
             landmarkName = "getGroups()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "iOsmo/MapViewController.swift"
-            timestampString = "581883473.860268"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -94,11 +78,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "iOsmo/MapViewController.swift"
-            timestampString = "581883473.860541"
+            timestampString = "583265276.549786"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "410"
-            endingLineNumber = "410"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "updateGroupsOnMap(groups:GP:)"
             landmarkType = "7">
          </BreakpointContent>

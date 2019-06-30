@@ -448,26 +448,16 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 let nickLabel = cell!.contentView.viewWithTag(9) as? UILabel{
                 typeBtn.setTitle(Group.getTypeName(groupType), for: UIControl.State.normal)
                 
-                var isUser = false;
                 if let user = SettingsManager.getKey(SettingKeys.user) {
                     if user.length > 0 {
-                        isUser = true;
                         nick.text = user as String;
                     }
                 }
-                /*
-                if isUser {
-                    email.isHidden = true;
-                    emailLabel.isHidden = true;
-                    nick.isHidden = true;
-                    nickLabel.isHidden = true;
-                } else {
- */
-                    email.isHidden = false;
-                    emailLabel.isHidden = false;
-                    nick.isHidden = false;
-                    nickLabel.isHidden = false;
-               //}
+
+                email.isHidden = false;
+                emailLabel.isHidden = false;
+                nick.isHidden = false;
+                nickLabel.isHidden = false;
             }
         } else {
             cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)

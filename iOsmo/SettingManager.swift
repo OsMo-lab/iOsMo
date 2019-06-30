@@ -40,7 +40,7 @@ struct SettingsManager {
 
         let fileManager = FileManager.default
        
-        if let getPath = getSettingPath as? String {
+        if let getPath = getSettingPath as String? {
             
             if !fileManager.fileExists(atPath: getPath){
                 

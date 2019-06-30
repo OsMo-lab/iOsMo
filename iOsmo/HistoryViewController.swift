@@ -131,10 +131,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                                 // 5
                                 // Before we assign the image, check whether the current cell is visible
                                 if let updateCell = tableView.cellForRow(at: indexPath) {
-                                    let img:UIImage! = UIImage(data: data)
-                                    let curTrackImage = updateCell.contentView.viewWithTag(4) as? UIImageView
-                                    curTrackImage?.image = img
-                                    self.cache.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                                    if let img:UIImage = UIImage(data: data), let curTrackImage = updateCell.contentView.viewWithTag(4) as? UIImageView {
+                                        
+                                        curTrackImage.image = img
+                                        self.cache.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                                    }
                                 }
                             })
                         }

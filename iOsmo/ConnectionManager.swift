@@ -44,8 +44,7 @@ open class ConnectionManager: NSObject{
     let groupListDownloaded = ObserverSet<[Group]>()
     
     let groupList = ObserverSet<[Group]>()
-    let trackDownoaded = ObserverSet<(Track)>()
-    
+
     let connectionRun = ObserverSet<(Int, String)>()
     let sessionRun = ObserverSet<(Int, String)>()
     let groupsEnabled = ObserverSet<Int>()
@@ -537,9 +536,11 @@ open class ConnectionManager: NSObject{
     }
     
     open func sendChatMessage(group: Int, text: String){
-        let jsonInfo: NSDictionary = try ["text": text]
+        let jsonInfo: NSDictionary = ["text": text]
+        
         do{
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
+        
             if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
                 let request = "\(Tags.groupChatSend.rawValue):\(group)|\(jsonString)"
                 send(request: request)
@@ -623,11 +624,8 @@ open class ConnectionManager: NSObject{
         
         var command = output.components(separatedBy: "|").first!
         
-        //let index = output.firstIndex(of: "|") ?? output.endIndex
         let index = command.count + 1
         let addict = index < output.count ? output.substring(with: output.index(output.startIndex, offsetBy: index)..<output.endIndex) : ""
-
-        //let addict = output.components(separatedBy: "|").last!""
 
         var param = ""
         if command.contains(":"){
