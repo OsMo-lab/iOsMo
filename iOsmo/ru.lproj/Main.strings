@@ -92,11 +92,7 @@
 "JBh-VC-BMZ.text" = "email";
 
 /* Class = "UILabel"; text = "iOsMo"; ObjectID = "JgA-OC-PKV"; */
-<<<<<<< HEAD
 "JgA-OC-PKV.text" = "OsMo";
-=======
-"JgA-OC-PKV.text" = "iOsMo";
->>>>>>> origin/master
 
 /* Class = "UIButton"; normalTitle = "Join"; ObjectID = "JLp-vB-cdg"; */
 "JLp-vB-cdg.normalTitle" = "Вступить";

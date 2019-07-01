@@ -88,7 +88,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-        if SettingsManager.getKey(SettingKeys.trackerId) as? String != ""{
+        if SettingsManager.getKey(SettingKeys.trackerId) as String? != ""{
             if isSessionPaused || isMonitoringOn {
                 Analytics.logEvent("trip_stop", parameters: nil)
                 sendingManger.stopSendingCoordinates()
@@ -108,10 +108,14 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
-        MDView.text = ""
+        if let md = SettingsManager.getKey(SettingKeys.motd) as String? {
+            MDView.text = md
+        } else {
+            MDView.text = ""
+        }
         
-        if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as? String {
-            self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+        if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as String? {
+            self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
         }
 
         //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
@@ -174,12 +178,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         uiSettings()
         //setup handler for open connection
-        connectionManager.dataSendStart.add {
+        connectionManager.dataSendStart.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-blue")
             }
         }
-        connectionManager.dataSendEnd.add {
+        connectionManager.dataSendEnd.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-green")
             }
@@ -200,13 +204,14 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if theChange {
                 self.onMessageOfTheDayUpdated = self.connectionManager.messageOfTheDayReceived.add{
                     self.MDView.text = $1
+                    if UIApplication.shared.applicationState != .active {
+                        let app = UIApplication.shared.delegate as! AppDelegate
+                        app.displayNotification("iOSMo", $1)
+                    }
                 }
                 self.groupManager.groupList(true)
-                self.connectionManager.getMessageOfTheDay() //Запрашиваем сообщение дня
                 self.connectionManager.activatePoolGroups(1) //Активируем получение обновления групп
-                
             } else if let glUpdated = self.onGroupListUpdated {
-                
                 self.groupManager.groupListUpdated.remove(glUpdated)
             }
             DispatchQueue.main.async {
@@ -221,7 +226,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 }
                 
                 if let trackerId = self.connectionManager.TrackerID{
-                    self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControlState())
+                    self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
                 }
                 self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
                 
@@ -244,13 +249,13 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             
             if theChange {
                 if let sUrl = self.connectionManager.sessionUrl {
-                    self.link.setTitle(sUrl, for: UIControlState())
+                    self.link.setTitle(sUrl, for: UIControl.State())
                     self.link.isEnabled = true
                 }
                 
                 self.log.enqueue("MVC: The session was opened")
                 
-                self.playStopBtn.setImage(UIImage(named: "stop-100"), for: UIControlState())
+                self.playStopBtn.setImage(UIImage(named: "stop-100"), for: UIControl.State())
                 self.pauseBtn.isHidden = false
                 
                 if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
@@ -259,15 +264,15 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
             } else {
                 
-                self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControlState())
+                self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControl.State())
                 self.link.isEnabled = false
                 
                 self.log.enqueue("MVC: The session was closed")
                 
                 self.pauseBtn.isHidden = true
-                self.playStopBtn.setImage(UIImage(named: "play-100"), for: UIControlState())
+                self.playStopBtn.setImage(UIImage(named: "play-100"), for: UIControl.State())
                 self.isSessionPaused = false
-                self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
+                self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControl.State())
                 //if self.mainAnnotation != nil {self.mapView.removeAnnotation(self.mainAnnotation!)}
                 //self.mainAnnotation = nil
                 
@@ -281,7 +286,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if $0 == 0 {
                 self.isMonitoringOn = false
                 self.isSessionPaused = true
-                self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControlState())
+                self.pauseBtn.setImage(UIImage(named: "play-32"), for: UIControl.State())
                 if let sessionTimer = self.sessionTimer {
                     sessionTimer.stop()
                 }
@@ -292,7 +297,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if $0 == 0 {
                 self.isMonitoringOn = true
                 self.isSessionPaused = false
-                self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControlState())
+                self.pauseBtn.setImage(UIImage(named: "pause-32"), for: UIControl.State())
                 if let sessionTimer = self.sessionTimer {
                     sessionTimer.start()
                 }
