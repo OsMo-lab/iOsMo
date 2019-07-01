@@ -67,7 +67,7 @@ public class User:NSObject, MKAnnotation {
     }
     
     open var mapId: String! {
-        return "u\(u!)";
+        return "u-\(groupId)-\(u!)";
     }
 
 }

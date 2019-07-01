@@ -29,6 +29,12 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             groupManager.sendChatMessage(group: Int(group.u) ?? 0, text: text)
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if (self.group.messages.count > 0) {
+            self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,18 +42,24 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let _ = $0
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
+                if (self.group.messages.count > 0) {
+                    self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
+                }
+                
             }
         }
-        _ = groupManager.messageSent.add {
+        _ = groupManager.messageSent.add{
             let _ = $0
             DispatchQueue.main.async {
                 self.message.text = ""
                 self.tableView.reloadData()
-                self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
+                if (self.group.messages.count > 0) {
+                    self.tableView.scrollToRow(at: IndexPath(item:self.group.messages.count-1, section: 0), at: .bottom, animated: true)
+                }
             }
         }
         setupViewResizerOnKeyboardShown()
+        
     }
 
     // MARK UITableViewDelegate
@@ -79,7 +91,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             cell = tableView.dequeueReusableCell(withIdentifier: messageCell, for: indexPath)
             if (cell == nil) {
-                cell = UITableViewCell(style:UITableViewCellStyle.default, reuseIdentifier:messageCell)
+                cell = UITableViewCell(style:UITableViewCell.CellStyle.default, reuseIdentifier:messageCell)
                 
             }
             if let messageLabel = cell!.contentView.viewWithTag(1) as? UILabel{

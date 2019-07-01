@@ -25,6 +25,8 @@ open class GroupManager{
     var groupsUpdated = ObserverSet<(Int, Any)>()
     var messagesUpdated = ObserverSet<(Int, Any)>()
     var messageSent = ObserverSet<(Int, String)>()
+    let trackDownloaded =  ObserverSet<(Track)>()
+    
     var onGroupListUpdated: ObserverSetEntry<[Group]>?
 
     
@@ -32,7 +34,11 @@ open class GroupManager{
     var onDeactivateGroup : ObserverSetEntry<(Int, String)>?
     var onUpdateGroup : ObserverSetEntry<(Int, Any)>?
     var onMessagesUpdated : ObserverSetEntry<(Int, Any)>?
-    var trackDownloaded : ObserverSet<(Track)>?
+    
+    var onEnterGroup : ObserverSetEntry<(Int, String)>?
+    var onLeaveGroup : ObserverSetEntry<(Int, String)>?
+    var onMessageSent : ObserverSetEntry<(Int, String)>?
+    var onCreateGroup : ObserverSetEntry<(Int, String)>?
     
     fileprivate let log = LogQueue.sharedLogQueue
     
@@ -180,7 +186,6 @@ open class GroupManager{
                                 point.lon = lon
                                 point.descr = descr!
                                 point.url = uURL
-                                
                             }
                         } else {
                             let pointNew = Point (json: jsonP as! Dictionary<String, AnyObject>)
@@ -242,7 +247,7 @@ open class GroupManager{
             self.saveCache()
             for group in $0 {
                 for track in group.tracks{
-                    self.downloadIfNeeded(track)
+                    self.getTrackData(track)
                 }
             }
         }
@@ -265,7 +270,7 @@ open class GroupManager{
     
     open func activateGroup(_ name: String){
         self.onActivateGroup = connection.groupActivated.add{
-            self.groupActivated.notify($0, $1)
+            self.groupActivated.notify(($0, $1))
             print("ACTIVATED! \($0) \(name)")
             if($0 == 0) {
                 do {
@@ -290,7 +295,7 @@ open class GroupManager{
     
     open func deactivateGroup(_ name: String) {
         self.onDeactivateGroup = connection.groupDeactivated.add{
-            self.groupDeactivated.notify($0, $1)
+            self.groupDeactivated.notify(($0, $1))
             
             print("DEACTIVATED \(name)! \($0) ")
             if($0 == 0) {
@@ -312,20 +317,30 @@ open class GroupManager{
     }
 
     
-    var onEnterGroup : ObserverSetEntry<(Int, String)>?
-    var onLeaveGroup : ObserverSetEntry<(Int, String)>?
-    var onMessageSent : ObserverSetEntry<(Int, String)>?
-    var onCreateGroup : ObserverSetEntry<(Int, String)>?
+    
 
     open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
         self.onCreateGroup = connection.groupCreated.add{
-            if ($0 != 0) {
+            print("GM.createGroup add")
+            /*if ($0 != 0) {
                 self.groupList(false)
+            }*/
+            
+            if ($0 == 0) {
+                do {
+                    if let data: Data = $1.data(using: String.Encoding.utf8), let jsonObject: Any? =  try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) {
+                        
+                        let group = Group.init(json: jsonObject as! Dictionary<String, AnyObject>)
+                        self.allGroups.append(group)
+                    }
+                    self.saveCache()
+                } catch {}
+                
             }
-            self.groupCreated.notify($0, $1)
             
+            
+            self.groupCreated.notify(($0, $1))
             print("CREATED! \($0) ")
-            
             self.connection.groupCreated.remove(self.onCreateGroup!)
         }
         connection.createGroup(name, email: email, nick: nick, gtype: gtype, priv: priv)
@@ -333,7 +348,7 @@ open class GroupManager{
     
     open func enterGroup(_ name: String, nick: String){
         self.onEnterGroup = connection.groupEntered.add{
-            self.groupEntered.notify($0, $1)
+            self.groupEntered.notify(($0, $1))
             print("ENTERED! \($0) ")
             self.connection.groupEntered.remove(self.onEnterGroup!)
         }
@@ -342,7 +357,7 @@ open class GroupManager{
     
     open func leaveGroup(_ u: String) {
         self.onLeaveGroup = connection.groupLeft.add{
-            self.groupLeft.notify($0, $1)
+            self.groupLeft.notify(($0, $1))
             if $0 == 0 {
                 let foundGroup = self.allGroups.filter{$0.u == "\(u)"}.first
                 let idx = self.allGroups.index(of: foundGroup!)
@@ -418,7 +433,7 @@ open class GroupManager{
                 foundGroup.messages.append(message)
                 
             }*/
-            self.messageSent.notify($0, $1)
+            self.messageSent.notify(($0, $1))
             self.connection.messageSent.remove(self.onMessageSent!)
         }
         connection.sendChatMessage(group: group, text: text)
@@ -512,15 +527,15 @@ open class GroupManager{
             self.clearCache()
             connection.getGroups()
         }
-        
     }
     
-    func downloadIfNeeded(_ track:Track) {
+    func getTrackData(_ track:Track) {
         var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
-        let filename = "\(track.u).gpx"
+        let filename = "\(track.groupId)-\(track.u).gpx"
         let path =  "\(paths[0])/channelsgpx/"
         let fileManager = FileManager.default;
         var shouldDownload = true;
+        print(track.url)
         
         if fileManager.fileExists(atPath: "\(path)\(filename)") {
             do {
@@ -550,8 +565,8 @@ open class GroupManager{
                         let fileURL = URL(fileURLWithPath: "\(path)\(filename)")
                         do {
                             try data?.write(to: fileURL)
-                            self.trackDownloaded?.notify(track)
                             print("Saved file \(path)\(filename)")
+                            self.trackDownloaded.notify((track))
                         } catch{
                             print("Error saving \(path)\(filename)")
                         }

@@ -40,13 +40,13 @@ open class Group: Equatable{
         if (gPermanent == nil ){
             let gPermentntInt = json["permanent"] as? Int
 
-            gPermanent = "\(gPermentntInt)"
+            gPermanent = "\(gPermentntInt ?? 0)"
         }
         
         let gURL = json["url"] as! String
         var gType = json["type"] as? String
         if (gType == nil ){
-            gType = "\(json["type"] as? Int)"
+            gType = "\(json["type"] as? Int ?? 0)"
         }
         let gActive = (json["active"] as? String ?? "") == "1"
         var gU = json["u"] as? String
@@ -82,6 +82,7 @@ open class Group: Equatable{
             for jsonP in jsonPoints{
                 let point = Point (json:jsonP as! Dictionary<String, AnyObject>)
                 point.groupId = Int(self.u) ?? 0
+                point.mapId = "p-\(self.u)-\(point.u)"
                 self.points.append(point)
                 
             }

@@ -27,7 +27,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     @IBOutlet weak var btnEnterGroup: UIButton!
     @IBOutlet weak var btnAddGroup: UIButton!
     var onConnectionRun: ObserverSetEntry<(Int, String)>?
-    var onGroupCreated: ObserverSetEntry<[Group]>?
+    //var onGroupCreated: ObserverSetEntry<[Group]>?
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var userName: UILabel!
@@ -197,10 +197,10 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 }
             }
         }
-        _ = groupManager.groupCreated.add {
+        _ = groupManager.groupCreated.add{
             if ($0.0 == 0 ) {
                 self.groupAction = GroupActions.view
-                
+                self.btnAddGroup.isHidden = false
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -307,17 +307,17 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         if let user = SettingsManager.getKey(SettingKeys.user) {
             if user.length > 0 {
                 userName.text = String(user)
-                loginBtn.setImage(UIImage(named: "exit-32"), for: UIControlState())
+                loginBtn.setImage(UIImage(named: "exit-32"), for: UIControl.State())
                 self.successLogin = true
             } else {
                 userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
-                loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
+                loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
                 self.successLogin = false
             }
         } else {
             
             userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
-            loginBtn.setImage(UIImage(named: "enter-32"), for: UIControlState())
+            loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
             self.successLogin = false
         }
     }
@@ -421,7 +421,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
 
            cell = tableView.dequeueReusableCell(withIdentifier: enterGroupCell, for: indexPath)
             if (cell == nil) {
-                cell = UITableViewCell(style:UITableViewCellStyle.subtitle, reuseIdentifier:enterGroupCell)
+                cell = UITableViewCell(style:UITableViewCell.CellStyle.subtitle, reuseIdentifier:enterGroupCell)
             }
            if let gName = cell!.contentView.viewWithTag(1) as? UITextField,
                 let nick = cell!.contentView.viewWithTag(2) as? UITextField,
@@ -438,7 +438,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
 
             cell = tableView.dequeueReusableCell(withIdentifier: newGroupCell, for: indexPath)
             if (cell == nil) {
-                cell = UITableViewCell(style:UITableViewCellStyle.default, reuseIdentifier:newGroupCell)
+                cell = UITableViewCell(style:UITableViewCell.CellStyle.default, reuseIdentifier:newGroupCell)
                 
             }
             if let typeBtn = cell!.contentView.viewWithTag(7) as? UIButton,
@@ -446,33 +446,23 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 let nick = cell!.contentView.viewWithTag(6) as? UITextField,
                 let emailLabel = cell!.contentView.viewWithTag(8) as? UILabel,
                 let nickLabel = cell!.contentView.viewWithTag(9) as? UILabel{
-                typeBtn.setTitle(Group.getTypeName(groupType), for: UIControlState.normal)
+                typeBtn.setTitle(Group.getTypeName(groupType), for: UIControl.State.normal)
                 
-                var isUser = false;
                 if let user = SettingsManager.getKey(SettingKeys.user) {
                     if user.length > 0 {
-                        isUser = true;
                         nick.text = user as String;
                     }
                 }
-                /*
-                if isUser {
-                    email.isHidden = true;
-                    emailLabel.isHidden = true;
-                    nick.isHidden = true;
-                    nickLabel.isHidden = true;
-                } else {
- */
-                    email.isHidden = false;
-                    emailLabel.isHidden = false;
-                    nick.isHidden = false;
-                    nickLabel.isHidden = false;
-               //}
+
+                email.isHidden = false;
+                emailLabel.isHidden = false;
+                nick.isHidden = false;
+                nickLabel.isHidden = false;
             }
         } else {
             cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)
             if (cell == nil) {
-                cell = UITableViewCell(style:UITableViewCellStyle.subtitle, reuseIdentifier:groupCell)
+                cell = UITableViewCell(style:UITableViewCell.CellStyle.subtitle, reuseIdentifier:groupCell)
                 
             }
             let group = groupManager.allGroups[row]
@@ -482,7 +472,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 //let indicator = cell!.contentView.viewWithTag(3) as? UIActivityIndicatorView,
                 let btnURL = cell!.contentView.viewWithTag(4) as? UIButton{
                 groupName.text = "\(group.name)(\(group.nick))"
-                btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControlState.normal)
+                btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControl.State.normal)
                 activeSwitch.isOn = group.active
             }
             
@@ -524,9 +514,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let section = (indexPath as NSIndexPath).section
-        if editingStyle == UITableViewCellEditingStyle.delete {
+        if editingStyle == UITableViewCell.EditingStyle.delete {
             
             if (section < 2) {
 
