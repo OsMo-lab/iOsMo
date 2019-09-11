@@ -9,10 +9,6 @@
 
 import Foundation
 
-enum DataRequestResult<T> {
-    case success(T)
-    case failure(Error)
-}
 
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {

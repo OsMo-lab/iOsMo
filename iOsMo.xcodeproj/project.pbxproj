@@ -483,6 +483,7 @@
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = SF5DP65BZ4;
 						LastSwiftMigration = 1010;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -508,8 +509,10 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 293C95671A34B217005DD4CE;
 			productRefGroup = 293C95711A34B217005DD4CE /* Products */;
@@ -794,6 +797,7 @@
 				CODE_SIGN_ENTITLEMENTS = iOsmo/iOsmo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -812,6 +816,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
@@ -829,6 +834,7 @@
 				CODE_SIGN_ENTITLEMENTS = iOsmo/iOsmo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -847,6 +853,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
