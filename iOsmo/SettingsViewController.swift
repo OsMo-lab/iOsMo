@@ -15,7 +15,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     var groupManager = GroupManager.sharedGroupManager
     
     var clickCount = 0;
-    let MIN_SEND_TIME = 4;
+    let MIN_SEND_TIME = 0;
     let MIN_LOC_DISTANCE = 0;
     
     

@@ -82,15 +82,10 @@ open class GroupManager{
                 if let jsonUsers = g["users"] as? Array<AnyObject> {
                     for jsonU in jsonUsers{
                         let u = jsonU as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
-                        let uTime = (u["time"] as? Double) ?? 0
+                        let uId = (u["u"] as? Int) ?? Int(u["u"] as? String ?? "0")!
+                        let uE = (u["e"] as? Int) ?? Int(u["e"] as? String ?? "0")!
+                        
+                        let uTime = (u["time"] as? Double) ?? atof(u["time"] as? String ?? "0")
                         let deleteUser = u["deleted"] as? String
                         
                         if let user = self.getUser($0,user: uId) {
@@ -133,15 +128,9 @@ open class GroupManager{
                 } else if let jsonLeave = g["leave"] as? Array<AnyObject> {
                     for jsonL in jsonLeave{
                         let u = jsonL as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
+                        let uId = (u["u"] as? Int) ?? Int(u["u"] as? String ?? "0")!
+                        let uE = (u["e"] as? Int) ?? Int(u["e"] as? String ?? "0")!
                         
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
                         if let user = self.getUser($0,user: uId) {
                             let uIdx = foundGroup.users.index(of: user)
                             if uIdx! > -1 {
@@ -156,15 +145,9 @@ open class GroupManager{
                 } else if let jsonPoints = g["point"] as? Array<AnyObject> {
                     for jsonP in jsonPoints {
                         let u = jsonP as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
+                        let uId = (u["u"] as? Int) ?? Int(u["u"] as? String ?? "0")!
+                        let uE = (u["e"] as? Int) ?? Int(u["e"] as? String ?? "0")!
                         
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
                         if let point = self.getPoint($0,point: uId) {
                             if (u["deleted"] as? String) != nil {
                                 let uIdx = foundGroup.points.index(of: point)
@@ -173,11 +156,11 @@ open class GroupManager{
                                 }
                             } else {
                                 
-                                let lat = atof(u["lat"] as! String)
-                                let lon = atof(u["lon"] as! String)
+                                let lat = u["lat"] as? Double ?? atof((u["lat"] as? String) ?? "")
+                                let lon = u["lon"] as? Double ?? atof((u["lon"] as? String) ?? "")
                                 let uName = u["name"] as? String
                                 let descr = u["description"] as? String
-                                let uColor = u["color"] as! String
+                                let uColor = u["color"] as? String ?? ""
                                 let uURL = u["url"] as? String ?? ""
                                 
                                 point.color = uColor
@@ -199,15 +182,9 @@ open class GroupManager{
                 } else if let jsonTracks = g["track"] as? Array<AnyObject> {
                     for jsonT in jsonTracks {
                         let u = jsonT as! Dictionary<String, AnyObject>
-                        var uId = (u["u"] as? Int) ?? 0
-                        if (uId == 0) {
-                            uId = Int(u["u"] as! String)!
-                        }
+                        let uId = (u["u"] as? Int) ?? Int(u["u"] as? String ?? "0")!
+                        let uE = (u["e"] as? Int) ?? Int(u["e"] as? String ?? "0")!
                         
-                        var uE = (u["e"] as? Int) ?? 0
-                        if (uE == 0) {
-                            uE = Int(u["e"] as! String)!
-                        }
                         if let track = self.getTrack($0,track: uId) {
                             if (u["deleted"] as? String) != nil {
                                 let uIdx = foundGroup.tracks.index(of: track)
