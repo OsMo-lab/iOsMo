@@ -46,6 +46,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(item:0, section: 1), at: .top, animated: true)
             }
            
         }
@@ -108,6 +109,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.tableView.scrollToRow(at: IndexPath(item:0, section: 0), at: .top, animated: true)
+                
             }
         }
     }

@@ -10,16 +10,14 @@
 
 
 import Foundation
-import FirebaseInstanceID
-import FirebaseMessaging
 import CoreLocation
 import AudioToolbox
 import AVFoundation
 
-let authUrl = URL(string: "https://api.osmo.mobi/new?")
-let servUrl = URL(string: "https://api.osmo.mobi/serv?") // to get server info
+let authUrl = URL(string: "https://api2.osmo.mobi/new?")
+let servUrl = URL(string: "https://api2.osmo.mobi/serv?") // to get server info
 let iOsmoAppKey = "Jdf43G_fVl3Opa42"
-let apiUrl = "https://api.osmo.mobi/iProx?"
+let apiUrl = "https://api2.osmo.mobi/iProx?"
 
 open class ConnectionManager: NSObject{
 
