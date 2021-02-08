@@ -97,9 +97,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
         
-        if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
-            SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
-        }
 
         if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
             SettingsManager.setKey("5", forKey: SettingKeys.locDistance)

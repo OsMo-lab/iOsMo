@@ -34,6 +34,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isSessionPaused = false
     var isTracked = true
     
+    
     var onMessageOfTheDayUpdated: ObserverSetEntry<(Int, String)>?
     var onSessionPaused: ObserverSetEntry<(Int)>?
     var onSessionStarted: ObserverSetEntry<(Int)>?
@@ -95,15 +96,66 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
                 //UIApplication.shared.isIdleTimerDisabled = false
             } else {
-                Analytics.logEvent("trip_start", parameters: nil)
-                sendingManger.startSendingCoordinates(false)
+                self.SelectPrivacy()
                 
-                //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
             }
         }
         
     }
 
+    func SelectTransportType() {
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Transport type", comment: "Select type of transport"), preferredStyle: .actionSheet)
+        var idx:Int = 0
+        
+        while (idx < connectionManager.transports.count) {
+            let transport = connectionManager.transports[idx];
+            if (transport.name != "") {
+                myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                    self.connectionManager.transportType = transport.id;
+                    
+                    Analytics.logEvent("trip_start", parameters: nil)
+                    self.sendingManger.startSendingCoordinates(false)
+                    
+                    //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+                }))
+            }
+            idx += 1;
+        }
+        self.present(myAlert, animated: true, completion: nil)
+    }
+    
+    func SelectPrivacy() {
+        func privacyName(_ privacy: Int) -> String {
+            var name = ""
+            switch privacy {
+                case Privacy.everyone.rawValue:
+                    name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
+                case Privacy.shared.rawValue:
+                    name = NSLocalizedString("Shared", comment: "Trip visible by link")
+                case Privacy.me.rawValue:
+                    name = NSLocalizedString("None", comment: "Trip visible to noone")
+                default:
+                    name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
+            }
+            return name
+        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Set visibility of trip", comment: "Set visibility of trip"), preferredStyle: .actionSheet)
+        var idx:Int = 0
+        
+        while (idx < Privacy.PRIVACY_COUNT.rawValue) {
+            let name = privacyName(idx);
+            if (name != "") {
+                myAlert.addAction(UIAlertAction(title: name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                    self.connectionManager.trip_privacy = idx;
+                    self.SelectTransportType()
+                    
+                }))
+            }
+            idx += 1;
+        }
+        self.present(myAlert, animated: true, completion: nil)
+    }
+    
     func uiSettings(){
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
@@ -172,33 +224,33 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         
         super.viewDidLoad()
                 
-        sendingManger.sentObservers.add(self, type(of: self).onSentCoordinate)
+        _ = sendingManger.sentObservers.add(self, type(of: self).onSentCoordinate)
        
         sessionTimer = SessionTimer(handler: updateSessionValues)
         
         uiSettings()
         //setup handler for open connection
-        connectionManager.dataSendStart.add{
+        _ = connectionManager.dataSendStart.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-blue")
             }
         }
-        connectionManager.dataSendEnd.add{
+        _ = connectionManager.dataSendEnd.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-green")
             }
         }
-        connectionManager.connectionStart.add{
+        _ = connectionManager.connectionStart.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-yellow")
             }
         }
-        connectionManager.connectionClose.add{
+        _ = connectionManager.connectionClose.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-red")
             }
         }
-        connectionManager.connectionRun.add{
+        _ = connectionManager.connectionRun.add{
             let theChange = ($0.0 == 0)
             
             if theChange {
@@ -241,7 +293,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
         }
         
-        connectionManager.sessionRun.add{
+        _ = connectionManager.sessionRun.add{
             let theChange = ($0.0 == 0)
             
             self.isMonitoringOn = theChange

@@ -55,7 +55,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
         self.onHistoryUpdated = self.connectionManager.historyReceived.add{
             let jsonarr = $1 as! Array<AnyObject>
-            let res = $0
+            _ = $0
             
             for m in jsonarr {
                 let track = History.init(json: m as! Dictionary<String, AnyObject>)

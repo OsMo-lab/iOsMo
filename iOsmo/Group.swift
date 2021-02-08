@@ -43,7 +43,6 @@ open class Group: Equatable{
             gPermanent = "\(gPermentntInt ?? 0)"
         }
         
-        let gURL = json["url"] as! String
         var gType = json["type"] as? String
         if (gType == nil ){
             gType = "\(json["type"] as? Int ?? 0)"
@@ -55,7 +54,7 @@ open class Group: Equatable{
             gU = "\(gUint)"
         }
         
-        self.u =  gU!
+        self.u = json["u"] as? String ?? (("\(json["u"] as? Int ?? 0)") )
         self.name = gName
 
         self.active = gActive
@@ -63,7 +62,7 @@ open class Group: Equatable{
         self.policy = gPolicy
         self.nick = gNick
         self.color = gColor
-        self.url = gURL
+        self.url = json["url"] as! String
         if (gPermanent != nil) {
             self.permanent = gPermanent!
         }

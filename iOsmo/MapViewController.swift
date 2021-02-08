@@ -812,7 +812,7 @@ class OSMTileOverlay: MKTileOverlay {
     }
     
     func cacheTile(for url:String, data: Data) {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let fullPath =  "\(paths[0])/\(url)"
         let path = URL(fileURLWithPath: fullPath).deletingLastPathComponent().path
         
@@ -838,7 +838,7 @@ class OSMTileOverlay: MKTileOverlay {
         let url = self.url(forTilePath: path)
         
         let urlString = "\(url.host!)\(url.path)"
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
 
         let path =  "\(paths[0])/\(urlString)"
         let fileManager = FileManager.default;
@@ -849,16 +849,12 @@ class OSMTileOverlay: MKTileOverlay {
                 let fileDate = attr[FileAttributeKey.modificationDate] as! Date;
                 
                 if fileDate.timeIntervalSinceNow < 60 * 60 * 24 * 3 {
-                    do {
-                        let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)")
-                        if file != nil {
-                            // Read all the data
-                            let data = file?.readDataToEndOfFile()
-                            result(data, nil)
-                            return
-                        }
-                     } catch {
-                        
+                    let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)")
+                    if file != nil {
+                        // Read all the data
+                        let data = file?.readDataToEndOfFile()
+                        result(data, nil)
+                        return
                     }
                 }
             } catch {

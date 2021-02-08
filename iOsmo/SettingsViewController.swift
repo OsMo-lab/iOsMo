@@ -23,7 +23,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var resetAuthSwitcher: UISwitch!
     @IBOutlet weak var showTracksSwitcher: UISwitch!
     @IBOutlet weak var longNamesSwitcher: UISwitch!
-    @IBOutlet weak var intervalTextField: UITextField!
     @IBOutlet weak var distanceTextField: UITextField!
     @IBOutlet weak var locTimeTextField: UITextField!
     @IBOutlet weak var mapStyleButton: UIButton!
@@ -71,19 +70,10 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func textFieldShouldEndEditing(_ textField: UITextField){
         if var value: Int = Int(textField.text!) {
-            if textField == intervalTextField {
-                //Требуется остановить - заново запустить трекинг, для активизации введенного значения
-                if (value < MIN_SEND_TIME) {
-                    value = MIN_SEND_TIME
-                } else if (value > 60) {
-                    value = 60
-                }
-                SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.sendTime)
-                
-            } else if textField == distanceTextField {
+            if textField == distanceTextField {
                 if (value < MIN_LOC_DISTANCE) {
                     value = MIN_LOC_DISTANCE
-                }else if (value > 1000) {
+                } else if (value > 1000) {
                     value = 1000
                 }
                 SettingsManager.setKey(String(value) as NSString, forKey: SettingKeys.locDistance)
@@ -151,12 +141,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             }
         }
         
-        if var sendTime = SettingsManager.getKey(SettingKeys.sendTime) {
-            if sendTime.length == 0 {
-                sendTime = String(MIN_SEND_TIME) as NSString
-            }
-            intervalTextField.text = sendTime as String
-        }
         if var locDistance = SettingsManager.getKey(SettingKeys.locDistance) {
             if locDistance.length == 0 {
                 locDistance = String(MIN_LOC_DISTANCE) as NSString

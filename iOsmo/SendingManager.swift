@@ -139,16 +139,8 @@ open class SendingManager: NSObject{
             log.enqueue("Sending Manager: start Sending")
             self.lcSendTimer?.invalidate()
             self.lcSendTimer = nil
-            var sendTime:TimeInterval = 4;
-            if let sT = SettingsManager.getKey(SettingKeys.sendTime) {
-                sendTime  = sT.doubleValue
-                if sendTime < 4 {
-                    sendTime = 4;
-                }
             
-            }
-            
-            self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
+            self.lcSendTimer = Timer.scheduledTimer(timeInterval: 0, target: self, selector: aSelector, userInfo: nil, repeats: true)
             if connectionManager.sessionOpened {
                 sessionStarted.notify((0))
             }

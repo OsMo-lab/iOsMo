@@ -318,7 +318,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.successLogin = false
             }
         } else {
-            
             userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
             loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
             self.successLogin = false
@@ -326,9 +325,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func loginCancelled (_ controller: AuthViewController) -> Void {
-        
         controller.dismiss(animated: true, completion: nil)
-       
     }
     
     // MARK UITableViewDataSource
@@ -432,7 +429,13 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 
                 gName.text = groupToEnter
                 gName.isEnabled = true
-                nick.text = userName.text
+                if let user = SettingsManager.getKey(SettingKeys.user) {
+                    if user.length > 0 {
+                        nick.text = user as String;
+                    } else {
+                        nick.text = "";
+                    }
+                }
                 nick.isEnabled = true
                 btn.isHidden = false
                 
@@ -454,6 +457,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 if let user = SettingsManager.getKey(SettingKeys.user) {
                     if user.length > 0 {
                         nick.text = user as String;
+                    } else {
+                        nick.text = "";
                     }
                 }
 

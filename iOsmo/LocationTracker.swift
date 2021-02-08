@@ -140,7 +140,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             
         }
         
-        let locInterval = SettingsManager.getKey(SettingKeys.sendTime)!.doubleValue;
+        let locInterval = 0.0;
         let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue;
         
         for loc in locations {
@@ -192,17 +192,20 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-        switch (error){
-        	case CLError.Code.network:
-                log.enqueue("locationManager error \(error)")
-            case CLError.Code.denied:
-                log.enqueue("locationManager error \(error)")
-            case CLError.Code.locationUnknown:
-                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
-            default:
-                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
+        if let clErr = error as? CLError {
+            switch (clErr){
+                case CLError.network:
+                    log.enqueue("locationManager error \(error)")
+                case CLError.denied:
+                    log.enqueue("locationManager error \(error)")
+                case CLError.locationUnknown:
+                    log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
+                default:
+                    log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
+            }
+            self.isGettingLocationOnce = false
         }
-        self.isGettingLocationOnce = false
+        
     }
     
     open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {

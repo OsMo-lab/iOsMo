@@ -25,7 +25,7 @@ struct SettingsManager {
         SettingsManager.setKey("", forKey: SettingKeys.device)
         SettingsManager.setKey("", forKey: SettingKeys.user)
         SettingsManager.setKey("", forKey: SettingKeys.trackerId)
-        _ =  GroupManager.sharedGroupManager.clearCache()
+        GroupManager.sharedGroupManager.clearCache()
 
     }
     static func setKey(_ key: NSString, forKey: SettingKeys){

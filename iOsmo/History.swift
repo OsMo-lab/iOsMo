@@ -59,7 +59,7 @@ open class History: Equatable {
     }
     
     open func getGPXOptimalData() -> XML? {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(u).gpx"
         let path =  "\(paths[0])/history/gpx_optimal/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
@@ -79,7 +79,7 @@ open class History: Equatable {
     }
     
     open func getGPXFullData() -> XML? {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(u).gpx"
         let path =  "\(paths[0])/history/gpx_full/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")

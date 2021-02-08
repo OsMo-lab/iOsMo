@@ -100,7 +100,6 @@ enum SettingKeys: String {
     case motdtime = "motdtime"
     
     case user = "user"
-    case sendTime = "sendTime"
     case locDistance = "locDistance"
 
     case logView = "logView"
@@ -190,3 +189,11 @@ enum TileSource: Int32 {
     ,Sputnik
     ,SOURCES_COUNT
 }
+
+enum Privacy: Int {
+    case everyone = 0
+    ,shared
+    ,me
+    ,PRIVACY_COUNT
+}
+

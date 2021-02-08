@@ -69,6 +69,7 @@
 		4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */; };
 		4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4DEACF1921E13CAE00D1A32D /* Push.txt */; };
 		4DEACF2221EFA99C00D1A32D /* MonitoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEACF2121EFA99B00D1A32D /* MonitoringViewController.swift */; };
+		4DFF727E25D1767F00DFAF52 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFF727D25D1767F00DFAF52 /* Transport.swift */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
 /* End PBXBuildFile section */
@@ -171,6 +172,7 @@
 		4DEACF1721E0A3C800D1A32D /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Firebase/module.modulemap; sourceTree = SOURCE_ROOT; };
 		4DEACF1921E13CAE00D1A32D /* Push.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Push.txt; sourceTree = "<group>"; };
 		4DEACF2121EFA99B00D1A32D /* MonitoringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonitoringViewController.swift; sourceTree = "<group>"; };
+		4DFF727D25D1767F00DFAF52 /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		F946C9B81A3F08A30073A273 /* SendingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendingManager.swift; sourceTree = "<group>"; };
 		F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -332,6 +334,7 @@
 				4DB4CE661EA2B797009E96B5 /* Track.swift */,
 				4DADA8E4222C14D200ACB919 /* ChatMessage.swift */,
 				4D08BFFC2295A9DE00EECB33 /* History.swift */,
+				4DFF727D25D1767F00DFAF52 /* Transport.swift */,
 			);
 			name = Groups;
 			sourceTree = "<group>";
@@ -506,10 +509,9 @@
 			};
 			buildConfigurationList = 293C956B1A34B217005DD4CE /* Build configuration list for PBXProject "iOsMo" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 				ru,
@@ -606,6 +608,7 @@
 				4D8B78451FA7624A00E1069D /* MapViewController.swift in Sources */,
 				293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */,
 				4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */,
+				4DFF727E25D1767F00DFAF52 /* Transport.swift in Sources */,
 				4DADA8E5222C14D200ACB919 /* ChatMessage.swift in Sources */,
 				4D68B26E222BC22F00F6CC8E /* ChatViewController.swift in Sources */,
 				4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */,
@@ -798,7 +801,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 174;
+				CURRENT_PROJECT_VERSION = 175;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -813,7 +816,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.20;
+				MARKETING_VERSION = 1.21;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = OsMo;
@@ -837,7 +840,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 174;
+				CURRENT_PROJECT_VERSION = 175;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -852,7 +855,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.20;
+				MARKETING_VERSION = 1.21;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = OsMo;

@@ -140,7 +140,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
 
                 return
             }
-            let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            //let dataStr = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
             
             
             do {

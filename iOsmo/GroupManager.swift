@@ -353,7 +353,7 @@ open class GroupManager{
     
     open func saveCache() {
         if self.allGroups.count > 0 {
-            var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+            let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
             let path =  "\(paths[0])/GROUP.json"
             do {
                 var jsonInfo : [NSDictionary] = [NSDictionary]()
@@ -418,7 +418,7 @@ open class GroupManager{
     
     open func clearCache() {
         log.enqueue("Clearing GROUP cache")
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         var path =  "\(paths[0])/GROUP.json"
         let fileManager = FileManager.default;
 
@@ -441,7 +441,7 @@ open class GroupManager{
     open func groupList(_ cached: Bool){
         var shouldDownload = true;
         if (cached) {
-            var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+            let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
             let filename = "GROUP.json"
             let path =  "\(paths[0])/"
             let fileManager = FileManager.default;
@@ -468,13 +468,10 @@ open class GroupManager{
                                     
                                     if let jsonGroups = jsonObject as? Array<Any> {
                                         for jsonG in jsonGroups{
-                                            do {
-                                                let group = try Group.init(json: jsonG as! Dictionary<String, AnyObject>)
+                                            let group = Group.init(json: jsonG as! Dictionary<String, AnyObject>)
                                                 
-                                                allGroups.append(group)
-                                            } catch {
-                                                
-                                            }
+                                            allGroups.append(group)
+                                            
                                         }
                                     }
                                 }
@@ -507,7 +504,7 @@ open class GroupManager{
     }
     
     func getTrackData(_ track:Track) {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(track.groupId)-\(track.u).gpx"
         let path =  "\(paths[0])/channelsgpx/"
         let fileManager = FileManager.default;

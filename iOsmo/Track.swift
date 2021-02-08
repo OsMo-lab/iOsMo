@@ -48,7 +48,7 @@ open class Track: Equatable {
     }
     
     open func getTrackData() -> XML? {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(groupId)-\(u).gpx"
         let path =  "\(paths[0])/channelsgpx/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
