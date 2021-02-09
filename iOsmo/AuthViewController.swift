@@ -170,7 +170,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
     }
     
     @IBAction func forgotPassword(_ sender: UIButton) {
-        UIApplication.shared.openURL(URL(string: "https://osmo.mobi/forgot")!)
+        UIApplication.shared.openURL(URL(string: "https://osmo.mobi/forgot?utm_campaign=OsMo.App&utm_source=iOsMo&utm_term=forgot")!)
     }
     
     func alert(_ title: String, message: String) {

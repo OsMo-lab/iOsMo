@@ -90,14 +90,14 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
             var mapStyle: Int32;
             
             switch act.title! {
-            case "Hot OSM":
-                mapStyle = TileSource.Hotosm.rawValue
-            case "wiki":
-                mapStyle = TileSource.wiki.rawValue
-            case "Sputnik":
-                mapStyle = TileSource.Sputnik.rawValue
-            default:
-                mapStyle = TileSource.Mapnik.rawValue
+                case "OSM OpenTopo":
+                    mapStyle = TileSource.OpenTopo.rawValue
+                case "OSM Cycle":
+                    mapStyle = TileSource.Cycle.rawValue
+                case "Mapy.cz":
+                    mapStyle = TileSource.MapyCZ.rawValue
+                default:
+                    mapStyle = TileSource.Mapnik.rawValue
 
             }
             self.mapStyleButton.setTitle(act.title, for: .normal)
@@ -165,14 +165,14 @@ class SettingsViewController: UIViewController, UITextFieldDelegate {
     func tileSourceName(_ source: Int32) -> String {
         var mapTitle = ""
         switch source {
-            case TileSource.Hotosm.rawValue:
-                mapTitle = "Hot OSM"
-            case TileSource.wiki.rawValue:
-                mapTitle  = "wiki"
-            case TileSource.Sputnik.rawValue:
-                mapTitle  = "Sputnik"
+            case TileSource.OpenTopo.rawValue:
+                mapTitle = "OSM OpenTopo"
+            case TileSource.MapyCZ.rawValue:
+                mapTitle  = "Mapy.cz"
+            case TileSource.Cycle.rawValue:
+                mapTitle  = "OSM Cycle"
             default:
-                mapTitle  = "Mapnik"
+                mapTitle  = "OSM Mapnik"
         }
         return mapTitle
         

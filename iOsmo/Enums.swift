@@ -184,9 +184,9 @@ enum AnnotationType: Int {
 
 enum TileSource: Int32 {
     case Mapnik = 0
-    ,Hotosm
-    ,wiki
-    ,Sputnik
+    ,OpenTopo
+    ,Cycle
+    ,MapyCZ
     ,SOURCES_COUNT
 }
 

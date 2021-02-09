@@ -104,7 +104,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
 
     func SelectTransportType() {
-        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Transport type", comment: "Select type of transport"), preferredStyle: .actionSheet)
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Transport type", comment: "Select type of transport"), preferredStyle: .alert)
         var idx:Int = 0
         
         while (idx < connectionManager.transports.count) {
@@ -139,7 +139,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
             return name
         }
-        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Set visibility of trip", comment: "Set visibility of trip"), preferredStyle: .actionSheet)
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Set visibility of trip", comment: "Set visibility of trip"), preferredStyle: .alert)
         var idx:Int = 0
         
         while (idx < Privacy.PRIVACY_COUNT.rawValue) {

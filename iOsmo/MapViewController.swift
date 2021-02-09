@@ -633,14 +633,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         var template: String;
         
         switch self.tileSource {
-            case TileSource.Hotosm:
-                template = "https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png";
-            case TileSource.Sputnik:
-                template = "http://{s}.tiles.maps.sputnik.ru/{z}/{x}/{y}.png"
-            case TileSource.wiki:
-                template = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png"
+            case TileSource.OpenTopo:
+                template = "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png";
+            case TileSource.Cycle:
+                template = "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
+            case TileSource.MapyCZ:
+                template = "https://m{n}.mapserver.mapy.cz/turist-m/{z}-{x}-{y}"
             default:
-                template = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                template = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         }
         
         if (tileRenderer != nil) {
@@ -803,6 +803,25 @@ class OSMTileOverlay: MKTileOverlay {
                 balance = ""
             }
             sUrl = sUrl?.replacingOccurrences(of: "{s}", with: balance)
+        }
+        if (sUrl?.contains("{n}"))! {
+            switch ((path.x + path.y + path.z) % 3) {
+                case 0:
+                    balance = "1"
+                    break;
+                case 1:
+                    balance = "2"
+                    break;
+                case 2:
+                    balance = "3"
+                    break;
+                case 3:
+                    balance = "4"
+                    break;
+            default:
+                balance = ""
+            }
+            sUrl = sUrl?.replacingOccurrences(of: "{n}", with: balance)
         }
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
