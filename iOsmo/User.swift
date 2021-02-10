@@ -27,12 +27,7 @@ public class User:NSObject, MKAnnotation {
     public dynamic var subtitle: String? = ""
     
     init(json:Dictionary<String, AnyObject>) {
-        var uId = json["u"] as? String
-        if (uId == nil) {
-            let uIdInt = json["u"] as! Int
-            uId = "\(uIdInt)"
-        }
-        self.u = uId
+        self.u = json["u"] as? String ?? "\(json["u"] as! Int)"
         self.name = json["name"] as? String ?? ""
         self.connected = (json["connected"] as? Double) ?? 0
         self.color = (json["color"] as? String) ?? ""

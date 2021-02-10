@@ -64,3 +64,22 @@
 /* Unknown user */
 "Unknown" = "Неизвестен";
 
+/* Trip visible to everyone" */
+"Everyone" = "Всем";
+
+/* Trip visible by link */
+"Shared" = "По ссылке";
+
+/* Trip visible to noone*/
+"None" = "Никому";
+
+/* Set visibility of trip */
+"Set visibility of trip" = "Укажите доступность поездки";
+
+/* Select type of transport */
+"Transport type" = "Укажите транспорт";
+
+/* Select map style */
+"Map style" = "Стиль карты";
+
+

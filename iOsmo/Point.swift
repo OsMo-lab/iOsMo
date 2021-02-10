@@ -26,7 +26,6 @@ public class Point: NSObject, MKAnnotation {
     public var subtitle: String?   //MKAnnonation protocol
 
     init(json: Dictionary<String, AnyObject>) {
-        print(json)
         self.u = json["u"] as! Int
         self.lat = atof(json["lat"] as? String ?? "")
         self.lon = atof(json["lon"] as? String ?? "")

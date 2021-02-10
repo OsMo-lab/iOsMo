@@ -43,8 +43,8 @@ open class SendingManager: NSObject{
         super.init()
         
         self.onLocationUpdated = locationTracker.locationUpdated.add {
+            self.log.enqueue("SendingManager: onLocationUpdated")
             if self.connectionManager.isGettingLocation  {
-
                 self.connectionManager.sendCoordinate($0)
                 self.connectionManager.isGettingLocation = false
                 //self.locationTracker.locationUpdated.remove(self.onLocationUpdated!)
