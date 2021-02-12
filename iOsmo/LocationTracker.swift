@@ -172,10 +172,10 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     if !(self.isGettingLocationOnce) {
                         self.lastLocations.append(locationModel)
                         self.allSessionLocations.append(locationModel)
-                    } else {
-                        locationUpdated.notify(locationModel)
                     }
-
+                    locationUpdated.notify(locationModel)
+                    
+    
                     prevLM = locationModel;
                     
                 }

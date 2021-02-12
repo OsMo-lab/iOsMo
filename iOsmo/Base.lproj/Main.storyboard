@@ -929,7 +929,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P3p-0b-A4E">
-                                        <rect key="frame" x="8" y="14.666666666666664" width="150" height="35"/>
+                                        <rect key="frame" x="8" y="14.666666666666664" width="540" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="biN-33-bAt"/>
                                             <constraint firstAttribute="width" constant="150" id="qQA-NZ-A94"/>
@@ -947,7 +947,7 @@
                                 <color key="backgroundColor" red="0.08235294118" green="0.08235294118" blue="0.08235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="P3p-0b-A4E" firstAttribute="centerY" secondItem="bLj-bQ-tot" secondAttribute="centerY" id="BBd-Kb-QoB"/>
-                                    <constraint firstItem="P3p-0b-A4E" firstAttribute="width" secondItem="bLj-bQ-tot" secondAttribute="width" multiplier="0.25" id="ahl-iX-Gt3"/>
+                                    <constraint firstItem="P3p-0b-A4E" firstAttribute="width" secondItem="bLj-bQ-tot" secondAttribute="width" multiplier="0.9" id="ahl-iX-Gt3"/>
                                     <constraint firstItem="P3p-0b-A4E" firstAttribute="leading" secondItem="bLj-bQ-tot" secondAttribute="leading" constant="8" id="kZ0-Z7-G87"/>
                                     <constraint firstAttribute="height" constant="64" id="pNS-hn-5Kx"/>
                                 </constraints>

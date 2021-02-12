@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let theChange = $0.0
             
             if theChange == 0 {
-                self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
+                self.displayNotification("OsMo — Tracker", NSLocalizedString("Tracking location", comment: "Tracking location"))
             } else {
                 
             }
@@ -137,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.groupManager.saveCache()
         
         if (connectionManager.connected && connectionManager.sessionOpened) {
-            self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
+            self.displayNotification("OsMo — Tracker", NSLocalizedString("Tracking location", comment: "Tracking location"))
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {

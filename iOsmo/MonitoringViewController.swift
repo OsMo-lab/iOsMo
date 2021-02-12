@@ -34,7 +34,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     var isSessionPaused = false
     var isTracked = true
     
-    
     var onMessageOfTheDayUpdated: ObserverSetEntry<(Int, String)>?
     var onSessionPaused: ObserverSetEntry<(Int)>?
     var onSessionStarted: ObserverSetEntry<(Int)>?
@@ -62,7 +61,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var trackingModeBtn: UIButton!
 
     @IBAction func pauseClick(_ sender: AnyObject) {
-        
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
@@ -100,7 +98,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
             }
         }
-        
     }
 
     func SelectTransportType() {
@@ -148,7 +145,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 myAlert.addAction(UIAlertAction(title: name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
                     self.connectionManager.trip_privacy = idx;
                     self.SelectTransportType()
-                    
                 }))
             }
             idx += 1;
@@ -160,11 +156,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
-        if let md = SettingsManager.getKey(SettingKeys.motd) as String? {
-            MDView.text = md
-        } else {
-            MDView.text = ""
-        }
+        MDView.text = SettingsManager.getKey(SettingKeys.motd) as String? ?? ""
         
         if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as String? {
             self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
@@ -177,7 +169,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     fileprivate func updateSessionValues(_ elapsedTime: Int){
-    
         let (h, m, s) = durationBySecond(seconds: elapsedTime)
         let strH: String = h > 9 ? "\(h):" : h == 0 ? "" : "0\(h):"
         let strM: String = m > 9 ? "\(m):" : "0\(m):"
@@ -202,26 +193,20 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if let speedLabel = self.avgSpeedLabel {
                 speedLabel.text = String(format:"%.0f", speed)
             }
-           
         }
 
     }
     
     fileprivate func durationBySecond(seconds s:Int) -> (hours: Int, minutes: Int, seconds: Int){
-        
         return ((s % (24*3600))/3600, s%3600/60, s%60)
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
-        
         super.viewDidAppear(false)
-        
     }
     
-    
     override func viewDidLoad() {
-        
         super.viewDidLoad()
                 
         _ = sendingManger.sentObservers.add(self, type(of: self).onSentCoordinate)
@@ -258,7 +243,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.MDView.text = $1
                     if UIApplication.shared.applicationState != .active {
                         let app = UIApplication.shared.delegate as! AppDelegate
-                        app.displayNotification("iOSMo", $1)
+                        app.displayNotification("OsMo — Tracker", $1)
                     }
                 }
                 self.groupManager.groupList(true)
@@ -313,7 +298,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
                     self.sessionTimer!.reset()
                 }
-                
             } else {
                 
                 self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControl.State())
