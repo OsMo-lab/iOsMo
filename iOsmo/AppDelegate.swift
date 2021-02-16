@@ -222,7 +222,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     notifications.forEach({ (notification) in
                         DispatchQueue.main.async {
                             let userInfo = notification.request.content.userInfo
-                            self.log.enqueue("userInfo : \(userInfo)")
+                            self.log.enqueue("notification userInfo : \(userInfo)")
                             if let messageID = userInfo[self.gcmMessageIDKey] {
                                 self.log.enqueue("getDeliveredNotifications FCM : \(messageID)")
                                 self.connectionManager.connection.parseOutput(messageID as! String)

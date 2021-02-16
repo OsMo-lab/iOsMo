@@ -94,7 +94,9 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
                 //UIApplication.shared.isIdleTimerDisabled = false
             } else {
-                self.SelectPrivacy()
+                if (connectionManager.transports.count > 0) {
+                    self.SelectPrivacy()
+                }
                 
             }
         }

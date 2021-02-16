@@ -73,12 +73,13 @@ open class ConnectionManager: NSObject{
     
     var connection = BaseTcpConnection()
     var coordinates: [LocationModel]
-    
+    var sendingCoordinates = false;
     let reachability = Reachability()!
     
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
     open var isGettingLocation = false
+    
     
     open var transportType: Int = 0;
     open var trip_privacy : Int = 0;
@@ -203,7 +204,7 @@ open class ConnectionManager: NSObject{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
             let model = UIDevice.current.modelName
             let version = UIDevice.current.systemVersion
-            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
+            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&platform=\(model) iOS \(version)"
             conHelper.backgroundRequest(authUrl!, requestBody: requestString as NSString)
         } else {
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device!)")
@@ -452,8 +453,9 @@ open class ConnectionManager: NSObject{
     {
         if self.sessionOpened {
             self.coordinates += coordinates
-            self.sendNextCoordinates()
-            
+            if (!self.sendingCoordinates) {
+                self.sendNextCoordinates()
+            }
         }
     }
     open func sendRemoteCommandResponse(_ rc: String) {
@@ -1054,11 +1056,14 @@ open class ConnectionManager: NSObject{
                 self.coordinates.remove(at: 0)
             }
         }
+        self.sendingCoordinates = false;
         
         self.sendNextCoordinates()
     }
     
     fileprivate func sendNextCoordinates(){
+        
+        
         /*
          if self.shouldCloseSession {
          
@@ -1091,6 +1096,7 @@ open class ConnectionManager: NSObject{
             } else {
                 req = "\(Tags.coordinate.rawValue)|\(req)"
             }
+            self.sendingCoordinates = true;
             send(request:req)
         }
     }
