@@ -252,7 +252,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             let webURL = userActivity.webpageURL!;
             if !presentViewController(url:webURL) {
-                UIApplication.shared.openURL(webURL);
+                UIApplication.shared.open(webURL, options: [:], completionHandler: nil);
             }
         }
 

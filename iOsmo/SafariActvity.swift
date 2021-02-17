@@ -41,7 +41,7 @@ class SafariActivity: UIActivity {
         var completed = false
         
         if let url = self.url {
-            completed = UIApplication.shared.openURL(url as URL)
+            completed = UIApplication.shared.open(url as URL)
         }
         
         activityDidFinish(completed)
