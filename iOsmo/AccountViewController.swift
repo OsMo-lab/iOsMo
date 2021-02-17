@@ -26,6 +26,8 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     @IBOutlet weak var btnEnterGroup: UIButton!
     @IBOutlet weak var btnAddGroup: UIButton!
+    @IBOutlet weak var userIcon: UIImageView!
+    
     var onConnectionRun: ObserverSetEntry<(Int, String)>?
     //var onGroupCreated: ObserverSetEntry<[Group]>?
     
@@ -167,6 +169,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         _ = groupManager.groupListUpdated.add{
             let _ = $0
             DispatchQueue.main.async {
+                self.setLoginControls()
                 self.tableView.reloadData()
             }
         }
@@ -178,7 +181,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.btnEnterGroup.isHidden = false
             } else {
                 self.alert(NSLocalizedString("Error on enter group", comment:"Alert title for error on enter group"), message: $0.1)
-                
                 
                 if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)),
                     let indicator = cell.contentView.viewWithTag(3) as? UIActivityIndicatorView {
@@ -271,7 +273,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "toAuth" {
-            
             if successLogin {
                 if connectionManager.sessionOpened {
                     alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
@@ -298,30 +299,29 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void {
         SettingsManager.setKey(info.accountName as NSString, forKey: SettingKeys.user)
 
+        connectionManager.closeConnection()
         connectionManager.connect()
+        
         userName.text = NSLocalizedString("Connecting...", comment:"Connecting status")
         controller.dismiss(animated: true, completion: nil)
-        groupManager.groupList(false)
+        //groupManager.groupList(false)
         
     }
     
     func setLoginControls(){
-        
         if let user = SettingsManager.getKey(SettingKeys.user) {
             if user.length > 0 {
                 userName.text = String(user)
-                loginBtn.setImage(UIImage(named: "exit-32"), for: UIControl.State())
+                userIcon.alpha = 1;
+                loginBtn.setTitle(NSLocalizedString("Logout", comment:"Logout button"), for: UIControl.State())
                 self.successLogin = true
-            } else {
-                userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
-                loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
-                self.successLogin = false
+                return;
             }
-        } else {
-            userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
-            loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
-            self.successLogin = false
         }
+        userIcon.alpha = 0.3;
+        userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
+        loginBtn.setTitle(NSLocalizedString("Login", comment:"Login button"), for: UIControl.State())
+        self.successLogin = false
     }
     
     func loginCancelled (_ controller: AuthViewController) -> Void {

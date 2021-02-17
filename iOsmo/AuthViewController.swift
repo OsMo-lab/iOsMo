@@ -208,12 +208,8 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
     
     
     open func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
-        
-        
         if let url = request.url, let host = url.host {
-            
             if host == authAnswerScheme {
-                
                 let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
                 if let comp = components {
                     
@@ -227,14 +223,10 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
                                 
                                 delegate?.succesfullLoginWithToken(self, info: AuthInfo(accountName: user, key: passKey))
                         }
-                    }
-                    else {
-                        
+                    } else {
                         if let user = url.queryParams()["nick"] as? String, let passKey = url.queryParams()["user"] as? String {
-                            
                             print("auth user: \(user) with passkey: \(passKey)")
                             log.enqueue("auth user: \(user) with passkey: \(passKey)")
-                            
                             delegate?.succesfullLoginWithToken(self, info: AuthInfo(accountName: user, key: passKey))
                         }
                        

@@ -82,4 +82,11 @@
 /* Select map style */
 "Map style" = "Стиль карты";
 
+/* Logout button */
+"Logout" = "Выйти";
+
+/* Login button */
+"Login" = "Войти";
+
+
 
