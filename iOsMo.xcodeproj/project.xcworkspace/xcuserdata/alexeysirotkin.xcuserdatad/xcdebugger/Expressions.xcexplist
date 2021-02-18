@@ -221,6 +221,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "HistoryViewController.tableView(_:cellForRowAt:):HistoryViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "history">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
          <PersistentStrings>
             <PersistentString

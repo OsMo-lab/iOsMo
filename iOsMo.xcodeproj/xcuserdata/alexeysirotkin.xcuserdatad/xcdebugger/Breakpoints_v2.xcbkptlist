@@ -15,8 +15,8 @@
             timestampString = "583696383.1095949"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "412"
-            endingLineNumber = "412"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
             landmarkName = "messaging(_:didReceive:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -54,10 +54,10 @@
             timestampString = "589900845.371953"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "470"
-            endingLineNumber = "470"
+            startingLineNumber = "467"
+            endingLineNumber = "467"
             landmarkName = "getGroups()"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -87,10 +87,10 @@
             filePath = "iOsmo/ConnectionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "672"
-            endingLineNumber = "672"
+            startingLineNumber = "669"
+            endingLineNumber = "669"
             landmarkName = "notifyAnswer(output:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -103,10 +103,10 @@
             filePath = "iOsmo/ConnectionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
             landmarkName = "Authenticate()"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -119,10 +119,10 @@
             filePath = "iOsmo/ConnectionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
             landmarkName = "Authenticate()"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -135,10 +135,10 @@
             filePath = "iOsmo/ConnectionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "456"
-            endingLineNumber = "456"
+            startingLineNumber = "453"
+            endingLineNumber = "453"
             landmarkName = "sendCoordinates(_:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -151,10 +151,10 @@
             filePath = "iOsmo/ConnectionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1059"
-            endingLineNumber = "1059"
+            startingLineNumber = "1056"
+            endingLineNumber = "1056"
             landmarkName = "onSentCoordinate(cnt:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -167,10 +167,10 @@
             filePath = "iOsmo/ConnectionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "457"
-            endingLineNumber = "457"
+            startingLineNumber = "454"
+            endingLineNumber = "454"
             landmarkName = "sendCoordinates(_:)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

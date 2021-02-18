@@ -168,14 +168,6 @@ enum RemoteCommand: String {
     case TTS = "46"
 }
 
-/*
-enum MapStyle: String {
-    case Outdoor = "mapbox://styles/alesir/cizr8vw9g00mb2sqji5539sj4"
-    case Satellite = "mapbox://styles/alesir/cizr906j900mc2sqjct7nbux6"
-    case Streets = "mapbox://styles/alesir/cizr8v0z6003w2st6ytibx85a"
-    case Bright = "mapbox://styles/alesir/cizr8s765004h2rkwl1ob0zat"
-}
-*/
 enum AnnotationType: Int {
     case user = 1
     case point = 2

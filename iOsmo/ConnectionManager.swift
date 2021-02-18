@@ -118,11 +118,8 @@ open class ConnectionManager: NSObject{
         let audioSession = AVAudioSession.sharedInstance()
         
         do {
-            if #available(iOS 10.0, *) {
-                try audioSession.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode.default)
-            } else {
-                // Fallback on earlier versions
-            }
+            try audioSession.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode.default)
+        
         } catch {
             log.enqueue("CM.Inint: Unable to set AVAudioSessionCategory \(error)")
         }
