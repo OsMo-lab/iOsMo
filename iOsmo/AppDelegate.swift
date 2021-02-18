@@ -378,9 +378,9 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 // [START ios_10_data_message_handling]
 extension AppDelegate : MessagingDelegate {
     // [START refresh_token]
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        log.enqueue("Firebase registration token: \(fcmToken)")
-        connectionManager.sendPush(fcmToken)
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        log.enqueue("Firebase registration token: \(fcmToken ?? "")")
+        connectionManager.sendPush(fcmToken ?? "")
         
     }
     // [END refresh_token]
@@ -389,6 +389,7 @@ extension AppDelegate : MessagingDelegate {
     // [START ios_10_data_message]
     // Receive data messages on iOS 10+ directly from FCM (bypassing APNs) when the app is in the foreground.
     // To enable direct data messages, you can set Messaging.messaging().shouldEstablishDirectChannel to true.
+    /* ООтключено после обновления Firebase 18.02.2021
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
         let data = remoteMessage.appData
         log.enqueue("Received remote message: \(remoteMessage.appData)")
@@ -398,6 +399,7 @@ extension AppDelegate : MessagingDelegate {
             connectionManager.connection.parseOutput(messageID as! String)
         }
     }
+ */
     // [END ios_10_data_message]
     
 }
