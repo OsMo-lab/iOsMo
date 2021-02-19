@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="iOsmo/Base.lproj/LaunchScreen.xib" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.4" build-num="12D4e"/>
+    </header>
+    <body>
+      <trans-unit id="8ie-xW-0ye.text" xml:space="preserve">
+        <source>Copyright © 2015 Olga Grineva, 2021 Alexey Sirotkin
+All rights reserved.</source>
+        <target>  Copyright © 2015 Olga Grineva, 2021 Alexey Sirotkin
+All rights reserved.</target>
+        <note>Class = "UILabel"; text = "Copyright © 2015 Olga Grineva, 2021 Alexey Sirotkin\nAll rights reserved."; ObjectID = "8ie-xW-0ye";</note>
+      </trans-unit>
+      <trans-unit id="kId-c2-rCX.text" xml:space="preserve">
+        <source>OsMo — Tracker</source>
+        <target>OsMo — Tracker</target>
+        <note>Class = "UILabel"; text = "OsMo — Tracker"; ObjectID = "kId-c2-rCX";</note>
+      </trans-unit>
+      <trans-unit id="tGV-kz-4ch.accessibilityLabel" xml:space="preserve">
+        <source>APP_VERSION</source>
+        <note>Class = "UILabel"; accessibilityLabel = "APP_VERSION"; ObjectID = "tGV-kz-4ch";</note>
+      </trans-unit>
+      <trans-unit id="tGV-kz-4ch.text" xml:space="preserve">
+        <source>2.0(182)</source>
+        <note>Class = "UILabel"; text = "2.0(182)"; ObjectID = "tGV-kz-4ch";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmo/Base.lproj/Main.storyboard" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.4" build-num="12D4e"/>
+    </header>
+    <body>
+      <trans-unit id="1rg-8O-chP.text" xml:space="preserve">
+        <source>Time</source>
+        <target>Время</target>
+        <note>Class = "UILabel"; text = "Time"; ObjectID = "1rg-8O-chP";</note>
+      </trans-unit>
+      <trans-unit id="2C7-Iq-l0C.normalTitle" xml:space="preserve">
+        <source>Sign-in</source>
+        <target>Войти</target>
+        <note>Class = "UIButton"; normalTitle = "Sign-in"; ObjectID = "2C7-Iq-l0C";</note>
+      </trans-unit>
+      <trans-unit id="2dk-tC-xs0.normalTitle" xml:space="preserve">
+        <source>Join</source>
+        <target>Вступить</target>
+        <note>Class = "UIButton"; normalTitle = "Join"; ObjectID = "2dk-tC-xs0";</note>
+      </trans-unit>
+      <trans-unit id="2lC-Vq-lGK.normalTitle" xml:space="preserve">
+        <source>Groups</source>
+        <target>Группы</target>
+        <note>Class = "UIButton"; normalTitle = "Groups"; ObjectID = "2lC-Vq-lGK";</note>
+      </trans-unit>
+      <trans-unit id="2ux-Wj-WCn.text" xml:space="preserve">
+        <source>type</source>
+        <target>тип</target>
+        <note>Class = "UILabel"; text = "type"; ObjectID = "2ux-Wj-WCn";</note>
+      </trans-unit>
+      <trans-unit id="5aG-r9-HTC.text" xml:space="preserve">
+        <source>Date</source>
+        <target>Дата</target>
+        <note>Class = "UILabel"; text = "Date"; ObjectID = "5aG-r9-HTC";</note>
+      </trans-unit>
+      <trans-unit id="7T6-eH-nEm.placeholder" xml:space="preserve">
+        <source>Your nickname in group</source>
+        <target>Ваше имя в группе</target>
+        <note>Class = "UITextField"; placeholder = "Your nickname in group"; ObjectID = "7T6-eH-nEm";</note>
+      </trans-unit>
+      <trans-unit id="8rt-C4-f7P.text" xml:space="preserve">
+        <source>Message of the Day</source>
+        <target>Сообщение дня</target>
+        <note>Class = "UITextView"; text = "Message of the Day"; ObjectID = "8rt-C4-f7P";</note>
+      </trans-unit>
+      <trans-unit id="48f-pX-4EJ.text" xml:space="preserve">
+        <source>Not authorised</source>
+        <target>Не авторизован</target>
+        <note>Class = "UILabel"; text = "Not authorised"; ObjectID = "48f-pX-4EJ";</note>
+      </trans-unit>
+      <trans-unit id="A2D-51-5uc.text" xml:space="preserve">
+        <source>Group Chat</source>
+        <target>Чат группы</target>
+        <note>Class = "UILabel"; text = "Group Chat"; ObjectID = "A2D-51-5uc";</note>
+      </trans-unit>
+      <trans-unit id="AJB-As-rSV.normalTitle" xml:space="preserve">
+        <source>trackerID</source>
+        <target>trackerID</target>
+        <note>Class = "UIButton"; normalTitle = "trackerID"; ObjectID = "AJB-As-rSV";</note>
+      </trans-unit>
+      <trans-unit id="AxV-gG-nJV.text" xml:space="preserve">
+        <source>nick</source>
+        <target>имя</target>
+        <note>Class = "UILabel"; text = "nick"; ObjectID = "AxV-gG-nJV";</note>
+      </trans-unit>
+      <trans-unit id="BYA-yY-8gh.normalTitle" xml:space="preserve">
+        <source>press Start button</source>
+        <target>нажмите кнопку Старт</target>
+        <note>Class = "UIButton"; normalTitle = "press Start button"; ObjectID = "BYA-yY-8gh";</note>
+      </trans-unit>
+      <trans-unit id="CHt-yv-mdX.text" xml:space="preserve">
+        <source>Not authorised</source>
+        <target>Не авторизован</target>
+        <note>Class = "UILabel"; text = "Not authorised"; ObjectID = "CHt-yv-mdX";</note>
+      </trans-unit>
+      <trans-unit id="DX7-T5-2pK.text" xml:space="preserve">
+        <source>group</source>
+        <target>группа</target>
+        <note>Class = "UILabel"; text = "group"; ObjectID = "DX7-T5-2pK";</note>
+      </trans-unit>
+      <trans-unit id="DZb-1E-5vV.text" xml:space="preserve">
+        <source>00:00:00</source>
+        <target>00:00:00</target>
+        <note>Class = "UILabel"; text = "00:00:00"; ObjectID = "DZb-1E-5vV";</note>
+      </trans-unit>
+      <trans-unit id="FMD-q5-sW0.placeholder" xml:space="preserve">
+        <source>nickname</source>
+        <target>ник</target>
+        <note>Class = "UITextField"; placeholder = "nickname"; ObjectID = "FMD-q5-sW0";</note>
+      </trans-unit>
+      <trans-unit id="FUD-bK-jc9.text" xml:space="preserve">
+        <source>private</source>
+        <target>закрытая</target>
+        <note>Class = "UILabel"; text = "private"; ObjectID = "FUD-bK-jc9";</note>
+      </trans-unit>
+      <trans-unit id="Gcd-W9-a1F.normalTitle" xml:space="preserve">
+        <source>Add</source>
+        <target>Создать</target>
+        <note>Class = "UIButton"; normalTitle = "Add"; ObjectID = "Gcd-W9-a1F";</note>
+      </trans-unit>
+      <trans-unit id="JBh-VC-BMZ.text" xml:space="preserve">
+        <source>email</source>
+        <target>email</target>
+        <note>Class = "UILabel"; text = "email"; ObjectID = "JBh-VC-BMZ";</note>
+      </trans-unit>
+      <trans-unit id="JLp-vB-cdg.normalTitle" xml:space="preserve">
+        <source>Join</source>
+        <target>Вступить</target>
+        <note>Class = "UIButton"; normalTitle = "Join"; ObjectID = "JLp-vB-cdg";</note>
+      </trans-unit>
+      <trans-unit id="JS1-jZ-Ygc.placeholder" xml:space="preserve">
+        <source>Name of new group</source>
+        <target>Имя новой группы</target>
+        <note>Class = "UITextField"; placeholder = "Name of new group"; ObjectID = "JS1-jZ-Ygc";</note>
+      </trans-unit>
+      <trans-unit id="JSS-A0-wHk.text" xml:space="preserve">
+        <source>Nick</source>
+        <target>Ник</target>
+        <note>Class = "UILabel"; text = "Nick"; ObjectID = "JSS-A0-wHk";</note>
+      </trans-unit>
+      <trans-unit id="JgA-OC-PKV.text" xml:space="preserve">
+        <source>OsMo</source>
+        <target>OsMo</target>
+        <note>Class = "UILabel"; text = "OsMo"; ObjectID = "JgA-OC-PKV";</note>
+      </trans-unit>
+      <trans-unit id="Kpg-lx-GAk.text" xml:space="preserve">
+        <source>group</source>
+        <target>группа</target>
+        <note>Class = "UILabel"; text = "group"; ObjectID = "Kpg-lx-GAk";</note>
+      </trans-unit>
+      <trans-unit id="Lnw-wn-EtX.normalTitle" xml:space="preserve">
+        <source>Login</source>
+        <target>Войти</target>
+        <note>Class = "UIButton"; normalTitle = "Login"; ObjectID = "Lnw-wn-EtX";</note>
+      </trans-unit>
+      <trans-unit id="Lqr-TY-UXf.text" xml:space="preserve">
+        <source>Nick</source>
+        <target>Ник</target>
+        <note>Class = "UILabel"; text = "Nick"; ObjectID = "Lqr-TY-UXf";</note>
+      </trans-unit>
+      <trans-unit id="MBA-Xb-vkb.placeholder" xml:space="preserve">
+        <source>ID or URL of group to join</source>
+        <target>ID или URL группы</target>
+        <note>Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb";</note>
+      </trans-unit>
+      <trans-unit id="Mzq-5i-TsE.text" xml:space="preserve">
+        <source>Nick</source>
+        <target>Ник</target>
+        <note>Class = "UILabel"; text = "Nick"; ObjectID = "Mzq-5i-TsE";</note>
+      </trans-unit>
+      <trans-unit id="Nrg-GG-v8J.normalTitle" xml:space="preserve">
+        <source>Forgot?</source>
+        <target>Забыли?</target>
+        <note>Class = "UIButton"; normalTitle = "Forgot?"; ObjectID = "Nrg-GG-v8J";</note>
+      </trans-unit>
+      <trans-unit id="P5a-Qg-B28.normalTitle" xml:space="preserve">
+        <source>Reset</source>
+        <target>Сброс</target>
+        <note>Class = "UIButton"; normalTitle = "Reset"; ObjectID = "P5a-Qg-B28";</note>
+      </trans-unit>
+      <trans-unit id="PM8-tD-Glc.text" xml:space="preserve">
+        <source>E-mail</source>
+        <note>Class = "UILabel"; text = "E-mail"; ObjectID = "PM8-tD-Glc";</note>
+      </trans-unit>
+      <trans-unit id="Ppm-WI-6i7.text" xml:space="preserve">
+        <source>group</source>
+        <target>имя</target>
+        <note>Class = "UILabel"; text = "group"; ObjectID = "Ppm-WI-6i7";</note>
+      </trans-unit>
+      <trans-unit id="S8H-pZ-cOM.normalTitle" xml:space="preserve">
+        <source>Add</source>
+        <target>Создать</target>
+        <note>Class = "UIButton"; normalTitle = "Add"; ObjectID = "S8H-pZ-cOM";</note>
+      </trans-unit>
+      <trans-unit id="TRf-Ht-0I1.normalTitle" xml:space="preserve">
+        <source>Register</source>
+        <target>Регистрация</target>
+        <note>Class = "UIButton"; normalTitle = "Register"; ObjectID = "TRf-Ht-0I1";</note>
+      </trans-unit>
+      <trans-unit id="VMO-OO-6cj.normalTitle" xml:space="preserve">
+        <source>Refresh</source>
+        <target>Обновить</target>
+        <note>Class = "UIButton"; normalTitle = "Refresh"; ObjectID = "VMO-OO-6cj";</note>
+      </trans-unit>
+      <trans-unit id="Vjh-Tf-qLH.placeholder" xml:space="preserve">
+        <source>e-mail address</source>
+        <target>адрес e-mail</target>
+        <note>Class = "UITextField"; placeholder = "e-mail address"; ObjectID = "Vjh-Tf-qLH";</note>
+      </trans-unit>
+      <trans-unit id="WVP-LT-JgZ.text" xml:space="preserve">
+        <source>0</source>
+        <target>00.0</target>
+        <note>Class = "UILabel"; text = "0"; ObjectID = "WVP-LT-JgZ";</note>
+      </trans-unit>
+      <trans-unit id="Wuc-tR-7kP.text" xml:space="preserve">
+        <source>Sex</source>
+        <target>Пол</target>
+        <note>Class = "UILabel"; text = "Sex"; ObjectID = "Wuc-tR-7kP";</note>
+      </trans-unit>
+      <trans-unit id="Y2L-T9-ft9.text" xml:space="preserve">
+        <source>Password</source>
+        <target>Пароль</target>
+        <note>Class = "UILabel"; text = "Password"; ObjectID = "Y2L-T9-ft9";</note>
+      </trans-unit>
+      <trans-unit id="YML-d4-xYR.placeholder" xml:space="preserve">
+        <source>Superman</source>
+        <note>Class = "UITextField"; placeholder = "Superman"; ObjectID = "YML-d4-xYR";</note>
+      </trans-unit>
+      <trans-unit id="ZaF-6E-x27.text" xml:space="preserve">
+        <source>male</source>
+        <target>муж.</target>
+        <note>Class = "UILabel"; text = "male"; ObjectID = "ZaF-6E-x27";</note>
+      </trans-unit>
+      <trans-unit id="ZmA-1B-N8V.normalTitle" xml:space="preserve">
+        <source>Group URL</source>
+        <target>URL группы</target>
+        <note>Class = "UIButton"; normalTitle = "Group URL"; ObjectID = "ZmA-1B-N8V";</note>
+      </trans-unit>
+      <trans-unit id="aaK-Vn-Ex2.normalTitle" xml:space="preserve">
+        <source>&gt;&gt;</source>
+        <target>&gt;&gt;</target>
+        <note>Class = "UIButton"; normalTitle = "&gt;&gt;"; ObjectID = "aaK-Vn-Ex2";</note>
+      </trans-unit>
+      <trans-unit id="awp-jk-SoY.placeholder" xml:space="preserve">
+        <source>Message</source>
+        <target>Сообщение</target>
+        <note>Class = "UITextField"; placeholder = "Message"; ObjectID = "awp-jk-SoY";</note>
+      </trans-unit>
+      <trans-unit id="bKO-GC-XPI.text" xml:space="preserve">
+        <source>Distance</source>
+        <target>Расстояние</target>
+        <note>Class = "UILabel"; text = "Distance"; ObjectID = "bKO-GC-XPI";</note>
+      </trans-unit>
+      <trans-unit id="cYK-aE-whk.text" xml:space="preserve">
+        <source>...</source>
+        <target>...</target>
+        <note>Class = "UITextView"; text = "..."; ObjectID = "cYK-aE-whk";</note>
+      </trans-unit>
+      <trans-unit id="cwm-3c-oHU.text" xml:space="preserve">
+        <source>nick</source>
+        <target>ник</target>
+        <note>Class = "UILabel"; text = "nick"; ObjectID = "cwm-3c-oHU";</note>
+      </trans-unit>
+      <trans-unit id="mms-Em-UaN.text" xml:space="preserve">
+        <source>00.0</source>
+        <target>00.0</target>
+        <note>Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN";</note>
+      </trans-unit>
+      <trans-unit id="nCc-nC-2GY.text" xml:space="preserve">
+        <source>Re-enter password</source>
+        <target>Повторите пароль</target>
+        <note>Class = "UILabel"; text = "Re-enter password"; ObjectID = "nCc-nC-2GY";</note>
+      </trans-unit>
+      <trans-unit id="o31-Sf-Gmk.text" xml:space="preserve">
+        <source>Distance</source>
+        <target>Расстояние</target>
+        <note>Class = "UILabel"; text = "Distance"; ObjectID = "o31-Sf-Gmk";</note>
+      </trans-unit>
+      <trans-unit id="ors-8k-0GG.text" xml:space="preserve">
+        <source>Load last:</source>
+        <target>Загрузить последние:</target>
+        <note>Class = "UILabel"; text = "Load last:"; ObjectID = "ors-8k-0GG";</note>
+      </trans-unit>
+      <trans-unit id="p6k-rI-trZ.text" xml:space="preserve">
+        <source>Date</source>
+        <target>Дата</target>
+        <note>Class = "UILabel"; text = "Date"; ObjectID = "p6k-rI-trZ";</note>
+      </trans-unit>
+      <trans-unit id="qyj-mE-UvE.text" xml:space="preserve">
+        <source>Sign-in</source>
+        <target>Вход</target>
+        <note>Class = "UILabel"; text = "Sign-in"; ObjectID = "qyj-mE-UvE";</note>
+      </trans-unit>
+      <trans-unit id="roX-H8-MZy.text" xml:space="preserve">
+        <source>Account</source>
+        <target>Учетная запись</target>
+        <note>Class = "UILabel"; text = "Account"; ObjectID = "roX-H8-MZy";</note>
+      </trans-unit>
+      <trans-unit id="s0a-bC-RgU.text" xml:space="preserve">
+        <source>Speed</source>
+        <target>Скорость</target>
+        <note>Class = "UILabel"; text = "Speed"; ObjectID = "s0a-bC-RgU";</note>
+      </trans-unit>
+      <trans-unit id="vB8-i0-F1D.text" xml:space="preserve">
+        <source>MessageLine</source>
+        <note>Class = "UILabel"; text = "MessageLine"; ObjectID = "vB8-i0-F1D";</note>
+      </trans-unit>
+      <trans-unit id="vfZ-dH-OQh.normalTitle" xml:space="preserve">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        <note>Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "vfZ-dH-OQh";</note>
+      </trans-unit>
+      <trans-unit id="voL-dJ-cjX.text" xml:space="preserve">
+        <source>100</source>
+        <target>100</target>
+        <note>Class = "UITextField"; text = "100"; ObjectID = "voL-dJ-cjX";</note>
+      </trans-unit>
+      <trans-unit id="wHZ-Bj-8uU.text" xml:space="preserve">
+        <source>Log</source>
+        <target>Журнал</target>
+        <note>Class = "UILabel"; text = "Log"; ObjectID = "wHZ-Bj-8uU";</note>
+      </trans-unit>
+      <trans-unit id="wSH-og-nEL.normalTitle" xml:space="preserve">
+        <source>Type</source>
+        <target>Тип</target>
+        <note>Class = "UIButton"; normalTitle = "Type"; ObjectID = "wSH-og-nEL";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmo/en.lproj/InfoPlist.strings" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.4" build-num="12D4e"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName" xml:space="preserve">
+        <source>OsMo</source>
+        <note>Bundle display name</note>
+      </trans-unit>
+      <trans-unit id="CFBundleGetInfoString" xml:space="preserve">
+        <source/>
+        <note>Get Info string</note>
+      </trans-unit>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>OsMo</source>
+        <note>Bundle name</note>
+      </trans-unit>
+      <trans-unit id="NSLocationAlwaysAndWhenInUseUsageDescription" xml:space="preserve">
+        <source>Background location is required to track and share your location</source>
+        <target>Фоновое определение координат требуется для отслеживания ваших координат и их передаче вашим близким</target>
+        <note>Privacy - Location Always and When In Use Usage Description</note>
+      </trans-unit>
+      <trans-unit id="NSLocationAlwaysUsageDescription" xml:space="preserve">
+        <source>Background location is required to track and share your location</source>
+        <target>Фоновое определение координат требуется для отслеживания ваших координат и их передаче вашим близким</target>
+        <note>Privacy - Location Always Usage Description</note>
+      </trans-unit>
+      <trans-unit id="NSLocationWhenInUseUsageDescription" xml:space="preserve">
+        <source>Location usage is required to track and share your location</source>
+        <target>Определение координат требуется для отслеживания ваших координат и их передаче вашим близким</target>
+        <note>Privacy - Location When In Use Usage Description</note>
+      </trans-unit>
+      <trans-unit id="NSMotionUsageDescription" xml:space="preserve">
+        <source>Motion usage is required to optimize battery usage</source>
+        <target>Доступ к датчику движения требуется для оптимального использования аккумулятора</target>
+        <note>Privacy - Motion Usage Description</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="iOsmo/en.lproj/Localizable.strings" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="12.4" build-num="12D4e"/>
+    </header>
+    <body>
+      <trans-unit id="Cancel" xml:space="preserve">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        <note>Cancel</note>
+      </trans-unit>
+      <trans-unit id="Connecting..." xml:space="preserve">
+        <source>Connecting...</source>
+        <target>Соединяемся...</target>
+        <note>Connecting status</note>
+      </trans-unit>
+      <trans-unit id="Enter nick!" xml:space="preserve">
+        <source>Enter nick!</source>
+        <target>Введите ник!</target>
+        <note>Enter nick!</note>
+      </trans-unit>
+      <trans-unit id="Error" xml:space="preserve">
+        <source>Error</source>
+        <target>Ошибка</target>
+        <note>Error title for alert</note>
+      </trans-unit>
+      <trans-unit id="Error on activate group" xml:space="preserve">
+        <source>Error on activate group</source>
+        <target>Ошибка активации группы</target>
+        <note>Alert title for error on activate group</note>
+      </trans-unit>
+      <trans-unit id="Error on create group" xml:space="preserve">
+        <source>Error on create group</source>
+        <target>Ошибка создания группы</target>
+        <note>Alert title for error on create group</note>
+      </trans-unit>
+      <trans-unit id="Error on deactivate group" xml:space="preserve">
+        <source>Error on deactivate group</source>
+        <target>Ошибка деактивации группы</target>
+        <note>Alert title for error on deactivate group</note>
+      </trans-unit>
+      <trans-unit id="Error on enter group" xml:space="preserve">
+        <source>Error on enter group</source>
+        <target>Ошибка входа в группу</target>
+        <note>Alert title for error on enter group</note>
+      </trans-unit>
+      <trans-unit id="Error on leave group" xml:space="preserve">
+        <source>Error on leave group</source>
+        <target>Ошибка выхода из группы</target>
+        <note>Alert title for error on leave group</note>
+      </trans-unit>
+      <trans-unit id="Error on logout" xml:space="preserve">
+        <source>Error on logout</source>
+        <target>Ошибка выхода</target>
+        <note>Alert title for Error on logout</note>
+      </trans-unit>
+      <trans-unit id="Everyone" xml:space="preserve">
+        <source>Everyone</source>
+        <target>Всем</target>
+        <note>Trip visible to everyone</note>
+      </trans-unit>
+      <trans-unit id="Leave" xml:space="preserve">
+        <source>Leave</source>
+        <target>Выйти</target>
+        <note>Leave group</note>
+      </trans-unit>
+      <trans-unit id="LogView unlocked" xml:space="preserve">
+        <source>LogView unlocked</source>
+        <target>Журнал разблокирован</target>
+        <note>LogView unlocked</note>
+      </trans-unit>
+      <trans-unit id="Login" xml:space="preserve">
+        <source>Login</source>
+        <target>Войти</target>
+        <note>Login button</note>
+      </trans-unit>
+      <trans-unit id="Logout" xml:space="preserve">
+        <source>Logout</source>
+        <target>Выйти</target>
+        <note>Logout button</note>
+      </trans-unit>
+      <trans-unit id="Map style" xml:space="preserve">
+        <source>Map style</source>
+        <target>Стиль карты</target>
+        <note>Select map style</note>
+      </trans-unit>
+      <trans-unit id="None" xml:space="preserve">
+        <source>None</source>
+        <target>Никому</target>
+        <note>Trip visible to noone</note>
+      </trans-unit>
+      <trans-unit id="Not authorised" xml:space="preserve">
+        <source>Not authorised</source>
+        <target>Не авторизован</target>
+        <note>Not authorised user</note>
+      </trans-unit>
+      <trans-unit id="OK" xml:space="preserve">
+        <source>OK</source>
+        <note>OK</note>
+      </trans-unit>
+      <trans-unit id="Passwords didn't match!" xml:space="preserve">
+        <source>Passwords didn't match!</source>
+        <target>Пароли не совпадают!</target>
+        <note>Passwords didn't match!</note>
+      </trans-unit>
+      <trans-unit id="Register" xml:space="preserve">
+        <source>Register</source>
+        <target>Регистрация</target>
+        <note>Register label</note>
+      </trans-unit>
+      <trans-unit id="Restart iOsMo" xml:space="preserve">
+        <source>Restart iOsMo</source>
+        <target>Перезапустите iOsMo</target>
+        <note>Restart iOsMo</note>
+      </trans-unit>
+      <trans-unit id="Set visibility of trip" xml:space="preserve">
+        <source>Set visibility of trip</source>
+        <target>Укажите доступность поездки</target>
+        <note>Set visibility of trip</note>
+      </trans-unit>
+      <trans-unit id="Shared" xml:space="preserve">
+        <source>Shared</source>
+        <target>По ссылке</target>
+        <note>Trip visible by link</note>
+      </trans-unit>
+      <trans-unit id="Sign-In" xml:space="preserve">
+        <source>Sign-In</source>
+        <target>Вход</target>
+        <note>Sign-in label</note>
+      </trans-unit>
+      <trans-unit id="Stop current trip, before logout" xml:space="preserve">
+        <source>Stop current trip, before logout</source>
+        <target>Остановите поездку, до выхода</target>
+        <note>Stop current trip, before logout</note>
+      </trans-unit>
+      <trans-unit id="Tracking location" xml:space="preserve">
+        <source>Tracking location</source>
+        <target>Поездка отслеживается</target>
+        <note>Tracking location</note>
+      </trans-unit>
+      <trans-unit id="Transport type" xml:space="preserve">
+        <source>Transport type</source>
+        <target>Укажите транспорт</target>
+        <note>Select type of transport</note>
+      </trans-unit>
+      <trans-unit id="female" xml:space="preserve">
+        <source>female</source>
+        <target>жен.</target>
+        <note>female</note>
+      </trans-unit>
+      <trans-unit id="male" xml:space="preserve">
+        <source>male</source>
+        <target>муж.</target>
+        <note>male</note>
+      </trans-unit>
+      <trans-unit id="session was closed" xml:space="preserve">
+        <source>session was closed</source>
+        <target>поездка завершена</target>
+        <note>session was closed</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
