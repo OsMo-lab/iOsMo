@@ -23,6 +23,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     var groupAction = GroupActions.view
     var groupToEnter = ""
     var groupType = "1"
+    var clickCount = 0;
     
     @IBOutlet weak var btnEnterGroup: UIButton!
     @IBOutlet weak var btnAddGroup: UIButton!
@@ -52,6 +53,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
            
         }
+    }
+    
+    @IBAction func UserIconClick(_ sender: AnyObject) {
+        clickCount += 1;
+        if (clickCount == 7) {
+            SettingsManager.setKey("enable", forKey: SettingKeys.logView)
+            self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart iOsMo", comment:"Restart iOsMo"))
+        }
+
     }
     
     @IBAction func btnGroupType(_ sender: UIButton) {
@@ -143,6 +153,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         groupManager.groupList(false)
     }
     
+    @IBAction func btnResetClicked(_ sender: AnyObject) {
+        if connectionManager.sessionOpened {
+            alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
+        } else {
+            SettingsManager.clearKeys()
+            connectionManager.closeConnection()
+            connectionManager.connect()
+        }
+    }
  
 
     
@@ -319,7 +338,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             }
         }
         userIcon.alpha = 0.3;
-        userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
+        userName.text = NSLocalizedString("Not authorised", comment:"Not authorised user")
         loginBtn.setTitle(NSLocalizedString("Login", comment:"Login button"), for: UIControl.State())
         self.successLogin = false
     }

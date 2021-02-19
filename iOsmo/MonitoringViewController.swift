@@ -115,7 +115,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     Analytics.logEvent("trip_start", parameters: nil)
                     self.sendingManger.startSendingCoordinates(false)
                     
-                    //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+                    //UIApplication.shared.isIdleTimerDisabled = true
                 }))
             }
             idx += 1;

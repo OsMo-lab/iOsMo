@@ -28,17 +28,35 @@
 /* Alert title for Error on logout */
 "Error on logout" = "Ошибка выхода";
 
+/* Trip visible to everyone */
+"Everyone" = "Всем";
+
 /* female */
 "female" = "жен.";
 
 /* Leave group */
 "Leave" = "Выйти";
 
+/* Login button */
+"Login" = "Войти";
+
+/* Logout button */
+"Logout" = "Выйти";
+
 /* LogView unlocked */
 "LogView unlocked" = "Журнал разблокирован";
 
 /* male */
 "male" = "муж.";
+
+/* Select map style */
+"Map style" = "Стиль карты";
+
+/* Trip visible to noone */
+"None" = "Никому";
+
+/* Not authorised user */
+"Not authorised" = "Не авторизован";
 
 /* Passwords didn't match! */
 "Passwords didn't match!" = "Пароли не совпадают!";
@@ -52,6 +70,12 @@
 /* session was closed */
 "session was closed" = "поездка завершена";
 
+/* Set visibility of trip */
+"Set visibility of trip" = "Укажите доступность поездки";
+
+/* Trip visible by link */
+"Shared" = "По ссылке";
+
 /* Sign-in label */
 "Sign-In" = "Вход";
 
@@ -61,32 +85,6 @@
 /* Tracking location */
 "Tracking location" = "Поездка отслеживается";
 
-/* Unknown user */
-"Unknown" = "Неизвестен";
-
-/* Trip visible to everyone" */
-"Everyone" = "Всем";
-
-/* Trip visible by link */
-"Shared" = "По ссылке";
-
-/* Trip visible to noone*/
-"None" = "Никому";
-
-/* Set visibility of trip */
-"Set visibility of trip" = "Укажите доступность поездки";
-
 /* Select type of transport */
 "Transport type" = "Укажите транспорт";
-
-/* Select map style */
-"Map style" = "Стиль карты";
-
-/* Logout button */
-"Logout" = "Выйти";
-
-/* Login button */
-"Login" = "Войти";
-
-
 

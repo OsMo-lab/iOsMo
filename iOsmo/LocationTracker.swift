@@ -141,7 +141,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
         
         let locInterval = 0.0;
-        let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue;
         
         for loc in locations {
             let theCoordinate = loc.coordinate
@@ -185,9 +184,9 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
-        if (isDeferingUpdates == false && (locInterval > 10 || locDistance > 50 )) {
+        if (isDeferingUpdates == false && (locInterval > 10  )) {
             self.isDeferingUpdates = true
-            manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
+            manager.allowDeferredLocationUpdates(untilTraveled: 100.0, timeout: locInterval)
         }
     }
 

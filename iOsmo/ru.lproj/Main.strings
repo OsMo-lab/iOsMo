@@ -13,26 +13,17 @@
 /* Class = "UILabel"; text = "type"; ObjectID = "2ux-Wj-WCn"; */
 "2ux-Wj-WCn.text" = "тип";
 
-/* Class = "UILabel"; text = "Long names"; ObjectID = "2Vi-eq-TAO"; */
-"2Vi-eq-TAO.text" = "Длинные имена";
-
 /* Class = "UILabel"; text = "Date"; ObjectID = "5aG-r9-HTC"; */
 "5aG-r9-HTC.text" = "Дата";
 
 /* Class = "UITextField"; placeholder = "Your nickname in group"; ObjectID = "7T6-eH-nEm"; */
 "7T6-eH-nEm.placeholder" = "Ваше имя в группе";
 
-/* Class = "UILabel"; text = "Power saving"; ObjectID = "8Dm-lJ-hkP"; */
-"8Dm-lJ-hkP.text" = "Энергосбережение";
-
 /* Class = "UITextView"; text = "Message of the Day"; ObjectID = "8rt-C4-f7P"; */
 "8rt-C4-f7P.text" = "Сообщение дня";
 
-/* Class = "UILabel"; text = "Sending interval, seconds"; ObjectID = "8sE-Lc-xYs"; */
-"8sE-Lc-xYs.text" = "Интервал отправки, сек";
-
-/* Class = "UILabel"; text = "Unknown"; ObjectID = "48f-pX-4EJ"; */
-"48f-pX-4EJ.text" = "Неизвестен";
+/* Class = "UILabel"; text = "Not authorised"; ObjectID = "48f-pX-4EJ"; */
+"48f-pX-4EJ.text" = "Не авторизован";
 
 /* Class = "UILabel"; text = "Group Chat"; ObjectID = "A2D-51-5uc"; */
 "A2D-51-5uc.text" = "Чат группы";
@@ -43,17 +34,20 @@
 /* Class = "UIButton"; normalTitle = "trackerID"; ObjectID = "AJB-As-rSV"; */
 "AJB-As-rSV.normalTitle" = "trackerID";
 
+/* Class = "UITextField"; placeholder = "Message"; ObjectID = "awp-jk-SoY"; */
+"awp-jk-SoY.placeholder" = "Сообщение";
+
 /* Class = "UILabel"; text = "nick"; ObjectID = "AxV-gG-nJV"; */
 "AxV-gG-nJV.text" = "имя";
+
+/* Class = "UILabel"; text = "Distance"; ObjectID = "bKO-GC-XPI"; */
+"bKO-GC-XPI.text" = "Расстояние";
 
 /* Class = "UIButton"; normalTitle = "press Start button"; ObjectID = "BYA-yY-8gh"; */
 "BYA-yY-8gh.normalTitle" = "нажмите кнопку Старт";
 
-/* Class = "UILabel"; text = "Unknown"; ObjectID = "CHt-yv-mdX"; */
-"CHt-yv-mdX.text" = "Неизвестен";
-
-/* Class = "UILabel"; text = "Map"; ObjectID = "CRJ-D9-rPc"; */
-"CRJ-D9-rPc.text" = "Карта";
+/* Class = "UILabel"; text = "Not authorised"; ObjectID = "CHt-yv-mdX"; */
+"CHt-yv-mdX.text" = "Не авторизован";
 
 /* Class = "UILabel"; text = "nick"; ObjectID = "cwm-3c-oHU"; */
 "cwm-3c-oHU.text" = "ник";
@@ -67,31 +61,19 @@
 /* Class = "UILabel"; text = "00:00:00"; ObjectID = "DZb-1E-5vV"; */
 "DZb-1E-5vV.text" = "00:00:00";
 
-/* Class = "UILabel"; text = "Don't turn the screen off"; ObjectID = "dzF-Z7-f5g"; */
-"dzF-Z7-f5g.text" = "Не выключать экран";
-
-/* Class = "UILabel"; text = "Map style:"; ObjectID = "eUF-Zc-5EK"; */
-"eUF-Zc-5EK.text" = "Стиль карты:";
-
 /* Class = "UITextField"; placeholder = "nickname"; ObjectID = "FMD-q5-sW0"; */
 "FMD-q5-sW0.placeholder" = "ник";
 
 /* Class = "UILabel"; text = "private"; ObjectID = "FUD-bK-jc9"; */
 "FUD-bK-jc9.text" = "закрытая";
 
-/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "GBM-AG-ibl"; */
-"GBM-AG-ibl.normalTitle" = "Отпр.";
-
 /* Class = "UIButton"; normalTitle = "Add"; ObjectID = "Gcd-W9-a1F"; */
 "Gcd-W9-a1F.normalTitle" = "Создать";
-
-/* Class = "UILabel"; text = "Show tracks"; ObjectID = "IrP-ig-GDZ"; */
-"IrP-ig-GDZ.text" = "Показывать треки";
 
 /* Class = "UILabel"; text = "email"; ObjectID = "JBh-VC-BMZ"; */
 "JBh-VC-BMZ.text" = "email";
 
-/* Class = "UILabel"; text = "iOsMo"; ObjectID = "JgA-OC-PKV"; */
+/* Class = "UILabel"; text = "OsMo"; ObjectID = "JgA-OC-PKV"; */
 "JgA-OC-PKV.text" = "OsMo";
 
 /* Class = "UIButton"; normalTitle = "Join"; ObjectID = "JLp-vB-cdg"; */
@@ -106,17 +88,20 @@
 /* Class = "UILabel"; text = "group"; ObjectID = "Kpg-lx-GAk"; */
 "Kpg-lx-GAk.text" = "группа";
 
+/* Class = "UIButton"; normalTitle = "Login"; ObjectID = "Lnw-wn-EtX"; */
+"Lnw-wn-EtX.normalTitle" = "Войти";
+
 /* Class = "UILabel"; text = "Nick"; ObjectID = "Lqr-TY-UXf"; */
 "Lqr-TY-UXf.text" = "Ник";
-
-/* Class = "UILabel"; text = "Reset authorization"; ObjectID = "LWZ-te-6Dr"; */
-"LWZ-te-6Dr.text" = "Сброс авторизации";
 
 /* Class = "UITextField"; placeholder = "ID or URL of group to join"; ObjectID = "MBA-Xb-vkb"; */
 "MBA-Xb-vkb.placeholder" = "ID или URL группы";
 
 /* Class = "UILabel"; text = "00.0"; ObjectID = "mms-Em-UaN"; */
 "mms-Em-UaN.text" = "00.0";
+
+/* Class = "UILabel"; text = "Nick"; ObjectID = "Mzq-5i-TsE"; */
+"Mzq-5i-TsE.text" = "Ник";
 
 /* Class = "UILabel"; text = "Re-enter password"; ObjectID = "nCc-nC-2GY"; */
 "nCc-nC-2GY.text" = "Повторите пароль";
@@ -130,8 +115,11 @@
 /* Class = "UILabel"; text = "Load last:"; ObjectID = "ors-8k-0GG"; */
 "ors-8k-0GG.text" = "Загрузить последние:";
 
-/* Class = "UILabel"; text = "Settings"; ObjectID = "P3p-0b-A4E"; */
-"P3p-0b-A4E.text" = "Настройки";
+/* Class = "UIButton"; normalTitle = "Reset"; ObjectID = "P5a-Qg-B28"; */
+"P5a-Qg-B28.normalTitle" = "Сброс";
+
+/* Class = "UILabel"; text = "Date"; ObjectID = "p6k-rI-trZ"; */
+"p6k-rI-trZ.text" = "Дата";
 
 /* Class = "UILabel"; text = "group"; ObjectID = "Ppm-WI-6i7"; */
 "Ppm-WI-6i7.text" = "имя";
@@ -175,14 +163,8 @@
 /* Class = "UILabel"; text = "0"; ObjectID = "WVP-LT-JgZ"; */
 "WVP-LT-JgZ.text" = "00.0";
 
-/* Class = "UIButton"; normalTitle = "Map style"; ObjectID = "Xha-ba-15g"; */
-"Xha-ba-15g.normalTitle" = "Стиль карты";
-
 /* Class = "UILabel"; text = "Password"; ObjectID = "Y2L-T9-ft9"; */
 "Y2L-T9-ft9.text" = "Пароль";
-
-/* Class = "UILabel"; text = "Location distance, meters"; ObjectID = "ymo-ea-5EI"; */
-"ymo-ea-5EI.text" = "Расстояние, метры";
 
 /* Class = "UILabel"; text = "male"; ObjectID = "ZaF-6E-x27"; */
 "ZaF-6E-x27.text" = "муж.";

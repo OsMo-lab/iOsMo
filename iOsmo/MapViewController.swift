@@ -152,6 +152,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     var tileRenderer: MKTileOverlayRenderer!
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("MapViewController viewDidLoad")
@@ -761,7 +763,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func locateClick(sender: AnyObject) {
-        
         self.trackedUser = nil //Перестаем следить за выбранным пользователем
         switch self.mapView.userTrackingMode {
             case .follow:
@@ -772,6 +773,57 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
         }
         mapView.setNeedsDisplay()
+    }
+    
+    @IBAction func SelectMapStyle(sender: AnyObject) {
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Map style", comment: "Select map style"), preferredStyle: .alert)
+        var style:Int32 = 0
+        
+        func tileSourceName(_ source: Int32) -> String {
+            var mapTitle = ""
+            switch source {
+                case TileSource.OpenTopo.rawValue:
+                    mapTitle = "OSM OpenTopo"
+                case TileSource.MapyCZ.rawValue:
+                    mapTitle  = "Mapy.cz"
+                case TileSource.Cycle.rawValue:
+                    mapTitle  = "OSM Cycle"
+                default:
+                    mapTitle  = "OSM Mapnik"
+            }
+            return mapTitle
+            
+        }
+        
+        func handler(_ act:UIAlertAction!) {
+            var mapStyle: Int32;
+            
+            switch act.title! {
+                case "OSM OpenTopo":
+                    mapStyle = TileSource.OpenTopo.rawValue
+                case "OSM Cycle":
+                    mapStyle = TileSource.Cycle.rawValue
+                case "Mapy.cz":
+                    mapStyle = TileSource.MapyCZ.rawValue
+                default:
+                    mapStyle = TileSource.Mapnik.rawValue
+
+            }
+            SettingsManager.setKey("\(mapStyle)" as NSString, forKey: SettingKeys.tileSource)
+            self.setupTileRenderer()
+
+        }
+        
+        while (style < TileSource.SOURCES_COUNT.rawValue) {
+            let title = tileSourceName(style);
+            if (title != "") {
+                myAlert.addAction(UIAlertAction(title: title, style: .default, handler: handler))
+            }
+            style += 1;
+            
+        }
+
+        self.present(myAlert, animated: true, completion: nil)
     }
 }
 

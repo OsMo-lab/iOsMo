@@ -91,11 +91,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
         
-
-        if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
-            SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
-        }
-        
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
                 var vcs = tbc.viewControllers

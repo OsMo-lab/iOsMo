@@ -95,12 +95,10 @@ enum UpdatesEnum: String {
 enum SettingKeys: String {
     case device = "deviceKey"
     case trackerId = "trackerID"
-    case isStayAwake = "isStayAwake"
     case motd = "motd"
     case motdtime = "motdtime"
     
     case user = "user"
-    case locDistance = "locDistance"
 
     case logView = "logView"
     case poolGroups = "poolGroups"
@@ -111,7 +109,6 @@ enum SettingKeys: String {
     case lon_delta = "lon_delta"
     case zoom = "zoom"
     
-    case showTracks = "showTracks"
     case tileSource = "tileSource"
     case longNames = "longNames"
     
