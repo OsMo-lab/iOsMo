@@ -296,7 +296,7 @@ open class GroupManager{
     
     
 
-    open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
+    open func createGroup(_ name: String, email: String, nick: String){
         self.onCreateGroup = connection.groupCreated.add{
             print("GM.createGroup add")
             /*if ($0 != 0) {
@@ -320,7 +320,7 @@ open class GroupManager{
             print("CREATED! \($0) ")
             self.connection.groupCreated.remove(self.onCreateGroup!)
         }
-        connection.createGroup(name, email: email, nick: nick, gtype: gtype, priv: priv)
+        connection.createGroup(name, email: email, nick: nick)
     }
     
     open func enterGroup(_ name: String, nick: String){

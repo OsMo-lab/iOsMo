@@ -474,7 +474,7 @@ open class ConnectionManager: NSObject{
         self.send(request: "\(Tags.groupChat.rawValue):\(u)")
     }
     
-    open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
+    open func createGroup(_ name: String, email: String, nick: String){
         /*
         if self.onGroupCreated == nil {
             print("CM.creatGroup add onGroupCreated")
@@ -485,7 +485,7 @@ open class ConnectionManager: NSObject{
         }
         */
         let jsonInfo: NSDictionary =
-            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString]
         
         do{
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))

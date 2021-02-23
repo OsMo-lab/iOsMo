@@ -50,6 +50,7 @@
 		4D8C634D21FDCDBD0085D1C3 /* signalonoff.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D8C634A21FDCDBD0085D1C3 /* signalonoff.mp3 */; };
 		4D8C634E21FDCDBD0085D1C3 /* sendsound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D8C634B21FDCDBD0085D1C3 /* sendsound.mp3 */; };
 		4D8C635021FE2DA20085D1C3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D8C634F21FE2DA20085D1C3 /* AVFoundation.framework */; };
+		4DA3CC3225E01110008A9D69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4DA3CC3125E01110008A9D69 /* README.md */; };
 		4DA90A7025DECB82008A7D2B /* nanopb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6425DECB82008A7D2B /* nanopb.xcframework */; };
 		4DA90A7125DECB82008A7D2B /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6525DECB82008A7D2B /* PromisesObjC.xcframework */; };
 		4DA90A7225DECB82008A7D2B /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6625DECB82008A7D2B /* FirebaseAnalytics.xcframework */; };
@@ -150,6 +151,7 @@
 		4D8C634F21FE2DA20085D1C3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4D9359B21E43A697006C9FC9 /* apple-app-site-association */ = {isa = PBXFileReference; lastKnownFileType = text; path = "apple-app-site-association"; sourceTree = "<group>"; };
 		4D9359B31E43AC40006C9FC9 /* iOsmo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOsmo.entitlements; sourceTree = "<group>"; };
+		4DA3CC3125E01110008A9D69 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4DA90A6425DECB82008A7D2B /* nanopb.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = nanopb.xcframework; sourceTree = "<group>"; };
 		4DA90A6525DECB82008A7D2B /* PromisesObjC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = PromisesObjC.xcframework; sourceTree = "<group>"; };
 		4DA90A6625DECB82008A7D2B /* FirebaseAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = FirebaseAnalytics.xcframework; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				4D3744C5227225AC00608510 /* LICENSE */,
+				4DA3CC3125E01110008A9D69 /* README.md */,
 				29FA967D1A50A615009BFC19 /* libz.dylib */,
 				29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */,
 				293C95721A34B217005DD4CE /* iOsmo */,
@@ -540,6 +543,7 @@
 				4D3744C6227225AC00608510 /* LICENSE in Resources */,
 				4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */,
 				293C957F1A34B217005DD4CE /* Images.xcassets in Resources */,
+				4DA3CC3225E01110008A9D69 /* README.md in Resources */,
 				4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */,
 				4D8C634E21FDCDBD0085D1C3 /* sendsound.mp3 in Resources */,
 				4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */,
@@ -800,7 +804,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 182;
+				CURRENT_PROJECT_VERSION = 184;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -840,7 +844,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 182;
+				CURRENT_PROJECT_VERSION = 184;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;

@@ -122,7 +122,7 @@
 "p6k-rI-trZ.text" = "Дата";
 
 /* Class = "UILabel"; text = "group"; ObjectID = "Ppm-WI-6i7"; */
-"Ppm-WI-6i7.text" = "имя";
+"Ppm-WI-6i7.text" = "название";
 
 /* Class = "UILabel"; text = "Sign-in"; ObjectID = "qyj-mE-UvE"; */
 "qyj-mE-UvE.text" = "Вход";

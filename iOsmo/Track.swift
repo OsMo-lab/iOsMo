@@ -23,11 +23,7 @@ open class Track: Equatable {
     var finish: Date?
     
     init (json: Dictionary<String, AnyObject>) {
-        print(json)
-        self.u = json["u"] as? Int ?? 0
-        if (self.u == 0) {
-            self.u = Int(json["u"] as? String ?? "0")!
-        }
+        self.u = json["u"] as? Int ??  Int(json["u"] as? String ?? "0")!
         self.size = Int(json["size"] as? String ?? "0")!
         self.name = json["name"] as? String ?? ""
         self.descr = (json["description"] as? String ?? "")
