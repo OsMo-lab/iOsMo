@@ -33,7 +33,7 @@ open class Group: Equatable{
     init (json: Dictionary<String, AnyObject>) {
         self.u = json["u"] as? String ?? ("\(json["u"] as? Int ?? 0)")
         self.name = json["name"] as? String ?? ""
-        self.active =  (json["active"] as? String ?? "") == "1"
+        self.active =  (json["active"] as? String ?? ("\(json["active"] as? Int ?? 0)")) == "1"
         self.descr = (json["description"] as? String) ?? ""
         self.policy = (json["policy"] as? String) ?? ""
         self.nick = (json["nick"] as? String) ?? ""

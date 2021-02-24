@@ -70,7 +70,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 authorizationStatus == CLAuthorizationStatus.denied){
                     log.enqueue("Location authorization failed")
             } else {
-                
                 switch authorizationStatus {
                     case .notDetermined:
                         LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
@@ -91,7 +90,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 } else {
                     log.enqueue("startUpdatingLocation")
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
-                    
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)
                     })
@@ -173,8 +171,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                         self.allSessionLocations.append(locationModel)
                     }
                     locationUpdated.notify(locationModel)
-                    
-    
                     prevLM = locationModel;
                     
                 }

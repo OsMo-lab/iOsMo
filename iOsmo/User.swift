@@ -31,8 +31,8 @@ public class User:NSObject, MKAnnotation {
         self.name = json["name"] as? String ?? ""
         self.connected = (json["connected"] as? Double) ?? atof(json["connected"] as? String ?? "0")
         self.color = (json["color"] as? String) ?? ""
-        self.online = (json["online"] as? Int) ?? 0
-        self.state = (json["state"] as? Int) ?? 0
+        self.online = (json["online"] as? Int) ?? Int(json["online"] as? String ?? "0")!
+        self.state = (json["state"] as? Int) ?? Int(json["state"] as? String ?? "0")!
         let uTime = (json["time"] as? Double) ?? atof(json["time"] as? String ?? "0")
         if uTime > 0 {
             self.time = Date(timeIntervalSince1970: uTime)

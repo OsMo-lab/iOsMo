@@ -16,7 +16,7 @@ class ChatMessage : NSObject {
     init(json: Dictionary<String, AnyObject>) {
         self.text = json["text"] as? String ?? ""
         self.user = json["name"] as? String ?? ""
-        let uTime = (json["time"] as? Double) ?? 0
+        let uTime = (json["time"] as? Double) ??  atof(json["time"] as? String ?? "0")
         if uTime > 0 {
             self.time = Date(timeIntervalSince1970: uTime)
         } else {

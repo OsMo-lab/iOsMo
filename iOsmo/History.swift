@@ -35,8 +35,7 @@ open class History: Equatable {
     
     init (json: Dictionary<String, AnyObject>) {
         self.u = json["u"] as? Int ??  Int(json["u"] as? String ?? "0")!
-        
-        self.uid = Int(json["uid"] as? String ?? "0")!
+        self.uid = json["uid"] as? Int ??  Int(json["uid"] as? String ?? "0")!
         self.name = json["name"] as? String ?? ""
         //self.distantion = json["distantion"] as? Double ?? 0.0
         if let d = json["distantion"] as? String {
