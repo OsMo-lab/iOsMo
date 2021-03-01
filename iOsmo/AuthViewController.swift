@@ -34,9 +34,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
     @IBOutlet weak var actButton: UIButton!
     @IBOutlet weak var forgotButton: UIButton!
     
-    @IBOutlet weak var sexSwitch: UISwitch!
     @IBOutlet weak var signLabel: UILabel!
-    @IBOutlet weak var sexLabel: UILabel!
     @IBOutlet weak var registerView: UIView!
     @IBOutlet weak var signToRegConstraint: NSLayoutConstraint!
     @IBOutlet weak var signToPassConstraint: NSLayoutConstraint!
@@ -90,14 +88,6 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
         }
     }
 
-    //Выбор пола
-    @IBAction func setSex(_ sender: UISwitch) {
-        if sender.isOn {
-            sexLabel.text = NSLocalizedString("male", comment: "male")
-        } else {
-            sexLabel.text = NSLocalizedString("female", comment: "female")
-        }
-    }
     
     @IBAction func signAction(_ sender: UIButton) {
         if (signAction == SignActions.SignUp ) {
@@ -117,7 +107,7 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
         var urlReq = URLRequest(url: url!);
         var requestBody:String = "key=\(device)&email=\(emailField.text!)&password=\(passField.text!)"
         if (signAction == SignActions.SignUp) {
-            requestBody = "\(requestBody)&nick=\(nickField.text!)&gender=\(sexSwitch.isOn ? 1 : 0)"
+            requestBody = "\(requestBody)&nick=\(nickField.text!)"
         }
         
         urlReq.httpMethod = "POST"

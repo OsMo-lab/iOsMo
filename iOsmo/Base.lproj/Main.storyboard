@@ -993,7 +993,7 @@
                                 </connections>
                             </textField>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="77r-e3-8oz" userLabel="RegisterView">
-                                <rect key="frame" x="-1" y="182" width="600" height="192"/>
+                                <rect key="frame" x="-1" y="182" width="600" height="154"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Re-enter password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nCc-nC-2GY" userLabel="PasswordConf">
                                         <rect key="frame" x="8" y="0.0" width="584" height="35"/>
@@ -1031,32 +1031,6 @@
                                             <outlet property="delegate" destination="LlK-9l-b3c" id="XwL-Gw-ylM"/>
                                         </connections>
                                     </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sex" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wuc-tR-7kP" userLabel="Sex">
-                                        <rect key="frame" x="8" y="146" width="35" height="35"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="35" id="INs-cV-sgs"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
-                                        <color key="textColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZuK-Nw-fjP" userLabel="SexSwitch">
-                                        <rect key="frame" x="90" y="148" width="51" height="31"/>
-                                        <color key="onTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <color key="thumbTintColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <action selector="setSex:" destination="LlK-9l-b3c" eventType="touchUpInside" id="qs8-Zs-9Vc"/>
-                                        </connections>
-                                    </switch>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="male" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZaF-6E-x27" userLabel="SexLabel">
-                                        <rect key="frame" x="169" y="145" width="43" height="35"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="35" id="7bV-L6-f5V"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
-                                        <color key="textColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1064,23 +1038,16 @@
                                     <constraint firstItem="37O-WD-4BS" firstAttribute="top" secondItem="nCc-nC-2GY" secondAttribute="bottom" constant="6" id="BUc-nU-x4r"/>
                                     <constraint firstItem="YML-d4-xYR" firstAttribute="leading" secondItem="37O-WD-4BS" secondAttribute="leading" id="GLR-6P-My4"/>
                                     <constraint firstItem="Lqr-TY-UXf" firstAttribute="trailing" secondItem="77r-e3-8oz" secondAttribute="trailing" constant="-10" id="It3-k3-Dps"/>
-                                    <constraint firstAttribute="bottom" secondItem="ZaF-6E-x27" secondAttribute="bottom" constant="12" id="KdU-jU-JLZ"/>
                                     <constraint firstItem="Lqr-TY-UXf" firstAttribute="leading" secondItem="nCc-nC-2GY" secondAttribute="leading" id="SLW-Ao-raP"/>
-                                    <constraint firstItem="ZuK-Nw-fjP" firstAttribute="leading" secondItem="Wuc-tR-7kP" secondAttribute="trailing" constant="47" id="T8A-Vy-MyE"/>
-                                    <constraint firstItem="ZaF-6E-x27" firstAttribute="leading" secondItem="ZuK-Nw-fjP" secondAttribute="trailing" constant="30" id="UGc-XT-Ys3"/>
                                     <constraint firstItem="YML-d4-xYR" firstAttribute="width" secondItem="37O-WD-4BS" secondAttribute="width" id="Wam-oj-Vf9"/>
                                     <constraint firstItem="YML-d4-xYR" firstAttribute="trailing" secondItem="77r-e3-8oz" secondAttribute="trailing" constant="-8" id="Y4r-iJ-PXK"/>
-                                    <constraint firstItem="ZuK-Nw-fjP" firstAttribute="centerY" secondItem="Wuc-tR-7kP" secondAttribute="centerY" id="Z7b-mp-3PS"/>
-                                    <constraint firstItem="ZaF-6E-x27" firstAttribute="top" secondItem="Wuc-tR-7kP" secondAttribute="top" constant="-1" id="ZIU-HY-G6K"/>
-                                    <constraint firstAttribute="trailing" secondItem="ZaF-6E-x27" secondAttribute="trailing" constant="388" id="buO-AH-6JM"/>
-                                    <constraint firstItem="Wuc-tR-7kP" firstAttribute="leading" secondItem="nCc-nC-2GY" secondAttribute="leading" id="gkA-di-oTq"/>
                                     <constraint firstItem="nCc-nC-2GY" firstAttribute="top" secondItem="77r-e3-8oz" secondAttribute="top" id="hee-MI-EcZ"/>
                                     <constraint firstItem="Lqr-TY-UXf" firstAttribute="top" secondItem="37O-WD-4BS" secondAttribute="bottom" id="i49-Yz-Pun"/>
                                     <constraint firstItem="37O-WD-4BS" firstAttribute="leading" secondItem="nCc-nC-2GY" secondAttribute="leading" id="jHX-dM-p3u"/>
                                     <constraint firstItem="37O-WD-4BS" firstAttribute="trailing" secondItem="77r-e3-8oz" secondAttribute="trailing" constant="-8" id="kc9-SJ-qpB"/>
-                                    <constraint firstItem="Wuc-tR-7kP" firstAttribute="top" secondItem="YML-d4-xYR" secondAttribute="bottom" constant="2" id="tQB-dR-6xu"/>
                                     <constraint firstItem="nCc-nC-2GY" firstAttribute="leading" secondItem="77r-e3-8oz" secondAttribute="leading" constant="8" id="uhu-sa-TDd"/>
                                     <constraint firstItem="nCc-nC-2GY" firstAttribute="trailing" secondItem="77r-e3-8oz" secondAttribute="trailing" constant="-8" id="vLa-1L-aTx"/>
+                                    <constraint firstAttribute="bottom" secondItem="YML-d4-xYR" secondAttribute="bottom" constant="10" id="zoI-lJ-tn9"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2C7-Iq-l0C">
@@ -1149,8 +1116,6 @@
                         <outlet property="pass2Field" destination="37O-WD-4BS" id="XKU-gE-71K"/>
                         <outlet property="passField" destination="rd3-hm-Zzh" id="R6A-g6-fMw"/>
                         <outlet property="registerView" destination="77r-e3-8oz" id="zsR-gH-XNu"/>
-                        <outlet property="sexLabel" destination="ZaF-6E-x27" id="Osb-eE-cU2"/>
-                        <outlet property="sexSwitch" destination="ZuK-Nw-fjP" id="ztF-wN-jd4"/>
                         <outlet property="signButton" destination="TRf-Ht-0I1" id="0og-Eb-rJa"/>
                         <outlet property="signLabel" destination="qyj-mE-UvE" id="gSR-Wb-Hbf"/>
                         <outlet property="signToPassConstraint" destination="ZBG-yI-4Wg" id="ezr-jg-45v"/>
@@ -1159,7 +1124,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ko7-Y8-qpy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2145" y="770"/>
+            <point key="canvasLocation" x="-2146.376811594203" y="769.56521739130437"/>
         </scene>
         <!--MapView Controller-->
         <scene sceneID="p61-Na-REU">
