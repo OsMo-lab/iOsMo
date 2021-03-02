@@ -95,13 +95,10 @@ enum UpdatesEnum: String {
 enum SettingKeys: String {
     case device = "deviceKey"
     case trackerId = "trackerID"
-    case isStayAwake = "isStayAwake"
     case motd = "motd"
     case motdtime = "motdtime"
     
     case user = "user"
-    case sendTime = "sendTime"
-    case locDistance = "locDistance"
 
     case logView = "logView"
     case poolGroups = "poolGroups"
@@ -112,7 +109,6 @@ enum SettingKeys: String {
     case lon_delta = "lon_delta"
     case zoom = "zoom"
     
-    case showTracks = "showTracks"
     case tileSource = "tileSource"
     case longNames = "longNames"
     
@@ -169,14 +165,6 @@ enum RemoteCommand: String {
     case TTS = "46"
 }
 
-/*
-enum MapStyle: String {
-    case Outdoor = "mapbox://styles/alesir/cizr8vw9g00mb2sqji5539sj4"
-    case Satellite = "mapbox://styles/alesir/cizr906j900mc2sqjct7nbux6"
-    case Streets = "mapbox://styles/alesir/cizr8v0z6003w2st6ytibx85a"
-    case Bright = "mapbox://styles/alesir/cizr8s765004h2rkwl1ob0zat"
-}
-*/
 enum AnnotationType: Int {
     case user = 1
     case point = 2
@@ -185,8 +173,16 @@ enum AnnotationType: Int {
 
 enum TileSource: Int32 {
     case Mapnik = 0
-    ,Hotosm
-    ,wiki
-    ,Sputnik
+    ,OpenTopo
+    ,Cycle
+    ,MapyCZ
     ,SOURCES_COUNT
 }
+
+enum Privacy: Int {
+    case everyone = 0
+    ,shared
+    ,me
+    ,PRIVACY_COUNT
+}
+

@@ -70,7 +70,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 authorizationStatus == CLAuthorizationStatus.denied){
                     log.enqueue("Location authorization failed")
             } else {
-                
                 switch authorizationStatus {
                     case .notDetermined:
                         LocationTracker.sharedLocationManager.requestWhenInUseAuthorization()
@@ -91,7 +90,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                 } else {
                     log.enqueue("startUpdatingLocation")
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
-                    
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)
                     })
@@ -140,8 +138,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             
         }
         
-        let locInterval = SettingsManager.getKey(SettingKeys.sendTime)!.doubleValue;
-        let locDistance = SettingsManager.getKey(SettingKeys.locDistance)!.doubleValue;
+        let locInterval = 0.0;
         
         for loc in locations {
             let theCoordinate = loc.coordinate
@@ -172,10 +169,8 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     if !(self.isGettingLocationOnce) {
                         self.lastLocations.append(locationModel)
                         self.allSessionLocations.append(locationModel)
-                    } else {
-                        locationUpdated.notify(locationModel)
                     }
-
+                    locationUpdated.notify(locationModel)
                     prevLM = locationModel;
                     
                 }
@@ -185,24 +180,27 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд
-        if (isDeferingUpdates == false && (locInterval > 10 || locDistance > 50 )) {
+        if (isDeferingUpdates == false && (locInterval > 10  )) {
             self.isDeferingUpdates = true
-            manager.allowDeferredLocationUpdates(untilTraveled: locDistance, timeout: locInterval)
+            manager.allowDeferredLocationUpdates(untilTraveled: 100.0, timeout: locInterval)
         }
     }
 
     open func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
-        switch (error){
-        	case CLError.Code.network:
-                log.enqueue("locationManager error \(error)")
-            case CLError.Code.denied:
-                log.enqueue("locationManager error \(error)")
-            case CLError.Code.locationUnknown:
-                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
-            default:
-                log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
+        if let clErr = error as? CLError {
+            switch (clErr){
+                case CLError.network:
+                    log.enqueue("locationManager error \(error)")
+                case CLError.denied:
+                    log.enqueue("locationManager error \(error)")
+                case CLError.locationUnknown:
+                    log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
+                default:
+                    log.enqueue("locationManager error \(error). Once:\(self.isGettingLocationOnce)")
+            }
+            self.isGettingLocationOnce = false
         }
-        self.isGettingLocationOnce = false
+        
     }
     
     open func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {

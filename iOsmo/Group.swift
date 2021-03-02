@@ -31,44 +31,16 @@ open class Group: Equatable{
     }
     
     init (json: Dictionary<String, AnyObject>) {
-        let gName = json["name"] as? String ?? ""
-        let gDescr = (json["description"] as? String) ?? ""
-        let gPolicy = (json["policy"] as? String) ?? ""
-        let gNick = (json["nick"] as? String) ?? ""
-        let gColor = (json["color"] as? String) ?? ""
-        var gPermanent = (json["permanent"] as? String)
-        if (gPermanent == nil ){
-            let gPermentntInt = json["permanent"] as? Int
-
-            gPermanent = "\(gPermentntInt ?? 0)"
-        }
-        
-        let gURL = json["url"] as! String
-        var gType = json["type"] as? String
-        if (gType == nil ){
-            gType = "\(json["type"] as? Int ?? 0)"
-        }
-        let gActive = (json["active"] as? String ?? "") == "1"
-        var gU = json["u"] as? String
-        if (gU == nil ){
-            let gUint = json["u"] as! Int
-            gU = "\(gUint)"
-        }
-        
-        self.u =  gU!
-        self.name = gName
-
-        self.active = gActive
-        self.descr = gDescr
-        self.policy = gPolicy
-        self.nick = gNick
-        self.color = gColor
-        self.url = gURL
-        if (gPermanent != nil) {
-            self.permanent = gPermanent!
-        }
-
-        self.type = gType!;
+        self.u = json["u"] as? String ?? ("\(json["u"] as? Int ?? 0)")
+        self.name = json["name"] as? String ?? ""
+        self.active =  (json["active"] as? String ?? ("\(json["active"] as? Int ?? 0)")) == "1"
+        self.descr = (json["description"] as? String) ?? ""
+        self.policy = (json["policy"] as? String) ?? ""
+        self.nick = (json["nick"] as? String) ?? ""
+        self.color = (json["color"] as? String) ?? ""
+        self.url = json["url"] as! String
+        self.permanent = json["permanent"] as? String ?? "\(json["permanent"] as? Int ?? 0)"
+        self.type = json["type"] as? String ?? "\(json["type"] as? Int ?? 0)";
 
         if let jsonUsers = json["users"] as? Array<AnyObject> {
             for jsonU in jsonUsers{

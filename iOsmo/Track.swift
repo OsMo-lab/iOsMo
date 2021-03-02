@@ -23,17 +23,13 @@ open class Track: Equatable {
     var finish: Date?
     
     init (json: Dictionary<String, AnyObject>) {
-        print(json)
-        self.u = json["u"] as? Int ?? 0
-        if (self.u == 0) {
-            self.u = Int(json["u"] as? String ?? "0")!
-        }
-        self.size = Int(json["size"] as? String ?? "0")!
+        self.u = json["u"] as? Int ??  Int(json["u"] as? String ?? "0")!
+        self.size = json["size"] as? Int ??  Int(json["size"] as? String ?? "0")!
         self.name = json["name"] as? String ?? ""
         self.descr = (json["description"] as? String ?? "")
         self.color = json["color"] as? String ?? "#ffffff"
         self.url = json["url"] as? String ?? ""
-        self.type = json["type"] as? String ?? "0"
+        self.type = json["type"] as? String ?? ("\(json["type"] as? Int ?? 0)")
     }
     
     init (track: History) {
@@ -48,7 +44,7 @@ open class Track: Equatable {
     }
     
     open func getTrackData() -> XML? {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(groupId)-\(u).gpx"
         let path =  "\(paths[0])/channelsgpx/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")

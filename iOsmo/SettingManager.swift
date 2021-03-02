@@ -15,9 +15,7 @@ struct SettingsManager {
     
   
     static func getKey(_ forKey: SettingKeys) -> NSString?{
-        
         getKeyFromSettings(forKey)
-        
         return key
     }
     
@@ -25,7 +23,8 @@ struct SettingsManager {
         SettingsManager.setKey("", forKey: SettingKeys.device)
         SettingsManager.setKey("", forKey: SettingKeys.user)
         SettingsManager.setKey("", forKey: SettingKeys.trackerId)
-        _ =  GroupManager.sharedGroupManager.clearCache()
+        SettingsManager.setKey("0", forKey: SettingKeys.motdtime)
+        GroupManager.sharedGroupManager.clearCache()
 
     }
     static func setKey(_ key: NSString, forKey: SettingKeys){

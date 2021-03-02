@@ -16,7 +16,7 @@ import AVFoundation
 
 let authUrl = URL(string: "https://api2.osmo.mobi/new?")
 let servUrl = URL(string: "https://api2.osmo.mobi/serv?") // to get server info
-let iOsmoAppKey = "Jdf43G_fVl3Opa42"
+let iOsmoAppKey = "EfMNuZdpaGGYoQmWXZ4b"
 let apiUrl = "https://api2.osmo.mobi/iProx?"
 
 open class ConnectionManager: NSObject{
@@ -69,15 +69,20 @@ open class ConnectionManager: NSObject{
     open func getSessionUrl() -> String? {return "https://osmo.mobi/s/\(sessionUrlParsed)"}
 
     var delayedRequests : [String]  = [];
+    var transports: [Transport] = [Transport]()
     
     var connection = BaseTcpConnection()
     var coordinates: [LocationModel]
-    
+    var sendingCoordinates = false;
     let reachability = Reachability()!
     
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
     open var isGettingLocation = false
+    
+    
+    open var transportType: Int = 0;
+    open var trip_privacy : Int = 0;
     
     var audioPlayer = AVAudioPlayer()
     
@@ -108,17 +113,13 @@ open class ConnectionManager: NSObject{
 
         
         //!! subscribtion for almost all types events
-        connection.answerObservers.add(notifyAnswer)
+        _ = connection.answerObservers.add(notifyAnswer)
         
         let audioSession = AVAudioSession.sharedInstance()
         
-        
         do {
-            if #available(iOS 10.0, *) {
-                try audioSession.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode.default)
-            } else {
-                // Fallback on earlier versions
-            }
+            try audioSession.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode.default)
+        
         } catch {
             log.enqueue("CM.Inint: Unable to set AVAudioSessionCategory \(error)")
         }
@@ -200,7 +201,7 @@ open class ConnectionManager: NSObject{
             let vendorKey = UIDevice.current.identifierForVendor!.uuidString
             let model = UIDevice.current.modelName
             let version = UIDevice.current.systemVersion
-            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&imei=0&platform=\(model) iOS \(version)"
+            let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&platform=\(model) iOS \(version)"
             conHelper.backgroundRequest(authUrl!, requestBody: requestString as NSString)
         } else {
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device!)")
@@ -375,9 +376,19 @@ open class ConnectionManager: NSObject{
     open func openSession(){
         log.enqueue("CM.openSession")
         if (self.connected && !self.sessionOpened) {
-            let request = "\(Tags.openSession.rawValue)"
-            send(request: request)
-       }
+            let json: NSDictionary = ["transportid": self.transportType, "private": self.trip_privacy]
+            
+            do{
+                let data = try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions(rawValue: 0))
+                
+                if let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                    let request = "\(Tags.openSession.rawValue)|\(jsonString)"
+                    send(request: request)
+                }
+            }catch {
+                print("error generating trip open info")
+            }
+        }
     }
 
 
@@ -439,8 +450,9 @@ open class ConnectionManager: NSObject{
     {
         if self.sessionOpened {
             self.coordinates += coordinates
-            self.sendNextCoordinates()
-            
+            if (!self.sendingCoordinates) {
+                self.sendNextCoordinates()
+            }
         }
     }
     open func sendRemoteCommandResponse(_ rc: String) {
@@ -462,7 +474,7 @@ open class ConnectionManager: NSObject{
         self.send(request: "\(Tags.groupChat.rawValue):\(u)")
     }
     
-    open func createGroup(_ name: String, email: String, nick: String, gtype: String, priv: Bool){
+    open func createGroup(_ name: String, email: String, nick: String){
         /*
         if self.onGroupCreated == nil {
             print("CM.creatGroup add onGroupCreated")
@@ -473,7 +485,7 @@ open class ConnectionManager: NSObject{
         }
         */
         let jsonInfo: NSDictionary =
-            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString, "type": gtype as NSString, "private":(priv == true ? "1" :"0") as NSString]
+            ["name": name as NSString, "email": email as NSString, "nick": nick as NSString]
         
         do{
             let data = try JSONSerialization.data(withJSONObject: jsonInfo, options: JSONSerialization.WritingOptions(rawValue: 0))
@@ -569,8 +581,8 @@ open class ConnectionManager: NSObject{
     open func sendSystemInfo(){
         let model = UIDevice.current.modelName
         let version = UIDevice.current.systemVersion
-        let appVersion : String! = try (Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String ?? "unknown")
-        let jsonInfo: NSDictionary = try ["devicename": model, "version": "iOS \(version)", "app":"\(appVersion!)"]
+        let appVersion : String! = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String ?? "unknown"
+        let jsonInfo: NSDictionary = ["devicename": model, "version": "iOS \(version)", "app":"\(appVersion!)"]
         
         do{
             
@@ -623,7 +635,7 @@ open class ConnectionManager: NSObject{
         var command = output.components(separatedBy: "|").first!
         
         let index = command.count + 1
-        let addict = index < output.count ? output.substring(with: output.index(output.startIndex, offsetBy: index)..<output.endIndex) : ""
+        let addict = index < output.count ? String(output[output.index(output.startIndex, offsetBy: index)..<output.endIndex]) : ""
 
         var param = ""
         if command.contains(":"){
@@ -645,7 +657,15 @@ open class ConnectionManager: NSObject{
                     self.connecting = false
                     
                     self.connected = answer == 0;
+                    let js = parseJson(output) as! Dictionary<String, AnyObject>;
                     
+                    if let transport_array = js["transport"] as? Array<AnyObject> {
+                        for t in transport_array {
+                            let tt = Transport.init(json: (t as!  Dictionary<String, AnyObject>));
+                            self.transports.append(tt);
+                        }
+                    }
+  
                     if let trackerID = parseTag(output, key: Keys.id) {
                         sessionTrackerID = trackerID
                     } else {
@@ -842,7 +862,7 @@ open class ConnectionManager: NSObject{
         }
         if command == AnswTags.kick.rawValue {
             log.enqueue("connection kicked")
-            if let result = parseForErrorJson(output){
+            if parseForErrorJson(output) != nil{
                 self.connected = false
                 self.connection.closeConnection()
                 self.connect()
@@ -1033,11 +1053,14 @@ open class ConnectionManager: NSObject{
                 self.coordinates.remove(at: 0)
             }
         }
+        self.sendingCoordinates = false;
         
         self.sendNextCoordinates()
     }
     
     fileprivate func sendNextCoordinates(){
+        
+        
         /*
          if self.shouldCloseSession {
          
@@ -1070,6 +1093,7 @@ open class ConnectionManager: NSObject{
             } else {
                 req = "\(Tags.coordinate.rawValue)|\(req)"
             }
+            self.sendingCoordinates = true;
             send(request:req)
         }
     }
@@ -1133,7 +1157,7 @@ open class ConnectionManager: NSObject{
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
         
         let index = responce.components(separatedBy: "|")[0].count + 1
-        let json = responce.substring(with: responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
+        let json = responce[responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex]
         
         if let data: Data = json.data(using: String.Encoding.utf8) {
             
@@ -1157,7 +1181,7 @@ open class ConnectionManager: NSObject{
         // "TRACKER_SESSION_OPEN|{\"warn\":1,\"session\":\"40839\",\"url\":\"lGv|f2\"}\n"
         
         let index = responce.components(separatedBy: "|")[0].count + 1
-        let json = responce.substring(with: responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex)
+        let json = responce[responce.index(responce.startIndex, offsetBy: index)..<responce.endIndex]
         
         do {
             

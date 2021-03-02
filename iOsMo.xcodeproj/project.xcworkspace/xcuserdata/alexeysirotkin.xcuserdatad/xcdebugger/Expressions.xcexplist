@@ -199,6 +199,14 @@
          contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
       </ContextState>
       <ContextState
+         contextName = "ConnectionManager.Authenticate():ConnectionManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "authUrl">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ConnectionManager.notifyAnswer(_:name:answer:):ConnectionManager.swift">
       </ContextState>
       <ContextState
@@ -209,6 +217,14 @@
          <PersistentStrings>
             <PersistentString
                value = "g[&quot;u&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "HistoryViewController.tableView(_:cellForRowAt:):HistoryViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "history">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

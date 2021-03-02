@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let groupManager = GroupManager.sharedGroupManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
-    var localNotification: UILocalNotification? = nil;
+    var localNotification: UNNotificationRequest? = nil;
     var appIsStarting: Bool = false;
     fileprivate var timer = Timer()
     
@@ -51,28 +51,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let theChange = $0.0
             
             if theChange == 0 {
-                self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
+                self.displayNotification("OsMo — Tracker", NSLocalizedString("Tracking location", comment: "Tracking location"))
             } else {
                 
             }
         }
 
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            
-            // For iOS 10 data message (sent via FCM)
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-            
-        } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
-            Messaging.messaging().shouldEstablishDirectChannel = true;
-        }
+        // For iOS 10 display notification (sent via APNS)
+        UNUserNotificationCenter.current().delegate = self
+        
+        // For iOS 10 data message (sent via FCM)
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        
+        
         UIApplication.shared.applicationIconBadgeNumber = 0
         
         // [START set_messaging_delegate]
@@ -96,14 +90,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                selector: #selector(self.connectOnActivate),
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
-        
-        if SettingsManager.getKey(SettingKeys.sendTime)?.doubleValue == nil {
-            SettingsManager.setKey("5", forKey: SettingKeys.sendTime)
-        }
-
-        if SettingsManager.getKey(SettingKeys.locDistance)?.doubleValue == nil {
-            SettingsManager.setKey("5", forKey: SettingKeys.locDistance)
-        }
         
         if SettingsManager.getKey(SettingKeys.logView) == nil {
             if let tbc:UITabBarController = (window?.rootViewController as? UITabBarController){
@@ -140,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.groupManager.saveCache()
         
         if (connectionManager.connected && connectionManager.sessionOpened) {
-            self.displayNotification("iOsMo", NSLocalizedString("Tracking location", comment: "Tracking location"))
+            self.displayNotification("OsMo — Tracker", NSLocalizedString("Tracking location", comment: "Tracking location"))
         }
         
         if (connectionManager.connected && !connectionManager.sessionOpened) {
@@ -170,13 +156,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
  */
     
     public func displayNotification(_ title: String, _ body: String) {
-        if self.localNotification == nil {
-            self.localNotification = UILocalNotification()
-            self.localNotification?.alertTitle = title
-            self.localNotification?.alertBody = body
-            
-            //set the notification
-            UIApplication.shared.presentLocalNotificationNow(self.localNotification!)
+        if UIApplication.shared.applicationState != .active  {
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            self.localNotification = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         }
     }
     
@@ -188,7 +172,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     @objc func disconnectByTimer() {
         connectionManager.closeConnection()
-
         self.endBackgroundTask()
     }
     
@@ -204,6 +187,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        let center = UNUserNotificationCenter.current();
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         self.appIsStarting = false;
         if (backgroundTask != UIBackgroundTaskIdentifier.invalid) {
@@ -212,39 +196,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         if (self.localNotification != nil) {
-            UIApplication.shared.cancelLocalNotification(self.localNotification!)
+            center.removePendingNotificationRequests(withIdentifiers: [self.localNotification?.identifier ?? ""])
             self.localNotification = nil
         }
-        
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
-                if notifications.count > 0 {
-                    self.log.enqueue ("unprocessed notification count: \(notifications.count)")
-                    var identifiers: [String] = [];
-                    
-                    notifications.forEach({ (notification) in
-                        DispatchQueue.main.async {
-                            let userInfo = notification.request.content.userInfo
-                            self.log.enqueue("userInfo : \(userInfo)")
-                            if let messageID = userInfo[self.gcmMessageIDKey] {
-                                self.log.enqueue("getDeliveredNotifications FCM : \(messageID)")
-                                self.connectionManager.connection.parseOutput(messageID as! String)
-                            }
+        center.getDeliveredNotifications { (notifications) in
+            if notifications.count > 0 {
+                self.log.enqueue ("unprocessed notification count: \(notifications.count)")
+                var identifiers: [String] = [];
+                
+                notifications.forEach({ (notification) in
+                    DispatchQueue.main.async {
+                        let userInfo = notification.request.content.userInfo
+                        self.log.enqueue("notification userInfo : \(userInfo)")
+                        if let messageID = userInfo[self.gcmMessageIDKey] {
+                            self.log.enqueue("getDeliveredNotifications FCM : \(messageID)")
+                            self.connectionManager.connection.parseOutput(messageID as! String)
                         }
-                        identifiers.append( notification.request.identifier)
-                        
-                    })
-                    if (identifiers.count > 0) {
-                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: identifiers)
                     }
+                    identifiers.append( notification.request.identifier)
+                    
+                })
+                if (identifiers.count > 0) {
+                    center.removeDeliveredNotifications(withIdentifiers: identifiers)
                 }
             }
         }
         
-        
-        
-        UIApplication.shared.cancelAllLocalNotifications()
-        
+        center.removeAllPendingNotificationRequests()
      }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -255,7 +233,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             let webURL = userActivity.webpageURL!;
             if !presentViewController(url:webURL) {
-                UIApplication.shared.openURL(webURL);
+                UIApplication.shared.open(webURL, options: [:], completionHandler: nil);
             }
         }
 
@@ -317,12 +295,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     // [END receive_message]
     
-    
+    /*
     func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
         if notificationSettings.types != [.alert, .badge, .sound] {
             application.registerForRemoteNotifications()
         }
-    }
+    }*/
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         log.enqueue("Unable to register for remote notifications: \(error.localizedDescription)")
     }
@@ -351,11 +329,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-
-// [START ios_10_message_handling]
-@available(iOS 10, *)
 extension AppDelegate : UNUserNotificationCenterDelegate {
-    
     // Receive displayed notifications for iOS 10 devices.
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
@@ -399,9 +373,9 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 // [START ios_10_data_message_handling]
 extension AppDelegate : MessagingDelegate {
     // [START refresh_token]
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        log.enqueue("Firebase registration token: \(fcmToken)")
-        connectionManager.sendPush(fcmToken)
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        log.enqueue("Firebase registration token: \(fcmToken ?? "")")
+        connectionManager.sendPush(fcmToken ?? "")
         
     }
     // [END refresh_token]
@@ -410,6 +384,7 @@ extension AppDelegate : MessagingDelegate {
     // [START ios_10_data_message]
     // Receive data messages on iOS 10+ directly from FCM (bypassing APNs) when the app is in the foreground.
     // To enable direct data messages, you can set Messaging.messaging().shouldEstablishDirectChannel to true.
+    /* ООтключено после обновления Firebase 18.02.2021
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
         let data = remoteMessage.appData
         log.enqueue("Received remote message: \(remoteMessage.appData)")
@@ -419,6 +394,7 @@ extension AppDelegate : MessagingDelegate {
             connectionManager.connection.parseOutput(messageID as! String)
         }
     }
+ */
     // [END ios_10_data_message]
     
 }

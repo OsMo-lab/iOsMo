@@ -1,0 +1,14 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "OsMo";
+/* Get Info string */
+"CFBundleGetInfoString" = "";
+/* Bundle name */
+"CFBundleName" = "OsMo";
+/* Privacy - Location Always and When In Use Usage Description */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Background location is required to track and share your location";
+/* Privacy - Location Always Usage Description */
+"NSLocationAlwaysUsageDescription" = "Background location is required to track and share your location";
+/* Privacy - Location When In Use Usage Description */
+"NSLocationWhenInUseUsageDescription" = "Location usage is required to track and share your location";
+/* Privacy - Motion Usage Description */
+"NSMotionUsageDescription" = "Motion usage is required to optimize battery usage";

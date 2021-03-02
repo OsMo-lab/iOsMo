@@ -45,17 +45,14 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         self.cache = NSCache()
         // Add Refresh Control to Table View
 
-        if #available(iOS 10.0, *) {
-            self.tableView.refreshControl = refreshControl
-        } else {
-            self.tableView.addSubview(refreshControl)
-        }
+        
+        self.tableView.refreshControl = refreshControl
         // Configure Refresh Control
         refreshControl.addTarget(self, action: #selector(refreshHistory(_:)), for: .valueChanged)
         
         self.onHistoryUpdated = self.connectionManager.historyReceived.add{
             let jsonarr = $1 as! Array<AnyObject>
-            let res = $0
+            _ = $0
             
             for m in jsonarr {
                 let track = History.init(json: m as! Dictionary<String, AnyObject>)
@@ -100,49 +97,52 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 cell = UITableViewCell(style:UITableViewCell.CellStyle.default, reuseIdentifier:trackCell)
                 
             }
-           
-            if let nameLabel = cell!.contentView.viewWithTag(1) as? UILabel{
-                nameLabel.text = history[row].name
-            }
-            if let distanceLabel = cell!.contentView.viewWithTag(2) as? UILabel{
-                distanceLabel.text = String(format:"%.3f", history[row].distantion)
-            }
-            if let dateLabel = cell!.contentView.viewWithTag(3) as? UILabel{
-                let dateFormat = DateFormatter()
-                dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let formatedTime = dateFormat.string(from: history[row].start!)
-                dateLabel.text = "\(formatedTime)"
-            }
+            if (row < history.count) {
             
-            if let trackImage = cell!.contentView.viewWithTag(4) as? UIImageView{
-                if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
-                    // 2
-                    // Use cache
-                    print("Cached image used, no need to download it")
-                    trackImage.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
-                }else{
-                    // 3
-                    let imageUrl = history[row].image
-                    let url:URL! = URL(string: imageUrl)
-                    task = session.downloadTask(with: url, completionHandler: { (location, response, error) -> Void in
-                        if let data = try? Data(contentsOf: url){
-                            // 4
-                            DispatchQueue.main.async(execute: { () -> Void in
-                                // 5
-                                // Before we assign the image, check whether the current cell is visible
-                                if let updateCell = tableView.cellForRow(at: indexPath) {
-                                    if let img:UIImage = UIImage(data: data), let curTrackImage = updateCell.contentView.viewWithTag(4) as? UIImageView {
-                                        
-                                        curTrackImage.image = img
-                                        self.cache.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                if let nameLabel = cell!.contentView.viewWithTag(1) as? UILabel{
+                    nameLabel.text = history[row].name
+                }
+                if let distanceLabel = cell!.contentView.viewWithTag(2) as? UILabel{
+                    distanceLabel.text = String(format:"%.3f", history[row].distantion)
+                }
+                if let dateLabel = cell!.contentView.viewWithTag(3) as? UILabel{
+                    let dateFormat = DateFormatter()
+                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let formatedTime = dateFormat.string(from: history[row].start!)
+                    dateLabel.text = "\(formatedTime)"
+                }
+                
+                if let trackImage = cell!.contentView.viewWithTag(4) as? UIImageView{
+                    if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
+                        // 2
+                        // Use cache
+                        print("Cached image used, no need to download it")
+                        trackImage.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
+                    }else{
+                        // 3
+                        let imageUrl = history[row].image
+                        let url:URL! = URL(string: imageUrl)
+                        task = session.downloadTask(with: url, completionHandler: { (location, response, error) -> Void in
+                            if let data = try? Data(contentsOf: url){
+                                // 4
+                                DispatchQueue.main.async(execute: { () -> Void in
+                                    // 5
+                                    // Before we assign the image, check whether the current cell is visible
+                                    if let updateCell = tableView.cellForRow(at: indexPath) {
+                                        if let img:UIImage = UIImage(data: data), let curTrackImage = updateCell.contentView.viewWithTag(4) as? UIImageView {
+                                            
+                                            curTrackImage.image = img
+                                            self.cache.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                                        }
                                     }
-                                }
-                            })
-                        }
-                    })
-                    task.resume()
+                                })
+                            }
+                        })
+                        task.resume()
+                    }
                 }
             }
+            
         }
         return cell!
     }

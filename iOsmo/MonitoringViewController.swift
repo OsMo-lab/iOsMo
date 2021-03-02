@@ -61,7 +61,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var trackingModeBtn: UIButton!
 
     @IBAction func pauseClick(_ sender: AnyObject) {
-        
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
@@ -95,24 +94,71 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 
                 //UIApplication.shared.isIdleTimerDisabled = false
             } else {
-                Analytics.logEvent("trip_start", parameters: nil)
-                sendingManger.startSendingCoordinates(false)
+                if (connectionManager.transports.count > 0) {
+                    self.SelectPrivacy()
+                }
                 
-                //UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
             }
         }
-        
     }
 
+    func SelectTransportType() {
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Transport type", comment: "Select type of transport"), preferredStyle: .alert)
+        var idx:Int = 0
+        
+        while (idx < connectionManager.transports.count) {
+            let transport = connectionManager.transports[idx];
+            if (transport.name != "") {
+                myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                    self.connectionManager.transportType = transport.id;
+                    
+                    Analytics.logEvent("trip_start", parameters: nil)
+                    self.sendingManger.startSendingCoordinates(false)
+                    
+                    //UIApplication.shared.isIdleTimerDisabled = true
+                }))
+            }
+            idx += 1;
+        }
+        self.present(myAlert, animated: true, completion: nil)
+    }
+    
+    func SelectPrivacy() {
+        func privacyName(_ privacy: Int) -> String {
+            var name = ""
+            switch privacy {
+                case Privacy.everyone.rawValue:
+                    name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
+                case Privacy.shared.rawValue:
+                    name = NSLocalizedString("Shared", comment: "Trip visible by link")
+                case Privacy.me.rawValue:
+                    name = NSLocalizedString("None", comment: "Trip visible to noone")
+                default:
+                    name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
+            }
+            return name
+        }
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Set visibility of trip", comment: "Set visibility of trip"), preferredStyle: .alert)
+        var idx:Int = 0
+        
+        while (idx < Privacy.PRIVACY_COUNT.rawValue) {
+            let name = privacyName(idx);
+            if (name != "") {
+                myAlert.addAction(UIAlertAction(title: name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                    self.connectionManager.trip_privacy = idx;
+                    self.SelectTransportType()
+                }))
+            }
+            idx += 1;
+        }
+        self.present(myAlert, animated: true, completion: nil)
+    }
+    
     func uiSettings(){
         //TODO: make for different iPhoneSizes
         //slider.contentSize = CGSize(width: 640, height: 458)
         slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
-        if let md = SettingsManager.getKey(SettingKeys.motd) as String? {
-            MDView.text = md
-        } else {
-            MDView.text = ""
-        }
+        MDView.text = SettingsManager.getKey(SettingKeys.motd) as String? ?? ""
         
         if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as String? {
             self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
@@ -125,7 +171,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     fileprivate func updateSessionValues(_ elapsedTime: Int){
-    
         let (h, m, s) = durationBySecond(seconds: elapsedTime)
         let strH: String = h > 9 ? "\(h):" : h == 0 ? "" : "0\(h):"
         let strM: String = m > 9 ? "\(m):" : "0\(m):"
@@ -150,55 +195,49 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if let speedLabel = self.avgSpeedLabel {
                 speedLabel.text = String(format:"%.0f", speed)
             }
-           
         }
 
     }
     
     fileprivate func durationBySecond(seconds s:Int) -> (hours: Int, minutes: Int, seconds: Int){
-        
         return ((s % (24*3600))/3600, s%3600/60, s%60)
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
-        
         super.viewDidAppear(false)
-        
     }
     
-    
     override func viewDidLoad() {
-        
         super.viewDidLoad()
                 
-        sendingManger.sentObservers.add(self, type(of: self).onSentCoordinate)
+        _ = sendingManger.sentObservers.add(self, type(of: self).onSentCoordinate)
        
         sessionTimer = SessionTimer(handler: updateSessionValues)
         
         uiSettings()
         //setup handler for open connection
-        connectionManager.dataSendStart.add{
+        _ = connectionManager.dataSendStart.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-blue")
             }
         }
-        connectionManager.dataSendEnd.add{
+        _ = connectionManager.dataSendEnd.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-green")
             }
         }
-        connectionManager.connectionStart.add{
+        _ = connectionManager.connectionStart.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-yellow")
             }
         }
-        connectionManager.connectionClose.add{
+        _ = connectionManager.connectionClose.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-red")
             }
         }
-        connectionManager.connectionRun.add{
+        _ = connectionManager.connectionRun.add{
             let theChange = ($0.0 == 0)
             
             if theChange {
@@ -206,7 +245,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.MDView.text = $1
                     if UIApplication.shared.applicationState != .active {
                         let app = UIApplication.shared.delegate as! AppDelegate
-                        app.displayNotification("iOSMo", $1)
+                        app.displayNotification("OsMo — Tracker", $1)
                     }
                 }
                 self.groupManager.groupList(true)
@@ -241,7 +280,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
         }
         
-        connectionManager.sessionRun.add{
+        _ = connectionManager.sessionRun.add{
             let theChange = ($0.0 == 0)
             
             self.isMonitoringOn = theChange
@@ -261,7 +300,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 if self.sessionTimer != nil && !self.sessionTimer!.IsStarted {
                     self.sessionTimer!.reset()
                 }
-                
             } else {
                 
                 self.link.setTitle($0.1.isEmpty ? NSLocalizedString("session was closed", comment:"session was closed") : $0.1, for: UIControl.State())
@@ -317,104 +355,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         //moveToPosition(location)
         //drawLocationOnMap([location])
     }
-    
-    
-//MARK:  MapViewInteraction
-   /*
-    func moveToPosition(location: LocationModel){
-        //self.mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: location.lat, longitude: location.lon), animated: true)
-//        
-//        if (mainAnnotation == nil){
-//            
-//            let degreeRadius = 9000.0 / 110000.0 // (9000m / 110km per degree latitude)
-//            
-//            
-//            let southWest = CLLocationCoordinate2D(latitude: location.lat - degreeRadius, longitude: location.lon - degreeRadius)
-//            let northEast = CLLocationCoordinate2D(latitude: location.lat + degreeRadius, longitude: location.lon + degreeRadius)
-//            
-//            var zoomBounds = RMSphericalTrapezium(southWest: southWest, northEast: northEast)
-//            
-//            self.mapView.zoomWithLatitudeLongitudeBoundsSouthWest(zoomBounds.southWest, northEast: zoomBounds.northEast, animated: true)
-//            
-//            self.mapView.zoom = 20
-//        }
-    }
-  */
-//
-//    func mapView(mapView: RMMapView!, layerForAnnotation annotation: RMAnnotation!) -> RMMapLayer!{
-//        
-//        
-//        if let ann = annotation {
-//            if ann.isUserLocationAnnotation { return nil }
-//        }
-//        
-//        var shape: RMShape
-//        
-//        if let layer = annotation.layer as? RMShape {
-//            shape = layer
-//        }
-//        else { shape = RMShape(view: mapView) }
-//        
-//
-//        shape.lineColor = UIColor.orangeColor()
-//        shape.lineWidth = 5.0
-//        
-//        var locations = annotation.userInfo as! Array<CLLocation>
-//        
-//        
-//        for location in locations {
-//            
-//            shape.addLineToCoordinate(location.coordinate)
-//            shape.moveToCoordinate(location.coordinate)
-//        }
-//        
-//        return shape
-//    }
 
-    //do not delete, useful for debugging
-//    func mapView(mapView: RMMapView!, didUpdateUserLocation userLocation: RMUserLocation!) {
-//        
-//        LogQueue.sharedLogQueue.enqueue("map box update location lat: \(userLocation.location.coordinate.latitude) and lon:\(userLocation.location.coordinate.longitude)")
-//        
-//    }
-    
-
-    /*
-    func mapView(mapView: RMMapView!, layerForAnnotation annotation: RMAnnotation!) -> RMMapLayer! {
-        
-        if annotation.isUserLocationAnnotation { return nil }
-        if let info = annotation.userInfo as? User {
-           
-            let marker = RMMarker(mapboxMarkerImage: "circle-stroked", tintColorHex: info.color)
-            
-            marker!.changeLabelUsingText(info.name, position: CGPoint(x: 0, y: -18))
-            return marker
-            
-        }
-        return nil
-    }
-    */
-
-    
-    
-    
-    /*
-    func mapView(mapView: RMMapView!, didChangeUserTrackingMode mode: RMUserTrackingMode, animated: Bool) {
-        
-        let isTrack = (mode.rawValue == RMUserTrackingModeFollow.rawValue) ? true : false
-        
-        if isTrack {
-            trackingModeBtn.setImage(UIImage(named: "lock-25"), forState: UIControlState.Normal)
-        }
-        else {
-            trackingModeBtn.setImage(UIImage(named: "unlock-25"), forState: UIControlState.Normal)
-        }
-        
-        isTracked = isTrack
-        
-    }
-    */
-    
     
     func alert(_ title: String, message: String) {
         let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

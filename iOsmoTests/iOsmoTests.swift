@@ -10,7 +10,6 @@ import UIKit
 import XCTest
 import Foundation
 
-@available(iOS 9.0, *)
 class iOsmoTests: XCTestCase {
     
     private var launched = false

@@ -1,7 +1,6 @@
-/* Class = "UILabel"; text = "Copyright © 2015 Olga Grineva, 2019 Alexey Sirotkin\nAll rights reserved."; ObjectID = "8ie-xW-0ye"; */
-"8ie-xW-0ye.text" = "  Copyright © 2015 Olga Grineva, 2016 Alexey Sirotkin
-All rights reserved.";
+/* Class = "UILabel"; text = "Copyright © 2015 Olga Grineva, 2021 Alexey Sirotkin\nAll rights reserved."; ObjectID = "8ie-xW-0ye"; */
+"8ie-xW-0ye.text" = "  Copyright © 2015 Olga Grineva, 2021 Alexey Sirotkin\nAll rights reserved.";
 
-/* Class = "UILabel"; text = "iOsMo"; ObjectID = "kId-c2-rCX"; */
-"kId-c2-rCX.text" = "OsMo Monitoring";
+/* Class = "UILabel"; text = "OsMo — Tracker"; ObjectID = "kId-c2-rCX"; */
+"kId-c2-rCX.text" = "OsMo — Tracker";
 

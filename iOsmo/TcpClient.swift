@@ -229,7 +229,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 var count = 0
                 for res in responceSplit {
                     if !res.isEmpty{
-                        let subst = message.substring(with: message.index(message.endIndex, offsetBy: -1)..<message.endIndex)
+                        let subst = message[message.index(message.endIndex, offsetBy: -1)..<message.endIndex]
                         
                         if responceSplit.count < 2 && subst != "\n"{
                             return
@@ -243,7 +243,7 @@ open class TcpClient : NSObject, StreamDelegate {
 
                         let resAdvance = res + "\n"
                             
-                        message  = (responceSplit.count != count && message.endIndex >= resAdvance.endIndex) ? message.substring(with: resAdvance.endIndex..<message.endIndex) : res
+                        message  = (responceSplit.count != count && message.endIndex >= resAdvance.endIndex) ? String(message[ resAdvance.endIndex..<message.endIndex]) : res
                         
                         count += 1
 

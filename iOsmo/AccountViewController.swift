@@ -22,10 +22,12 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     var groupAction = GroupActions.view
     var groupToEnter = ""
-    var groupType = "1"
+    var clickCount = 0;
     
     @IBOutlet weak var btnEnterGroup: UIButton!
     @IBOutlet weak var btnAddGroup: UIButton!
+    @IBOutlet weak var userIcon: UIButton!
+    
     var onConnectionRun: ObserverSetEntry<(Int, String)>?
     //var onGroupCreated: ObserverSetEntry<[Group]>?
     
@@ -48,36 +50,15 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.tableView.reloadData()
                 self.tableView.scrollToRow(at: IndexPath(item:0, section: 1), at: .top, animated: true)
             }
-           
         }
     }
     
-    @IBAction func btnGroupType(_ sender: UIButton) {
-        //Create the AlertController
-        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        var typeAction: UIAlertAction = UIAlertAction(title: Group.getTypeName(GroupType.Simple.rawValue), style: .default) { action -> Void in
-            self.groupType = GroupType.Simple.rawValue
-            self.tableView.reloadData()
+    @IBAction func UserIconClick(_ sender: AnyObject) {
+        clickCount += 1;
+        if (clickCount == 7) {
+            SettingsManager.setKey("enable", forKey: SettingKeys.logView)
+            self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart iOsMo", comment:"Restart iOsMo"))
         }
-        actionSheetController.addAction(typeAction)
-        
-        typeAction = UIAlertAction(title: Group.getTypeName(GroupType.Family.rawValue), style: .default) { action -> Void in
-            self.groupType = GroupType.Family.rawValue
-            self.tableView.reloadData()
-        }
-        actionSheetController.addAction(typeAction)
-
-        typeAction = UIAlertAction(title: Group.getTypeName(GroupType.POI.rawValue), style: .default) { action -> Void in
-            self.groupType = GroupType.POI.rawValue
-            self.tableView.reloadData()
-        }
-        actionSheetController.addAction(typeAction)
-                
-        //We need to provide a popover sourceView when using it on iPad
-        actionSheetController.popoverPresentationController?.sourceView = sender as UIView
-        
-        
-        self.present(actionSheetController, animated: true, completion: nil)
     }
     
     @IBAction func btnGroupAdd(_ sender: UIButton) {
@@ -88,15 +69,13 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
             sender.isEnabled = false
             if (row == 0 && section == 0) {
                 if let gName = cell.contentView.viewWithTag(1) as? UITextField,
-                    let priv = cell.contentView.viewWithTag(2) as? UISwitch,
                     let email = cell.contentView.viewWithTag(5) as? UITextField,
                     let nick = cell.contentView.viewWithTag(6) as? UITextField {
-                    self.groupManager.createGroup(gName.text!, email: email.text!, nick: nick.text!, gtype: self.groupType, priv: priv.isOn)
+                    self.groupManager.createGroup(gName.text!, email: email.text!, nick: SettingsManager.getKey(SettingKeys.user) as String? ?? nick.text!)
                 }
             
             }
         }
-
     }
     
     @IBAction func btnGroupCellAdd(_ sender: UIButton) {
@@ -120,7 +99,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
 
     @IBAction func activateSwitched(_ sender: UISwitch) {
-        
         if let indexPath = self.tableView.indexPath(for: sender.superview?.superview as! UITableViewCell) {
             let row = (indexPath as NSIndexPath).row
             
@@ -136,13 +114,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         }
     }
     
-    
     @IBAction func btnGroupsClicked(_ sender: AnyObject) {
         groupManager.groupList(false)
     }
-    
- 
-
     
     override func viewDidAppear(_ animated: Bool) {
         setLoginControls()
@@ -167,6 +141,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         _ = groupManager.groupListUpdated.add{
             let _ = $0
             DispatchQueue.main.async {
+                self.setLoginControls()
                 self.tableView.reloadData()
             }
         }
@@ -178,7 +153,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 self.btnEnterGroup.isHidden = false
             } else {
                 self.alert(NSLocalizedString("Error on enter group", comment:"Alert title for error on enter group"), message: $0.1)
-                
                 
                 if let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)),
                     let indicator = cell.contentView.viewWithTag(3) as? UIActivityIndicatorView {
@@ -271,7 +245,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     
     override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "toAuth" {
-            
             if successLogin {
                 if connectionManager.sessionOpened {
                     alert(NSLocalizedString("Error on logout", comment:"Alert title for Error on logout"), message: NSLocalizedString("Stop current trip, before logout", comment:"Stop current trip, before logout"))
@@ -298,37 +271,33 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void {
         SettingsManager.setKey(info.accountName as NSString, forKey: SettingKeys.user)
 
+        connectionManager.closeConnection()
         connectionManager.connect()
+        
         userName.text = NSLocalizedString("Connecting...", comment:"Connecting status")
         controller.dismiss(animated: true, completion: nil)
-        groupManager.groupList(false)
+        //groupManager.groupList(false)
         
     }
     
     func setLoginControls(){
-        
         if let user = SettingsManager.getKey(SettingKeys.user) {
             if user.length > 0 {
                 userName.text = String(user)
-                loginBtn.setImage(UIImage(named: "exit-32"), for: UIControl.State())
+                userIcon.alpha = 1;
+                loginBtn.setTitle(NSLocalizedString("Logout", comment:"Logout button"), for: UIControl.State())
                 self.successLogin = true
-            } else {
-                userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
-                loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
-                self.successLogin = false
+                return;
             }
-        } else {
-            
-            userName.text = NSLocalizedString("Unknown", comment:"Unknown user")
-            loginBtn.setImage(UIImage(named: "enter-32"), for: UIControl.State())
-            self.successLogin = false
         }
+        userIcon.alpha = 0.3;
+        userName.text = NSLocalizedString("Not authorised", comment:"Not authorised user")
+        loginBtn.setTitle(NSLocalizedString("Login", comment:"Login button"), for: UIControl.State())
+        self.successLogin = false
     }
     
     func loginCancelled (_ controller: AuthViewController) -> Void {
-        
         controller.dismiss(animated: true, completion: nil)
-       
     }
     
     // MARK UITableViewDataSource
@@ -347,9 +316,9 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 btn.isHidden = true
                 indicator.startAnimating()
                 
-                groupManager.enterGroup(gName.text!, nick: nick.text!)
+                groupManager.enterGroup(gName.text!, nick: SettingsManager.getKey(SettingKeys.user) as String? ?? nick.text!)
             }
-        
+         
         }
  
     }
@@ -403,15 +372,19 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0{
-            if groupAction == GroupActions.new{
-                return 150;
-            } else {
-                return 85;
+        var height:CGFloat = 85.0;
+        if indexPath.section == 0 {
+            if groupAction == GroupActions.new {
+                if let user = SettingsManager.getKey(SettingKeys.user) {
+                    if user.length == 0 {
+                        height = 124
+                    }
+                } else {
+                    height = 124
+                }
             }
-        } else {
-            return 85;
         }
+        return height;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -420,49 +393,61 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         
         var cell: UITableViewCell?
         
-        if (section == 1 && row == 0) {
-
+        if (section == 1 && row == 0) {/* Строка вступления в группу */
            cell = tableView.dequeueReusableCell(withIdentifier: enterGroupCell, for: indexPath)
             if (cell == nil) {
                 cell = UITableViewCell(style:UITableViewCell.CellStyle.subtitle, reuseIdentifier:enterGroupCell)
             }
            if let gName = cell!.contentView.viewWithTag(1) as? UITextField,
                 let nick = cell!.contentView.viewWithTag(2) as? UITextField,
-                let btn = cell!.contentView.viewWithTag(4) as? UIButton {
+                let btn = cell!.contentView.viewWithTag(4) as? UIButton,
+                let nickLabel = cell!.contentView.viewWithTag(9) as? UILabel{
                 
                 gName.text = groupToEnter
                 gName.isEnabled = true
-                nick.text = userName.text
-                nick.isEnabled = true
+                nick.isHidden = false;
+                nickLabel.isHidden = false;
+                if let user = SettingsManager.getKey(SettingKeys.user) {
+                    if user.length > 0 {
+                        nick.text = user as String;
+                        nick.isHidden = true;
+                        nickLabel.isHidden = true;
+                    } else {
+                        nick.text = "";
+                    }
+                }
                 btn.isHidden = false
-                
            }
-        } else if (section == 0 && row == 0) {
-
+        } else if (section == 0 && row == 0) { /* Строка создания новой группы */
             cell = tableView.dequeueReusableCell(withIdentifier: newGroupCell, for: indexPath)
             if (cell == nil) {
                 cell = UITableViewCell(style:UITableViewCell.CellStyle.default, reuseIdentifier:newGroupCell)
                 
             }
-            if let typeBtn = cell!.contentView.viewWithTag(7) as? UIButton,
-                let email = cell!.contentView.viewWithTag(5) as? UITextField,
+            if let email = cell!.contentView.viewWithTag(5) as? UITextField,
                 let nick = cell!.contentView.viewWithTag(6) as? UITextField,
                 let emailLabel = cell!.contentView.viewWithTag(8) as? UILabel,
                 let nickLabel = cell!.contentView.viewWithTag(9) as? UILabel{
-                typeBtn.setTitle(Group.getTypeName(groupType), for: UIControl.State.normal)
-                
+
+                nick.isHidden = false;
+                nickLabel.isHidden = false;
+                email.isHidden = false;
+                emailLabel.isHidden = false;
+
                 if let user = SettingsManager.getKey(SettingKeys.user) {
                     if user.length > 0 {
                         nick.text = user as String;
+                        nick.isHidden = true;
+                        nickLabel.isHidden = true;
+                        email.isHidden = true;
+                        emailLabel.isHidden = true;
+
+                    } else {
+                        nick.text = "";
                     }
                 }
-
-                email.isHidden = false;
-                emailLabel.isHidden = false;
-                nick.isHidden = false;
-                nickLabel.isHidden = false;
             }
-        } else {
+        } else {/* Строка информации группы */
             cell = tableView.dequeueReusableCell(withIdentifier: groupCell, for: indexPath)
             if (cell == nil) {
                 cell = UITableViewCell(style:UITableViewCell.CellStyle.subtitle, reuseIdentifier:groupCell)
@@ -478,7 +463,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 btnURL.setTitle("https://osmo.mobi/g/\(group.url)", for: UIControl.State.normal)
                 activeSwitch.isOn = group.active
             }
-            
         }
         return cell!
     }

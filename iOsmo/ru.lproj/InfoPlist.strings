@@ -7,3 +7,6 @@
 /* Privacy - Location When In Use Usage Description */
 "NSLocationWhenInUseUsageDescription" = "Определение координат требуется для отслеживания ваших координат и их передаче вашим близким";
 
+/* Privacy - Motion Usage Description */
+"NSMotionUsageDescription" = "Доступ к датчику движения требуется для оптимального использования аккумулятора";
+

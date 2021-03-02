@@ -21,24 +21,19 @@ public class User:NSObject, MKAnnotation {
     var connected: Double //time of connected in UNIX time format
     public dynamic var coordinate : CLLocationCoordinate2D;
 
-    public dynamic var speed: Double = -1.0
+    @objc public dynamic var speed: Double = -1.0
     var track = [CLLocationCoordinate2D]()
     
     public dynamic var subtitle: String? = ""
     
     init(json:Dictionary<String, AnyObject>) {
-        var uId = json["u"] as? String
-        if (uId == nil) {
-            let uIdInt = json["u"] as! Int
-            uId = "\(uIdInt)"
-        }
-        self.u = uId
+        self.u = json["u"] as? String ?? "\(json["u"] as! Int)"
         self.name = json["name"] as? String ?? ""
-        self.connected = (json["connected"] as? Double) ?? 0
+        self.connected = (json["connected"] as? Double) ?? atof(json["connected"] as? String ?? "0")
         self.color = (json["color"] as? String) ?? ""
-        self.online = (json["online"] as? Int) ?? 0
-        self.state = (json["state"] as? Int) ?? 0
-        let uTime = (json["time"] as? Double) ?? 0
+        self.online = (json["online"] as? Int) ?? Int(json["online"] as? String ?? "0")!
+        self.state = (json["state"] as? Int) ?? Int(json["state"] as? String ?? "0")!
+        let uTime = (json["time"] as? Double) ?? atof(json["time"] as? String ?? "0")
         if uTime > 0 {
             self.time = Date(timeIntervalSince1970: uTime)
         }

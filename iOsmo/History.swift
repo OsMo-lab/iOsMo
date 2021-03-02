@@ -34,12 +34,8 @@ open class History: Equatable {
     var end: Date?
     
     init (json: Dictionary<String, AnyObject>) {
-        //print(json)
-        self.u = json["u"] as? Int ?? 0
-        if (self.u == 0) {
-            self.u = Int(json["u"] as? String ?? "0")!
-        }
-        self.uid = Int(json["uid"] as? String ?? "0")!
+        self.u = json["u"] as? Int ??  Int(json["u"] as? String ?? "0")!
+        self.uid = json["uid"] as? Int ??  Int(json["uid"] as? String ?? "0")!
         self.name = json["name"] as? String ?? ""
         //self.distantion = json["distantion"] as? Double ?? 0.0
         if let d = json["distantion"] as? String {
@@ -59,7 +55,7 @@ open class History: Equatable {
     }
     
     open func getGPXOptimalData() -> XML? {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(u).gpx"
         let path =  "\(paths[0])/history/gpx_optimal/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")
@@ -79,7 +75,7 @@ open class History: Equatable {
     }
     
     open func getGPXFullData() -> XML? {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let filename = "\(u).gpx"
         let path =  "\(paths[0])/history/gpx_full/"
         let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)\(filename)")

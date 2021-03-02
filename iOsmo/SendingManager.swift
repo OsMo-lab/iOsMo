@@ -43,11 +43,15 @@ open class SendingManager: NSObject{
         super.init()
         
         self.onLocationUpdated = locationTracker.locationUpdated.add {
+            self.log.enqueue("SendingManager: onLocationUpdated")
             if self.connectionManager.isGettingLocation  {
-
                 self.connectionManager.sendCoordinate($0)
                 self.connectionManager.isGettingLocation = false
-                //self.locationTracker.locationUpdated.remove(self.onLocationUpdated!)
+            } else {
+                if self.connectionManager.sessionOpened {
+                    self.connectionManager.sendCoordinates([$0])
+                }
+                self.sentObservers.notify($0)
             }
         }
 
@@ -97,8 +101,8 @@ open class SendingManager: NSObject{
     open func pauseSendingCoordinates(){
         locationTracker.turnMonitoringOff()
         
-        self.lcSendTimer?.invalidate()
-        self.lcSendTimer = nil
+        //self.lcSendTimer?.invalidate()
+        //self.lcSendTimer = nil
         sessionPaused.notify((0))
         UIApplication.shared.isIdleTimerDisabled = false
         
@@ -137,23 +141,15 @@ open class SendingManager: NSObject{
         if (connectionManager.sessionOpened || connectionManager.isGettingLocation) {
             
             log.enqueue("Sending Manager: start Sending")
-            self.lcSendTimer?.invalidate()
-            self.lcSendTimer = nil
-            var sendTime:TimeInterval = 4;
-            if let sT = SettingsManager.getKey(SettingKeys.sendTime) {
-                sendTime  = sT.doubleValue
-                if sendTime < 4 {
-                    sendTime = 4;
-                }
+            //self.lcSendTimer?.invalidate()
+            //self.lcSendTimer = nil
             
-            }
-            
-            self.lcSendTimer = Timer.scheduledTimer(timeInterval: sendTime, target: self, selector: aSelector, userInfo: nil, repeats: true)
+            //self.lcSendTimer = Timer.scheduledTimer(timeInterval: 0, target: self, selector: aSelector, userInfo: nil, repeats: true)
             if connectionManager.sessionOpened {
                 sessionStarted.notify((0))
             }
             
-            UIApplication.shared.isIdleTimerDisabled = SettingsManager.getKey(SettingKeys.isStayAwake)!.boolValue
+            UIApplication.shared.isIdleTimerDisabled = true
             
         }
     }

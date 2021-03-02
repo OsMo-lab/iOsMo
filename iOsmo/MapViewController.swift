@@ -152,6 +152,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     var tileRenderer: MKTileOverlayRenderer!
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("MapViewController viewDidLoad")
@@ -633,14 +635,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         var template: String;
         
         switch self.tileSource {
-            case TileSource.Hotosm:
-                template = "https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png";
-            case TileSource.Sputnik:
-                template = "http://{s}.tiles.maps.sputnik.ru/{z}/{x}/{y}.png"
-            case TileSource.wiki:
-                template = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png"
+            case TileSource.OpenTopo:
+                template = "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png";
+            case TileSource.Cycle:
+                template = "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
+            case TileSource.MapyCZ:
+                template = "https://m{n}.mapserver.mapy.cz/turist-m/{z}-{x}-{y}"
             default:
-                template = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                template = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         }
         
         if (tileRenderer != nil) {
@@ -761,7 +763,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func locateClick(sender: AnyObject) {
-        
         self.trackedUser = nil //Перестаем следить за выбранным пользователем
         switch self.mapView.userTrackingMode {
             case .follow:
@@ -772,6 +773,57 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
         }
         mapView.setNeedsDisplay()
+    }
+    
+    @IBAction func SelectMapStyle(sender: AnyObject) {
+        let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Map style", comment: "Select map style"), preferredStyle: .alert)
+        var style:Int32 = 0
+        
+        func tileSourceName(_ source: Int32) -> String {
+            var mapTitle = ""
+            switch source {
+                case TileSource.OpenTopo.rawValue:
+                    mapTitle = "OSM OpenTopo"
+                case TileSource.MapyCZ.rawValue:
+                    mapTitle  = "Mapy.cz"
+                case TileSource.Cycle.rawValue:
+                    mapTitle  = "OSM Cycle"
+                default:
+                    mapTitle  = "OSM Mapnik"
+            }
+            return mapTitle
+            
+        }
+        
+        func handler(_ act:UIAlertAction!) {
+            var mapStyle: Int32;
+            
+            switch act.title! {
+                case "OSM OpenTopo":
+                    mapStyle = TileSource.OpenTopo.rawValue
+                case "OSM Cycle":
+                    mapStyle = TileSource.Cycle.rawValue
+                case "Mapy.cz":
+                    mapStyle = TileSource.MapyCZ.rawValue
+                default:
+                    mapStyle = TileSource.Mapnik.rawValue
+
+            }
+            SettingsManager.setKey("\(mapStyle)" as NSString, forKey: SettingKeys.tileSource)
+            self.setupTileRenderer()
+
+        }
+        
+        while (style < TileSource.SOURCES_COUNT.rawValue) {
+            let title = tileSourceName(style);
+            if (title != "") {
+                myAlert.addAction(UIAlertAction(title: title, style: .default, handler: handler))
+            }
+            style += 1;
+            
+        }
+
+        self.present(myAlert, animated: true, completion: nil)
     }
 }
 
@@ -804,6 +856,25 @@ class OSMTileOverlay: MKTileOverlay {
             }
             sUrl = sUrl?.replacingOccurrences(of: "{s}", with: balance)
         }
+        if (sUrl?.contains("{n}"))! {
+            switch ((path.x + path.y + path.z) % 3) {
+                case 0:
+                    balance = "1"
+                    break;
+                case 1:
+                    balance = "2"
+                    break;
+                case 2:
+                    balance = "3"
+                    break;
+                case 3:
+                    balance = "4"
+                    break;
+            default:
+                balance = ""
+            }
+            sUrl = sUrl?.replacingOccurrences(of: "{n}", with: balance)
+        }
         sUrl = sUrl?.replacingOccurrences(of: "{z}", with: "\(path.z)")
         sUrl = sUrl?.replacingOccurrences(of: "{x}", with: "\(path.x)")
         sUrl = sUrl?.replacingOccurrences(of: "{y}", with: "\(path.y)")
@@ -812,7 +883,7 @@ class OSMTileOverlay: MKTileOverlay {
     }
     
     func cacheTile(for url:String, data: Data) {
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
         let fullPath =  "\(paths[0])/\(url)"
         let path = URL(fileURLWithPath: fullPath).deletingLastPathComponent().path
         
@@ -838,7 +909,7 @@ class OSMTileOverlay: MKTileOverlay {
         let url = self.url(forTilePath: path)
         
         let urlString = "\(url.host!)\(url.path)"
-        var paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true);
 
         let path =  "\(paths[0])/\(urlString)"
         let fileManager = FileManager.default;
@@ -849,16 +920,12 @@ class OSMTileOverlay: MKTileOverlay {
                 let fileDate = attr[FileAttributeKey.modificationDate] as! Date;
                 
                 if fileDate.timeIntervalSinceNow < 60 * 60 * 24 * 3 {
-                    do {
-                        let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)")
-                        if file != nil {
-                            // Read all the data
-                            let data = file?.readDataToEndOfFile()
-                            result(data, nil)
-                            return
-                        }
-                     } catch {
-                        
+                    let file: FileHandle? = FileHandle(forReadingAtPath: "\(path)")
+                    if file != nil {
+                        // Read all the data
+                        let data = file?.readDataToEndOfFile()
+                        result(data, nil)
+                        return
                     }
                 }
             } catch {
