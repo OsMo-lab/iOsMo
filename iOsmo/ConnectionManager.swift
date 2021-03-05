@@ -239,7 +239,8 @@ open class ConnectionManager: NSObject{
                     connectionRun.notify((1, "")) //error but is not need to be popuped
                 }
         }
-        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
+        if (shouldReConnect) {
+            self.connecting = false
             log.enqueue("Reconnect action")
             connect()
         }
