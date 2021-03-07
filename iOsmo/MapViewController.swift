@@ -8,7 +8,6 @@
 
 import Foundation
 
-import FirebaseAnalytics
 import CoreLocation
 import MapKit
 
@@ -226,7 +225,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewWillAppear(animated)
         
         print("MapViewController viewWillAppear")
+        #if TARGET_OS_IOS
         Analytics.logEvent("map_open", parameters: nil)
+        #endif
+        
 
         self.setupTileRenderer()
         

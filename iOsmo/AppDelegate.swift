@@ -9,7 +9,9 @@
 import UIKit
 import UserNotifications
 
+#if TARGET_OS_IOS
 import FirebaseAnalytics
+#endif
 import FirebaseInstanceID
 import FirebaseMessaging
 
@@ -99,10 +101,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 tbc.setViewControllers(vcs, animated: false)
             }
         }
-        
-        
 
+        #if TARGET_OS_IOS
         Analytics.logEvent("app_open", parameters: nil)
+        #endif
+
         if let url = launchOptions?[.url] as? URL {
             _ = presentViewController(url:url);
         }

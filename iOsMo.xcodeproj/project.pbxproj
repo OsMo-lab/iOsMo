@@ -53,12 +53,12 @@
 		4DA3CC3225E01110008A9D69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4DA3CC3125E01110008A9D69 /* README.md */; };
 		4DA90A7025DECB82008A7D2B /* nanopb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6425DECB82008A7D2B /* nanopb.xcframework */; };
 		4DA90A7125DECB82008A7D2B /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6525DECB82008A7D2B /* PromisesObjC.xcframework */; };
-		4DA90A7225DECB82008A7D2B /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6625DECB82008A7D2B /* FirebaseAnalytics.xcframework */; };
+		4DA90A7225DECB82008A7D2B /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6625DECB82008A7D2B /* FirebaseAnalytics.xcframework */; platformFilter = ios; };
 		4DA90A7325DECB82008A7D2B /* FirebaseCoreDiagnostics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6725DECB82008A7D2B /* FirebaseCoreDiagnostics.xcframework */; };
 		4DA90A7425DECB82008A7D2B /* FirebaseInstallations.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6825DECB82008A7D2B /* FirebaseInstallations.xcframework */; };
 		4DA90A7525DECB82008A7D2B /* FirebaseCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6925DECB82008A7D2B /* FirebaseCore.xcframework */; };
 		4DA90A7625DECB82008A7D2B /* GoogleDataTransport.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6A25DECB82008A7D2B /* GoogleDataTransport.xcframework */; };
-		4DA90A7725DECB82008A7D2B /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6B25DECB82008A7D2B /* GoogleAppMeasurement.xcframework */; };
+		4DA90A7725DECB82008A7D2B /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6B25DECB82008A7D2B /* GoogleAppMeasurement.xcframework */; platformFilter = ios; };
 		4DA90A7825DECB82008A7D2B /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6C25DECB82008A7D2B /* GoogleUtilities.xcframework */; };
 		4DA90A7925DECB82008A7D2B /* FirebaseMessaging.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6E25DECB82008A7D2B /* FirebaseMessaging.xcframework */; };
 		4DA90A7A25DECB82008A7D2B /* FirebaseInstanceID.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6F25DECB82008A7D2B /* FirebaseInstanceID.xcframework */; };
@@ -826,6 +826,7 @@
 				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
@@ -866,6 +867,7 @@
 				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
 				SWIFT_REFLECTION_METADATA_LEVEL = none;

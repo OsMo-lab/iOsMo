@@ -21,7 +21,7 @@ protocol AuthResultProtocol {
     
 }
 
-open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDelegate, UITextFieldDelegate {
+open class AuthViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
     let authAnswerScheme = "api2.osmo.mobi"
     let log = LogQueue.sharedLogQueue
@@ -171,13 +171,6 @@ open class AuthViewController: UIViewController, UIWebViewDelegate, UITextViewDe
     }
     */
 
-
-    
-    
-    open func webViewDidFinishLoad(_ webView: UIWebView) {
-        //hide loading indicator
-        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-    }
     //MARK UITextFieldDelegate
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

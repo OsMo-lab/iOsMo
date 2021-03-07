@@ -9,7 +9,9 @@
 
 import UIKit
 import CoreLocation
+#if TARGET_OS_IOS
 import FirebaseAnalytics
+#endif
 
 class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMapViewDelegate*/{
     
@@ -64,7 +66,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
+            #if TARGET_OS_IOS
             Analytics.logEvent("trip_pause", parameters: nil)
+            #endif
+            
             sendingManger.pauseSendingCoordinates()
         } else {
             connectionManager.isGettingLocation = false
@@ -89,7 +94,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if SettingsManager.getKey(SettingKeys.trackerId) as String? != ""{
             if isSessionPaused || isMonitoringOn {
+                #if TARGET_OS_IOS
                 Analytics.logEvent("trip_stop", parameters: nil)
+                #endif
+                
                 sendingManger.stopSendingCoordinates()
                 
                 //UIApplication.shared.isIdleTimerDisabled = false
@@ -111,8 +119,10 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             if (transport.name != "") {
                 myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
                     self.connectionManager.transportType = transport.id;
-                    
+                    #if TARGET_OS_IOS
                     Analytics.logEvent("trip_start", parameters: nil)
+                    #endif
+                    
                     self.sendingManger.startSendingCoordinates(false)
                     
                     //UIApplication.shared.isIdleTimerDisabled = true
