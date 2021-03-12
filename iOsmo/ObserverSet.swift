@@ -86,8 +86,6 @@ open class ObserverSet<Parameters>: CustomStringConvertible {
                 ? "\(entry.f)"
                 : "\(entry.object! ) \(entry.f)")
         }
-        
-        //let joined = ", ".join(strings)
         let joined = strings.joined(separator: ", ")
         let aMirror = Mirror(reflecting:self);
         

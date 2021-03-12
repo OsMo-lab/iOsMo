@@ -41,7 +41,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         print("HistoryViewController viewDidLoad")
         session = URLSession.shared
-        task = URLSessionDownloadTask()
+        //task = URLSessionDownloadTask()
         self.cache = NSCache()
         // Add Refresh Control to Table View
 
@@ -114,9 +114,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 if let trackImage = cell!.contentView.viewWithTag(4) as? UIImageView{
                     if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
-                        // 2
-                        // Use cache
-                        print("Cached image used, no need to download it")
+                        // Изображение есть в кэше, грузиь не нужно
                         trackImage.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
                     }else{
                         // 3
@@ -130,7 +128,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                                     // Before we assign the image, check whether the current cell is visible
                                     if let updateCell = tableView.cellForRow(at: indexPath) {
                                         if let img:UIImage = UIImage(data: data), let curTrackImage = updateCell.contentView.viewWithTag(4) as? UIImageView {
-                                            
                                             curTrackImage.image = img
                                             self.cache.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
                                         }

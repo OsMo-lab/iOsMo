@@ -27,7 +27,6 @@
 		2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB31AC21CC60070A090 /* TcpClient.swift */; };
 		29CCA6241B1676AB00DA0C83 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CCA6231B1676AB00DA0C83 /* Extensions.swift */; };
 		29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CD67091ACB6EA000656860 /* SessionTimer.swift */; };
-		29CDE0851A61911900CC5628 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CDE0841A61911900CC5628 /* SettingsViewController.swift */; };
 		29CED6BB1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png in Resources */ = {isa = PBXBuildFile; fileRef = 29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */; };
 		29CED6BD1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png in Resources */ = {isa = PBXBuildFile; fileRef = 29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */; };
 		29F293E11AED989600B6AF8A /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F293E01AED989600B6AF8A /* Coordinate.swift */; };
@@ -37,7 +36,6 @@
 		29FA960A1A45FAC5009BFC19 /* LogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96091A45FAC5009BFC19 /* LogQueue.swift */; };
 		29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96331A478335009BFC19 /* AccountViewController.swift */; };
 		29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96371A4784EC009BFC19 /* AuthViewController.swift */; };
-		29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */; };
 		4D08BFFD2295A9DE00EECB33 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D08BFFC2295A9DE00EECB33 /* History.swift */; };
 		4D19BE321E69C93600F7599D /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D19BE311E69C93600F7599D /* Point.swift */; };
 		4D2A12B422959A2900831219 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2A12B322959A2900831219 /* HistoryViewController.swift */; };
@@ -125,7 +123,6 @@
 		2982CFB31AC21CC60070A090 /* TcpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpClient.swift; sourceTree = "<group>"; };
 		29CCA6231B1676AB00DA0C83 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		29CD67091ACB6EA000656860 /* SessionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTimer.swift; sourceTree = "<group>"; };
-		29CDE0841A61911900CC5628 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screen Shot 2015-01-07 at 00.10.05.png"; sourceTree = "<group>"; };
 		29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screen Shot 2015-01-07 at 00.09.29.png"; sourceTree = "<group>"; };
 		29F293E01AED989600B6AF8A /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
@@ -135,8 +132,6 @@
 		29FA96091A45FAC5009BFC19 /* LogQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogQueue.swift; sourceTree = "<group>"; };
 		29FA96331A478335009BFC19 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		29FA96371A4784EC009BFC19 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
-		29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4D08BFFC2295A9DE00EECB33 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		4D19BE311E69C93600F7599D /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		4D2A12B322959A2900831219 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
@@ -191,7 +186,6 @@
 				4DA90A7025DECB82008A7D2B /* nanopb.xcframework in Frameworks */,
 				4D8C635021FE2DA20085D1C3 /* AVFoundation.framework in Frameworks */,
 				4DA90A7825DECB82008A7D2B /* GoogleUtilities.xcframework in Frameworks */,
-				29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */,
 				4DA90A7425DECB82008A7D2B /* FirebaseInstallations.xcframework in Frameworks */,
 				4DA90A7925DECB82008A7D2B /* FirebaseMessaging.xcframework in Frameworks */,
 				4DA90A7725DECB82008A7D2B /* GoogleAppMeasurement.xcframework in Frameworks */,
@@ -217,8 +211,6 @@
 			children = (
 				4D3744C5227225AC00608510 /* LICENSE */,
 				4DA3CC3125E01110008A9D69 /* README.md */,
-				29FA967D1A50A615009BFC19 /* libz.dylib */,
-				29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */,
 				293C95721A34B217005DD4CE /* iOsmo */,
 				293C958A1A34B217005DD4CE /* iOsmoTests */,
 				293C95711A34B217005DD4CE /* Products */,
@@ -299,7 +291,6 @@
 				29FA96331A478335009BFC19 /* AccountViewController.swift */,
 				29FA96371A4784EC009BFC19 /* AuthViewController.swift */,
 				4D8B78441FA7624A00E1069D /* MapViewController.swift */,
-				29CDE0841A61911900CC5628 /* SettingsViewController.swift */,
 				293C95791A34B217005DD4CE /* LogViewController.swift */,
 				4D68B26D222BC22F00F6CC8E /* ChatViewController.swift */,
 				4D2A12B322959A2900831219 /* HistoryViewController.swift */,
@@ -586,7 +577,6 @@
 				29FA960A1A45FAC5009BFC19 /* LogQueue.swift in Sources */,
 				293C95BC1A3C660F005DD4CE /* ConnectionManager.swift in Sources */,
 				29F293E11AED989600B6AF8A /* Coordinate.swift in Sources */,
-				29CDE0851A61911900CC5628 /* SettingsViewController.swift in Sources */,
 				29520AB81AD5D79100CC4136 /* Group.swift in Sources */,
 				293C957A1A34B217005DD4CE /* LogViewController.swift in Sources */,
 				29520AB61AD4838500CC4136 /* GroupManager.swift in Sources */,
@@ -804,7 +794,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 188;
+				CURRENT_PROJECT_VERSION = 191;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -845,7 +835,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 188;
+				CURRENT_PROJECT_VERSION = 191;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;

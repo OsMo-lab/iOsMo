@@ -6,6 +6,9 @@
          contextName = "closure #1 in ConnectionManager.getServerInfo(key:):ConnectionManager.swift">
       </ContextState>
       <ContextState
+         contextName = "ConnectionManager.init():ConnectionManager.swift">
+      </ContextState>
+      <ContextState
          contextName = "AppDelegate.presentViewController(url : URL) -&gt; Bool:AppDelegate.swift">
          <PersistentStrings>
             <PersistentString
@@ -72,6 +75,9 @@
          contextName = "GroupManager.(updateGroupsOnMap([Int]) -&gt; ()).(closure #2):GroupManager.swift">
       </ContextState>
       <ContextState
+         contextName = "TcpClient.stream(_:handle:):TcpClient.swift">
+      </ContextState>
+      <ContextState
          contextName = "BaseTcpConnection.onSentCoordinate() -&gt; ():BaseTcpConnection.swift">
          <PersistentStrings>
             <PersistentString
@@ -135,10 +141,24 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "String.hexColor.getter:Extensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ConnectionManager.sendCoordinates(_:):ConnectionManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.sendingCoordinates">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ConnectionManager.notifyAnswer(output:):ConnectionManager.swift">
       </ContextState>
       <ContextState
          contextName = "ConnectionManager.connect(_:):ConnectionManager.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ConnectionManager.connect():ConnectionManager.swift">
       </ContextState>
       <ContextState
          contextName = "GroupManager.groupList(Bool) -&gt; ():GroupManager.swift">
@@ -196,6 +216,14 @@
          contextName = "static ConnectionHelper.authenticate() -&gt; NSString?:ConnectionHelper.swift">
       </ContextState>
       <ContextState
+         contextName = "closure #1 in ConnectionManager.completed(result:token:):ConnectionManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.connected">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #2):MonitoringViewController.swift">
       </ContextState>
       <ContextState
@@ -229,12 +257,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in SendingManager.init():SendingManager.swift">
+      </ContextState>
+      <ContextState
          contextName = "MonitoringViewController.(viewDidAppear(Bool) -&gt; ()).(closure #1):MonitoringViewController.swift">
          <PersistentStrings>
             <PersistentString
                value = "$1">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ConnectionManager.reachabilityChanged(_:):ConnectionManager.swift">
       </ContextState>
       <ContextState
          contextName = "AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:):AppDelegate.swift">

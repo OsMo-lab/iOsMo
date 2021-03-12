@@ -172,7 +172,7 @@ open class AuthViewController: UIViewController, UITextViewDelegate, UITextField
     */
 
     //MARK UITextFieldDelegate
-    @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

@@ -23,6 +23,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open var distance = 0.0;
     var isDeferingUpdates = false;
     var isGettingLocationOnce = false;
+    var isGettingLocation = false;
     
     let locationUpdated = ObserverSet<(LocationModel)>()
     
@@ -49,9 +50,11 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     private func setActiveMode(_ moving: Bool) {
         log.enqueue("CMMotionActivityManager moving \(moving)")
         if moving {
+            //Находимя в движении по показаниям датчика - запрашиваем максимальную точность координат
             LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
             LocationTracker.sharedLocationManager.distanceFilter = kCLDistanceFilterNone
         } else {
+            //Неподвижны - загрубляем запрашиваемую точность координат
             LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             LocationTracker.sharedLocationManager.distanceFilter = 100
         }
@@ -68,7 +71,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             let authorizationStatus = CLLocationManager.authorizationStatus()
             if (authorizationStatus ==  CLAuthorizationStatus.restricted ||
                 authorizationStatus == CLAuthorizationStatus.denied){
-                    log.enqueue("Location authorization failed")
+                log.enqueue("Location authorization failed")
             } else {
                 switch authorizationStatus {
                     case .notDetermined:
@@ -86,10 +89,14 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
 
                 if (once) {
                     log.enqueue("requestLocation")
+                    //Запрашиваем разовое определение координат
                     LocationTracker.sharedLocationManager.requestLocation()
                 } else {
                     log.enqueue("startUpdatingLocation")
+                    //Начинаем отслеживать изменеиня координат
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
+                    self.isGettingLocation = true
+                    //Запускаем датчик движения, для тонкой настройки точности определения координат
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)
                     })
@@ -105,6 +112,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
         log.enqueue("LT.turnMonitoringOff")
         self.isDeferingUpdates = false
+        self.isGettingLocation = false
     }
     
     

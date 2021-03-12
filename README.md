@@ -1,4 +1,4 @@
-# OsMo - Tracker
+# OsMo — Tracker
 based on original code by Olga Grineva (c) 2015
 Клиент сервиса osmo.mobi для iOS
 

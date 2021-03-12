@@ -64,8 +64,8 @@
 /* Register label */
 "Register" = "Регистрация";
 
-/* Restart iOsMo */
-"Restart iOsMo" = "Перезапустите iOsMo";
+/* Restart OsMo - Tracker */
+"Restart OsMo - Tracker" = "Перезапустите OsMo - Tracker";
 
 /* session was closed */
 "session was closed" = "поездка завершена";

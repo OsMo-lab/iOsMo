@@ -57,7 +57,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         clickCount += 1;
         if (clickCount == 7) {
             SettingsManager.setKey("enable", forKey: SettingKeys.logView)
-            self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart iOsMo", comment:"Restart iOsMo"))
+            self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart OsMo - Tracker", comment:"Restart OsMo - Tracker"))
         }
     }
     

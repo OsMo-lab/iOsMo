@@ -32,7 +32,7 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class ConnectionHelper: NSObject {
     var backgroundCompletionHandler: (() -> Void)?
     private var session: URLSession!
-    private var backgroundTask: URLSessionDownloadTask?;
+    private var backgroundTask: URLSessionDownloadTask? = nil;
     
     var onCompleted: (( URL, Data?) -> ())?
     
@@ -108,6 +108,7 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
         LogQueue.sharedLogQueue.enqueue("CH.didFinishDownloadingTo")
         var data: Data;
         do {
+            backgroundTask = nil;
             data = try Data(contentsOf: location)
             DispatchQueue.main.async {
                 self.onCompleted?(location, data)
@@ -118,7 +119,7 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
                 self.onCompleted?(location, nil)
             }
         }
-        backgroundTask = nil;
+        
     }
     /*
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
