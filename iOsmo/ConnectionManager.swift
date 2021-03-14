@@ -14,9 +14,7 @@ import CoreLocation
 import AudioToolbox
 import AVFoundation
 
-let authUrl =  "https://api2.osmo.mobi/new?"
-let servUrl = "https://api2.osmo.mobi/serv?" // to get server info
-let apiUrl = "https://api2.osmo.mobi/iProx?"
+
 let iOsmoAppKey = "EfMNuZdpaGGYoQmWXZ4b"
 
 open class ConnectionManager: NSObject{
@@ -85,9 +83,7 @@ open class ConnectionManager: NSObject{
     open var trip_privacy : Int = 0;
     
     var audioPlayer = AVAudioPlayer()
-    
     public var timer = Timer()
-    
     
     class var sharedConnectionManager : ConnectionManager{
         
@@ -101,7 +97,7 @@ open class ConnectionManager: NSObject{
     override init(){
         let reachability: Reachability?
         
-        reachability = try? Reachability()
+        reachability = try? Reachability() 
         
         self.reachability = reachability
         coordinates = [LocationModel]()
@@ -176,7 +172,7 @@ open class ConnectionManager: NSObject{
         }
         LogQueue.sharedLogQueue.enqueue("CM.getServerInfo")
         let requestString = "app=\(iOsmoAppKey)"
-        conHelper.backgroundRequest(URL(string: servUrl)!, requestBody: requestString as NSString)
+        conHelper.backgroundRequest(URL(string: URLs.servUrl)!, requestBody: requestString as NSString)
     }
     
     func Authenticate () {
@@ -207,7 +203,7 @@ open class ConnectionManager: NSObject{
             let model = UIDevice.current.modelName
             let version = UIDevice.current.systemVersion
             let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&platform=\(model) iOS \(version)"
-            conHelper.backgroundRequest(URL(string: authUrl)!, requestBody: requestString as NSString)
+            conHelper.backgroundRequest(URL(string: URLs.authUrl)!, requestBody: requestString as NSString)
         } else {
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device!)")
             self.Authenticated = true
@@ -235,8 +231,9 @@ open class ConnectionManager: NSObject{
                     shouldReConnect = true;
                 }
             case .unavailable:
-                //reachabilityStatus = .notReachable
                 if (self.connected) {
+                    self.connected = false
+                    self.sendingCoordinates = false
                     log.enqueue("should be reconnected")
                     shouldReConnect = true;
                     
@@ -287,9 +284,18 @@ open class ConnectionManager: NSObject{
             }
             if self.connection.addCallBackOnSendEnd == nil {
                 self.connection.addCallBackOnSendEnd = {
-                    () -> Void in
+                    (message) -> Void in
                     self.timer.invalidate()
-                    self.dataSendEnd.notify(())
+                    let command = message.components(separatedBy: "|").first!
+                    if (command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue) {
+                        self.sendingCoordinates = false
+                    }
+                    if (message == "") { //Событие - получение данных от сервера
+                        if (!self.connected) { //Восстановления коннекта после обрыва
+                            self.connected = true
+                        }
+                    }
+                    self.dataSendEnd.notify(()) //Передаем событие подписчикам
                 }
             }
             if self.connection.addCallBackOnCloseConnection == nil {
@@ -414,7 +420,7 @@ open class ConnectionManager: NSObject{
         if self.connected {
             connection.send(request)
         } else {
-            if UIApplication.shared.applicationState == .active {
+            if (UIApplication.shared.applicationState == .active || self.sessionOpened) {
                 log.enqueue("CM.send appActive")
                 delayedRequests.append(request)
                 if (!self.timer.isValid) {
@@ -426,7 +432,7 @@ open class ConnectionManager: NSObject{
                 let device = SettingsManager.getKey(SettingKeys.device)! as String
                 let escapedRequest = request.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
 
-                if let url = URL(string: (apiUrl + "k=" + device + "&m=" + escapedRequest! ) ) {
+                if let url = URL(string: (URLs.apiUrl + "k=" + device + "&m=" + escapedRequest! ) ) {
                     conHelper.onCompleted = {(dataURL, data) in
                         guard let data = data else { return }
                         LogQueue.sharedLogQueue.enqueue("CM.Send.onCompleted")
@@ -1063,8 +1069,6 @@ open class ConnectionManager: NSObject{
                 self.coordinates.remove(at: 0)
             }
         }
-        self.sendingCoordinates = false;
-        
         self.sendNextCoordinates()
     }
     

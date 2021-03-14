@@ -19,7 +19,7 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
     open var callbackOnSendStart: (() -> Void)?
-    open var callbackOnSendEnd: (() -> Void)?
+    open var callbackOnSendEnd: ((String) -> Void)?
     open var callbackOnConnect: (() -> Void)?
     open var callbackOnCloseConnection: (() -> Void)?
     
@@ -121,7 +121,7 @@ open class TcpClient : NSObject, StreamDelegate {
                         return
                     }
                     if (self.callbackOnSendEnd != nil) {
-                        self.callbackOnSendEnd!()
+                        self.callbackOnSendEnd!(req)
                     }
                 } else {
                     self.log.enqueue("error: send request")
@@ -220,7 +220,7 @@ open class TcpClient : NSObject, StreamDelegate {
                     }
                 }
                 if (callbackOnSendEnd != nil) {
-                    callbackOnSendEnd!()
+                    callbackOnSendEnd!("")
                 }
             } else {
                 log.enqueue("Stream is empty")

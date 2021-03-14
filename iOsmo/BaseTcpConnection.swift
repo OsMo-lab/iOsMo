@@ -33,7 +33,7 @@ open class BaseTcpConnection: NSObject {
         }
     }
     
-    open var addCallBackOnSendEnd: (() -> Void)? {
+    open var addCallBackOnSendEnd: ((String) -> Void)? {
         get {
             return tcpClient.callbackOnSendEnd
         } set {

@@ -14,16 +14,11 @@ enum SignActions: Int {
     case SignUp = 2
 }
 protocol AuthResultProtocol {
-    
     func succesfullLoginWithToken (_ controller: AuthViewController, info : AuthInfo) -> Void
     func loginCancelled (_ controller: AuthViewController) -> Void
-    
-    
 }
 
 open class AuthViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
-
-    let authAnswerScheme = "api2.osmo.mobi"
     let log = LogQueue.sharedLogQueue
     
     @IBOutlet weak var emailField: UITextField!
@@ -102,7 +97,7 @@ open class AuthViewController: UIViewController, UITextViewDelegate, UITextField
         }
         
         let device = SettingsManager.getKey(SettingKeys.device)! as String
-        let url = URL(string: signAction == SignActions.SignIn ? "https://api2.osmo.mobi/signin?" : "https://api2.osmo.mobi/signup?")
+        let url = URL(string: signAction == SignActions.SignIn ? "https://\(URLs.osmoDomain)/signin?" : "https://api2.osmo.mobi/signup?")
         let session = URLSession.shared;
         var urlReq = URLRequest(url: url!);
         var requestBody:String = "key=\(device)&email=\(emailField.text!)&password=\(passField.text!)"

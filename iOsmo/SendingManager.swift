@@ -12,7 +12,6 @@ import Foundation
 import UIKit
 
 open class SendingManager: NSObject{
-    //used lib
     let sentObservers = ObserverSet<LocationModel>()
     
     fileprivate let connectionManager = ConnectionManager.sharedConnectionManager

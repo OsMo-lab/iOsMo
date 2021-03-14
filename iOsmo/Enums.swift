@@ -55,8 +55,6 @@ enum Keys: String{
     case id = "id"
 }
 
-
-
 enum AnswTags: String{
     case openedSession = "TO"
     case getGroups = "GROUP"
@@ -186,3 +184,9 @@ enum Privacy: Int {
     ,PRIVACY_COUNT
 }
 
+enum URLs {
+    static let osmoDomain = "api2.osmo.mobi"
+    static let authUrl =  "https://\(osmoDomain)/new?"
+    static let servUrl = "https://\(osmoDomain)/serv?" // to get server info
+    static let apiUrl = "https://\(osmoDomain)/iProx?"
+}
