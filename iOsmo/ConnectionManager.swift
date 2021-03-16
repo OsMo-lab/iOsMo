@@ -255,24 +255,27 @@ open class ConnectionManager: NSObject{
     open var sessionOpened: Bool = false
     private var connecting: Bool = false
  
+    /*Информация о сервере получена*/
     private func completed (result: Bool, token: Token?) {
+        self.connecting = false
         if (result) {
-            /*Информация о сервере получена*/
+            self.connecting = false
             if self.connection.addCallBackOnError == nil {
                 self.connection.addCallBackOnError = {
                     (isError : Bool) -> Void in
                     
                     self.connecting = false
                     self.shouldReConnect = isError
-                    
-                    if ((self.connected /*|| reconnect*/) && isError) {
-                        self.shouldReConnect = true;
-                    }
                     self.connected = false
                     
                     self.connectionRun.notify((1, ""))
                     if (self.shouldReConnect) {
-                        self.connect()
+                        //self.connect()
+                        if (!self.timer.isValid) {
+                            self.log.enqueue("CM.completed scheduling connect by timer")
+                            self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
+                        }
+                        
                     }
                 }
             }
@@ -285,11 +288,28 @@ open class ConnectionManager: NSObject{
             if self.connection.addCallBackOnSendEnd == nil {
                 self.connection.addCallBackOnSendEnd = {
                     (message) -> Void in
-                    self.timer.invalidate()
+                    
                     let command = message.components(separatedBy: "|").first!
+                    
                     if (command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue) {
-                        self.sendingCoordinates = false
+                        self.sendingCoordinates = true
+                    
+                        /*
+                         Удаление отправленных координат из буфера по факту отправки недопустимо, т.к. в некоторых случаях даже при отсутствии канала передачи
+                         ошибок при записи в outputStream не возникает
+                         */
+                        
+                        /* Сколько координат удалять из буфера ? */
+                        /*
+                        var cnt = command == Tags.coordinate.rawValue ? 1 :0
+                        if (cnt == 0) {
+                            cnt = message.components(separatedBy: "|").last!.components(separatedBy: ",").count
+                        }
+                        
+                        self.onSentCoordinate(cnt: cnt);
+                        */
                     }
+                     
                     if (message == "") { //Событие - получение данных от сервера
                         if (!self.connected) { //Восстановления коннекта после обрыва
                             self.connected = true
@@ -303,13 +323,17 @@ open class ConnectionManager: NSObject{
                     () -> Void in
                     self.connecting = false
                     self.connected = false
+                    self.sendingCoordinates = false
                     self.connectionClose.notify(())
                 }
             }
             if self.connection.addCallBackOnConnect == nil {
                 self.connection.addCallBackOnConnect = {
                     () -> Void in
-                    //self.connecting = false
+                    self.connecting = false
+                    if (self.timer.isValid) {
+                        self.timer.invalidate()
+                    }
                     let device = SettingsManager.getKey(SettingKeys.device)! as String
                     let request = "\(Tags.auth.rawValue)\(device)"
                     
@@ -361,20 +385,17 @@ open class ConnectionManager: NSObject{
             return;
         }
         self.connecting = true;
+        /*
         if !isNetworkAvailable {
             log.enqueue("Network is NOT available")
             shouldReConnect = true
             self.connecting = false;
             return
-        }
+        }*/
         self.connectionStart.notify(())
         
-        if (self.serverToken.port > 0) {
-            log.enqueue("Reconnecting with server info")
-            self.completed(result: true,token: self.serverToken)
-        } else {
-            self.Authenticate()
-        }
+        
+        self.Authenticate()
         
     }
     
@@ -417,13 +438,15 @@ open class ConnectionManager: NSObject{
     }
     
     open func send(request: String) {
-        if self.connected {
+        let command = request.components(separatedBy: "|").first!
+        if (self.connected || command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue) {
             connection.send(request)
         } else {
-            if (UIApplication.shared.applicationState == .active || self.sessionOpened) {
-                log.enqueue("CM.send appActive")
+            if (UIApplication.shared.applicationState == .active ) {
+                log.enqueue("CM.send appActive or coorinate")
                 delayedRequests.append(request)
                 if (!self.timer.isValid) {
+                    log.enqueue("CM.send scheduling connect by timer")
                     self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
                 }
             } else {
@@ -448,6 +471,7 @@ open class ConnectionManager: NSObject{
         }
     }
     
+    //Попытка посстановить соединение после обрыва, по срабатыванию таймера
     @objc func connectByTimer() {
         self.connect()
     }
@@ -894,18 +918,24 @@ open class ConnectionManager: NSObject{
             sendPing()
             return
         }
+        
         if command == AnswTags.coordinate.rawValue {
-            let cnt = Int(addict)
+            
+             let cnt = Int(addict)
+            
             if cnt ?? 0  > 0 {
                 self.onSentCoordinate(cnt:cnt!)
             }
+            
             return
         }
         if command == AnswTags.buffer.rawValue {
+            
             let cnt = Int(addict)
             if cnt ?? 0 > 0 {
                 self.onSentCoordinate(cnt:cnt!)
             }
+            
             return
         }
         if command == AnswTags.grCoord.rawValue {
@@ -988,7 +1018,6 @@ open class ConnectionManager: NSObject{
                     audioPlayer.stop()
                     sendRemoteCommandResponse(param)
                 }
-                
                 return
             }
             
@@ -996,7 +1025,6 @@ open class ConnectionManager: NSObject{
             if (param == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 sendingManger.stopSendingCoordinates()
                 sendRemoteCommandResponse(param)
-
                 return
             }
             if (param == RemoteCommand.TRACKER_EXIT.rawValue){
@@ -1069,6 +1097,7 @@ open class ConnectionManager: NSObject{
                 self.coordinates.remove(at: 0)
             }
         }
+        self.sendingCoordinates = false
         self.sendNextCoordinates()
     }
     
@@ -1105,8 +1134,11 @@ open class ConnectionManager: NSObject{
             } else {
                 req = "\(Tags.coordinate.rawValue)|\(req)"
             }
-            self.sendingCoordinates = true;
             send(request:req)
+            if (idx % 10 == 0 && !self.connected) { //Накопилось 10 координат а соединение разорвано?
+                self.connect() //Пытаемся восстановить соединение
+                
+            }
         }
     }
     

@@ -27,7 +27,7 @@ All rights reserved.</string>
                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" restorationIdentifier="APP_VERSION" text="2.1(192)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGV-kz-4ch" userLabel="APP_VERSION">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" restorationIdentifier="APP_VERSION" text="2.1(194)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGV-kz-4ch" userLabel="APP_VERSION">
                     <rect key="frame" x="102" y="190" width="277" height="18"/>
                     <accessibility key="accessibilityConfiguration" identifier="APP_VERSION" label="APP_VERSION"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>

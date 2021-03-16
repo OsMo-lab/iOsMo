@@ -39,6 +39,9 @@ open class TcpClient : NSObject, StreamDelegate {
     
     open func createConnection(_ token: Token){
         if (token.port>0) {
+            if ( inputStream != nil || outputStream != nil ) {
+                self.closeConnection()
+            }
             Stream.getStreamsToHost(withName: token.address, port: token.port, inputStream: &inputStream, outputStream: &outputStream)
             if inputStream != nil && outputStream != nil {
                 isOpen = false
@@ -80,25 +83,29 @@ open class TcpClient : NSObject, StreamDelegate {
             inputStream?.delegate = nil
             inputStream?.close()
             inputStream?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
+            inputStream = nil
             
         }
         if (outputStream != nil) {
             outputStream?.delegate = nil
             outputStream?.close()
             outputStream?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
+            outputStream = nil
         }
-        isOpen = false
-        if (self.callbackOnCloseConnection != nil) {
-            DispatchQueue.main.async {
-                self.callbackOnCloseConnection!()
+        if (isOpen) {
+            isOpen = false
+            if (self.callbackOnCloseConnection != nil) {
+                DispatchQueue.main.async {
+                    self.callbackOnCloseConnection!()
+                }
             }
         }
         self.callbackOnConnect = nil
     }
 
     final func writeToStream(){
-        if self.outputStream != nil {
-            if _messagesQueue.count > 0 && self.outputStream!.hasSpaceAvailable  {
+        if (self.outputStream != nil && (isOpen == true || _messagesQueue.count % 10 == 0)) { //Пишем только в открытое соединение
+            if _messagesQueue.count > 0 /*&& self.outputStream!.hasSpaceAvailable */ {
                 var req: String = ""
                 sendQueue.sync {
                     req = self._messagesQueue.removeLast()
@@ -135,13 +142,15 @@ open class TcpClient : NSObject, StreamDelegate {
     
     final func send(message:String){
         let command = message.components(separatedBy: "|").first!
-        if command == AnswTags.buffer.rawValue {
+        //Отправляем список координат ?
+        if command == Tags.buffer.rawValue {
             var idx = 0;
             sendQueue.sync {
+                //Удаляем из очереди сообщений все ранее неотправленные координаты, т.к. они должны содержаться в текущем запросе
                 for msg in _messagesQueue {
                     let cmd = msg.components(separatedBy: "|").first!
                     
-                    if cmd == AnswTags.buffer.rawValue || cmd == AnswTags.coordinate.rawValue {
+                    if cmd == Tags.buffer.rawValue || cmd == Tags.coordinate.rawValue {
                         _messagesQueue.remove(at: idx);
                         break;
                     } else {
@@ -165,9 +174,7 @@ open class TcpClient : NSObject, StreamDelegate {
                 _messagesQueue.append(message)
             }
         }
-        if self.outputStream != nil {
-            writeToStream()
-        }
+        writeToStream()
     }
     
     private var message = "";
@@ -192,10 +199,14 @@ open class TcpClient : NSObject, StreamDelegate {
 
         case Stream.Event.errorOccurred:
             log.enqueue("\(aStream == self.inputStream ? "input" : "output") stream errorOccurred, connection is out")
-            self.closeConnection()
-            if callbackOnError != nil {
-                let reconnect =  aStream == self.inputStream ? false : true
-                callbackOnError!(reconnect)
+            
+            if (self.isOpen) {
+                //Ошибка возникла в потоке записи - тогда делаем попытку восстановить соединение
+                let reconnect =  aStream == self.outputStream ? false : true
+            
+                if callbackOnError != nil {
+                    callbackOnError!(reconnect)
+                }
             }
         case Stream.Event.hasSpaceAvailable:
             writeToStream()

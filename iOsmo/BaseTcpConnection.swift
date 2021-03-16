@@ -64,7 +64,9 @@ open class BaseTcpConnection: NSObject {
     }
     
     func connect(_ token: Token){
-        tcpClient.callbackOnParse = parseOutput
+        if (tcpClient.callbackOnParse == nil) {
+            tcpClient.callbackOnParse = parseOutput
+        }
         tcpClient.createConnection(token)
     }
 

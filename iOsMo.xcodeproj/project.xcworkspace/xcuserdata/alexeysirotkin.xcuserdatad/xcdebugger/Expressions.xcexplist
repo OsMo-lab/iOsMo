@@ -269,6 +269,11 @@
       </ContextState>
       <ContextState
          contextName = "ConnectionManager.reachabilityChanged(_:):ConnectionManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "shouldReConnect">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "AppDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:):AppDelegate.swift">
