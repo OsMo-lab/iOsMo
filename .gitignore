@@ -23,3 +23,7 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 *.xcexplist
+iOsMo.xcodeproj/project.xcworkspace/xcuserdata/alexeysirotkin.xcuserdatad/UserInterfaceState.xcuserstate
+iOsMo.xcodeproj/xcuserdata/alexeysirotkin.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+*.xcbkptlist
+iOsMo.xcodeproj/project.xcworkspace/xcuserdata/alexeysirotkin.xcuserdatad/UserInterfaceState.xcuserstate
