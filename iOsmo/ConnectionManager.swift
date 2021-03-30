@@ -81,7 +81,7 @@ open class ConnectionManager: NSObject{
     var reachability: Reachability?
     
     open var transportType: Int = 0;
-    open var trip_privacy : Int = 0;
+    open var trip_privacy : Int = -1;
     
     var audioPlayer = AVAudioPlayer()
     public var timer = Timer()
@@ -417,7 +417,7 @@ open class ConnectionManager: NSObject{
 
     open func closeSession(){
         log.enqueue("CM.closeSession")
-        
+        self.trip_privacy = -1
         if self.sessionOpened {
             let request = "\(Tags.closeSession.rawValue)"
             connection.send(request)
@@ -731,6 +731,7 @@ open class ConnectionManager: NSObject{
                             SettingsManager.setKey(trackerId as NSString, forKey: SettingKeys.trackerId)
                         }
                         connectionRun.notify((answer, name))
+                        
                     }
                 } else {
                     connectionRun.notify((answer, name))
