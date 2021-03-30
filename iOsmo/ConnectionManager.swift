@@ -49,6 +49,7 @@ open class ConnectionManager: NSObject{
     let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
+    let dataReceiveEnd = ObserverSet<()>()
     let dataSendEnd = ObserverSet<()>()
     
     let conHelper = ConnectionHelper()
@@ -285,6 +286,15 @@ open class ConnectionManager: NSObject{
                     self.dataSendStart.notify(())
                 }
             }
+            if self.connection.addCallBackOnReceiveEnd == nil {
+                self.connection.addCallBackOnReceiveEnd = {
+                    () -> Void in
+                    self.dataReceiveEnd.notify(())
+                    if (!self.connected) { //Восстановления коннекта после обрыва
+                        self.connected = true
+                    }
+                }
+            }
             if self.connection.addCallBackOnSendEnd == nil {
                 self.connection.addCallBackOnSendEnd = {
                     (message) -> Void in
@@ -293,28 +303,8 @@ open class ConnectionManager: NSObject{
                     
                     if (command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue) {
                         self.sendingCoordinates = true
-                    
-                        /*
-                         Удаление отправленных координат из буфера по факту отправки недопустимо, т.к. в некоторых случаях даже при отсутствии канала передачи
-                         ошибок при записи в outputStream не возникает
-                         */
-                        
-                        /* Сколько координат удалять из буфера ? */
-                        /*
-                        var cnt = command == Tags.coordinate.rawValue ? 1 :0
-                        if (cnt == 0) {
-                            cnt = message.components(separatedBy: "|").last!.components(separatedBy: ",").count
-                        }
-                        
-                        self.onSentCoordinate(cnt: cnt);
-                        */
                     }
                      
-                    if (message == "") { //Событие - получение данных от сервера
-                        if (!self.connected) { //Восстановления коннекта после обрыва
-                            self.connected = true
-                        }
-                    }
                     self.dataSendEnd.notify(()) //Передаем событие подписчикам
                 }
             }
@@ -367,9 +357,7 @@ open class ConnectionManager: NSObject{
                 self.log.enqueue("CM.completed Error: Invalid data")
                 self.connectionRun.notify((1, "Invalid data"))
                 self.shouldReConnect = false
-                
             }
-            
         }
     }
     
@@ -402,7 +390,6 @@ open class ConnectionManager: NSObject{
     open func closeConnection() {
         if (self.connected && !self.sessionOpened) {
             connection.closeConnection()
-            self.connection.addCallBackOnConnect = nil
             self.connected = false
             self.Authenticated = false
             self.sendingCoordinates = false
@@ -447,7 +434,7 @@ open class ConnectionManager: NSObject{
                 delayedRequests.append(request)
                 if (!self.timer.isValid) {
                     log.enqueue("CM.send scheduling connect by timer")
-                    self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
+                    self.timer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
                 }
             } else {
                 log.enqueue("CM.send appInActive")

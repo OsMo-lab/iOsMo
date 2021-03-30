@@ -24,6 +24,11 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.alexey.sirotkin.iosmo.tracker-start</string>
+		<string>com.alexey.sirotkin.iosmo.tracker-stop</string>
+	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>

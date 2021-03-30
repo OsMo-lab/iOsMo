@@ -49,7 +49,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var MDView: UITextView!
     
     @IBOutlet weak var osmoImage: UIImageView!
-    @IBOutlet weak var osmoStatus: UIImageView!
     @IBOutlet weak var gpsConnectionImage: UIImageView!
     @IBOutlet weak var playStopBtn: UIButton!
 
@@ -232,7 +231,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.osmoImage.image = UIImage(named:"small-blue")
             }
         }
-        _ = connectionManager.dataSendEnd.add{
+        _ = connectionManager.dataReceiveEnd.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-green")
             }
@@ -282,9 +281,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             }
             
             self.log.enqueue("MVC: The connection status was changed: \(theChange)")
-            
-            //self.osmoStatus.isHidden = !theChange
-            
             if !theChange && !$0.1.isEmpty {
                 self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
             }

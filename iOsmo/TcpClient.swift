@@ -19,6 +19,7 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
     open var callbackOnSendStart: (() -> Void)?
+    open var callbackOnReceiveEnd: (() -> Void)?
     open var callbackOnSendEnd: ((String) -> Void)?
     open var callbackOnConnect: (() -> Void)?
     open var callbackOnCloseConnection: (() -> Void)?
@@ -100,7 +101,6 @@ open class TcpClient : NSObject, StreamDelegate {
                 }
             }
         }
-        self.callbackOnConnect = nil
     }
 
     final func writeToStream(){
@@ -230,8 +230,8 @@ open class TcpClient : NSObject, StreamDelegate {
                         }
                     }
                 }
-                if (callbackOnSendEnd != nil) {
-                    callbackOnSendEnd!("")
+                if (callbackOnReceiveEnd != nil) {
+                    callbackOnReceiveEnd!()
                 }
             } else {
                 log.enqueue("Stream is empty")

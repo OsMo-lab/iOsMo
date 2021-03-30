@@ -12,7 +12,6 @@
 		293C957D1A34B217005DD4CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 293C957B1A34B217005DD4CE /* Main.storyboard */; };
 		293C957F1A34B217005DD4CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 293C957E1A34B217005DD4CE /* Images.xcassets */; };
 		293C95821A34B217005DD4CE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 293C95801A34B217005DD4CE /* LaunchScreen.xib */; };
-		293C958E1A34B217005DD4CE /* iOsmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C958D1A34B217005DD4CE /* iOsmoTests.swift */; };
 		293C95B61A34F63B005DD4CE /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 293C95B51A34F63B005DD4CE /* settings.plist */; };
 		293C95BC1A3C660F005DD4CE /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95BB1A3C660F005DD4CE /* ConnectionManager.swift */; };
 		293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C11A3C665E005DD4CE /* ConnectionProtocol.swift */; };
@@ -64,25 +63,13 @@
 		4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE661EA2B797009E96B5 /* Track.swift */; };
 		4DB4CE691EA3EB31009E96B5 /* XML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE681EA3EB31009E96B5 /* XML.swift */; };
 		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
-		4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */; };
 		4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB841E5A18880094FF8A /* InfoPlist.strings */; };
 		4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */; };
-		4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4DEACF1921E13CAE00D1A32D /* Push.txt */; };
 		4DEACF2221EFA99C00D1A32D /* MonitoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEACF2121EFA99B00D1A32D /* MonitoringViewController.swift */; };
 		4DFF727E25D1767F00DFAF52 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFF727D25D1767F00DFAF52 /* Transport.swift */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		293C95881A34B217005DD4CE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 293C95681A34B217005DD4CE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 293C956F1A34B217005DD4CE;
-			remoteInfo = iOsmo;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		4D19BE2C1E67353B00F7599D /* Embed Frameworks */ = {
@@ -105,7 +92,6 @@
 		293C957C1A34B217005DD4CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		293C957E1A34B217005DD4CE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		293C95811A34B217005DD4CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		293C95871A34B217005DD4CE /* iOsmoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOsmoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C958C1A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C958D1A34B217005DD4CE /* iOsmoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOsmoTests.swift; sourceTree = "<group>"; };
 		293C95AB1A34C4D9005DD4CE /* iOsmo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOsmo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -196,13 +182,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		293C95841A34B217005DD4CE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -222,7 +201,6 @@
 			isa = PBXGroup;
 			children = (
 				293C95701A34B217005DD4CE /* OsMo.app */,
-				293C95871A34B217005DD4CE /* iOsmoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -446,24 +424,6 @@
 			productReference = 293C95701A34B217005DD4CE /* OsMo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		293C95861A34B217005DD4CE /* iOsmoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */;
-			buildPhases = (
-				293C95831A34B217005DD4CE /* Sources */,
-				293C95841A34B217005DD4CE /* Frameworks */,
-				293C95851A34B217005DD4CE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				293C95891A34B217005DD4CE /* PBXTargetDependency */,
-			);
-			name = iOsmoTests;
-			productName = iOsmoTests;
-			productReference = 293C95871A34B217005DD4CE /* iOsmoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -491,12 +451,6 @@
 							};
 						};
 					};
-					293C95861A34B217005DD4CE = {
-						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = SF5DP65BZ4;
-						LastSwiftMigration = 1010;
-						TestTargetID = 293C956F1A34B217005DD4CE;
-					};
 				};
 			};
 			buildConfigurationList = 293C956B1A34B217005DD4CE /* Build configuration list for PBXProject "iOsMo" */;
@@ -514,7 +468,6 @@
 			projectRoot = "";
 			targets = (
 				293C956F1A34B217005DD4CE /* iOsMo */,
-				293C95861A34B217005DD4CE /* iOsmoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -538,15 +491,6 @@
 				4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */,
 				4D8C634E21FDCDBD0085D1C3 /* sendsound.mp3 in Resources */,
 				4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		293C95851A34B217005DD4CE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */,
-				4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,23 +556,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		293C95831A34B217005DD4CE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				293C958E1A34B217005DD4CE /* iOsmoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		293C95891A34B217005DD4CE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 293C956F1A34B217005DD4CE /* iOsMo */;
-			targetProxy = 293C95881A34B217005DD4CE /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		293C957B1A34B217005DD4CE /* Main.storyboard */ = {
@@ -794,7 +722,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 194;
+				CURRENT_PROJECT_VERSION = 202;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -835,7 +763,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 194;
+				CURRENT_PROJECT_VERSION = 202;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -867,54 +795,6 @@
 			};
 			name = Release;
 		};
-		293C95951A34B217005DD4CE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = iOsmoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
-			};
-			name = Debug;
-		};
-		293C95961A34B217005DD4CE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = iOsmoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -932,15 +812,6 @@
 			buildConfigurations = (
 				293C95921A34B217005DD4CE /* Debug */,
 				293C95931A34B217005DD4CE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				293C95951A34B217005DD4CE /* Debug */,
-				293C95961A34B217005DD4CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

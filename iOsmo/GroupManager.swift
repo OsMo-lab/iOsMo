@@ -293,9 +293,6 @@ open class GroupManager{
         connection.groupsSwitch(s)
     }
 
-    
-    
-
     open func createGroup(_ name: String, email: String, nick: String){
         self.onCreateGroup = connection.groupCreated.add{
             print("GM.createGroup add")
@@ -369,8 +366,11 @@ open class GroupManager{
                     
                     var points : [NSDictionary] = [NSDictionary]()
                     for p in g.points {
+                        let t:TimeInterval = (p.time != nil) ? p.time!.timeIntervalSince1970 : 0
+                        let s:TimeInterval = (p.start != nil) ? p.start!.timeIntervalSince1970 : 0
+                        let f:TimeInterval = (p.finish != nil) ? p.finish!.timeIntervalSince1970 : 0
                         let point : NSDictionary =
-                            ["u": p.u, "name": p.name,"url": p.url, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)"];
+                            ["u": p.u, "name": p.name,"url": p.url, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)","time":"\(t)","start":"\(s)","finish":"\(f)"];
                         points.append(point)
                     }
                     

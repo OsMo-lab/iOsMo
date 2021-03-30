@@ -41,6 +41,14 @@ open class BaseTcpConnection: NSObject {
         }
     }
     
+    open var addCallBackOnReceiveEnd: (() -> Void)? {
+        get {
+            return tcpClient.callbackOnReceiveEnd
+        } set {
+            tcpClient.callbackOnReceiveEnd = newValue
+        }
+    }
+    
     open var addCallBackOnConnect: (() -> Void)? {
         get {
             return tcpClient.callbackOnConnect

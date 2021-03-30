@@ -98,27 +98,27 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                 
             }
             if (row < history.count) {
-            
+                let trip = history[row]
                 if let nameLabel = cell!.contentView.viewWithTag(1) as? UILabel{
-                    nameLabel.text = history[row].name
+                    nameLabel.text = trip.name
                 }
                 if let distanceLabel = cell!.contentView.viewWithTag(2) as? UILabel{
-                    distanceLabel.text = String(format:"%.3f", history[row].distantion)
+                    distanceLabel.text = String(format:"%.3f", trip.distantion)
                 }
                 if let dateLabel = cell!.contentView.viewWithTag(3) as? UILabel{
                     let dateFormat = DateFormatter()
                     dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                    let formatedTime = dateFormat.string(from: history[row].start!)
+                    let formatedTime = dateFormat.string(from: trip.start!)
                     dateLabel.text = "\(formatedTime)"
                 }
                 
                 if let trackImage = cell!.contentView.viewWithTag(4) as? UIImageView{
-                    if (self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) != nil){
+                    if (self.cache.object(forKey: trip) != nil){
                         // Изображение есть в кэше, грузиь не нужно
-                        trackImage.image = self.cache.object(forKey: (indexPath as NSIndexPath).row as AnyObject) as? UIImage
+                        trackImage.image = self.cache.object(forKey: trip) as? UIImage
                     }else{
                         // 3
-                        let imageUrl = history[row].image
+                        let imageUrl = trip.image
                         let url:URL! = URL(string: imageUrl)
                         task = session.downloadTask(with: url, completionHandler: { (location, response, error) -> Void in
                             if let data = try? Data(contentsOf: url){
@@ -129,7 +129,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                                     if let updateCell = tableView.cellForRow(at: indexPath) {
                                         if let img:UIImage = UIImage(data: data), let curTrackImage = updateCell.contentView.viewWithTag(4) as? UIImageView {
                                             curTrackImage.image = img
-                                            self.cache.setObject(img, forKey: (indexPath as NSIndexPath).row as AnyObject)
+                                            self.cache.setObject(img, forKey: trip)
                                         }
                                     }
                                 })

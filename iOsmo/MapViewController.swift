@@ -511,7 +511,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
             if !annVisible {
-                point.subtitle = "\(group.name)\n\(point.descr)\n\(point.url)"
+                var pt = ""
+                if (point.time != nil) {
+                    let dateFormat = DateFormatter()
+                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let formatedTime = dateFormat.string(from: point.time!)
+                    pt = "\n\n\(formatedTime)"
+                }
+                
+                point.subtitle = "\(group.name)\n\(point.descr)\n\(point.url)\(pt)"
                 self.mapView.addAnnotation(point);
                 self.pointAnnotations.append(point)
                 print("add point \(point.mapId!)")
