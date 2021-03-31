@@ -145,6 +145,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath.row >= history.count) {
+            return
+        }
         let track = Track.init(track: history[indexPath.row])
         
         groupManager.getTrackData(track)

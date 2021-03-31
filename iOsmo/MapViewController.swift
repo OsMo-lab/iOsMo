@@ -267,7 +267,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if self.mapView != nil {
                         self.mapView.removeOverlay(ann)
                     }
-                    trackAnnotations.remove(at: idx)
+                    if (idx < trackAnnotations.count) {
+                        trackAnnotations.remove(at: idx)
+                    }
                     continue
                 }
             }
@@ -289,7 +291,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if (ann is User)  {
                     print("removing All users: \((ann as! User).u!)")
                     self.mapView.removeAnnotation(ann)
-                    pointAnnotations.remove(at: idx)
+                    if (idx < pointAnnotations.count) {
+                        pointAnnotations.remove(at: idx)
+                    }
                     continue
                 }
                 idx = idx + 1;
@@ -378,7 +382,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 //if !(annObjId.contains("wpt")) {
                 if (delete == true && !(annObjId.contains("wpt"))) {
                     self.mapView.removeAnnotation(ann)
-                    pointAnnotations.remove(at: idx)
+                    if (idx < pointAnnotations.count) {
+                        pointAnnotations.remove(at: idx)
+                    }
                     print("removing \(annObjId!)")
                 }
             } else {
@@ -408,7 +414,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             if (delete == true) {
                 self.mapView.removeOverlay(ann)
-                trackAnnotations.remove(at: idx)
+                if (idx < trackAnnotations.count) {
+                    trackAnnotations.remove(at: idx)
+                }
                 print("removing track \(ann.objId)")
                 
                 //Удаляем Waypoint-ы трека
@@ -417,7 +425,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     let wptId = ann.objId.replacingOccurrences(of: "t-", with: "wpt-");
                     if (wpt is Point && (wpt as! Point).mapId! == wptId) {
                         self.mapView.removeAnnotation(wpt)
-                        pointAnnotations.remove(at: wpt_idx)
+                        if (wpt_idx < pointAnnotations.count) {
+                            pointAnnotations.remove(at: wpt_idx)
+                        }
                         print("removing waypoint for \(ann.objId)")
                     } else {
                         wpt_idx = wpt_idx + 1;
@@ -439,7 +449,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if (ann.objId == "t-\(track.groupId)-\(track.u)") {
                     print("MVC drawTrack removing track \(ann.objId)")
                     self.mapView.removeOverlay(ann)
-                    if (idx<self.trackAnnotations.count) {
+                    if (idx < self.trackAnnotations.count) {
                         self.trackAnnotations.remove(at: idx)
                     }
                 } else {
