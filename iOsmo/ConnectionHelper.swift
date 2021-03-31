@@ -58,9 +58,7 @@ class ConnectionHelper: NSObject {
             backgroundTask = nil
         }
         let configuration = URLSessionConfiguration.background(withIdentifier:"bgSessionConfiguration")
-
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-        
         var urlReq = URLRequest(url: url);
         
         urlReq.httpMethod = "POST"

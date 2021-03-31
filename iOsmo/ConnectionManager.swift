@@ -450,7 +450,6 @@ open class ConnectionManager: NSObject{
                             LogQueue.sharedLogQueue.enqueue(output)
                             self.notifyAnswer(output: output)
                         }
-                    
                     }
                     conHelper.backgroundRequest(url, requestBody: "")
                 }

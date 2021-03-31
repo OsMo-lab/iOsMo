@@ -439,7 +439,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if (ann.objId == "t-\(track.groupId)-\(track.u)") {
                     print("MVC drawTrack removing track \(ann.objId)")
                     self.mapView.removeOverlay(ann)
-                    self.trackAnnotations.remove(at: idx)
+                    if (idx<self.trackAnnotations.count) {
+                        self.trackAnnotations.remove(at: idx)
+                    }
                 } else {
                     idx  = idx + 1
                 }

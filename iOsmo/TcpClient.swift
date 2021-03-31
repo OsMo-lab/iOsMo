@@ -199,11 +199,13 @@ open class TcpClient : NSObject, StreamDelegate {
 
         case Stream.Event.errorOccurred:
             log.enqueue("\(aStream == self.inputStream ? "input" : "output") stream errorOccurred, connection is out")
-            
+            //Были открыты оба потока ?
             if (self.isOpen) {
                 //Ошибка возникла в потоке записи - тогда делаем попытку восстановить соединение
                 let reconnect =  aStream == self.outputStream ? false : true
             
+                self.closeConnection()
+                
                 if callbackOnError != nil {
                     callbackOnError!(reconnect)
                 }
@@ -212,7 +214,6 @@ open class TcpClient : NSObject, StreamDelegate {
             writeToStream()
             break
         case Stream.Event.hasBytesAvailable:
-            
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
             var len: Int = 0
@@ -262,7 +263,6 @@ open class TcpClient : NSObject, StreamDelegate {
                         message  = (responceSplit.count != count && message.endIndex >= resAdvance.endIndex) ? String(message[ resAdvance.endIndex..<message.endIndex]) : res
                         
                         count += 1
-
                     }
                 }
             }
