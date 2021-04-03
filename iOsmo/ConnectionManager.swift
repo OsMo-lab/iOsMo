@@ -459,6 +459,7 @@ open class ConnectionManager: NSObject{
     
     //Попытка посстановить соединение после обрыва, по срабатыванию таймера
     @objc func connectByTimer() {
+        self.connecting = false
         self.connect()
     }
     

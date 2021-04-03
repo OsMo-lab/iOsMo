@@ -151,8 +151,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     var tileRenderer: MKTileOverlayRenderer!
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("MapViewController viewDidLoad")
@@ -163,7 +161,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.mapView.showsUserLocation = true
         if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let lon_delta = SettingsManager.getKey(SettingKeys.lon_delta)?.doubleValue, let lat_delta = SettingsManager.getKey(SettingKeys.lat_delta)?.doubleValue {
             if ((lat != 0) && (lon != 0)) {
-                
                 if ((lat_delta != 0) && (lon_delta != 0)) {
                     let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon), span: MKCoordinateSpan(latitudeDelta: lat_delta, longitudeDelta: lon_delta))
                     self.mapView.setRegion(region, animated: false)
@@ -200,9 +197,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         //Завершение загрузки трека
-      
-        
-        
         _ = self.groupManager.trackDownloaded.add{
             let track = $0
             DispatchQueue.main.async {
@@ -229,13 +223,11 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         Analytics.logEvent("map_open", parameters: nil)
         #endif
         
-
         self.setupTileRenderer()
         
         if (groupManager.allGroups.count) > 0 {
             self.updateGroupsOnMap(groups: groupManager.allGroups, GP:nil )
         }
-        
         
         for track in historyTracks {
             drawTrack(track: track)
