@@ -97,6 +97,7 @@ enum SettingKeys: String {
     case motdtime = "motdtime"
     
     case user = "user"
+    case uid = "uid"
 
     case logView = "logView"
     case poolGroups = "poolGroups"

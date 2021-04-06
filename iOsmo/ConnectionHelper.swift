@@ -69,6 +69,7 @@ class ConnectionHelper: NSObject {
         urlReq.httpMethod = "POST"
         urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
         urlReq.httpBody = requestBody.data(using: String.Encoding.utf8.rawValue)
+        urlReq.timeoutInterval = 15 //Интервал должен быть меньше, чем в интервале таймера восстановления соединения коннекта после ошибок
         backgroundTask = self.backgroundSession.downloadTask(with: urlReq)
         backgroundTask!.resume()
     }

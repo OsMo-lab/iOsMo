@@ -87,7 +87,6 @@ open class ConnectionManager: NSObject{
     public var timer = Timer()
     
     class var sharedConnectionManager : ConnectionManager{
-        
         struct Static {
             static let instance: ConnectionManager = ConnectionManager()
         }
@@ -180,7 +179,6 @@ open class ConnectionManager: NSObject{
         let device = SettingsManager.getKey(SettingKeys.device)
         if device == nil || device?.length == 0{
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:getting key from server")
-            
             conHelper.onCompleted = {(dataURL, data) in
                 guard let data = data else { return }
                 var res : NSDictionary = [:]
@@ -260,7 +258,6 @@ open class ConnectionManager: NSObject{
     private func completed (result: Bool, token: Token?) {
         self.connecting = false
         if (result) {
-            self.connecting = false
             if self.connection.addCallBackOnError == nil {
                 self.connection.addCallBackOnError = {
                     (isError : Bool) -> Void in
@@ -333,7 +330,6 @@ open class ConnectionManager: NSObject{
             self.connection.connect(token!)
             self.shouldReConnect = false //interesting why here? may after connction is successful??
         } else {
-            self.connecting = false
             if (token != nil) {
                 if (token?.error.isEmpty)! {
                     self.connectionRun.notify((1, ""))
@@ -426,7 +422,7 @@ open class ConnectionManager: NSObject{
     
     open func send(request: String) {
         let command = request.components(separatedBy: "|").first!
-        if (self.connected || command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue) {
+        if (self.connected || command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue || self.connecting) {
             connection.send(request)
         } else {
             if (UIApplication.shared.applicationState == .active ) {
@@ -697,6 +693,12 @@ open class ConnectionManager: NSObject{
                         sessionTrackerID = trackerID
                     } else {
                         sessionTrackerID = "error parsing TrackerID"
+                    }
+                    if let user = parseTag(output, key: Keys.name) {
+                        SettingsManager.setKey(user as NSString, forKey: SettingKeys.user)
+                    }
+                    if let uid = parseTag(output, key: Keys.uid) {
+                        SettingsManager.setKey(uid as NSString, forKey: SettingKeys.uid)
                     }
                     if let spermanent = parseTag(output, key: Keys.permanent) {
                         if spermanent == "1" {
