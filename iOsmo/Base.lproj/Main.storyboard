@@ -386,29 +386,38 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2dk-tC-xs0">
                                         <rect key="frame" x="507" y="5" width="80" height="30"/>
+                                        <color key="backgroundColor" red="0.80494925900000003" green="0.38341245819999997" blue="0.15144851170000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="5w6-CV-uE1"/>
                                             <constraint firstAttribute="width" constant="80" id="Myh-R4-ce2"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                         <state key="normal" title="Join">
-                                            <color key="titleColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="btnEnterCellAdd:" destination="Sgt-SC-42k" eventType="touchUpInside" id="YLC-pA-Xwq"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gcd-W9-a1F" userLabel="AddGroupButton">
                                         <rect key="frame" x="417" y="5" width="80" height="30"/>
+                                        <color key="backgroundColor" red="0.80494925900000003" green="0.38341245819999997" blue="0.15144851170000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="EXL-D2-CP2"/>
                                             <constraint firstAttribute="height" constant="30" id="jiC-ee-q2F"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                        <state key="normal" title="Add">
-                                            <color key="titleColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
+                                        <state key="normal" title="Add"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="btnGroupCellAdd:" destination="Sgt-SC-42k" eventType="touchUpInside" id="S53-yV-bJ0"/>
                                         </connections>
@@ -1461,7 +1470,7 @@
         <image name="pause-32" width="32" height="32"/>
         <image name="play-100" width="100" height="100"/>
         <image name="previous-50" width="50" height="50"/>
-        <image name="small-red" width="85" height="85"/>
+        <image name="small-red" width="35" height="35"/>
         <image name="topic-26" width="26" height="26"/>
         <image name="user_male_4-64" width="64" height="64"/>
         <systemColor name="darkTextColor">
