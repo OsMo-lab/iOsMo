@@ -60,6 +60,7 @@
 		4DA90A7925DECB82008A7D2B /* FirebaseMessaging.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6E25DECB82008A7D2B /* FirebaseMessaging.xcframework */; };
 		4DA90A7A25DECB82008A7D2B /* FirebaseInstanceID.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6F25DECB82008A7D2B /* FirebaseInstanceID.xcframework */; };
 		4DADA8E5222C14D200ACB919 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DADA8E4222C14D200ACB919 /* ChatMessage.swift */; };
+		4DB448B62622AF3D000A6EC1 /* Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB448B52622AF3D000A6EC1 /* Private.swift */; };
 		4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE661EA2B797009E96B5 /* Track.swift */; };
 		4DB4CE691EA3EB31009E96B5 /* XML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE681EA3EB31009E96B5 /* XML.swift */; };
 		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
@@ -146,6 +147,7 @@
 		4DA90A6F25DECB82008A7D2B /* FirebaseInstanceID.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = FirebaseInstanceID.xcframework; sourceTree = "<group>"; };
 		4DADA8E3222BD59500ACB919 /* Firebase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Firebase.h; path = Firebase/Firebase.h; sourceTree = SOURCE_ROOT; };
 		4DADA8E4222C14D200ACB919 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		4DB448B52622AF3D000A6EC1 /* Private.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Private.swift; sourceTree = "<group>"; };
 		4DB4CE661EA2B797009E96B5 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		4DB4CE681EA3EB31009E96B5 /* XML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XML.swift; sourceTree = "<group>"; };
 		4DB5FB741E5A14E70094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				4DADA8E4222C14D200ACB919 /* ChatMessage.swift */,
 				4D08BFFC2295A9DE00EECB33 /* History.swift */,
 				4DFF727D25D1767F00DFAF52 /* Transport.swift */,
+				4DB448B52622AF3D000A6EC1 /* Private.swift */,
 			);
 			name = Groups;
 			sourceTree = "<group>";
@@ -528,6 +531,7 @@
 				29F293E31AEEFA4500B6AF8A /* UserGroupCoordinate.swift in Sources */,
 				29F9A6D81AC0C50C001A610D /* BaseTcpConnection.swift in Sources */,
 				293C95C61A3C7FAE005DD4CE /* Enums.swift in Sources */,
+				4DB448B62622AF3D000A6EC1 /* Private.swift in Sources */,
 				4D2A12B422959A2900831219 /* HistoryViewController.swift in Sources */,
 				2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */,
 				293C95C41A3C6FB1005DD4CE /* LocationModel.swift in Sources */,
@@ -722,7 +726,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -763,7 +767,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 206;
+				CURRENT_PROJECT_VERSION = 207;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;

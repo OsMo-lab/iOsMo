@@ -178,13 +178,6 @@ enum TileSource: Int32 {
     ,SOURCES_COUNT
 }
 
-enum Privacy: Int {
-    case everyone = 0
-    ,shared
-    ,me
-    ,PRIVACY_COUNT
-}
-
 enum URLs {
     static let osmoDomain = "api2.osmo.mobi"
     static let authUrl =  "https://\(osmoDomain)/new?"

@@ -69,6 +69,7 @@ open class ConnectionManager: NSObject{
 
     var delayedRequests : [String]  = [];
     var transports: [Transport] = [Transport]()
+    var privacyList: [Private] = [Private]()
     
     var connection = BaseTcpConnection()
     var coordinates: [LocationModel]
@@ -682,10 +683,16 @@ open class ConnectionManager: NSObject{
                     self.connected = answer == 0;
                     let js = parseJson(output) as! Dictionary<String, AnyObject>;
                     
-                    if let transport_array = js["transport"] as? Array<AnyObject> {
-                        for t in transport_array {
+                    if let json_array = js["transport"] as? Array<AnyObject> {
+                        for t in json_array {
                             let tt = Transport.init(json: (t as!  Dictionary<String, AnyObject>));
                             self.transports.append(tt);
+                        }
+                    }
+                    if let json_array = js["private"] as? Array<AnyObject> {
+                        for t in json_array {
+                            let p = Private.init(json: (t as!  Dictionary<String, AnyObject>));
+                            self.privacyList.append(p);
                         }
                     }
   

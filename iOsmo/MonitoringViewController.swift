@@ -105,7 +105,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.userActivity = activity
                 self.userActivity?.becomeCurrent()
             } else {
-                if (connectionManager.transports.count > 0) {
+                if (connectionManager.transports.count > 0 && connectionManager.privacyList.count > 0) {
                     self.SelectPrivacy()
                 }
             }
@@ -116,59 +116,46 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Transport type", comment: "Select type of transport"), preferredStyle: .alert)
         var idx:Int = 0
         
-        while (idx < connectionManager.transports.count) {
-            let transport = connectionManager.transports[idx];
-            if (transport.name != "") {
-                myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
-                    self.connectionManager.transportType = transport.id;
-                    #if TARGET_OS_IOS
-                    Analytics.logEvent("trip_start", parameters: nil)
-                    #endif
-                    
-                    self.sendingManger.startSendingCoordinates(false)
-                    
-                    let activity = NSUserActivity(activityType: "com.alexey.sirotkin.iosmo.tracker-start")
-                    activity.userInfo = ["transport": transport.id,"privacy":self.connectionManager.trip_privacy]
-                    activity.title = "\(NSLocalizedString("Start trip", comment: "Siri start trip")) \(NSLocalizedString("visible", comment: "Siri visible trip")) \(self.privacyName(self.connectionManager.trip_privacy)) @\(transport.name)"
-                    if #available(iOS 12.0, *) {
-                        // Сири будет обучаться и предлагать шорткат на базе этой активити
-                        activity.isEligibleForPrediction = true
-                        activity.isEligibleForSearch = true
-                    }
-                    self.userActivity = activity
-                    self.userActivity?.becomeCurrent()
-                }))
+        if let privacy = self.connectionManager.privacyList.filter({$0.id == self.connectionManager.trip_privacy}).first {
+        
+            while (idx < connectionManager.transports.count) {
+                let transport = connectionManager.transports[idx];
+                if (transport.name != "") {
+                    myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                        self.connectionManager.transportType = transport.id;
+                        #if TARGET_OS_IOS
+                        Analytics.logEvent("trip_start", parameters: nil)
+                        #endif
+                        
+                        self.sendingManger.startSendingCoordinates(false)
+                        
+                        let activity = NSUserActivity(activityType: "com.alexey.sirotkin.iosmo.tracker-start")
+                        activity.userInfo = ["transport": transport.id,"privacy":self.connectionManager.trip_privacy]
+                        activity.title = "\(NSLocalizedString("Start trip", comment: "Siri start trip")) \(NSLocalizedString("visible", comment: "Siri visible trip")) \(privacy.name) @\(transport.name)"
+                        if #available(iOS 12.0, *) {
+                            // Сири будет обучаться и предлагать шорткат на базе этой активити
+                            activity.isEligibleForPrediction = true
+                            activity.isEligibleForSearch = true
+                        }
+                        self.userActivity = activity
+                        self.userActivity?.becomeCurrent()
+                    }))
+                }
+                idx += 1;
             }
-            idx += 1;
+            self.present(myAlert, animated: true, completion: nil)
         }
-        self.present(myAlert, animated: true, completion: nil)
-    }
-    
-    func privacyName(_ privacy: Int) -> String {
-        var name = ""
-        switch privacy {
-            case Privacy.everyone.rawValue:
-                name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
-            case Privacy.shared.rawValue:
-                name = NSLocalizedString("Shared", comment: "Trip visible by link")
-            case Privacy.me.rawValue:
-                name = NSLocalizedString("None", comment: "Trip visible to noone")
-            default:
-                name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
-        }
-        return name
     }
     
     func SelectPrivacy() {
-        
         let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Set visibility of trip", comment: "Set visibility of trip"), preferredStyle: .alert)
         var idx:Int = 0
         
-        while (idx < Privacy.PRIVACY_COUNT.rawValue) {
-            let name = privacyName(idx);
-            if (name != "") {
-                myAlert.addAction(UIAlertAction(title: name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
-                    self.connectionManager.trip_privacy = idx;
+        while (idx < connectionManager.privacyList.count) {
+            let privacy = connectionManager.privacyList[idx];
+            if (privacy.name != "") {
+                myAlert.addAction(UIAlertAction(title: privacy.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                    self.connectionManager.trip_privacy = privacy.id;
                     self.SelectTransportType()
                 }))
             }
@@ -178,7 +165,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     func uiSettings(){
-        //slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
         MDView.text = SettingsManager.getKey(SettingKeys.motd) as String? ?? ""
         
         if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as String? {

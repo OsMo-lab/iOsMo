@@ -1,26 +1,24 @@
 //
-//  Transport.swift
+//  Private.swift
 //  iOsMo
 //
-//  Created by Alexey Sirotkin on 08.02.2021.
+//  Created by Alexey Sirotkin on 11.04.2021.
 //  Copyright © 2021 Alexey Sirotkin. All rights reserved.
 //
 
-
 /*
- Тип транспорта поездки
+ Тип приватности поездки
  Список приходит в ответе AUTH
  */
+
 import Foundation
 
-class Transport : NSObject {
+class Private : NSObject {
     var id: Int;
-    var type: Int;
     var name: String;
     
     init(json: Dictionary<String, AnyObject>) {
         self.name = json["name"] as? String ?? ""
         self.id = (json["id"] as? Int) ?? Int(json["id"] as? String ?? "0")!
-        self.type = (json["type"] as? Int) ?? Int(json["type"] as? String ?? "0")!
     }
 }
