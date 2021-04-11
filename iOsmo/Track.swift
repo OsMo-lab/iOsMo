@@ -26,7 +26,7 @@ open class Track: Equatable {
         self.u = json["u"] as? Int ??  Int(json["u"] as? String ?? "0")!
         self.size = json["size"] as? Int ??  Int(json["size"] as? String ?? "0")!
         self.name = json["name"] as? String ?? ""
-        self.descr = (json["description"] as? String ?? "")
+        self.descr = json["description"] as? String ?? ""
         self.color = json["color"] as? String ?? "#ffffff"
         self.url = json["url"] as? String ?? ""
         self.type = json["type"] as? String ?? ("\(json["type"] as? Int ?? 0)")

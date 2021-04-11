@@ -97,7 +97,7 @@ open class GroupManager{
                             } else {
                                 if let uName = u["name"] as? String {
                                     let uConnected = (u["connected"] as? Double) ?? 0
-                                    let uColor = u["color"] as! String
+                                    let uColor = u["color"] as? String ?? ""
                                     let uState = (u["state"] as? Int) ?? 0
                                     user.state = uState
                                     user.color = uColor
@@ -155,19 +155,18 @@ open class GroupManager{
                                     foundGroup.points.remove(at: uIdx!)
                                 }
                             } else {
-                                
                                 let lat = u["lat"] as? Double ?? atof((u["lat"] as? String) ?? "")
                                 let lon = u["lon"] as? Double ?? atof((u["lon"] as? String) ?? "")
-                                let uName = u["name"] as? String
-                                let descr = u["description"] as? String
+                                let uName = u["name"] as? String ?? ""
+                                let descr = u["description"] as? String ?? ""
                                 let uColor = u["color"] as? String ?? ""
                                 let uURL = u["url"] as? String ?? ""
                                 
                                 point.color = uColor
-                                point.name = uName!
+                                point.name = uName
                                 point.lat = lat
                                 point.lon = lon
-                                point.descr = descr!
+                                point.descr = descr
                                 point.url = uURL
                             }
                         } else {
@@ -192,8 +191,8 @@ open class GroupManager{
                                     foundGroup.tracks.remove(at: uIdx!)
                                 }
                             } else {
-                                let uName = u["name"] as! String
-                                let uColor = u["color"] as! String
+                                let uName = u["name"] as? String ?? ""
+                                let uColor = u["color"] as? String ?? ""
                                 track.name = uName
                                 track.color = uColor
                             }
