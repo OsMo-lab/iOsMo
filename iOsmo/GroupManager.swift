@@ -97,7 +97,7 @@ open class GroupManager{
                             } else {
                                 if let uName = u["name"] as? String {
                                     let uConnected = (u["connected"] as? Double) ?? 0
-                                    let uColor = u["color"] as! String
+                                    let uColor = u["color"] as? String ?? ""
                                     let uState = (u["state"] as? Int) ?? 0
                                     user.state = uState
                                     user.color = uColor
@@ -155,19 +155,18 @@ open class GroupManager{
                                     foundGroup.points.remove(at: uIdx!)
                                 }
                             } else {
-                                
                                 let lat = u["lat"] as? Double ?? atof((u["lat"] as? String) ?? "")
                                 let lon = u["lon"] as? Double ?? atof((u["lon"] as? String) ?? "")
-                                let uName = u["name"] as? String
-                                let descr = u["description"] as? String
+                                let uName = u["name"] as? String ?? ""
+                                let descr = u["description"] as? String ?? ""
                                 let uColor = u["color"] as? String ?? ""
                                 let uURL = u["url"] as? String ?? ""
                                 
                                 point.color = uColor
-                                point.name = uName!
+                                point.name = uName
                                 point.lat = lat
                                 point.lon = lon
-                                point.descr = descr!
+                                point.descr = descr
                                 point.url = uURL
                             }
                         } else {
@@ -192,8 +191,8 @@ open class GroupManager{
                                     foundGroup.tracks.remove(at: uIdx!)
                                 }
                             } else {
-                                let uName = u["name"] as! String
-                                let uColor = u["color"] as! String
+                                let uName = u["name"] as? String ?? ""
+                                let uColor = u["color"] as? String ?? ""
                                 track.name = uName
                                 track.color = uColor
                             }
@@ -293,9 +292,6 @@ open class GroupManager{
         connection.groupsSwitch(s)
     }
 
-    
-    
-
     open func createGroup(_ name: String, email: String, nick: String){
         self.onCreateGroup = connection.groupCreated.add{
             print("GM.createGroup add")
@@ -369,8 +365,11 @@ open class GroupManager{
                     
                     var points : [NSDictionary] = [NSDictionary]()
                     for p in g.points {
+                        let t:TimeInterval = (p.time != nil) ? p.time!.timeIntervalSince1970 : 0
+                        let s:TimeInterval = (p.start != nil) ? p.start!.timeIntervalSince1970 : 0
+                        let f:TimeInterval = (p.finish != nil) ? p.finish!.timeIntervalSince1970 : 0
                         let point : NSDictionary =
-                            ["u": p.u, "name": p.name,"url": p.url, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)"];
+                            ["u": p.u, "name": p.name,"url": p.url, "description": p.descr, "color": p.color, "lat": "\(p.lat)", "lon": "\(p.lon)","time":"\(t)","start":"\(s)","finish":"\(f)"];
                         points.append(point)
                     }
                     

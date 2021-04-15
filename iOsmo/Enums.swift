@@ -55,8 +55,6 @@ enum Keys: String{
     case id = "id"
 }
 
-
-
 enum AnswTags: String{
     case openedSession = "TO"
     case getGroups = "GROUP"
@@ -99,6 +97,7 @@ enum SettingKeys: String {
     case motdtime = "motdtime"
     
     case user = "user"
+    case uid = "uid"
 
     case logView = "logView"
     case poolGroups = "poolGroups"
@@ -179,10 +178,9 @@ enum TileSource: Int32 {
     ,SOURCES_COUNT
 }
 
-enum Privacy: Int {
-    case everyone = 0
-    ,shared
-    ,me
-    ,PRIVACY_COUNT
+enum URLs {
+    static let osmoDomain = "api2.osmo.mobi"
+    static let authUrl =  "https://\(osmoDomain)/new?"
+    static let servUrl = "https://\(osmoDomain)/serv?" // to get server info
+    static let apiUrl = "https://\(osmoDomain)/iProx?"
 }
-

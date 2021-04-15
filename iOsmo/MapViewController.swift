@@ -8,7 +8,6 @@
 
 import Foundation
 
-import FirebaseAnalytics
 import CoreLocation
 import MapKit
 
@@ -152,8 +151,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     var tileRenderer: MKTileOverlayRenderer!
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("MapViewController viewDidLoad")
@@ -164,7 +161,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.mapView.showsUserLocation = true
         if let lat = SettingsManager.getKey(SettingKeys.lat)?.doubleValue, let lon = SettingsManager.getKey(SettingKeys.lon)?.doubleValue,let lon_delta = SettingsManager.getKey(SettingKeys.lon_delta)?.doubleValue, let lat_delta = SettingsManager.getKey(SettingKeys.lat_delta)?.doubleValue {
             if ((lat != 0) && (lon != 0)) {
-                
                 if ((lat_delta != 0) && (lon_delta != 0)) {
                     let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon), span: MKCoordinateSpan(latitudeDelta: lat_delta, longitudeDelta: lon_delta))
                     self.mapView.setRegion(region, animated: false)
@@ -201,9 +197,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         //Завершение загрузки трека
-      
-        
-        
         _ = self.groupManager.trackDownloaded.add{
             let track = $0
             DispatchQueue.main.async {
@@ -226,14 +219,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewWillAppear(animated)
         
         print("MapViewController viewWillAppear")
+        #if TARGET_OS_IOS
         Analytics.logEvent("map_open", parameters: nil)
-
+        #endif
+        
         self.setupTileRenderer()
         
         if (groupManager.allGroups.count) > 0 {
             self.updateGroupsOnMap(groups: groupManager.allGroups, GP:nil )
         }
-        
         
         for track in historyTracks {
             drawTrack(track: track)
@@ -265,7 +259,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     if self.mapView != nil {
                         self.mapView.removeOverlay(ann)
                     }
-                    trackAnnotations.remove(at: idx)
+                    if (idx < trackAnnotations.count) {
+                        trackAnnotations.remove(at: idx)
+                    }
                     continue
                 }
             }
@@ -287,7 +283,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if (ann is User)  {
                     print("removing All users: \((ann as! User).u!)")
                     self.mapView.removeAnnotation(ann)
-                    pointAnnotations.remove(at: idx)
+                    if (idx < pointAnnotations.count) {
+                        pointAnnotations.remove(at: idx)
+                    }
                     continue
                 }
                 idx = idx + 1;
@@ -376,7 +374,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 //if !(annObjId.contains("wpt")) {
                 if (delete == true && !(annObjId.contains("wpt"))) {
                     self.mapView.removeAnnotation(ann)
-                    pointAnnotations.remove(at: idx)
+                    if (idx < pointAnnotations.count) {
+                        pointAnnotations.remove(at: idx)
+                    }
                     print("removing \(annObjId!)")
                 }
             } else {
@@ -406,7 +406,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             if (delete == true) {
                 self.mapView.removeOverlay(ann)
-                trackAnnotations.remove(at: idx)
+                if (idx < trackAnnotations.count) {
+                    trackAnnotations.remove(at: idx)
+                }
                 print("removing track \(ann.objId)")
                 
                 //Удаляем Waypoint-ы трека
@@ -415,7 +417,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     let wptId = ann.objId.replacingOccurrences(of: "t-", with: "wpt-");
                     if (wpt is Point && (wpt as! Point).mapId! == wptId) {
                         self.mapView.removeAnnotation(wpt)
-                        pointAnnotations.remove(at: wpt_idx)
+                        if (wpt_idx < pointAnnotations.count) {
+                            pointAnnotations.remove(at: wpt_idx)
+                        }
                         print("removing waypoint for \(ann.objId)")
                     } else {
                         wpt_idx = wpt_idx + 1;
@@ -437,7 +441,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 if (ann.objId == "t-\(track.groupId)-\(track.u)") {
                     print("MVC drawTrack removing track \(ann.objId)")
                     self.mapView.removeOverlay(ann)
-                    self.trackAnnotations.remove(at: idx)
+                    if (idx < self.trackAnnotations.count) {
+                        self.trackAnnotations.remove(at: idx)
+                    }
                 } else {
                     idx  = idx + 1
                 }
@@ -509,7 +515,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
             }
             if !annVisible {
-                point.subtitle = "\(group.name)\n\(point.descr)\n\(point.url)"
+                var pt = ""
+                if (point.time != nil) {
+                    let dateFormat = DateFormatter()
+                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let formatedTime = dateFormat.string(from: point.time!)
+                    pt = "\n\n\(formatedTime)"
+                }
+                
+                point.subtitle = "\(group.name)\n\(point.descr)\n\(point.url)\(pt)"
                 self.mapView.addAnnotation(point);
                 self.pointAnnotations.append(point)
                 print("add point \(point.mapId!)")

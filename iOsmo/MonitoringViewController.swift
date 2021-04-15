@@ -9,7 +9,9 @@
 
 import UIKit
 import CoreLocation
+#if TARGET_OS_IOS
 import FirebaseAnalytics
+#endif
 
 class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMapViewDelegate*/{
     
@@ -47,7 +49,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var MDView: UITextView!
     
     @IBOutlet weak var osmoImage: UIImageView!
-    @IBOutlet weak var osmoStatus: UIImageView!
     @IBOutlet weak var gpsConnectionImage: UIImageView!
     @IBOutlet weak var playStopBtn: UIButton!
 
@@ -55,16 +56,15 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBOutlet weak var slider: UIScrollView!
     @IBOutlet weak var link: UIButton!
     
-    @IBOutlet weak var sliderImg: UIView!
-    @IBOutlet weak var fronSliderImg: UIView!
-    
     @IBOutlet weak var trackingModeBtn: UIButton!
 
     @IBAction func pauseClick(_ sender: AnyObject) {
         isSessionPaused = !isSessionPaused
         
         if isMonitoringOn {
+            #if TARGET_OS_IOS
             Analytics.logEvent("trip_pause", parameters: nil)
+            #endif
             sendingManger.pauseSendingCoordinates()
         } else {
             connectionManager.isGettingLocation = false
@@ -89,15 +89,25 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     @IBAction func MonitoringAction(_ sender: AnyObject) {
         if SettingsManager.getKey(SettingKeys.trackerId) as String? != ""{
             if isSessionPaused || isMonitoringOn {
+                #if TARGET_OS_IOS
                 Analytics.logEvent("trip_stop", parameters: nil)
+                #endif
+                
                 sendingManger.stopSendingCoordinates()
                 
-                //UIApplication.shared.isIdleTimerDisabled = false
+                let activity = NSUserActivity(activityType: "com.alexey.sirotkin.iosmo.tracker-stop")
+                activity.title = NSLocalizedString("Stop trip", comment: "Siri stop trip")
+                if #available(iOS 12.0, *) {
+                    // Сири будет обучаться и предлагать шорткат на базе этой активити
+                    activity.isEligibleForPrediction = true
+                    activity.isEligibleForSearch = true
+                }
+                self.userActivity = activity
+                self.userActivity?.becomeCurrent()
             } else {
-                if (connectionManager.transports.count > 0) {
+                if (connectionManager.transports.count > 0 && connectionManager.privacyList.count > 0) {
                     self.SelectPrivacy()
                 }
-                
             }
         }
     }
@@ -106,46 +116,46 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
         let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Transport type", comment: "Select type of transport"), preferredStyle: .alert)
         var idx:Int = 0
         
-        while (idx < connectionManager.transports.count) {
-            let transport = connectionManager.transports[idx];
-            if (transport.name != "") {
-                myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
-                    self.connectionManager.transportType = transport.id;
-                    
-                    Analytics.logEvent("trip_start", parameters: nil)
-                    self.sendingManger.startSendingCoordinates(false)
-                    
-                    //UIApplication.shared.isIdleTimerDisabled = true
-                }))
+        if let privacy = self.connectionManager.privacyList.filter({$0.id == self.connectionManager.trip_privacy}).first {
+        
+            while (idx < connectionManager.transports.count) {
+                let transport = connectionManager.transports[idx];
+                if (transport.name != "") {
+                    myAlert.addAction(UIAlertAction(title: transport.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                        self.connectionManager.transportType = transport.id;
+                        #if TARGET_OS_IOS
+                        Analytics.logEvent("trip_start", parameters: nil)
+                        #endif
+                        
+                        self.sendingManger.startSendingCoordinates(false)
+                        
+                        let activity = NSUserActivity(activityType: "com.alexey.sirotkin.iosmo.tracker-start")
+                        activity.userInfo = ["transport": transport.id,"privacy":self.connectionManager.trip_privacy]
+                        activity.title = "\(NSLocalizedString("Start trip", comment: "Siri start trip")) \(NSLocalizedString("visible", comment: "Siri visible trip")) \(privacy.name) @\(transport.name)"
+                        if #available(iOS 12.0, *) {
+                            // Сири будет обучаться и предлагать шорткат на базе этой активити
+                            activity.isEligibleForPrediction = true
+                            activity.isEligibleForSearch = true
+                        }
+                        self.userActivity = activity
+                        self.userActivity?.becomeCurrent()
+                    }))
+                }
+                idx += 1;
             }
-            idx += 1;
+            self.present(myAlert, animated: true, completion: nil)
         }
-        self.present(myAlert, animated: true, completion: nil)
     }
     
     func SelectPrivacy() {
-        func privacyName(_ privacy: Int) -> String {
-            var name = ""
-            switch privacy {
-                case Privacy.everyone.rawValue:
-                    name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
-                case Privacy.shared.rawValue:
-                    name = NSLocalizedString("Shared", comment: "Trip visible by link")
-                case Privacy.me.rawValue:
-                    name = NSLocalizedString("None", comment: "Trip visible to noone")
-                default:
-                    name = NSLocalizedString("Everyone", comment: "Trip visible to everyone")
-            }
-            return name
-        }
         let myAlert: UIAlertController = UIAlertController(title: title, message: NSLocalizedString("Set visibility of trip", comment: "Set visibility of trip"), preferredStyle: .alert)
         var idx:Int = 0
         
-        while (idx < Privacy.PRIVACY_COUNT.rawValue) {
-            let name = privacyName(idx);
-            if (name != "") {
-                myAlert.addAction(UIAlertAction(title: name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
-                    self.connectionManager.trip_privacy = idx;
+        while (idx < connectionManager.privacyList.count) {
+            let privacy = connectionManager.privacyList[idx];
+            if (privacy.name != "") {
+                myAlert.addAction(UIAlertAction(title: privacy.name, style: .default, handler: { (alert: UIAlertAction!) -> Void in
+                    self.connectionManager.trip_privacy = privacy.id;
                     self.SelectTransportType()
                 }))
             }
@@ -155,19 +165,11 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     func uiSettings(){
-        //TODO: make for different iPhoneSizes
-        //slider.contentSize = CGSize(width: 640, height: 458)
-        slider.contentSize = CGSize(width: self.view.frame.width * 2, height: self.view.frame.height)
         MDView.text = SettingsManager.getKey(SettingKeys.motd) as String? ?? ""
         
         if let trackerId = SettingsManager.getKey(SettingKeys.trackerId) as String? {
             self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
         }
-
-        //UITabBar.appearance().tintColor = UIColor(red: 255/255, green: 102/255, blue: 0/255, alpha: 1.0)
-
-        //sliderImg.roundCorners([.TopRight , .BottomRight], radius: 2)
-        //fronSliderImg.roundCorners([.TopLeft , .BottomLeft], radius: 2)
     }
     
     fileprivate func updateSessionValues(_ elapsedTime: Int){
@@ -222,7 +224,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                 self.osmoImage.image = UIImage(named:"small-blue")
             }
         }
-        _ = connectionManager.dataSendEnd.add{
+        _ = connectionManager.dataReceiveEnd.add{
             DispatchQueue.main.async {
                 self.osmoImage.image = UIImage(named:"small-green")
             }
@@ -268,13 +270,12 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
                     self.trackerID.setTitle("TrackerID:\(trackerId)", for: UIControl.State())
                 }
                 self.osmoImage.image = theChange ? UIImage(named:"small-green")! : UIImage(named:"small-red")!
-                
+                if (self.connectionManager.trip_privacy > -1 && !self.connectionManager.sessionOpened) {
+                    self.sendingManger.startSendingCoordinates(false)
+                }
             }
             
             self.log.enqueue("MVC: The connection status was changed: \(theChange)")
-            
-            //self.osmoStatus.isHidden = !theChange
-            
             if !theChange && !$0.1.isEmpty {
                 self.alert(NSLocalizedString("Error", comment:"Error title for alert"), message: $0.1)
             }
@@ -284,7 +285,6 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             let theChange = ($0.0 == 0)
             
             self.isMonitoringOn = theChange
-            
             
             if theChange {
                 if let sUrl = self.connectionManager.sessionUrl {

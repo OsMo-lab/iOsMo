@@ -19,11 +19,13 @@ open class TcpClient : NSObject, StreamDelegate {
     open var callbackOnParse: ((String) -> Void)?
     open var callbackOnError: ((Bool) -> Void)?
     open var callbackOnSendStart: (() -> Void)?
-    open var callbackOnSendEnd: (() -> Void)?
+    open var callbackOnReceiveEnd: (() -> Void)?
+    open var callbackOnSendEnd: ((String) -> Void)?
     open var callbackOnConnect: (() -> Void)?
     open var callbackOnCloseConnection: (() -> Void)?
     
     var isOpen = false
+    var authenticating = false;
 
     deinit{
         if let inputStr = self.inputStream{
@@ -38,7 +40,10 @@ open class TcpClient : NSObject, StreamDelegate {
     
     open func createConnection(_ token: Token){
         if (token.port>0) {
-            Stream.getStreamsToHost(withName: "osmo.mobi", port: token.port, inputStream: &inputStream, outputStream: &outputStream)
+            if ( inputStream != nil || outputStream != nil ) {
+                self.closeConnection()
+            }
+            Stream.getStreamsToHost(withName: token.address, port: token.port, inputStream: &inputStream, outputStream: &outputStream)
             if inputStream != nil && outputStream != nil {
                 isOpen = false
                 inputStream!.delegate = self
@@ -49,7 +54,6 @@ open class TcpClient : NSObject, StreamDelegate {
                 
                 inputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
                 outputStream!.setProperty(StreamSocketSecurityLevel.tlSv1.rawValue, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-                //inputStream!.setProperty(kCFStreamPropertySocketSecurityLevel, forKey: <#T##Stream.PropertyKey#>)
                 
                 inputStream!.open()
                 outputStream!.open()
@@ -60,11 +64,10 @@ open class TcpClient : NSObject, StreamDelegate {
     }
     
     final func openCompleted(stream: Stream){
-        log.enqueue("stream openCompleted")
+        log.enqueue("\(stream == self.inputStream ? "input" : "output") stream openCompleted")
         if(inputStream?.streamStatus == .open && outputStream?.streamStatus == .open){
             if isOpen == false {
                 isOpen = true
-                log.enqueue("input and output streams opened")
                 if (callbackOnConnect != nil) {
                     DispatchQueue.main.async {
                         self.callbackOnConnect!()
@@ -81,58 +84,54 @@ open class TcpClient : NSObject, StreamDelegate {
             inputStream?.delegate = nil
             inputStream?.close()
             inputStream?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
+            inputStream = nil
             
         }
         if (outputStream != nil) {
             outputStream?.delegate = nil
             outputStream?.close()
             outputStream?.remove(from: RunLoop.main, forMode: RunLoop.Mode.default)
+            outputStream = nil
         }
-        isOpen = false
-        if (self.callbackOnCloseConnection != nil) {
-            DispatchQueue.main.async {
-                self.callbackOnCloseConnection!()
+        if (isOpen) {
+            isOpen = false
+            if (self.callbackOnCloseConnection != nil) {
+                DispatchQueue.main.async {
+                    self.callbackOnCloseConnection!()
+                }
             }
         }
-        self.callbackOnConnect = nil
     }
 
     final func writeToStream(){
-        if self.outputStream != nil {
-            if _messagesQueue.count > 0 && self.outputStream!.hasSpaceAvailable  {
-                do  {
-                    var req: String = ""
-                    sendQueue.sync {
-                        req = self._messagesQueue.removeLast()
+        if (self.outputStream != nil && (isOpen == true || _messagesQueue.count % 10 == 0)) { //Пишем только в открытое соединение
+            if _messagesQueue.count > 0 /*&& self.outputStream!.hasSpaceAvailable */ {
+                var req: String = ""
+                sendQueue.sync {
+                    req = self._messagesQueue.removeLast()
+                }
+                self.log.enqueue("c: \(req)")
+                let message = "\(req)\n"
+                if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
+                    if (self.callbackOnSendStart != nil) {
+                        self.callbackOnSendStart!()
                     }
-                    self.log.enqueue("c: \(req)")
-                    let message = "\(req)\n"
-                    if let outputStream = self.outputStream, let data = message.data(using: String.Encoding.utf8) {
-                        if (self.callbackOnSendStart != nil) {
-                            self.callbackOnSendStart!()
+                    let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
+                    if (wb == -1 ) {
+                        sendQueue.async {
+                            self._messagesQueue.append(message)
                         }
-                        let wb = outputStream.write((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), maxLength: data.count)
-                        if (wb == -1 ) {
-                            sendQueue.async {
-                                self._messagesQueue.append(message)
-                            }
-                            self.log.enqueue("error: write to output stream")
-                            if self.callbackOnError != nil {
-                                self.callbackOnError!(true)
-                            }
-                            return
-                        }
-                        if (self.callbackOnSendEnd != nil) {
-                            self.callbackOnSendEnd!()
-                        }
-                    } else {
-                        self.log.enqueue("error: send request")
+                        self.log.enqueue("error: write to output stream")
                         if self.callbackOnError != nil {
                             self.callbackOnError!(true)
                         }
+                        return
                     }
-                }catch{
-                    self.log.enqueue("error: writeToStream")
+                    if (self.callbackOnSendEnd != nil) {
+                        self.callbackOnSendEnd!(req)
+                    }
+                } else {
+                    self.log.enqueue("error: send request")
                     if self.callbackOnError != nil {
                         self.callbackOnError!(true)
                     }
@@ -143,13 +142,15 @@ open class TcpClient : NSObject, StreamDelegate {
     
     final func send(message:String){
         let command = message.components(separatedBy: "|").first!
-        if command == AnswTags.buffer.rawValue {
+        //Отправляем список координат ?
+        if command == Tags.buffer.rawValue {
             var idx = 0;
             sendQueue.sync {
+                //Удаляем из очереди сообщений все ранее неотправленные координаты, т.к. они должны содержаться в текущем запросе
                 for msg in _messagesQueue {
                     let cmd = msg.components(separatedBy: "|").first!
                     
-                    if cmd == AnswTags.buffer.rawValue || cmd == AnswTags.coordinate.rawValue {
+                    if cmd == Tags.buffer.rawValue || cmd == Tags.coordinate.rawValue {
                         _messagesQueue.remove(at: idx);
                         break;
                     } else {
@@ -157,14 +158,23 @@ open class TcpClient : NSObject, StreamDelegate {
                     }
                 }
             }
-            
         }
         sendQueue.sync {
-            _messagesQueue.append(message)
+            var should_add  = true
+            if command == AnswTags.auth.rawValue {
+                if (self.authenticating) {
+                    should_add = false
+                } else {
+                    self.authenticating = true
+                }
+            } else {
+                self.authenticating = false
+            }
+            if should_add {
+                _messagesQueue.append(message)
+            }
         }
-        if self.outputStream != nil {
-            writeToStream()
-        }
+        writeToStream()
     }
     
     private var message = "";
@@ -176,8 +186,8 @@ open class TcpClient : NSObject, StreamDelegate {
             print ("None")
    
         case Stream.Event.endEncountered:
-            log.enqueue("stream endEcountered")
-            
+            log.enqueue("\(aStream == self.inputStream ? "input" : "output") stream endEcountered")
+            self.closeConnection()
             if callbackOnError != nil {
                 let reconnect =  aStream == self.inputStream ? false : true
                 callbackOnError!(reconnect)
@@ -188,15 +198,22 @@ open class TcpClient : NSObject, StreamDelegate {
             openCompleted(stream: aStream)
 
         case Stream.Event.errorOccurred:
-            log.enqueue("stream errorOccurred, connection is out")
-            if callbackOnError != nil {
-                callbackOnError!(true)
+            log.enqueue("\(aStream == self.inputStream ? "input" : "output") stream errorOccurred, connection is out")
+            //Были открыты оба потока ?
+            if (self.isOpen) {
+                //Ошибка возникла в потоке записи - тогда делаем попытку восстановить соединение
+                let reconnect =  aStream == self.outputStream ? false : true
+            
+                self.closeConnection()
+                
+                if callbackOnError != nil {
+                    callbackOnError!(reconnect)
+                }
             }
         case Stream.Event.hasSpaceAvailable:
             writeToStream()
             break
         case Stream.Event.hasBytesAvailable:
-            
             let bufferSize = 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
             var len: Int = 0
@@ -214,8 +231,8 @@ open class TcpClient : NSObject, StreamDelegate {
                         }
                     }
                 }
-                if (callbackOnSendEnd != nil) {
-                    callbackOnSendEnd!()
+                if (callbackOnReceiveEnd != nil) {
+                    callbackOnReceiveEnd!()
                 }
             } else {
                 log.enqueue("Stream is empty")
@@ -246,7 +263,6 @@ open class TcpClient : NSObject, StreamDelegate {
                         message  = (responceSplit.count != count && message.endIndex >= resAdvance.endIndex) ? String(message[ resAdvance.endIndex..<message.endIndex]) : res
                         
                         count += 1
-
                     }
                 }
             }

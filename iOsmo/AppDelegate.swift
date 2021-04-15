@@ -9,7 +9,9 @@
 import UIKit
 import UserNotifications
 
+#if TARGET_OS_IOS
 import FirebaseAnalytics
+#endif
 import FirebaseInstanceID
 import FirebaseMessaging
 
@@ -19,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let connectionManager = ConnectionManager.sharedConnectionManager
+    let sendingManager = SendingManager.sharedSendingManager
     let groupManager = GroupManager.sharedGroupManager
     let log = LogQueue.sharedLogQueue
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier.invalid
@@ -99,10 +102,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 tbc.setViewControllers(vcs, animated: false)
             }
         }
-        
-        
 
+        #if TARGET_OS_IOS
         Analytics.logEvent("app_open", parameters: nil)
+        #endif
+
         if let url = launchOptions?[.url] as? URL {
             _ = presentViewController(url:url);
         }
@@ -234,6 +238,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let webURL = userActivity.webpageURL!;
             if !presentViewController(url:webURL) {
                 UIApplication.shared.open(webURL, options: [:], completionHandler: nil);
+            }
+        }
+        
+        if userActivity.activityType == "com.alexey.sirotkin.iosmo.tracker-start"{
+            guard let tbc:UITabBarController = (window?.rootViewController as? UITabBarController), let mvc: MonitoringViewController = tbc.viewControllers![0] as? MonitoringViewController else {
+                return false
+            }
+            tbc.selectedViewController = mvc;
+            
+            guard let transport = userActivity.userInfo?["transport"] as? Int, let trip_privacy = userActivity.userInfo?["privacy"] as? Int  else{
+                return false
+            }
+            self.connectionManager.trip_privacy = trip_privacy
+            self.connectionManager.transportType = transport
+            if (!self.connectionManager.sessionOpened) {
+                if (!self.connectionManager.connected) {
+                    self.connectionManager.connect()
+                }
+                self.sendingManager.startSendingCoordinates(false)
+            }
+        }
+        if userActivity.activityType == "com.alexey.sirotkin.iosmo.tracker-stop"{
+            guard let tbc:UITabBarController = (window?.rootViewController as? UITabBarController), let mvc: MonitoringViewController = tbc.viewControllers![0] as? MonitoringViewController else {
+                return false
+            }
+            tbc.selectedViewController = mvc;
+
+            if (self.connectionManager.sessionOpened) {
+                self.sendingManager.stopSendingCoordinates()
             }
         }
 

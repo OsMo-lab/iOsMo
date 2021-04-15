@@ -34,11 +34,11 @@ open class Group: Equatable{
         self.u = json["u"] as? String ?? ("\(json["u"] as? Int ?? 0)")
         self.name = json["name"] as? String ?? ""
         self.active =  (json["active"] as? String ?? ("\(json["active"] as? Int ?? 0)")) == "1"
-        self.descr = (json["description"] as? String) ?? ""
-        self.policy = (json["policy"] as? String) ?? ""
-        self.nick = (json["nick"] as? String) ?? ""
-        self.color = (json["color"] as? String) ?? ""
-        self.url = json["url"] as! String
+        self.descr = json["description"] as? String ?? ""
+        self.policy = json["policy"] as? String ?? ""
+        self.nick = json["nick"] as? String ?? ""
+        self.color = json["color"] as? String ?? ""
+        self.url = json["url"] as? String ?? ""
         self.permanent = json["permanent"] as? String ?? "\(json["permanent"] as? Int ?? 0)"
         self.type = json["type"] as? String ?? "\(json["type"] as? Int ?? 0)";
 

@@ -7,8 +7,8 @@
 //
 
 import Foundation
+
 public struct LocationModel{
-    
     var lat: Double
     var lon: Double
     var speed: Double = -1.0
@@ -29,7 +29,6 @@ public struct LocationModel{
     }
     
     init(coordString: String){
-        
         //G:1578|["17397|L59.852968:30.373739S0","47580|L37.330178:-122.032674S3"]
         //G:9938|["21542|L46.654809:31.020692S3A48","21646|L46.484945:30.689059S7A78"]
         let parts = coordString.components(separatedBy: "S")
@@ -59,14 +58,12 @@ public struct LocationModel{
         let t:TimeInterval = time.timeIntervalSince1970
         formatedTime = NSString(format:timeFormat as NSString, t) as String
 
-        
-        let formatedSpeed = speed > 1 ? (NSString(format:speedFormat as NSString, speed)): ""
+        let formatedSpeed = speed > 0 ? (NSString(format:speedFormat as NSString, speed)): ""
         let formatedCourse = (speed > 5 && course > 0)  ? (NSString(format:courseFormat as NSString, course)): ""
         let toSend = "L\(NSString(format:coordFormat as NSString, lat)):\(NSString(format:coordFormat as NSString, lon))\(formatedSpeed)A\(isSimulated ? randRange(5, upper: 125) : alt)\(formatedCourse)H\(accuracy)\(formatedTime)"
 
         return toSend
     }
-    
     
     fileprivate func randRange (_ lower: UInt32 , upper: UInt32) -> Int {
         return (Int)(lower + arc4random_uniform(upper - lower + 1))

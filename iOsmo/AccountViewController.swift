@@ -57,7 +57,7 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         clickCount += 1;
         if (clickCount == 7) {
             SettingsManager.setKey("enable", forKey: SettingKeys.logView)
-            self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart iOsMo", comment:"Restart iOsMo"))
+            self.alert(NSLocalizedString("LogView unlocked", comment:"LogView unlocked"),message:NSLocalizedString("Restart OsMo - Tracker", comment:"Restart OsMo - Tracker"))
         }
     }
     
@@ -281,15 +281,22 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func setLoginControls(){
+        if let uid = SettingsManager.getKey(SettingKeys.uid) {
+            if (uid != "0" && uid != "") {
+                userIcon.alpha = 1;
+                self.successLogin = true
+                loginBtn.setTitle(NSLocalizedString("Logout", comment:"Logout button"), for: UIControl.State())
+            }
+        }
         if let user = SettingsManager.getKey(SettingKeys.user) {
             if user.length > 0 {
                 userName.text = String(user)
-                userIcon.alpha = 1;
-                loginBtn.setTitle(NSLocalizedString("Logout", comment:"Logout button"), for: UIControl.State())
-                self.successLogin = true
+                
+                
                 return;
             }
         }
+        
         userIcon.alpha = 0.3;
         userName.text = NSLocalizedString("Not authorised", comment:"Not authorised user")
         loginBtn.setTitle(NSLocalizedString("Login", comment:"Login button"), for: UIControl.State())

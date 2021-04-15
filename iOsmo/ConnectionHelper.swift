@@ -32,7 +32,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class ConnectionHelper: NSObject {
     var backgroundCompletionHandler: (() -> Void)?
     private var session: URLSession!
-    private var backgroundTask: URLSessionDownloadTask?;
+    private var backgroundSession: URLSession!
+    private var backgroundTask: URLSessionDownloadTask? = nil;
     
     var onCompleted: (( URL, Data?) -> ())?
     
@@ -50,6 +51,7 @@ class ConnectionHelper: NSObject {
     }
     
     // MARK: - postRequest
+    // Метод для отправки команд серверу через HTTP POST
     func backgroundRequest (_ url: URL, requestBody: NSString  ) {
         LogQueue.sharedLogQueue.enqueue("CH.backgroundRequest for \(url)")
         if backgroundTask != nil {
@@ -57,19 +59,22 @@ class ConnectionHelper: NSObject {
             backgroundTask?.cancel()
             backgroundTask = nil
         }
-        let configuration = URLSessionConfiguration.background(withIdentifier:"bgSessionConfiguration")
-
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-        
+        if (self.backgroundSession == nil) {
+            let configuration = URLSessionConfiguration.background(withIdentifier:"bgSessionConfiguration")
+            //let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+            self.backgroundSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        }
         var urlReq = URLRequest(url: url);
         
         urlReq.httpMethod = "POST"
         urlReq.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
         urlReq.httpBody = requestBody.data(using: String.Encoding.utf8.rawValue)
-        backgroundTask = session.downloadTask(with: urlReq)
+        urlReq.timeoutInterval = 15 //Интервал должен быть меньше, чем в интервале таймера восстановления соединения коннекта после ошибок
+        backgroundTask = self.backgroundSession.downloadTask(with: urlReq)
         backgroundTask!.resume()
     }
     
+    //Метод для загрузки файлов с сервера (треки, изображения)
     static func downloadRequest (_ url: URL, completed : @escaping (_ succeeded: Bool, _ res: Data?) -> ()) {
         let session = URLSession.shared;
         var urlReq = URLRequest(url: url);
@@ -108,6 +113,7 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
         LogQueue.sharedLogQueue.enqueue("CH.didFinishDownloadingTo")
         var data: Data;
         do {
+            backgroundTask = nil;
             data = try Data(contentsOf: location)
             DispatchQueue.main.async {
                 self.onCompleted?(location, data)
@@ -118,7 +124,7 @@ extension ConnectionHelper: URLSessionDownloadDelegate {
                 self.onCompleted?(location, nil)
             }
         }
-        backgroundTask = nil;
+        
     }
     /*
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {

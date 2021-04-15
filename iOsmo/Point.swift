@@ -21,6 +21,8 @@ public class Point: NSObject, MKAnnotation {
     var url: String = ""
     var start: Date?
     var finish: Date?
+    var time: Date?
+    
     var mapId: String! = ""
     
     public var subtitle: String?   //MKAnnonation protocol
@@ -35,6 +37,19 @@ public class Point: NSObject, MKAnnotation {
         self.color = json["color"] as? String ?? "#ffffff"
         self.mapId = "p-\(groupId)-\(u)"
         self.subtitle = self.descr
+        
+        let uTime = (json["time"] as? Double) ?? atof(json["time"] as? String ?? "0")
+        if uTime > 0 {
+            self.time = Date(timeIntervalSince1970: uTime)
+        }
+        let uFinish = (json["finish"] as? Double) ?? atof(json["finish"] as? String ?? "0")
+        if uFinish > 0 {
+            self.finish = Date(timeIntervalSince1970: uFinish)
+        }
+        let uStart = (json["start"] as? Double) ?? atof(json["start"] as? String ?? "0")
+        if uStart > 0 {
+            self.start = Date(timeIntervalSince1970: uStart)
+        }
     }
     
     public static func == (left: Point, right: Point) -> Bool {

@@ -14,10 +14,8 @@ import CoreLocation
 import AudioToolbox
 import AVFoundation
 
-let authUrl = URL(string: "https://api2.osmo.mobi/new?")
-let servUrl = URL(string: "https://api2.osmo.mobi/serv?") // to get server info
+
 let iOsmoAppKey = "EfMNuZdpaGGYoQmWXZ4b"
-let apiUrl = "https://api2.osmo.mobi/iProx?"
 
 open class ConnectionManager: NSObject{
 
@@ -51,6 +49,7 @@ open class ConnectionManager: NSObject{
     let connectionClose = ObserverSet<()>()
     let connectionStart = ObserverSet<()>()
     let dataSendStart = ObserverSet<()>()
+    let dataReceiveEnd = ObserverSet<()>()
     let dataSendEnd = ObserverSet<()>()
     
     let conHelper = ConnectionHelper()
@@ -70,27 +69,25 @@ open class ConnectionManager: NSObject{
 
     var delayedRequests : [String]  = [];
     var transports: [Transport] = [Transport]()
+    var privacyList: [Private] = [Private]()
     
     var connection = BaseTcpConnection()
     var coordinates: [LocationModel]
     var sendingCoordinates = false;
-    let reachability = Reachability()!
     
     fileprivate let aSelector : Selector = #selector(ConnectionManager.reachabilityChanged(_:))
     open var shouldReConnect = false
     open var isGettingLocation = false
-    
+    var serverToken: Token
+    var reachability: Reachability?
     
     open var transportType: Int = 0;
-    open var trip_privacy : Int = 0;
+    open var trip_privacy : Int = -1;
     
     var audioPlayer = AVAudioPlayer()
-    
     public var timer = Timer()
     
-    
     class var sharedConnectionManager : ConnectionManager{
-        
         struct Static {
             static let instance: ConnectionManager = ConnectionManager()
         }
@@ -99,14 +96,19 @@ open class ConnectionManager: NSObject{
     }
 
     override init(){
-        coordinates = [LocationModel]()
+        let reachability: Reachability?
         
+        reachability = try? Reachability() 
+        
+        self.reachability = reachability
+        coordinates = [LocationModel]()
+        self.serverToken = Token(tokenString: "", address: "", port:0, key: "")
         super.init()
         
         
-        NotificationCenter.default.addObserver(self, selector: aSelector, name: NSNotification.Name.reachabilityChanged, object: self.reachability)
+        NotificationCenter.default.addObserver(self, selector: aSelector, name: NSNotification.Name.reachabilityChanged, object: reachability)
         do  {
-            try self.reachability.startNotifier()
+            try reachability?.startNotifier()
         }catch{
             print("could not start reachability notifier")
         }
@@ -148,8 +150,8 @@ open class ConnectionManager: NSObject{
                     let server_arr = server.components(separatedBy: ":")
                     if server_arr.count > 1 {
                         if let tknPort = Int(server_arr[1]) {
-                            tkn =  Token(tokenString:"", address: server_arr[0], port: tknPort, key: key! as String)
-                            self.completed(result: true,token: tkn)
+                            self.serverToken =  Token(tokenString:"", address: server_arr[0], port: tknPort, key: key! as String)
+                            self.completed(result: true,token: self.serverToken)
                             return
                         }
                     }
@@ -171,14 +173,13 @@ open class ConnectionManager: NSObject{
         }
         LogQueue.sharedLogQueue.enqueue("CM.getServerInfo")
         let requestString = "app=\(iOsmoAppKey)"
-        conHelper.backgroundRequest(servUrl!, requestBody: requestString as NSString)
+        conHelper.backgroundRequest(URL(string: URLs.servUrl)!, requestBody: requestString as NSString)
     }
     
     func Authenticate () {
         let device = SettingsManager.getKey(SettingKeys.device)
         if device == nil || device?.length == 0{
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:getting key from server")
-            
             conHelper.onCompleted = {(dataURL, data) in
                 guard let data = data else { return }
                 var res : NSDictionary = [:]
@@ -202,7 +203,7 @@ open class ConnectionManager: NSObject{
             let model = UIDevice.current.modelName
             let version = UIDevice.current.systemVersion
             let requestString = "app=\(iOsmoAppKey)&id=\(vendorKey)&platform=\(model) iOS \(version)"
-            conHelper.backgroundRequest(authUrl!, requestBody: requestString as NSString)
+            conHelper.backgroundRequest(URL(string: URLs.authUrl)!, requestBody: requestString as NSString)
         } else {
             LogQueue.sharedLogQueue.enqueue("CM.Authenticate:using local key \(device!)")
             self.Authenticated = true
@@ -222,7 +223,6 @@ open class ConnectionManager: NSObject{
                     log.enqueue("should be reconnected via WiFi")
                     shouldReConnect = true;
                 }
-            
             case .cellular:
                 //reachabilityStatus = .reachableViaWWAN
                 print("Reachable via Cellular")
@@ -230,21 +230,22 @@ open class ConnectionManager: NSObject{
                     log.enqueue("should be reconnected via Cellular")
                     shouldReConnect = true;
                 }
-            case .none:
-                //reachabilityStatus = .notReachable
+            case .unavailable:
                 if (self.connected) {
+                    self.connected = false
+                    self.sendingCoordinates = false
                     log.enqueue("should be reconnected")
                     shouldReConnect = true;
                     
                     connectionRun.notify((1, "")) //error but is not need to be popuped
                 }
         }
-        if shouldReConnect /*&& (status.rawValue == ReachableViaWiFi.rawValue || status.rawValue == ReachableViaWWAN.rawValue)*/ {
+        if (shouldReConnect) {
+            self.connecting = false
             log.enqueue("Reconnect action")
             connect()
         }
     }
-    
     
     open var sessionUrl: String? { get { return self.getSessionUrl() } }
     
@@ -254,25 +255,26 @@ open class ConnectionManager: NSObject{
     open var sessionOpened: Bool = false
     private var connecting: Bool = false
  
+    /*Информация о сервере получена*/
     private func completed (result: Bool, token: Token?) {
+        self.connecting = false
         if (result) {
-            /*Информация о сервере получена*/
             if self.connection.addCallBackOnError == nil {
                 self.connection.addCallBackOnError = {
                     (isError : Bool) -> Void in
                     
                     self.connecting = false
                     self.shouldReConnect = isError
-                    
-                    if ((self.connected /*|| reconnect*/) && isError) {
-                        self.shouldReConnect = true;
-                    }
                     self.connected = false
                     
                     self.connectionRun.notify((1, ""))
-                    
                     if (self.shouldReConnect) {
-                        self.connect()
+                        //self.connect()
+                        if (!self.timer.isValid) {
+                            self.log.enqueue("CM.completed scheduling connect by timer")
+                            self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
+                        }
+                        
                     }
                 }
             }
@@ -282,12 +284,26 @@ open class ConnectionManager: NSObject{
                     self.dataSendStart.notify(())
                 }
             }
+            if self.connection.addCallBackOnReceiveEnd == nil {
+                self.connection.addCallBackOnReceiveEnd = {
+                    () -> Void in
+                    self.dataReceiveEnd.notify(())
+                    if (!self.connected) { //Восстановления коннекта после обрыва
+                        self.connected = true
+                    }
+                }
+            }
             if self.connection.addCallBackOnSendEnd == nil {
                 self.connection.addCallBackOnSendEnd = {
-                    () -> Void in
+                    (message) -> Void in
                     
-                    self.timer.invalidate()
-                    self.dataSendEnd.notify(())
+                    let command = message.components(separatedBy: "|").first!
+                    
+                    if (command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue) {
+                        self.sendingCoordinates = true
+                    }
+                     
+                    self.dataSendEnd.notify(()) //Передаем событие подписчикам
                 }
             }
             if self.connection.addCallBackOnCloseConnection == nil {
@@ -295,23 +311,26 @@ open class ConnectionManager: NSObject{
                     () -> Void in
                     self.connecting = false
                     self.connected = false
+                    self.sendingCoordinates = false
                     self.connectionClose.notify(())
                 }
             }
             if self.connection.addCallBackOnConnect == nil {
                 self.connection.addCallBackOnConnect = {
                     () -> Void in
-                    //self.connecting = false
+                    self.connecting = false
+                    if (self.timer.isValid) {
+                        self.timer.invalidate()
+                    }
                     let device = SettingsManager.getKey(SettingKeys.device)! as String
-
                     let request = "\(Tags.auth.rawValue)\(device)"
+                    
                     self.connection.send(request)
                 }
             }
             self.connection.connect(token!)
             self.shouldReConnect = false //interesting why here? may after connction is successful??
         } else {
-            self.connecting = false
             if (token != nil) {
                 if (token?.error.isEmpty)! {
                     self.connectionRun.notify((1, ""))
@@ -335,14 +354,13 @@ open class ConnectionManager: NSObject{
                 self.log.enqueue("CM.completed Error: Invalid data")
                 self.connectionRun.notify((1, "Invalid data"))
                 self.shouldReConnect = false
-                
             }
-            
         }
     }
     
     open func connect(){
         log.enqueue("CM: connect")
+        self.sendingCoordinates = false
         if self.connecting {
             log.enqueue("Conection already in process")
             return;
@@ -352,13 +370,15 @@ open class ConnectionManager: NSObject{
             return;
         }
         self.connecting = true;
+        /*
         if !isNetworkAvailable {
             log.enqueue("Network is NOT available")
             shouldReConnect = true
             self.connecting = false;
             return
-        }
+        }*/
         self.connectionStart.notify(())
+        
         
         self.Authenticate()
         
@@ -367,9 +387,9 @@ open class ConnectionManager: NSObject{
     open func closeConnection() {
         if (self.connected && !self.sessionOpened) {
             connection.closeConnection()
-            self.connection.addCallBackOnConnect = nil
             self.connected = false
             self.Authenticated = false
+            self.sendingCoordinates = false
         }
     }
     
@@ -394,21 +414,24 @@ open class ConnectionManager: NSObject{
 
     open func closeSession(){
         log.enqueue("CM.closeSession")
-        
+        self.trip_privacy = -1
         if self.sessionOpened {
-            connection.closeSession()
+            let request = "\(Tags.closeSession.rawValue)"
+            connection.send(request)
         }
     }
     
     open func send(request: String) {
-        if self.connected {
+        let command = request.components(separatedBy: "|").first!
+        if (self.connected || command == Tags.coordinate.rawValue || command == Tags.buffer.rawValue || self.connecting) {
             connection.send(request)
         } else {
-            if UIApplication.shared.applicationState == .active {
-                log.enqueue("CM.send appActive")
+            if (UIApplication.shared.applicationState == .active ) {
+                log.enqueue("CM.send appActive or coorinate")
                 delayedRequests.append(request)
                 if (!self.timer.isValid) {
-                    self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
+                    log.enqueue("CM.send scheduling connect by timer")
+                    self.timer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.connectByTimer), userInfo: nil, repeats: true)
                 }
             } else {
                 log.enqueue("CM.send appInActive")
@@ -416,7 +439,7 @@ open class ConnectionManager: NSObject{
                 let device = SettingsManager.getKey(SettingKeys.device)! as String
                 let escapedRequest = request.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
 
-                if let url = URL(string: (apiUrl + "k=" + device + "&m=" + escapedRequest! ) ) {
+                if let url = URL(string: (URLs.apiUrl + "k=" + device + "&m=" + escapedRequest! ) ) {
                     conHelper.onCompleted = {(dataURL, data) in
                         guard let data = data else { return }
                         LogQueue.sharedLogQueue.enqueue("CM.Send.onCompleted")
@@ -424,7 +447,6 @@ open class ConnectionManager: NSObject{
                             LogQueue.sharedLogQueue.enqueue(output)
                             self.notifyAnswer(output: output)
                         }
-                    
                     }
                     conHelper.backgroundRequest(url, requestBody: "")
                 }
@@ -432,7 +454,9 @@ open class ConnectionManager: NSObject{
         }
     }
     
+    //Попытка посстановить соединение после обрыва, по срабатыванию таймера
     @objc func connectByTimer() {
+        self.connecting = false
         self.connect()
     }
     
@@ -624,9 +648,9 @@ open class ConnectionManager: NSObject{
     //MARK private methods
     
     var isNetworkAvailable : Bool {
-        return reachabilityStatus != .none
+        return reachabilityStatus != .unavailable
     }
-    var reachabilityStatus: Reachability.Connection = .none
+    var reachabilityStatus: Reachability.Connection = .unavailable
     
     
     //fileprivate func notifyAnswer(_ tag: AnswTags, name: String, answer: Int){
@@ -659,10 +683,16 @@ open class ConnectionManager: NSObject{
                     self.connected = answer == 0;
                     let js = parseJson(output) as! Dictionary<String, AnyObject>;
                     
-                    if let transport_array = js["transport"] as? Array<AnyObject> {
-                        for t in transport_array {
+                    if let json_array = js["transport"] as? Array<AnyObject> {
+                        for t in json_array {
                             let tt = Transport.init(json: (t as!  Dictionary<String, AnyObject>));
                             self.transports.append(tt);
+                        }
+                    }
+                    if let json_array = js["private"] as? Array<AnyObject> {
+                        for t in json_array {
+                            let p = Private.init(json: (t as!  Dictionary<String, AnyObject>));
+                            self.privacyList.append(p);
                         }
                     }
   
@@ -670,6 +700,12 @@ open class ConnectionManager: NSObject{
                         sessionTrackerID = trackerID
                     } else {
                         sessionTrackerID = "error parsing TrackerID"
+                    }
+                    if let user = parseTag(output, key: Keys.name) {
+                        SettingsManager.setKey(user as NSString, forKey: SettingKeys.user)
+                    }
+                    if let uid = parseTag(output, key: Keys.uid) {
+                        SettingsManager.setKey(uid as NSString, forKey: SettingKeys.uid)
                     }
                     if let spermanent = parseTag(output, key: Keys.permanent) {
                         if spermanent == "1" {
@@ -704,6 +740,7 @@ open class ConnectionManager: NSObject{
                             SettingsManager.setKey(trackerId as NSString, forKey: SettingKeys.trackerId)
                         }
                         connectionRun.notify((answer, name))
+                        
                     }
                 } else {
                     connectionRun.notify((answer, name))
@@ -878,18 +915,24 @@ open class ConnectionManager: NSObject{
             sendPing()
             return
         }
+        
         if command == AnswTags.coordinate.rawValue {
-            let cnt = Int(addict)
+            
+             let cnt = Int(addict)
+            
             if cnt ?? 0  > 0 {
                 self.onSentCoordinate(cnt:cnt!)
             }
+            
             return
         }
         if command == AnswTags.buffer.rawValue {
+            
             let cnt = Int(addict)
             if cnt ?? 0 > 0 {
                 self.onSentCoordinate(cnt:cnt!)
             }
+            
             return
         }
         if command == AnswTags.grCoord.rawValue {
@@ -972,7 +1015,6 @@ open class ConnectionManager: NSObject{
                     audioPlayer.stop()
                     sendRemoteCommandResponse(param)
                 }
-                
                 return
             }
             
@@ -980,7 +1022,6 @@ open class ConnectionManager: NSObject{
             if (param == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 sendingManger.stopSendingCoordinates()
                 sendRemoteCommandResponse(param)
-
                 return
             }
             if (param == RemoteCommand.TRACKER_EXIT.rawValue){
@@ -1053,14 +1094,11 @@ open class ConnectionManager: NSObject{
                 self.coordinates.remove(at: 0)
             }
         }
-        self.sendingCoordinates = false;
-        
+        self.sendingCoordinates = false
         self.sendNextCoordinates()
     }
     
     fileprivate func sendNextCoordinates(){
-        
-        
         /*
          if self.shouldCloseSession {
          
@@ -1093,8 +1131,11 @@ open class ConnectionManager: NSObject{
             } else {
                 req = "\(Tags.coordinate.rawValue)|\(req)"
             }
-            self.sendingCoordinates = true;
             send(request:req)
+            if (idx % 10 == 0 && !self.connected) { //Накопилось 10 координат а соединение разорвано?
+                self.connect() //Пытаемся восстановить соединение
+                
+            }
         }
     }
     

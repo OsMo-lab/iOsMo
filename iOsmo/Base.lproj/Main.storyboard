@@ -27,13 +27,6 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uJd-A2-nGg" userLabel="OsmoView">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="small-white" translatesAutoresizingMaskIntoConstraints="NO" id="o2G-rG-8qN" userLabel="Osmo-status">
-                                                <rect key="frame" x="16" y="28" width="35" height="35"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="35" id="6Oc-Yc-QuM"/>
-                                                    <constraint firstAttribute="height" constant="35" id="EC7-ew-Iy6"/>
-                                                </constraints>
-                                            </imageView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="small-red" translatesAutoresizingMaskIntoConstraints="NO" id="zKi-rC-Dwj">
                                                 <rect key="frame" x="16" y="28" width="35" height="35"/>
                                                 <constraints>
@@ -56,9 +49,7 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.082352941176470587" green="0.082352941176470587" blue="0.082352941176470587" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="o2G-rG-8qN" firstAttribute="top" secondItem="zKi-rC-Dwj" secondAttribute="top" id="46E-cK-995"/>
                                             <constraint firstItem="zKi-rC-Dwj" firstAttribute="bottom" secondItem="JgA-OC-PKV" secondAttribute="bottom" id="6sl-Zr-Pb3"/>
-                                            <constraint firstItem="o2G-rG-8qN" firstAttribute="leading" secondItem="zKi-rC-Dwj" secondAttribute="leading" id="AI4-f2-gSz"/>
                                             <constraint firstItem="JgA-OC-PKV" firstAttribute="leading" secondItem="zKi-rC-Dwj" secondAttribute="trailing" constant="8" symbolic="YES" id="BZw-63-WFG"/>
                                             <constraint firstItem="zKi-rC-Dwj" firstAttribute="top" secondItem="uJd-A2-nGg" secondAttribute="top" constant="28" id="OPK-py-0HE"/>
                                             <constraint firstItem="CHt-yv-mdX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="JgA-OC-PKV" secondAttribute="trailing" constant="8" symbolic="YES" id="Q8g-5R-LMj"/>
@@ -266,7 +257,7 @@
                             <constraint firstItem="nfj-ia-vgM" firstAttribute="width" secondItem="tsR-hK-woN" secondAttribute="width" id="tsv-aQ-eAf"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="Menu" id="acW-dT-cKf" userLabel="Session">
+                    <tabBarItem key="tabBarItem" title="" image="small-red" id="acW-dT-cKf" userLabel="Session">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <connections>
@@ -275,7 +266,6 @@
                         <outlet property="distanceLabel" destination="mms-Em-UaN" id="X4X-La-K3G"/>
                         <outlet property="link" destination="BYA-yY-8gh" id="v0i-il-jDc"/>
                         <outlet property="osmoImage" destination="zKi-rC-Dwj" id="Q6d-E8-7HN"/>
-                        <outlet property="osmoStatus" destination="o2G-rG-8qN" id="Pwc-th-ZYB"/>
                         <outlet property="pauseBtn" destination="94X-Lr-3Ab" id="YCN-6R-aPR"/>
                         <outlet property="playStopBtn" destination="lqI-48-1cC" id="Gnh-ef-QyS"/>
                         <outlet property="slider" destination="nfj-ia-vgM" id="8Jz-ML-qvX"/>
@@ -396,29 +386,38 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2dk-tC-xs0">
                                         <rect key="frame" x="507" y="5" width="80" height="30"/>
+                                        <color key="backgroundColor" red="0.80494925900000003" green="0.38341245819999997" blue="0.15144851170000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="5w6-CV-uE1"/>
                                             <constraint firstAttribute="width" constant="80" id="Myh-R4-ce2"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                         <state key="normal" title="Join">
-                                            <color key="titleColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="btnEnterCellAdd:" destination="Sgt-SC-42k" eventType="touchUpInside" id="YLC-pA-Xwq"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gcd-W9-a1F" userLabel="AddGroupButton">
                                         <rect key="frame" x="417" y="5" width="80" height="30"/>
+                                        <color key="backgroundColor" red="0.80494925900000003" green="0.38341245819999997" blue="0.15144851170000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="EXL-D2-CP2"/>
                                             <constraint firstAttribute="height" constant="30" id="jiC-ee-q2F"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                        <state key="normal" title="Add">
-                                            <color key="titleColor" red="0.87843137250000003" green="0.28235294119999998" blue="0.035294117649999998" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
+                                        <state key="normal" title="Add"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="btnGroupCellAdd:" destination="Sgt-SC-42k" eventType="touchUpInside" id="S53-yV-bJ0"/>
                                         </connections>
@@ -524,11 +523,10 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name of new group" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JS1-jZ-Ygc" userLabel="newGroupField">
                                                     <rect key="frame" x="73" y="11.666666666666664" width="407" height="30"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="dZr-XI-2GY"/>
                                                     </constraints>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
@@ -543,11 +541,10 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="e-mail address" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Vjh-Tf-qLH" userLabel="emailField">
                                                     <rect key="frame" x="73" y="46.666666666666664" width="407" height="29.999999999999993"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="P3m-xS-HjP"/>
                                                     </constraints>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="emailAddress"/>
                                                 </textField>
@@ -576,11 +573,10 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="nickname" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FMD-q5-sW0" userLabel="NickField">
                                                     <rect key="frame" x="73" y="81.666666666666671" width="407" height="30"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="DB3-W4-Bbh"/>
                                                     </constraints>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <textInputTraits key="textInputTraits" spellCheckingType="no"/>
                                                 </textField>
@@ -629,12 +625,11 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ID or URL of group to join" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MBA-Xb-vkb" userLabel="GroupField">
                                                     <rect key="frame" x="81" y="12" width="145" height="30"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="dwD-CV-kmX"/>
                                                         <constraint firstAttribute="width" constant="145" id="iyq-k3-kNN"/>
                                                     </constraints>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                                                     <connections>
@@ -653,11 +648,10 @@
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Your nickname in group" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7T6-eH-nEm" userLabel="NickField">
                                                     <rect key="frame" x="81" y="49" width="145" height="30"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="5cv-hO-fJU"/>
                                                     </constraints>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" spellCheckingType="no"/>
                                                     <connections>
@@ -954,7 +948,7 @@
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="czt-ye-ntc" userLabel="Email field">
                                 <rect key="frame" x="8" y="79" width="583" height="34"/>
-                                <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress"/>
                                 <connections>
@@ -1273,8 +1267,7 @@
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="awp-jk-SoY" userLabel="MessageField">
                                         <rect key="frame" x="0.0" y="0.0" width="550" height="39"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" red="1" green="0.83137255909999996" blue="0.47450977560000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -1462,7 +1455,6 @@
     <color key="tintColor" red="0.1960784314" green="0.45882352939999999" blue="0.75686274509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="History" width="30" height="30"/>
-        <image name="Menu" width="30" height="30"/>
         <image name="User" width="30" height="30"/>
         <image name="WaypointMap" width="30" height="30"/>
         <image name="about-32" width="32" height="32"/>
@@ -1472,8 +1464,7 @@
         <image name="pause-32" width="32" height="32"/>
         <image name="play-100" width="100" height="100"/>
         <image name="previous-50" width="50" height="50"/>
-        <image name="small-red" width="85" height="85"/>
-        <image name="small-white" width="85" height="85"/>
+        <image name="small-red" width="35" height="35"/>
         <image name="topic-26" width="26" height="26"/>
         <image name="user_male_4-64" width="64" height="64"/>
         <systemColor name="darkTextColor">

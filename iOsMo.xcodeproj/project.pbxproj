@@ -12,7 +12,6 @@
 		293C957D1A34B217005DD4CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 293C957B1A34B217005DD4CE /* Main.storyboard */; };
 		293C957F1A34B217005DD4CE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 293C957E1A34B217005DD4CE /* Images.xcassets */; };
 		293C95821A34B217005DD4CE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 293C95801A34B217005DD4CE /* LaunchScreen.xib */; };
-		293C958E1A34B217005DD4CE /* iOsmoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C958D1A34B217005DD4CE /* iOsmoTests.swift */; };
 		293C95B61A34F63B005DD4CE /* settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 293C95B51A34F63B005DD4CE /* settings.plist */; };
 		293C95BC1A3C660F005DD4CE /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95BB1A3C660F005DD4CE /* ConnectionManager.swift */; };
 		293C95C21A3C665E005DD4CE /* ConnectionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293C95C11A3C665E005DD4CE /* ConnectionProtocol.swift */; };
@@ -27,7 +26,6 @@
 		2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2982CFB31AC21CC60070A090 /* TcpClient.swift */; };
 		29CCA6241B1676AB00DA0C83 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CCA6231B1676AB00DA0C83 /* Extensions.swift */; };
 		29CD670A1ACB6EA000656860 /* SessionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CD67091ACB6EA000656860 /* SessionTimer.swift */; };
-		29CDE0851A61911900CC5628 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29CDE0841A61911900CC5628 /* SettingsViewController.swift */; };
 		29CED6BB1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png in Resources */ = {isa = PBXBuildFile; fileRef = 29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */; };
 		29CED6BD1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png in Resources */ = {isa = PBXBuildFile; fileRef = 29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */; };
 		29F293E11AED989600B6AF8A /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F293E01AED989600B6AF8A /* Coordinate.swift */; };
@@ -37,7 +35,6 @@
 		29FA960A1A45FAC5009BFC19 /* LogQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96091A45FAC5009BFC19 /* LogQueue.swift */; };
 		29FA96341A478335009BFC19 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96331A478335009BFC19 /* AccountViewController.swift */; };
 		29FA96381A4784EC009BFC19 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29FA96371A4784EC009BFC19 /* AuthViewController.swift */; };
-		29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */; };
 		4D08BFFD2295A9DE00EECB33 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D08BFFC2295A9DE00EECB33 /* History.swift */; };
 		4D19BE321E69C93600F7599D /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D19BE311E69C93600F7599D /* Point.swift */; };
 		4D2A12B422959A2900831219 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2A12B322959A2900831219 /* HistoryViewController.swift */; };
@@ -53,38 +50,27 @@
 		4DA3CC3225E01110008A9D69 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4DA3CC3125E01110008A9D69 /* README.md */; };
 		4DA90A7025DECB82008A7D2B /* nanopb.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6425DECB82008A7D2B /* nanopb.xcframework */; };
 		4DA90A7125DECB82008A7D2B /* PromisesObjC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6525DECB82008A7D2B /* PromisesObjC.xcframework */; };
-		4DA90A7225DECB82008A7D2B /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6625DECB82008A7D2B /* FirebaseAnalytics.xcframework */; };
+		4DA90A7225DECB82008A7D2B /* FirebaseAnalytics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6625DECB82008A7D2B /* FirebaseAnalytics.xcframework */; platformFilter = ios; };
 		4DA90A7325DECB82008A7D2B /* FirebaseCoreDiagnostics.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6725DECB82008A7D2B /* FirebaseCoreDiagnostics.xcframework */; };
 		4DA90A7425DECB82008A7D2B /* FirebaseInstallations.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6825DECB82008A7D2B /* FirebaseInstallations.xcframework */; };
 		4DA90A7525DECB82008A7D2B /* FirebaseCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6925DECB82008A7D2B /* FirebaseCore.xcframework */; };
 		4DA90A7625DECB82008A7D2B /* GoogleDataTransport.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6A25DECB82008A7D2B /* GoogleDataTransport.xcframework */; };
-		4DA90A7725DECB82008A7D2B /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6B25DECB82008A7D2B /* GoogleAppMeasurement.xcframework */; };
+		4DA90A7725DECB82008A7D2B /* GoogleAppMeasurement.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6B25DECB82008A7D2B /* GoogleAppMeasurement.xcframework */; platformFilter = ios; };
 		4DA90A7825DECB82008A7D2B /* GoogleUtilities.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6C25DECB82008A7D2B /* GoogleUtilities.xcframework */; };
 		4DA90A7925DECB82008A7D2B /* FirebaseMessaging.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6E25DECB82008A7D2B /* FirebaseMessaging.xcframework */; };
 		4DA90A7A25DECB82008A7D2B /* FirebaseInstanceID.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DA90A6F25DECB82008A7D2B /* FirebaseInstanceID.xcframework */; };
 		4DADA8E5222C14D200ACB919 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DADA8E4222C14D200ACB919 /* ChatMessage.swift */; };
+		4DB448B62622AF3D000A6EC1 /* Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB448B52622AF3D000A6EC1 /* Private.swift */; };
 		4DB4CE671EA2B797009E96B5 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE661EA2B797009E96B5 /* Track.swift */; };
 		4DB4CE691EA3EB31009E96B5 /* XML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB4CE681EA3EB31009E96B5 /* XML.swift */; };
 		4DB5FB781E5A18860094FF8A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7A1E5A18860094FF8A /* Localizable.strings */; };
-		4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB7F1E5A18870094FF8A /* InfoPlist.strings */; };
 		4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB5FB841E5A18880094FF8A /* InfoPlist.strings */; };
 		4DCA84BE1F8E794C00C5BCC4 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCA84BD1F8E794C00C5BCC4 /* Reachability.swift */; };
-		4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4DEACF1921E13CAE00D1A32D /* Push.txt */; };
 		4DEACF2221EFA99C00D1A32D /* MonitoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEACF2121EFA99B00D1A32D /* MonitoringViewController.swift */; };
 		4DFF727E25D1767F00DFAF52 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFF727D25D1767F00DFAF52 /* Transport.swift */; };
 		F946C9B91A3F08A30073A273 /* SendingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9B81A3F08A30073A273 /* SendingManager.swift */; };
 		F946C9BB1A3FA0C40073A273 /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F946C9BA1A3FA0C40073A273 /* LocationTracker.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		293C95881A34B217005DD4CE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 293C95681A34B217005DD4CE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 293C956F1A34B217005DD4CE;
-			remoteInfo = iOsmo;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		4D19BE2C1E67353B00F7599D /* Embed Frameworks */ = {
@@ -107,7 +93,6 @@
 		293C957C1A34B217005DD4CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		293C957E1A34B217005DD4CE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		293C95811A34B217005DD4CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		293C95871A34B217005DD4CE /* iOsmoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOsmoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C958C1A34B217005DD4CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		293C958D1A34B217005DD4CE /* iOsmoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOsmoTests.swift; sourceTree = "<group>"; };
 		293C95AB1A34C4D9005DD4CE /* iOsmo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOsmo-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -125,7 +110,6 @@
 		2982CFB31AC21CC60070A090 /* TcpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TcpClient.swift; sourceTree = "<group>"; };
 		29CCA6231B1676AB00DA0C83 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		29CD67091ACB6EA000656860 /* SessionTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionTimer.swift; sourceTree = "<group>"; };
-		29CDE0841A61911900CC5628 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		29CED6BA1A5CB63D008D865A /* Screen Shot 2015-01-07 at 00.10.05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screen Shot 2015-01-07 at 00.10.05.png"; sourceTree = "<group>"; };
 		29CED6BC1A5CB659008D865A /* Screen Shot 2015-01-07 at 00.09.29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Screen Shot 2015-01-07 at 00.09.29.png"; sourceTree = "<group>"; };
 		29F293E01AED989600B6AF8A /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
@@ -135,8 +119,6 @@
 		29FA96091A45FAC5009BFC19 /* LogQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogQueue.swift; sourceTree = "<group>"; };
 		29FA96331A478335009BFC19 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		29FA96371A4784EC009BFC19 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
-		29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		29FA967D1A50A615009BFC19 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4D08BFFC2295A9DE00EECB33 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		4D19BE311E69C93600F7599D /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		4D2A12B322959A2900831219 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
@@ -165,6 +147,7 @@
 		4DA90A6F25DECB82008A7D2B /* FirebaseInstanceID.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = FirebaseInstanceID.xcframework; sourceTree = "<group>"; };
 		4DADA8E3222BD59500ACB919 /* Firebase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Firebase.h; path = Firebase/Firebase.h; sourceTree = SOURCE_ROOT; };
 		4DADA8E4222C14D200ACB919 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		4DB448B52622AF3D000A6EC1 /* Private.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Private.swift; sourceTree = "<group>"; };
 		4DB4CE661EA2B797009E96B5 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		4DB4CE681EA3EB31009E96B5 /* XML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XML.swift; sourceTree = "<group>"; };
 		4DB5FB741E5A14E70094FF8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
@@ -191,7 +174,6 @@
 				4DA90A7025DECB82008A7D2B /* nanopb.xcframework in Frameworks */,
 				4D8C635021FE2DA20085D1C3 /* AVFoundation.framework in Frameworks */,
 				4DA90A7825DECB82008A7D2B /* GoogleUtilities.xcframework in Frameworks */,
-				29FA967C1A50A60A009BFC19 /* libsqlite3.dylib in Frameworks */,
 				4DA90A7425DECB82008A7D2B /* FirebaseInstallations.xcframework in Frameworks */,
 				4DA90A7925DECB82008A7D2B /* FirebaseMessaging.xcframework in Frameworks */,
 				4DA90A7725DECB82008A7D2B /* GoogleAppMeasurement.xcframework in Frameworks */,
@@ -199,13 +181,6 @@
 				4DA90A7A25DECB82008A7D2B /* FirebaseInstanceID.xcframework in Frameworks */,
 				4DA90A7325DECB82008A7D2B /* FirebaseCoreDiagnostics.xcframework in Frameworks */,
 				4DA90A7125DECB82008A7D2B /* PromisesObjC.xcframework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		293C95841A34B217005DD4CE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,8 +192,6 @@
 			children = (
 				4D3744C5227225AC00608510 /* LICENSE */,
 				4DA3CC3125E01110008A9D69 /* README.md */,
-				29FA967D1A50A615009BFC19 /* libz.dylib */,
-				29FA967B1A50A60A009BFC19 /* libsqlite3.dylib */,
 				293C95721A34B217005DD4CE /* iOsmo */,
 				293C958A1A34B217005DD4CE /* iOsmoTests */,
 				293C95711A34B217005DD4CE /* Products */,
@@ -230,7 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				293C95701A34B217005DD4CE /* OsMo.app */,
-				293C95871A34B217005DD4CE /* iOsmoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -299,7 +271,6 @@
 				29FA96331A478335009BFC19 /* AccountViewController.swift */,
 				29FA96371A4784EC009BFC19 /* AuthViewController.swift */,
 				4D8B78441FA7624A00E1069D /* MapViewController.swift */,
-				29CDE0841A61911900CC5628 /* SettingsViewController.swift */,
 				293C95791A34B217005DD4CE /* LogViewController.swift */,
 				4D68B26D222BC22F00F6CC8E /* ChatViewController.swift */,
 				4D2A12B322959A2900831219 /* HistoryViewController.swift */,
@@ -341,6 +312,7 @@
 				4DADA8E4222C14D200ACB919 /* ChatMessage.swift */,
 				4D08BFFC2295A9DE00EECB33 /* History.swift */,
 				4DFF727D25D1767F00DFAF52 /* Transport.swift */,
+				4DB448B52622AF3D000A6EC1 /* Private.swift */,
 			);
 			name = Groups;
 			sourceTree = "<group>";
@@ -455,24 +427,6 @@
 			productReference = 293C95701A34B217005DD4CE /* OsMo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		293C95861A34B217005DD4CE /* iOsmoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */;
-			buildPhases = (
-				293C95831A34B217005DD4CE /* Sources */,
-				293C95841A34B217005DD4CE /* Frameworks */,
-				293C95851A34B217005DD4CE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				293C95891A34B217005DD4CE /* PBXTargetDependency */,
-			);
-			name = iOsmoTests;
-			productName = iOsmoTests;
-			productReference = 293C95871A34B217005DD4CE /* iOsmoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -500,12 +454,6 @@
 							};
 						};
 					};
-					293C95861A34B217005DD4CE = {
-						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = SF5DP65BZ4;
-						LastSwiftMigration = 1010;
-						TestTargetID = 293C956F1A34B217005DD4CE;
-					};
 				};
 			};
 			buildConfigurationList = 293C956B1A34B217005DD4CE /* Build configuration list for PBXProject "iOsMo" */;
@@ -523,7 +471,6 @@
 			projectRoot = "";
 			targets = (
 				293C956F1A34B217005DD4CE /* iOsMo */,
-				293C95861A34B217005DD4CE /* iOsmoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -547,15 +494,6 @@
 				4DB5FB821E5A18880094FF8A /* InfoPlist.strings in Resources */,
 				4D8C634E21FDCDBD0085D1C3 /* sendsound.mp3 in Resources */,
 				4D4671EF1E4E4CBC007A87CE /* GoogleService-Info.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		293C95851A34B217005DD4CE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4DEACF1A21E13CAE00D1A32D /* Push.txt in Resources */,
-				4DB5FB7D1E5A18870094FF8A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,7 +524,6 @@
 				29FA960A1A45FAC5009BFC19 /* LogQueue.swift in Sources */,
 				293C95BC1A3C660F005DD4CE /* ConnectionManager.swift in Sources */,
 				29F293E11AED989600B6AF8A /* Coordinate.swift in Sources */,
-				29CDE0851A61911900CC5628 /* SettingsViewController.swift in Sources */,
 				29520AB81AD5D79100CC4136 /* Group.swift in Sources */,
 				293C957A1A34B217005DD4CE /* LogViewController.swift in Sources */,
 				29520AB61AD4838500CC4136 /* GroupManager.swift in Sources */,
@@ -594,6 +531,7 @@
 				29F293E31AEEFA4500B6AF8A /* UserGroupCoordinate.swift in Sources */,
 				29F9A6D81AC0C50C001A610D /* BaseTcpConnection.swift in Sources */,
 				293C95C61A3C7FAE005DD4CE /* Enums.swift in Sources */,
+				4DB448B62622AF3D000A6EC1 /* Private.swift in Sources */,
 				4D2A12B422959A2900831219 /* HistoryViewController.swift in Sources */,
 				2982CFB41AC21CC60070A090 /* TcpClient.swift in Sources */,
 				293C95C41A3C6FB1005DD4CE /* LocationModel.swift in Sources */,
@@ -622,23 +560,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		293C95831A34B217005DD4CE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				293C958E1A34B217005DD4CE /* iOsmoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		293C95891A34B217005DD4CE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 293C956F1A34B217005DD4CE /* iOsMo */;
-			targetProxy = 293C95881A34B217005DD4CE /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		293C957B1A34B217005DD4CE /* Main.storyboard */ = {
@@ -804,7 +726,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 208;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -820,12 +742,13 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
@@ -844,7 +767,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 187;
+				CURRENT_PROJECT_VERSION = 208;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = SF5DP65BZ4;
 				ENABLE_BITCODE = NO;
@@ -860,66 +783,19 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = alexey.sirotkin.iosmo;
 				PRODUCT_NAME = OsMo;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOsmo/iOsmo-Bridging-Header.h";
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		293C95951A34B217005DD4CE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = iOsmoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
-			};
-			name = Debug;
-		};
-		293C95961A34B217005DD4CE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = iOsmoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "olame.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOsMo.app/iOsMo";
 			};
 			name = Release;
 		};
@@ -940,15 +816,6 @@
 			buildConfigurations = (
 				293C95921A34B217005DD4CE /* Debug */,
 				293C95931A34B217005DD4CE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		293C95941A34B217005DD4CE /* Build configuration list for PBXNativeTarget "iOsmoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				293C95951A34B217005DD4CE /* Debug */,
-				293C95961A34B217005DD4CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

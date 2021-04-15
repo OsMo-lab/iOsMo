@@ -7,16 +7,6 @@
 //
 
 import Foundation
-
-//
-//  History.swift
-//  iOsMo
-//
-//  Created by Alexey Sirotkin on 16.04.17.
-//  Copyright © 2017 Alexey Sirotkin. All rights reserved.
-//
-
-import Foundation
 import MapKit
 
 open class History: Equatable {
