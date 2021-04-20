@@ -291,8 +291,6 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
         if let user = SettingsManager.getKey(SettingKeys.user) {
             if user.length > 0 {
                 userName.text = String(user)
-                
-                
                 return;
             }
         }
@@ -379,15 +377,24 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let row = (indexPath as NSIndexPath).row
+        let section = (indexPath as NSIndexPath).section
+        
         var height:CGFloat = 85.0;
-        if indexPath.section == 0 {
+        let uid = SettingsManager.getKey(SettingKeys.uid);
+        if (section == 0 && row == 0) { /* Строка создания новой группы */
             if groupAction == GroupActions.new {
-                if let user = SettingsManager.getKey(SettingKeys.user) {
-                    if user.length == 0 {
-                        height = 124
-                    }
-                } else {
+                if (uid == "0" || uid == "") {
                     height = 124
+                } else {
+                    height = 50
+                }
+            }
+        }
+        if (section == 1 && row == 0) { /* Строка вступления в группу */
+            if groupAction == GroupActions.enter {
+                if (uid != "0" && uid != "") {
+                    height = 50
                 }
             }
         }
@@ -414,15 +421,20 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 gName.isEnabled = true
                 nick.isHidden = false;
                 nickLabel.isHidden = false;
-                if let user = SettingsManager.getKey(SettingKeys.user) {
-                    if user.length > 0 {
-                        nick.text = user as String;
-                        nick.isHidden = true;
-                        nickLabel.isHidden = true;
-                    } else {
-                        nick.text = "";
+                if let uid = SettingsManager.getKey(SettingKeys.uid){
+                    if (uid != "0" && uid != "") {
+                        if let user = SettingsManager.getKey(SettingKeys.user) {
+                            if user.length > 0 {
+                                nick.text = user as String;
+                                nick.isHidden = true;
+                                nickLabel.isHidden = true;
+                            } else {
+                                nick.text = "";
+                            }
+                        }
                     }
                 }
+                
                 btn.isHidden = false
            }
         } else if (section == 0 && row == 0) { /* Строка создания новой группы */
@@ -441,16 +453,19 @@ class AccountViewController: UIViewController, AuthResultProtocol, UITableViewDa
                 email.isHidden = false;
                 emailLabel.isHidden = false;
 
-                if let user = SettingsManager.getKey(SettingKeys.user) {
-                    if user.length > 0 {
-                        nick.text = user as String;
-                        nick.isHidden = true;
-                        nickLabel.isHidden = true;
-                        email.isHidden = true;
-                        emailLabel.isHidden = true;
-
-                    } else {
-                        nick.text = "";
+                if let uid = SettingsManager.getKey(SettingKeys.uid){
+                    if (uid != "0" && uid != "") {
+                        if let user = SettingsManager.getKey(SettingKeys.user) {
+                            if user.length > 0 {
+                                nick.text = user as String;
+                                nick.isHidden = true;
+                                nickLabel.isHidden = true;
+                                email.isHidden = true;
+                                emailLabel.isHidden = true;
+                            } else {
+                                nick.text = "";
+                            }
+                        }
                     }
                 }
             }
