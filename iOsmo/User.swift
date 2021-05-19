@@ -29,20 +29,18 @@ public class User:NSObject, MKAnnotation {
     init(json:Dictionary<String, AnyObject>) {
         self.u = json["u"] as? String ?? "\(json["u"] as! Int)"
         self.name = json["name"] as? String ?? ""
-        self.connected = (json["connected"] as? Double) ?? atof(json["connected"] as? String ?? "0")
-        self.color = (json["color"] as? String) ?? ""
-        self.online = (json["online"] as? Int) ?? Int(json["online"] as? String ?? "0")!
-        self.state = (json["state"] as? Int) ?? Int(json["state"] as? String ?? "0")!
-        let uTime = (json["time"] as? Double) ?? atof(json["time"] as? String ?? "0")
+        self.connected = json["connected"] as? Double ?? atof(json["connected"] as? String ?? "0")
+        self.color = json["color"] as? String ?? ""
+        self.online = json["online"] as? Int ?? Int(json["online"] as? String ?? "0")!
+        self.state = json["state"] as? Int ?? Int(json["state"] as? String ?? "0")!
+        let uTime = json["time"] as? Double ?? atof(json["time"] as? String ?? "0")
         if uTime > 0 {
             self.time = Date(timeIntervalSince1970: uTime)
         }
 
-        if let lat = json["lat"] as? String, let lon = json["lon"] as? String {
-            self.coordinate = CLLocationCoordinate2D(latitude: atof(lat), longitude: atof(lon))
-        } else {
-            self.coordinate = CLLocationCoordinate2D(latitude: -3000, longitude: -3000)
-        }
+        let lat = json["lat"] as? Double ?? atof(json["lat"] as? String ?? "-3000")
+        let lon = json["lon"] as? Double ?? atof(json["lon"] as? String ?? "-3000")
+        self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
     }
     
     init(u: String!, name: String, color: String, connected: Double){

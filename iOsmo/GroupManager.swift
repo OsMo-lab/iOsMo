@@ -373,7 +373,6 @@ open class GroupManager{
                             ["u": t.u, "name": t.name, "description": t.descr, "color": t.color, "size": "\(t.size)", "url": t.url, "type": t.type];
                         tracks.append(track)
                     }
-
                     
                     let jsonGroup : NSDictionary =
                         ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy

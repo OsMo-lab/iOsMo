@@ -13,7 +13,6 @@ open class UserGroupCoordinate{
     let userId: Int //Уникалльный ID
     let location: LocationModel
 
-    
     init(group: Int, user: Int, location: LocationModel){
         self.groupId = group
         self.userId = user

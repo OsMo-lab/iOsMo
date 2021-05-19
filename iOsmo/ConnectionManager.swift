@@ -684,12 +684,14 @@ open class ConnectionManager: NSObject{
                     let js = parseJson(output) as! Dictionary<String, AnyObject>;
                     
                     if let json_array = js["transport"] as? Array<AnyObject> {
+                        self.transports = [Transport]();
                         for t in json_array {
                             let tt = Transport.init(json: (t as!  Dictionary<String, AnyObject>));
                             self.transports.append(tt);
                         }
                     }
                     if let json_array = js["private"] as? Array<AnyObject> {
+                        self.privacyList = [Private]();
                         for t in json_array {
                             let p = Private.init(json: (t as!  Dictionary<String, AnyObject>));
                             self.privacyList.append(p);

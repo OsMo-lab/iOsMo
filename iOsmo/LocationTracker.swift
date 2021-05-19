@@ -110,9 +110,11 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
+        self.motionManager.stopActivityUpdates()
         log.enqueue("LT.turnMonitoringOff")
         self.isDeferingUpdates = false
         self.isGettingLocation = false
+        
     }
     
     
