@@ -107,6 +107,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if let url = launchOptions?[.url] as? URL {
             _ = presentViewController(url:url);
+        } else {
+            /* Пользователь зарегистрирован на устройстве ? */
+            if let uid = SettingsManager.getKey(SettingKeys.uid) {
+                if (uid == "0" || uid == "") { /* Если нет, то переходимна страницу логина-регистрации */
+                    let tbc:UITabBarController = (window?.rootViewController as! UITabBarController)
+                    let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
+                    tbc.selectedViewController = accountVC;
+                }
+            }
         }
         return true
     }

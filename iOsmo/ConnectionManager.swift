@@ -479,6 +479,7 @@ open class ConnectionManager: NSObject{
             }
         }
     }
+    
     open func sendRemoteCommandResponse(_ rc: String) {
         let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)|1"
         send(request: request)
@@ -1039,7 +1040,7 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
-                sendingManger.pauseSendingCoordinates()
+                sendingManger.pauseSendingCoordinates(true)
                 sendRemoteCommandResponse(param)
                 return
             }

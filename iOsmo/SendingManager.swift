@@ -97,18 +97,17 @@ open class SendingManager: NSObject{
         }
     }
     
-    open func pauseSendingCoordinates(){
+    open func pauseSendingCoordinates(_ pause: Bool){
         locationTracker.turnMonitoringOff()
-        
-        //self.lcSendTimer?.invalidate()
-        //self.lcSendTimer = nil
-        sessionPaused.notify((0))
+        if (pause) {
+            sessionPaused.notify((0))
+        }
         UIApplication.shared.isIdleTimerDisabled = false
         
     }
     
     open func stopSendingCoordinates(){
-        pauseSendingCoordinates()
+        pauseSendingCoordinates(false)
         connectionManager.closeSession()
     }
     
