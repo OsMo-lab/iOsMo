@@ -96,9 +96,11 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
                     self.isGettingLocation = true
                     //Запускаем датчик движения, для тонкой настройки точности определения координат
+                    /*
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)
                     })
+                    */
                 }
             }
         }
@@ -107,7 +109,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
-        self.motionManager.stopActivityUpdates()
+        //self.motionManager.stopActivityUpdates()
         log.enqueue("LT.turnMonitoringOff")
         self.isDeferingUpdates = false
         self.isGettingLocation = false
