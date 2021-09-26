@@ -14,11 +14,8 @@ open class Coordinate{
     var location: LocationModel
     
     init(group: Int, user: Int, location: LocationModel){
-        
         self.groupId = group
         self.userId = user
         self.location = location
-        
     }
-    
 }

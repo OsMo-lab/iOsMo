@@ -474,11 +474,16 @@ open class ConnectionManager: NSObject{
     {
         if self.sessionOpened {
             self.coordinates += coordinates
+            /* Время первой локации в списке неотправлкнных старее чем 1.5 минуты и есть незаконченная опытка отправки ? */
+            if (-self.coordinates[0].time.timeIntervalSinceNow > 30 && self.sendingCoordinates) {
+                self.sendingCoordinates = false; /* Сбрасываем признак активной отправки координат*/
+            }
             if (!self.sendingCoordinates) {
                 self.sendNextCoordinates()
             }
         }
     }
+    
     open func sendRemoteCommandResponse(_ rc: String) {
         let request = "\(Tags.remoteCommandResponse.rawValue)\(rc)|1"
         send(request: request)
@@ -684,12 +689,14 @@ open class ConnectionManager: NSObject{
                     let js = parseJson(output) as! Dictionary<String, AnyObject>;
                     
                     if let json_array = js["transport"] as? Array<AnyObject> {
+                        self.transports = [Transport]();
                         for t in json_array {
                             let tt = Transport.init(json: (t as!  Dictionary<String, AnyObject>));
                             self.transports.append(tt);
                         }
                     }
                     if let json_array = js["private"] as? Array<AnyObject> {
+                        self.privacyList = [Private]();
                         for t in json_array {
                             let p = Private.init(json: (t as!  Dictionary<String, AnyObject>));
                             self.privacyList.append(p);
@@ -918,7 +925,7 @@ open class ConnectionManager: NSObject{
         
         if command == AnswTags.coordinate.rawValue {
             
-             let cnt = Int(addict)
+            let cnt = Int(addict)
             
             if cnt ?? 0  > 0 {
                 self.onSentCoordinate(cnt:cnt!)
@@ -1004,7 +1011,7 @@ open class ConnectionManager: NSObject{
                         sendRemoteCommandResponse(param)
                     } catch {
                         
-                        
+                    
                     }
                 }
                 
@@ -1017,7 +1024,6 @@ open class ConnectionManager: NSObject{
                 }
                 return
             }
-            
 
             if (param == RemoteCommand.TRACKER_SESSION_STOP.rawValue){
                 sendingManger.stopSendingCoordinates()
@@ -1037,7 +1043,7 @@ open class ConnectionManager: NSObject{
                 return
             }
             if (param == RemoteCommand.TRACKER_SESSION_PAUSE.rawValue){
-                sendingManger.pauseSendingCoordinates()
+                sendingManger.pauseSendingCoordinates(true)
                 sendRemoteCommandResponse(param)
                 return
             }
@@ -1084,8 +1090,6 @@ open class ConnectionManager: NSObject{
         }
     }
 
-
-    
     //MARK - parsing server response functions
     func onSentCoordinate(cnt: Int){
         log.enqueue("Removing \(cnt) coordinates from buffer")

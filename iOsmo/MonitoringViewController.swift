@@ -65,7 +65,7 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
             #if TARGET_OS_IOS
             Analytics.logEvent("trip_pause", parameters: nil)
             #endif
-            sendingManger.pauseSendingCoordinates()
+            sendingManger.pauseSendingCoordinates(true)
         } else {
             connectionManager.isGettingLocation = false
             sendingManger.startSendingCoordinates(false)
@@ -87,7 +87,8 @@ class MonitoringViewController: UIViewController, UIActionSheetDelegate/*, RMMap
     }
     
     @IBAction func MonitoringAction(_ sender: AnyObject) {
-        if SettingsManager.getKey(SettingKeys.trackerId) as String? != ""{
+        let uid = SettingsManager.getKey(SettingKeys.uid) as String?;
+        if (SettingsManager.getKey(SettingKeys.trackerId) as String? != "" && uid != "0" && uid != "")  { /* ID устройства получен и пользователь зарегистрирован */
             if isSessionPaused || isMonitoringOn {
                 #if TARGET_OS_IOS
                 Analytics.logEvent("trip_stop", parameters: nil)

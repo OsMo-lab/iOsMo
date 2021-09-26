@@ -311,9 +311,7 @@ open class GroupManager{
                 
             }
             
-            
             self.groupCreated.notify(($0, $1))
-            print("CREATED! \($0) ")
             self.connection.groupCreated.remove(self.onCreateGroup!)
         }
         connection.createGroup(name, email: email, nick: nick)
@@ -322,7 +320,6 @@ open class GroupManager{
     open func enterGroup(_ name: String, nick: String){
         self.onEnterGroup = connection.groupEntered.add{
             self.groupEntered.notify(($0, $1))
-            print("ENTERED! \($0) ")
             self.connection.groupEntered.remove(self.onEnterGroup!)
         }
         connection.enterGroup(name, nick: nick)
@@ -339,9 +336,6 @@ open class GroupManager{
                     self.saveCache()
                 }
             }
-            
-            print("LEFT! \($0) ")
-            
             self.connection.groupLeft.remove(self.onLeaveGroup!)
         }
         connection.leaveGroup(u)
@@ -379,7 +373,6 @@ open class GroupManager{
                             ["u": t.u, "name": t.name, "description": t.descr, "color": t.color, "size": "\(t.size)", "url": t.url, "type": t.type];
                         tracks.append(track)
                     }
-
                     
                     let jsonGroup : NSDictionary =
                         ["u": g.u, "url": g.url, "name": g.name, "description": g.descr, "active": (g.active ? "1" : "0"), "type": g.type, "color": g.color, "policy": g.policy

@@ -50,7 +50,7 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
     private func setActiveMode(_ moving: Bool) {
         log.enqueue("CMMotionActivityManager moving \(moving)")
         if moving {
-            //Находимя в движении по показаниям датчика - запрашиваем максимальную точность координат
+            //Находимся в движении по показаниям датчика - запрашиваем максимальную точность координат
             LocationTracker.sharedLocationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
             LocationTracker.sharedLocationManager.distanceFilter = kCLDistanceFilterNone
         } else {
@@ -86,7 +86,6 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                         break
                 }
                 
-
                 if (once) {
                     log.enqueue("requestLocation")
                     //Запрашиваем разовое определение координат
@@ -97,24 +96,24 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     LocationTracker.sharedLocationManager.startUpdatingLocation()
                     self.isGettingLocation = true
                     //Запускаем датчик движения, для тонкой настройки точности определения координат
+                    /*
                     motionManager.startActivityUpdates(to: .main, withHandler: { [weak self] activity in
                         self?.setActiveMode((activity?.stationary)! ? false : true)
                     })
-                
+                    */
                 }
             }
         }
     }
     
-    
     open func turnMonitoringOff(){
         LocationTracker.sharedLocationManager.stopUpdatingLocation()
         LocationTracker.sharedLocationManager.disallowDeferredLocationUpdates()
+        //self.motionManager.stopActivityUpdates()
         log.enqueue("LT.turnMonitoringOff")
         self.isDeferingUpdates = false
         self.isGettingLocation = false
     }
-    
     
     open func getLastLocations() -> [LocationModel]{
         let getLastLocations = self.lastLocations
@@ -160,10 +159,9 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
             let prevAge = (prevLM != nil ? loc.timestamp.timeIntervalSince((prevLM?.time)!):0)
             
             //select only valid location and also location with good accuracy
-            if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil || self.isGettingLocationOnce))){
+            if (theAccuracy > 0 && theAccuracy < 2000 && !(theCoordinate.latitude==0.0 && theCoordinate.longitude==0.0) && (((prev_loc?.coordinate.latitude != loc.coordinate.latitude && prev_loc?.coordinate.longitude != loc.coordinate.longitude) || lastLocations.last == nil || self.isGettingLocationOnce))) {
                 if ((prevAge >= locInterval) || (lastLocations.last == nil) || self.isGettingLocationOnce) {
                     var locationModel:LocationModel = LocationModel(lat: theCoordinate.latitude, lon: theCoordinate.longitude)
-                    //add others values
                     locationModel.accuracy = Int(theAccuracy)
                     locationModel.course = Float(loc.course)
                     locationModel.alt = (loc.verticalAccuracy > 0) ? Int(theAltitude) : 0
@@ -187,11 +185,8 @@ open class LocationTracker: NSObject, CLLocationManagerDelegate {
                     }
                     locationUpdated.notify(locationModel)
                     prevLM = locationModel;
-                    
                 }
             }
-            
-            
         }
         
         //Копим изменения координат в фоне более 100 метров или 60 секунд

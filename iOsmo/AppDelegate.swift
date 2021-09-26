@@ -32,9 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let gcmMessageIDKey = "GCM" //"GCM"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
         UIApplication.shared.registerForRemoteNotifications()
-
         
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
@@ -109,6 +107,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if let url = launchOptions?[.url] as? URL {
             _ = presentViewController(url:url);
+        } else {
+            /* Пользователь зарегистрирован на устройстве ? */
+            if let uid = SettingsManager.getKey(SettingKeys.uid) {
+                if (uid == "0" || uid == "") { /* Если нет, то переходимна страницу логина-регистрации */
+                    let tbc:UITabBarController = (window?.rootViewController as! UITabBarController)
+                    let accountVC: AccountViewController = tbc.viewControllers![1] as! AccountViewController;
+                    tbc.selectedViewController = accountVC;
+                }
+            }
         }
         return true
     }
@@ -146,43 +153,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
         }
-    }
-
-    /*
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        log.enqueue("Firebase registration token: \(fcmToken)")
-        
-        let dataDict:[String: String] = ["token": fcmToken]
-        //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }
- */
-    
-    public func displayNotification(_ title: String, _ body: String) {
-        if UIApplication.shared.applicationState != .active  {
-            let content = UNMutableNotificationContent()
-            content.title = title
-            content.body = body
-            self.localNotification = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        }
-    }
-    
-    @objc func connectOnActivate () {
-        if !connectionManager.connected {
-            connectionManager.connect()
-        }
-    }
-    
-    @objc func disconnectByTimer() {
-        connectionManager.closeConnection()
-        self.endBackgroundTask()
-    }
-    
-    func endBackgroundTask() {
-        print("Background task ended.")
-        UIApplication.shared.endBackgroundTask(convertToUIBackgroundTaskIdentifier(backgroundTask.rawValue))
-        backgroundTask = UIBackgroundTaskIdentifier.invalid
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -273,6 +243,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true;
     
     }
+
+    /*
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        log.enqueue("Firebase registration token: \(fcmToken)")
+        
+        let dataDict:[String: String] = ["token": fcmToken]
+        //NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        // TODO: If necessary send token to application server.
+        // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+ */
+    
+    public func displayNotification(_ title: String, _ body: String) {
+        if UIApplication.shared.applicationState != .active  {
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            self.localNotification = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        }
+    }
+    
+    @objc func connectOnActivate () {
+        if !connectionManager.connected {
+            connectionManager.connect()
+        }
+    }
+    
+    @objc func disconnectByTimer() {
+        connectionManager.closeConnection()
+        self.endBackgroundTask()
+    }
+    
+    func endBackgroundTask() {
+        print("Background task ended.")
+        UIApplication.shared.endBackgroundTask(convertToUIBackgroundTaskIdentifier(backgroundTask.rawValue))
+        backgroundTask = UIBackgroundTaskIdentifier.invalid
+    }
+    
+    
     
     func presentViewController(url:URL)->Bool {
         if NSURLComponents(url: url, resolvingAgainstBaseURL: true) != nil{
